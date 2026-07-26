@@ -301,6 +301,67 @@ export const en = {
       },
     },
 
+    "video-convert": {
+      blurb: "MOV to MP4 without re-encoding, or MP4 to WebM for the web. Nothing is uploaded.",
+      metaTitle: "MOV to MP4 & MP4 to WebM Converter",
+      metaDescription:
+        "Convert MOV to MP4 with no re-encoding, or MP4 to WebM with VP9 and Opus. Runs in your browser — no upload, no sign-up, no file size limit.",
+      h1: "Video converter",
+      lead: "Puts your video in a different container. MP4 leaves the codecs exactly as they are; WebM re-encodes the picture to VP9 and the sound to Opus.",
+      faq: [
+        {
+          q: "Where do my files go?",
+          a: "Nowhere. The video is read and rewritten inside this browser tab, and nothing is uploaded. Close the tab and it is gone.",
+        },
+        {
+          q: "Why is MOV to MP4 finished almost instantly?",
+          a: "Because .mov and .mp4 are the same box with a different label. An iPhone .mov already holds H.264 or HEVC video and AAC sound, all of which an MP4 can hold too, so we copy the streams across untouched and only rewrite the wrapper. Nothing is decoded, so nothing is lost.",
+        },
+        {
+          q: "Why does WebM take so much longer?",
+          a: "Because WebM cannot hold H.264 or AAC at all. Every frame has to be decoded and encoded again as VP9, and the sound as Opus. That is real work — expect it to take a fair share of the clip's own length, and expect a small quality cost, as with any re-encode.",
+        },
+        {
+          q: "Can I convert a WebM, AVI or MKV into MP4?",
+          a: "No. We open the container ourselves instead of shipping a 30MB media toolchain to your browser, and what we can open is MP4, MOV and M4V. We would rather leave those formats off the list than accept the file and fail on it.",
+        },
+        {
+          q: "Does the quality drop?",
+          a: "Not on the MP4 path — not a single frame is re-encoded there. On the WebM path it does, because re-encoding always does. Pick the quality that suits you; the tool tells you which path you are on before you press the button.",
+        },
+      ],
+      ui: {
+        dropLabel: "Drop a video here",
+        dropHint: "MP4 · MOV · M4V — one at a time",
+        reading: "reading…",
+        seconds: "s",
+        noAudio: "no sound",
+        targetLabel: "Convert to",
+        targetMp4: "MP4",
+        targetWebm: "WebM",
+        mp4Note: "The codecs are left alone and only the container is rewritten. Nothing is lost and it takes seconds.",
+        webmNote: "H.264 cannot live in a WebM, so the picture is re-encoded to VP9 and the sound to Opus. This takes a while and costs a little quality.",
+        alreadyMp4: "This file is already an MP4 — converting would only rewrite the container.",
+        mp4Unavailable: "This video's codec can't be copied into an MP4 as it is.",
+        webmUnavailable: "This browser can't encode WebM. MP4 still works.",
+        sizeLabel: "Size",
+        sizeOriginal: "Keep original size",
+        sizeMax: "Long edge {px}px",
+        qualityLabel: "Quality",
+        qualityHigh: "High — bigger file",
+        qualityBalanced: "Balanced",
+        qualitySmall: "Small — lower quality",
+        run: "Convert to {format}",
+        working: "Converting…",
+        outputNameMp4: "{stem}.mp4",
+        outputNameWebm: "{stem}.webm",
+        resultLossless: "Nothing was re-encoded.",
+        resultReencoded: "The picture was re-encoded to VP9.",
+        audioKept: "The sound came across too.",
+        audioDropped: "The sound could not be carried over.",
+      },
+    },
+
     "video-compress": {
       blurb: "Shrink an MP4 in your browser. No 30MB toolchain to download — your device does the work.",
       metaTitle: "Compress Video — shrink MP4 in your browser",

@@ -82,14 +82,17 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 현재 상태 (2026-07-26)
 
-**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 9) = 60 페이지
-+ 루트 언어 선택. 전부 정적. Playwright **95종**(프로덕션 93 통과 / 2 스킵, dev 81 / 14 스킵).
+**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 10) = 66 페이지
++ 루트 언어 선택. 전부 정적. Playwright **106종**(프로덕션 104 통과 / 2 스킵).
+dev 는 90 통과 / 15 스킵 — pdf-compress 1건이 냉컴파일 부하로 30초 타임아웃을 냈지만
+단독으로는 8/8 통과한다. 판정은 프로덕션 수치로 한다.
 
-### 배포된 도구 9개
+### 배포된 도구 10개
 
 | # | 도구 | 경로 | 핵심 |
 |---|---|---|---|
 | 1 | 이미지 변환·압축 | `/tools/image-convert` | HEIC 는 파일이 들어온 순간에만 libheif 를 받는다 |
+| 4 | 영상 변환 | `/tools/video-convert` | MOV→MP4 는 재mux, MP4→WebM 만 재인코딩 |
 | 9 | PDF 병합 | `/tools/pdf-merge` | 재렌더링 없이 페이지 복사 |
 | 10 | PDF 분할 | `/tools/pdf-split` | 범위 추출 + 낱장 ZIP(fflate) |
 | 11 | PDF 회전·삭제 | `/tools/pdf-organize` | pdf.js 썸네일. 회전은 **원본 값에 더한다** |
@@ -113,6 +116,11 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   화면 숫자와 파일 안 숫자가 어긋날 수 없다.
 - `lib/video/trim-core.ts` — 재인코딩 없는 재mux. **cts/dts 를 다루는 유일한 곳**이다.
   `Sample.decodeTime` 과 `readMp4` 의 `rebase()` 가 여기 때문에 생겼다.
+  `remuxMp4()` 는 이미 열어 둔 소스를 받는다 — 영상 변환(MOV→MP4)이 **구간만 파일 전체로
+  주고** 그대로 재사용한다.
+- `lib/video/convert-core.ts` — 상자 바꾸기. 두 갈래의 성격이 정반대라(무손실 재mux vs
+  전부 재인코딩) UI 가 어느 쪽인지 미리 말한다. **`AudioEncoder` 를 부르는 유일한 곳**
+  (`transcodeToOpus`) 이기도 하다.
 - `lib/use-capability.ts` — "이 브라우저가 할 수 있는가" 를 묻는 유일한 방법.
   `useEffect` 안에서 `setSupported(...)` 를 부르지 말 것 — 서버에는 `Worker` 도
   `OffscreenCanvas` 도 없어 렌더 중에 물을 수도 없다. `useSyncExternalStore` 가
@@ -138,8 +146,13 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   `BASE_URL=<배포주소> pnpm test` 로만 판단한다.
 - **`.next` 가 깨진 것처럼 보이는 두 번째 원인은 Playwright 워커 수다.** 기본값(12)이면
   `next dev` 한 대가 감당 못 해 전 페이지가 `Unexpected non-whitespace character after JSON`
-  으로 죽는다 — `.next` 를 지워도 안 낫는다. `playwright.config.ts` 에 `workers: 4` 로
-  묶어 두었으니 **이 값을 올리지 말 것.**
+  으로 죽는다. `playwright.config.ts` 에 `workers: 4` 로 묶어 두었으니 **이 값을 올리지 말 것.**
+- **그 오류가 났다고 `.next` 를 지우고 곧바로 전체 스위트를 돌리면 오히려 그 오류를 만든다.**
+  2026-07-26 에 두 번 연속 이렇게 무너뜨렸다(둘 다 11.8분, 2 통과). 4 워커가 텅 빈 `.next`
+  에 동시에 냉컴파일을 요구하는 것이 바로 그 경합이기 때문이다. `.next` 를 지웠다면
+  **가벼운 스펙 하나를 먼저 돌려 데운 뒤** 전체를 돌린다 — 그러면 59초에 끝난다.
+  판정 순서: (1) 단일 스펙이 통과하는가 → 통과하면 코드 문제가 아니다, (2) 3111 포트에
+  **LISTENING** 이 남아 있는가(TIME_WAIT 는 무관하다).
 
 ### 남은 일 (사용자 몫)
 
@@ -200,9 +213,6 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 다음 할 일
 
-1. **#4 영상 변환** — Tier 1 영상 도구 중 마지막이자 가장 크다. WebM 출력이면 오디오도
-   Opus 로 **재인코딩**해야 하는데, 이 저장소에는 아직 오디오를 인코딩하는 코드가 한 줄도
-   없다(`AudioEncoder` 를 부르는 곳이 없다). MP4↔WebM 양방향이면 muxer 도 둘 다 쓴다.
-2. **#2 OCR / #3 CSV·Parquet 쿼리** — Tier 1 에서 영상이 아닌 두 개.
-3. 색인 진행 상황 확인 — 며칠 뒤 Pages 리포트에 페이지가 잡히는지 본다.
+1. **#2 OCR / #3 CSV·Parquet 쿼리** — Tier 1 에 남은 두 개. 영상 도구는 다 나갔다.
+2. 색인 진행 상황 확인 — 며칠 뒤 Pages 리포트에 페이지가 잡히는지 본다.
    사이트맵 발견 페이지가 도구 수 × 6 + 6 으로 늘어야 한다(지금 60).

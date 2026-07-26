@@ -296,6 +296,69 @@ export const ko = {
       },
     },
 
+    "video-convert": {
+      blurb: "MOV 를 재인코딩 없이 MP4 로, 또는 MP4 를 WebM 으로. 업로드가 없습니다.",
+      metaTitle: "MOV → MP4 · MP4 → WebM 변환",
+      metaDescription:
+        "MOV 를 재인코딩 없이 MP4 로 바꾸고, MP4 를 VP9·Opus WebM 으로 변환합니다. 브라우저 안에서 끝나 업로드도 가입도 용량 제한도 없습니다.",
+      h1: "영상 변환",
+      lead: "영상을 다른 상자에 담습니다. MP4 는 코덱을 그대로 두고, WebM 은 화면을 VP9 로 소리를 Opus 로 다시 인코딩합니다.",
+      faq: [
+        {
+          q: "제 파일은 어디로 가나요?",
+          a: "어디로도 가지 않습니다. 영상을 읽고 다시 쓰는 일이 전부 이 브라우저 탭 안에서 일어나며, 서버로 올라가는 것이 없습니다. 탭을 닫으면 그리고 끝입니다.",
+        },
+        {
+          q: "MOV → MP4 는 왜 순식간에 끝나나요?",
+          a: ".mov 와 .mp4 는 라벨만 다른 같은 상자이기 때문입니다. 아이폰 .mov 안에는 이미 H.264 나 HEVC 영상과 AAC 소리가 들어 있고, 이들은 전부 MP4 에도 그대로 들어갑니다. 그래서 스트림을 그대로 옮기고 겉봉투만 다시 씁니다. 디코드하지 않으니 잃는 것도 없습니다.",
+        },
+        {
+          q: "WebM 은 왜 그렇게 오래 걸리나요?",
+          a: "WebM 은 H.264 도 AAC 도 담을 수 없기 때문입니다. 모든 프레임을 다시 디코드해서 VP9 로, 소리는 Opus 로 다시 인코딩해야 합니다. 진짜 연산이라 영상 길이에 상당하는 시간이 들고, 재인코딩이 다 그렇듯 화질도 조금 내려갑니다.",
+        },
+        {
+          q: "WebM 이나 AVI, MKV 를 MP4 로 바꿀 수 있나요?",
+          a: "없습니다. 30MB 짜리 미디어 도구모음을 브라우저로 보내는 대신 상자를 직접 열기 때문에, 열 수 있는 것은 MP4·MOV·M4V 입니다. 받아 놓고 실패하느니 목록에서 빼는 쪽을 골랐습니다.",
+        },
+        {
+          q: "화질이 떨어지나요?",
+          a: "MP4 쪽은 아닙니다 — 단 한 프레임도 다시 인코딩하지 않습니다. WebM 쪽은 떨어집니다. 재인코딩은 언제나 그렇습니다. 어느 쪽인지는 버튼을 누르기 전에 화면에 적어 둡니다.",
+        },
+      ],
+      ui: {
+        dropLabel: "여기에 영상을 놓으세요",
+        dropHint: "MP4 · MOV · M4V — 한 번에 하나",
+        reading: "읽는 중…",
+        seconds: "초",
+        noAudio: "소리 없음",
+        targetLabel: "무엇으로 바꿀까요",
+        targetMp4: "MP4",
+        targetWebm: "WebM",
+        mp4Note: "코덱은 건드리지 않고 상자만 다시 씁니다. 잃는 것이 없고 몇 초면 끝납니다.",
+        webmNote: "H.264 는 WebM 에 들어갈 수 없어 화면은 VP9 로, 소리는 Opus 로 다시 인코딩합니다. 시간이 걸리고 화질이 조금 내려갑니다.",
+        alreadyMp4: "이미 MP4 입니다 — 변환해도 상자만 다시 쓰게 됩니다.",
+        mp4Unavailable: "이 영상의 코덱은 MP4 로 그대로 옮길 수 없습니다.",
+        webmUnavailable: "이 브라우저는 WebM 을 인코딩하지 못합니다. MP4 는 됩니다.",
+        sizeLabel: "크기",
+        sizeOriginal: "원본 크기 유지",
+        sizeMax: "긴 변 {px}px",
+        qualityLabel: "화질",
+        qualityHigh: "높게 — 파일이 커집니다",
+        qualityBalanced: "보통",
+        qualitySmall: "작게 — 화질이 내려갑니다",
+        // "MP4 으로" 는 틀리고 "WebM 로" 도 틀리다 — 받침이 서로 달라 한 틀에 담기지
+        // 않는다. "형식으로" 를 끼우면 둘 다 맞는 문장이 된다.
+        run: "{format} 형식으로 변환",
+        working: "변환하는 중…",
+        outputNameMp4: "{stem}.mp4",
+        outputNameWebm: "{stem}.webm",
+        resultLossless: "다시 인코딩하지 않았습니다.",
+        resultReencoded: "화면을 VP9 로 다시 인코딩했습니다.",
+        audioKept: "소리도 함께 옮겼습니다.",
+        audioDropped: "소리는 옮기지 못했습니다.",
+      },
+    },
+
     "video-compress": {
       blurb: "MP4 를 브라우저 안에서 줄입니다. 30MB짜리 도구를 받지 않습니다 — 기기가 직접 합니다.",
       metaTitle: "영상 압축 — 브라우저에서 MP4 용량 줄이기",

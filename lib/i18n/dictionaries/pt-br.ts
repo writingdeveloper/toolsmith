@@ -298,6 +298,67 @@ export const ptBR = {
       },
     },
 
+    "video-convert": {
+      blurb: "De MOV para MP4 sem recodificar, ou de MP4 para WebM. Nada é enviado.",
+      metaTitle: "Converter MOV para MP4 e MP4 para WebM",
+      metaDescription:
+        "Converta MOV para MP4 sem recodificar, ou MP4 para WebM com VP9 e Opus. Tudo no seu navegador: sem envio, sem cadastro e sem limite de tamanho.",
+      h1: "Conversor de vídeo",
+      lead: "Coloca seu vídeo em outro contêiner. MP4 mantém os codecs como estão; WebM recodifica a imagem em VP9 e o som em Opus.",
+      faq: [
+        {
+          q: "Para onde vão meus arquivos?",
+          a: "Para lugar nenhum. O vídeo é lido e reescrito dentro desta aba do navegador e nada é enviado. Ao fechar a aba, acabou.",
+        },
+        {
+          q: "Por que MOV para MP4 termina quase na hora?",
+          a: "Porque .mov e .mp4 são a mesma caixa com outro rótulo. Um .mov de iPhone já traz vídeo H.264 ou HEVC e som AAC, e tudo isso cabe igual em um MP4. Então copiamos as faixas intactas e só reescrevemos o invólucro. Nada é decodificado, então nada se perde.",
+        },
+        {
+          q: "Por que WebM demora tanto mais?",
+          a: "Porque WebM não aceita H.264 nem AAC. Cada quadro precisa ser decodificado e codificado de novo como VP9, e o som como Opus. Isso é trabalho de verdade: conte com um tempo proporcional à duração do clipe e com uma pequena perda de qualidade, como em qualquer recodificação.",
+        },
+        {
+          q: "Posso converter um WebM, AVI ou MKV para MP4?",
+          a: "Não. Abrimos o contêiner nós mesmos em vez de mandar um kit de mídia de 30MB para o seu navegador, e o que sabemos abrir é MP4, MOV e M4V. Preferimos deixar esses formatos fora da lista a aceitar o arquivo e falhar nele.",
+        },
+        {
+          q: "A qualidade cai?",
+          a: "No caminho MP4 não — ali nenhum quadro é recodificado. No caminho WebM cai, porque recodificar sempre custa algo. Escolha a qualidade que preferir; a ferramenta diz em qual caminho você está antes de apertar o botão.",
+        },
+      ],
+      ui: {
+        dropLabel: "Solte um vídeo aqui",
+        dropHint: "MP4 · MOV · M4V — um por vez",
+        reading: "lendo…",
+        seconds: "s",
+        noAudio: "sem som",
+        targetLabel: "Converter para",
+        targetMp4: "MP4",
+        targetWebm: "WebM",
+        mp4Note: "Os codecs não são tocados: só o contêiner é reescrito. Nada se perde e leva segundos.",
+        webmNote: "H.264 não cabe em um WebM, então a imagem é recodificada em VP9 e o som em Opus. Demora um pouco e custa alguma qualidade.",
+        alreadyMp4: "Este arquivo já é um MP4 — converter apenas reescreveria o contêiner.",
+        mp4Unavailable: "O codec deste vídeo não pode ser copiado como está para um MP4.",
+        webmUnavailable: "Este navegador não consegue codificar WebM. MP4 continua funcionando.",
+        sizeLabel: "Tamanho",
+        sizeOriginal: "Manter o tamanho original",
+        sizeMax: "Lado maior {px}px",
+        qualityLabel: "Qualidade",
+        qualityHigh: "Alta — arquivo maior",
+        qualityBalanced: "Equilibrada",
+        qualitySmall: "Pequena — menos qualidade",
+        run: "Converter para {format}",
+        working: "Convertendo…",
+        outputNameMp4: "{stem}.mp4",
+        outputNameWebm: "{stem}.webm",
+        resultLossless: "Nada foi recodificado.",
+        resultReencoded: "A imagem foi recodificada em VP9.",
+        audioKept: "O som veio junto.",
+        audioDropped: "O som não pôde ser transportado.",
+      },
+    },
+
     "video-compress": {
       blurb: "Diminui um MP4 no navegador. Sem baixar 30MB de ferramentas — seu aparelho faz o trabalho.",
       metaTitle: "Comprimir vídeo — diminua um MP4 no navegador",

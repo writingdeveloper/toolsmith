@@ -30,8 +30,8 @@ export interface CompressResult {
   keptAudio: boolean;
 }
 
-/** H.264 는 가로·세로가 짝수여야 한다. */
-function evenFit(width: number, height: number, maxEdge: number) {
+/** H.264 는 가로·세로가 짝수여야 한다. (VP9 도 짝수로 맞춰 두면 탈이 없다) */
+export function evenFit(width: number, height: number, maxEdge: number) {
   let w = width;
   let h = height;
   if (maxEdge && Math.max(w, h) > maxEdge) {

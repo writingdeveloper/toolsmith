@@ -15,7 +15,15 @@
  * window / document 를 참조하지 않는다 (워커에서 돈다).
  */
 
-import { MediaError, readMp4, type Sample, type VideoTrack } from "./mp4-source";
+import {
+  MediaError,
+  mp4AudioCodecName,
+  mp4VideoCodecName,
+  readMp4,
+  type Mp4Source,
+  type Sample,
+  type VideoTrack,
+} from "./mp4-source";
 
 export interface TrimOptions {
   /** 요청 시작(초). 실제로는 이 앞의 키프레임으로 당겨진다. */
@@ -35,22 +43,6 @@ export interface TrimResult {
 }
 
 const MICROS = 1_000_000;
-
-/** mp4box 의 코덱 문자열을 mp4-muxer 가 아는 이름으로 옮긴다. */
-function videoCodecName(codec: string): "avc" | "hevc" | "vp9" | "av1" {
-  if (codec.startsWith("avc1") || codec.startsWith("avc3")) return "avc";
-  if (codec.startsWith("hvc1") || codec.startsWith("hev1")) return "hevc";
-  if (codec.startsWith("vp09")) return "vp9";
-  if (codec.startsWith("av01")) return "av1";
-  throw new MediaError("UNSUPPORTED_CODEC");
-}
-
-function audioCodecName(codec: string): "aac" | "opus" | null {
-  if (codec.startsWith("mp4a")) return "aac";
-  if (codec.startsWith("opus") || codec.startsWith("Opus")) return "opus";
-  // 옮길 줄 모르는 오디오라면 소리를 버리고 영상만 낸다 — 통째로 실패시키지 않는다
-  return null;
-}
 
 /**
  * 이 영상에서 실제로 잘릴 수 있는 시작점들(초).
@@ -90,7 +82,21 @@ export async function trimVideo(
   options: TrimOptions,
   onProgress?: (ratio: number) => void,
 ): Promise<TrimResult> {
-  const { video, audio } = await readMp4(bytes);
+  return remuxMp4(bytes.byteLength, await readMp4(bytes), options, onProgress);
+}
+
+/**
+ * 고른 구간을 MP4 로 다시 mux 한다. **이 저장소에서 cts/dts 를 다루는 유일한 곳이다.**
+ *
+ * 이미 열어 둔 소스를 받는 형태로 떼어 놓은 이유는 영상 변환(MOV → MP4)이 같은 일을
+ * 하기 때문이다 — 구간이 파일 전체일 뿐이다. 두 벌로 두면 한쪽만 고치게 된다.
+ */
+export async function remuxMp4(
+  sourceBytes: number,
+  { video, audio }: Mp4Source,
+  options: TrimOptions,
+  onProgress?: (ratio: number) => void,
+): Promise<TrimResult> {
   if (!video || video.samples.length === 0) throw new MediaError("NO_VIDEO_TRACK");
 
   const startMicros = options.startSec * MICROS;
@@ -101,8 +107,10 @@ export async function trimVideo(
   const chosen = video.samples.slice(first, last + 1);
   if (chosen.length === 0) throw new MediaError("BAD_RANGE");
 
-  const codec = videoCodecName(video.codec);
-  const audioCodec = audio ? audioCodecName(audio.codec) : null;
+  const codec = mp4VideoCodecName(video.codec);
+  if (!codec) throw new MediaError("UNSUPPORTED_CODEC");
+  // 옮길 줄 모르는 오디오라면 소리를 버리고 영상만 낸다 — 통째로 실패시키지 않는다
+  const audioCodec = audio ? mp4AudioCodecName(audio.codec) : null;
   const keepAudio = Boolean(audio && audioCodec);
 
   const { Muxer, ArrayBufferTarget } = await import("mp4-muxer");
@@ -187,7 +195,7 @@ export async function trimVideo(
 
   return {
     blob: new Blob([buffer], { type: "video/mp4" }),
-    before: bytes.byteLength,
+    before: sourceBytes,
     after: buffer.byteLength,
     startSec: actualStart / MICROS,
     endSec: actualEnd / MICROS,

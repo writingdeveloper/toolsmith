@@ -9,6 +9,7 @@
 let cached: boolean | null = null;
 let audioCached: boolean | null = null;
 let gifCached: boolean | null = null;
+let webmCached: boolean | null = null;
 
 export async function canRunVideoTools(): Promise<boolean> {
   if (cached !== null) return cached;
@@ -50,6 +51,45 @@ export async function canRunGifTools(): Promise<boolean> {
     return (gifCached = Boolean(probe.supported));
   } catch {
     return (gifCached = false);
+  }
+}
+
+/**
+ * WebM 으로 내보낼 수 있는가.
+ *
+ * **영상 변환 도구 전체를 막는 판정이 아니다.** MP4 로 옮기는 길은 코덱을 하나도
+ * 부르지 않으므로 인코더가 없는 기기에서도 멀쩡히 돈다. 여기서 false 가 나오면
+ * WebM 선택지 하나만 잠근다.
+ *
+ * 비디오와 오디오를 **둘 다** 물어야 한다 — WebM 에는 H.264 도 AAC 도 들어갈 수
+ * 없어서, 한쪽만 되는 기기에서는 결국 반쪽짜리 파일이 나온다.
+ */
+export async function canEncodeWebm(): Promise<boolean> {
+  if (webmCached !== null) return webmCached;
+  if (typeof VideoEncoder === "undefined" || typeof AudioEncoder === "undefined") {
+    return (webmCached = false);
+  }
+
+  try {
+    for (const codec of ["vp09.00.10.08", "vp8"]) {
+      const probe = await VideoEncoder.isConfigSupported({
+        codec,
+        width: 640,
+        height: 480,
+        bitrate: 1_000_000,
+      });
+      if (!probe.supported) continue;
+      const opus = await AudioEncoder.isConfigSupported({
+        codec: "opus",
+        sampleRate: 48000,
+        numberOfChannels: 2,
+        bitrate: 128_000,
+      });
+      return (webmCached = Boolean(opus.supported));
+    }
+    return (webmCached = false);
+  } catch {
+    return (webmCached = false);
   }
 }
 

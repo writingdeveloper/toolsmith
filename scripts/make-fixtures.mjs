@@ -162,6 +162,21 @@ try {
   );
   console.log(`trim.mp4 — ${(await stat(trimPath)).size} bytes`);
 
+  /*
+   * MOV. clip.mp4 와 **같은 스트림을 다른 상자에 담은 것**이다(-c copy).
+   *
+   * 영상 변환의 핵심 주장이 "MOV → MP4 는 코덱을 건드리지 않는다" 이므로, 그것을
+   * 증명하려면 내용이 같고 상자만 다른 짝이 있어야 한다. 변환 결과를 clip.mp4 와
+   * 견주면 "정말 아무것도 다시 인코딩하지 않았는가" 를 픽셀로 확인할 수 있다.
+   */
+  const movPath = fileURLToPath(new URL("clip.mov", OUT));
+  execFileSync(
+    "ffmpeg",
+    ["-y", "-i", clipPath, "-c", "copy", "-f", "mov", movPath],
+    { stdio: "ignore" },
+  );
+  console.log(`clip.mov — ${(await stat(movPath)).size} bytes`);
+
   // 오디오 트랙이 아예 없는 영상 — "꺼낼 소리가 없다" 를 정직하게 말하는지 확인용
   const silentPath = fileURLToPath(new URL("silent.mp4", OUT));
   execFileSync(

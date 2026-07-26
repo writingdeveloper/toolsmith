@@ -298,6 +298,67 @@ export const de = {
       },
     },
 
+    "video-convert": {
+      blurb: "MOV ohne Neukodierung zu MP4, oder MP4 zu WebM fürs Web. Nichts wird hochgeladen.",
+      metaTitle: "MOV in MP4 und MP4 in WebM umwandeln",
+      metaDescription:
+        "Wandeln Sie MOV ohne Neukodierung in MP4 um oder MP4 mit VP9 und Opus in WebM. Läuft in Ihrem Browser — ohne Upload, ohne Anmeldung, ohne Größenlimit.",
+      h1: "Video-Konverter",
+      lead: "Legt Ihr Video in einen anderen Container. MP4 lässt die Codecs unangetastet; WebM kodiert das Bild neu in VP9 und den Ton in Opus.",
+      faq: [
+        {
+          q: "Wohin gehen meine Dateien?",
+          a: "Nirgendwohin. Das Video wird in diesem Browser-Tab gelesen und neu geschrieben, hochgeladen wird nichts. Schließen Sie den Tab, und es ist weg.",
+        },
+        {
+          q: "Warum ist MOV zu MP4 fast sofort fertig?",
+          a: "Weil .mov und .mp4 dieselbe Schachtel mit einem anderen Etikett sind. Ein iPhone-.mov enthält bereits H.264- oder HEVC-Bild und AAC-Ton, und all das passt genauso in ein MP4. Wir kopieren die Spuren also unverändert und schreiben nur die Hülle neu. Es wird nichts dekodiert, also geht auch nichts verloren.",
+        },
+        {
+          q: "Warum dauert WebM so viel länger?",
+          a: "Weil WebM weder H.264 noch AAC aufnehmen kann. Jedes Einzelbild muss neu als VP9 kodiert werden und der Ton als Opus. Das ist echte Rechenarbeit: Rechnen Sie mit einem guten Teil der Cliplaufzeit und mit einem kleinen Qualitätsverlust, wie bei jeder Neukodierung.",
+        },
+        {
+          q: "Kann ich ein WebM, AVI oder MKV in MP4 umwandeln?",
+          a: "Nein. Wir öffnen den Container selbst, statt Ihnen ein 30MB großes Medienpaket in den Browser zu schicken — und öffnen können wir MP4, MOV und M4V. Wir lassen diese Formate lieber von der Liste weg, als die Datei anzunehmen und dann daran zu scheitern.",
+        },
+        {
+          q: "Leidet die Qualität?",
+          a: "Auf dem MP4-Weg nicht — dort wird kein einziges Einzelbild neu kodiert. Auf dem WebM-Weg schon, denn Neukodieren kostet immer etwas. Wählen Sie die Qualität, die Ihnen passt; das Werkzeug sagt Ihnen vor dem Klick, auf welchem Weg Sie sind.",
+        },
+      ],
+      ui: {
+        dropLabel: "Video hier ablegen",
+        dropHint: "MP4 · MOV · M4V — eines nach dem anderen",
+        reading: "wird gelesen…",
+        seconds: "s",
+        noAudio: "ohne Ton",
+        targetLabel: "Umwandeln in",
+        targetMp4: "MP4",
+        targetWebm: "WebM",
+        mp4Note: "Die Codecs bleiben unangetastet, nur der Container wird neu geschrieben. Es geht nichts verloren und es dauert Sekunden.",
+        webmNote: "H.264 passt nicht in ein WebM, deshalb wird das Bild neu in VP9 und der Ton in Opus kodiert. Das dauert und kostet etwas Qualität.",
+        alreadyMp4: "Diese Datei ist bereits ein MP4 — die Umwandlung würde nur den Container neu schreiben.",
+        mp4Unavailable: "Der Codec dieses Videos lässt sich nicht unverändert in ein MP4 kopieren.",
+        webmUnavailable: "Dieser Browser kann kein WebM kodieren. MP4 funktioniert weiterhin.",
+        sizeLabel: "Größe",
+        sizeOriginal: "Originalgröße behalten",
+        sizeMax: "Lange Kante {px}px",
+        qualityLabel: "Qualität",
+        qualityHigh: "Hoch — größere Datei",
+        qualityBalanced: "Ausgewogen",
+        qualitySmall: "Klein — geringere Qualität",
+        run: "In {format} umwandeln",
+        working: "Wird umgewandelt…",
+        outputNameMp4: "{stem}.mp4",
+        outputNameWebm: "{stem}.webm",
+        resultLossless: "Es wurde nichts neu kodiert.",
+        resultReencoded: "Das Bild wurde neu in VP9 kodiert.",
+        audioKept: "Der Ton kam ebenfalls mit.",
+        audioDropped: "Der Ton konnte nicht mitübernommen werden.",
+      },
+    },
+
     "video-compress": {
       blurb: "Verkleinert ein MP4 im Browser. Ohne 30MB Werkzeugkasten — Ihr Gerät erledigt es selbst.",
       metaTitle: "Video verkleinern — MP4 im Browser schrumpfen",

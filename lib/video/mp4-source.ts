@@ -131,6 +131,24 @@ function rebase(samples: Sample[]): number {
   return end;
 }
 
+/**
+ * mp4box 가 읽어 온 코덱 문자열을 mp4-muxer 가 아는 이름으로 옮긴다.
+ * 옮길 줄 모르면 `null` — 부르는 쪽이 "다시 인코딩할지" 를 스스로 정한다.
+ */
+export function mp4VideoCodecName(codec: string): "avc" | "hevc" | "vp9" | "av1" | null {
+  if (codec.startsWith("avc1") || codec.startsWith("avc3")) return "avc";
+  if (codec.startsWith("hvc1") || codec.startsWith("hev1")) return "hevc";
+  if (codec.startsWith("vp09")) return "vp9";
+  if (codec.startsWith("av01")) return "av1";
+  return null;
+}
+
+export function mp4AudioCodecName(codec: string): "aac" | "opus" | null {
+  if (codec.startsWith("mp4a")) return "aac";
+  if (codec.toLowerCase().startsWith("opus")) return "opus";
+  return null;
+}
+
 /** AAC 샘플레이트 인덱스 표(ISO/IEC 14496-3). */
 const AAC_RATES = [
   96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000, 7350,

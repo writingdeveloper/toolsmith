@@ -298,6 +298,67 @@ export const es = {
       },
     },
 
+    "video-convert": {
+      blurb: "De MOV a MP4 sin recodificar, o de MP4 a WebM para la web. Nada se sube.",
+      metaTitle: "Convertir MOV a MP4 y MP4 a WebM",
+      metaDescription:
+        "Convierte MOV a MP4 sin recodificar, o MP4 a WebM con VP9 y Opus. Todo ocurre en tu navegador: sin subidas, sin registro y sin límite de tamaño.",
+      h1: "Convertidor de vídeo",
+      lead: "Pone tu vídeo en otro contenedor. MP4 deja los códecs tal cual; WebM recodifica la imagen a VP9 y el sonido a Opus.",
+      faq: [
+        {
+          q: "¿Adónde van mis archivos?",
+          a: "A ninguna parte. El vídeo se lee y se reescribe dentro de esta pestaña del navegador y no se sube nada. Al cerrar la pestaña desaparece.",
+        },
+        {
+          q: "¿Por qué MOV a MP4 termina al instante?",
+          a: "Porque .mov y .mp4 son la misma caja con otra etiqueta. Un .mov de iPhone ya lleva vídeo H.264 o HEVC y sonido AAC, y todo eso cabe igual en un MP4. Así que copiamos las pistas intactas y solo reescribimos la envoltura. No se descodifica nada, así que no se pierde nada.",
+        },
+        {
+          q: "¿Por qué WebM tarda tanto más?",
+          a: "Porque WebM no admite H.264 ni AAC. Hay que descodificar y volver a codificar cada fotograma como VP9 y el sonido como Opus. Eso es trabajo real: espera un tiempo proporcional a la duración del clip y una pérdida pequeña de calidad, como en cualquier recodificación.",
+        },
+        {
+          q: "¿Puedo convertir un WebM, AVI o MKV a MP4?",
+          a: "No. Abrimos el contenedor nosotros mismos en lugar de enviar a tu navegador un kit multimedia de 30MB, y lo que sabemos abrir es MP4, MOV y M4V. Preferimos dejar esos formatos fuera de la lista antes que aceptarlos y fallar.",
+        },
+        {
+          q: "¿Baja la calidad?",
+          a: "En la ruta MP4 no: ahí no se recodifica ni un fotograma. En la ruta WebM sí, porque recodificar siempre cuesta algo. Elige la calidad que prefieras; la herramienta te dice en qué ruta estás antes de pulsar el botón.",
+        },
+      ],
+      ui: {
+        dropLabel: "Suelta un vídeo aquí",
+        dropHint: "MP4 · MOV · M4V — de uno en uno",
+        reading: "leyendo…",
+        seconds: "s",
+        noAudio: "sin sonido",
+        targetLabel: "Convertir a",
+        targetMp4: "MP4",
+        targetWebm: "WebM",
+        mp4Note: "No se tocan los códecs: solo se reescribe el contenedor. No se pierde nada y tarda segundos.",
+        webmNote: "H.264 no cabe en un WebM, así que la imagen se recodifica a VP9 y el sonido a Opus. Tarda un rato y cuesta algo de calidad.",
+        alreadyMp4: "Este archivo ya es un MP4; convertirlo solo reescribiría el contenedor.",
+        mp4Unavailable: "El códec de este vídeo no se puede copiar tal cual a un MP4.",
+        webmUnavailable: "Este navegador no puede codificar WebM. MP4 sí funciona.",
+        sizeLabel: "Tamaño",
+        sizeOriginal: "Mantener el tamaño original",
+        sizeMax: "Lado largo {px}px",
+        qualityLabel: "Calidad",
+        qualityHigh: "Alta — archivo mayor",
+        qualityBalanced: "Equilibrada",
+        qualitySmall: "Pequeña — menos calidad",
+        run: "Convertir a {format}",
+        working: "Convirtiendo…",
+        outputNameMp4: "{stem}.mp4",
+        outputNameWebm: "{stem}.webm",
+        resultLossless: "No se recodificó nada.",
+        resultReencoded: "La imagen se recodificó a VP9.",
+        audioKept: "El sonido también se trasladó.",
+        audioDropped: "El sonido no se pudo trasladar.",
+      },
+    },
+
     "video-compress": {
       blurb: "Reduce un MP4 en tu navegador. Sin descargar 30MB de herramientas: lo hace tu propio equipo.",
       metaTitle: "Comprimir vídeo — reduce un MP4 en el navegador",
