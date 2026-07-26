@@ -1,0 +1,5 @@
+# 픽스처는 바이트 그대로여야 한다. 줄바꿈 변환이 끼면 QA 가 검사하는 것이 원본이 아니게 된다.
+*.pdf binary
+*.jpg binary
+*.png binary
+*.heic binary
