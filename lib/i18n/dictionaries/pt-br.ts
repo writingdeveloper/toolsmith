@@ -58,6 +58,7 @@ export const ptBR = {
 
   toolNames: {
     "image-convert": "Conversor de imagens",
+    "image-compress": "Comprimir imagem",
     "video-convert": "Conversor de vídeo",
     "video-compress": "Comprimir vídeo",
     "video-trim": "Cortar vídeo",
@@ -411,6 +412,53 @@ export const ptBR = {
           por: "Português",
           chi_sim: "Chinês simplificado",
         },
+      },
+    },
+
+    "image-compress": {
+      blurb: "Deixa as fotos mais leves sem mudar o formato. Você vê quanto cada arquivo economizou.",
+      metaTitle: "Comprimir imagens — JPG, PNG, WebP",
+      metaDescription:
+        "Deixe suas fotos mais leves no navegador sem enviá-las. Mantém o formato original e mostra quanto cada arquivo economizou. Sem cadastro nem limite.",
+      h1: "Comprimir imagens",
+      lead: "Deixa os arquivos de imagem menores e devolve no formato em que entraram. Você vê a economia de cada arquivo antes de baixar.",
+      faq: [
+        {
+          q: "Para onde vão meus arquivos?",
+          a: "Para lugar nenhum. A compressão roda dentro desta aba e suas imagens nunca saem pela rede. Ao fechar a aba, acabou.",
+        },
+        {
+          q: "Por que meu PNG não diminuiu?",
+          a: "Porque PNG é sem perdas: o controle de qualidade não tem o que ceder. Para reduzir um PNG é preciso diminuir os pixels ou passar para WebP, que costuma pesar de 60 a 80% menos com a mesma qualidade visível. As duas opções estão aqui.",
+        },
+        {
+          q: "Qual qualidade escolher?",
+          a: "75 é um bom ponto de partida para fotos que vão para a web; quase ninguém distingue do original. Abaixo de 50 as bordas começam a borrar. Cada arquivo mostra o antes e o depois, então teste um e olhe.",
+        },
+        {
+          q: "Ele mantém meu formato?",
+          a: "Sim, por padrão. Um JPG volta como JPG e encaixa onde já era usado. Dá para mudar se preferir WebP.",
+        },
+        {
+          q: "Os EXIF são mantidos?",
+          a: "Não. A recodificação descarta os metadados, inclusive as coordenadas de GPS que os celulares gravam. Para fotos que vão para a internet, normalmente é o que se quer.",
+        },
+      ],
+      ui: {
+        dropLabel: "Solte suas imagens aqui",
+        dropHint: "JPG · PNG · WebP · HEIC — várias de uma vez",
+        qualityLabel: "Qualidade {value}",
+        sizeLabel: "Tamanho",
+        sizeOriginal: "Manter o tamanho original",
+        sizeMax: "Lado maior {px}px",
+        formatLabel: "Saída",
+        formatKeep: "Manter o formato original",
+        losslessNote: "PNG é sem perdas, então a qualidade não vai reduzi-lo. Diminua o tamanho ou mude a saída para WebP.",
+        run: "Comprimir {n} arquivo(s)",
+        working: "Comprimindo…",
+        total: "{n} arquivos · {before} → {after} ({percent}% menor)",
+        errUnsupportedInput: "Este navegador não consegue ler esse formato",
+        errGeneric: "A compressão falhou",
       },
     },
 

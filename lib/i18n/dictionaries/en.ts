@@ -61,6 +61,7 @@ export const en = {
   /** 홈의 도구 카드와 "준비 중" 목록에 쓰는 짧은 이름. 모든 슬러그를 덮는다. */
   toolNames: {
     "image-convert": "Image converter",
+    "image-compress": "Compress image",
     "video-convert": "Video converter",
     "video-compress": "Compress video",
     "video-trim": "Video trimmer",
@@ -414,6 +415,53 @@ export const en = {
           por: "Portuguese",
           chi_sim: "Chinese (Simplified)",
         },
+      },
+    },
+
+    "image-compress": {
+      blurb: "Make photos smaller without changing their format. Drag the quality down and watch the size drop.",
+      metaTitle: "Compress Images — JPG, PNG, WebP",
+      metaDescription:
+        "Shrink photos in your browser without uploading them. Keeps the original format, shows exactly how much each file saved. No sign-up, no file limit.",
+      h1: "Compress images",
+      lead: "Makes image files smaller and keeps the format they came in as. You see the saving on every file before you download.",
+      faq: [
+        {
+          q: "Where do my files go?",
+          a: "Nowhere. The compression runs inside this browser tab and your images are never sent over the network. Close the tab and they are gone.",
+        },
+        {
+          q: "Why didn't my PNG get smaller?",
+          a: "Because PNG is lossless — the quality slider has nothing to trade away. To shrink a PNG you have to make it smaller in pixels, or switch it to WebP, which is usually 60-80% smaller at the same visible quality. Both options are right here.",
+        },
+        {
+          q: "What quality should I pick?",
+          a: "75 is a good default for photos going on the web; most people cannot tell it from the original. Below about 50 the edges start to smear. Every file shows its own before and after, so you can try one and look.",
+        },
+        {
+          q: "Does it keep my format?",
+          a: "Yes, by default. A JPG comes back a JPG so it drops into wherever it came from. You can override that if you would rather have WebP.",
+        },
+        {
+          q: "Is EXIF kept?",
+          a: "No. Re-encoding drops the metadata, including the GPS coordinates that phone cameras write. For putting pictures online that is usually what you want.",
+        },
+      ],
+      ui: {
+        dropLabel: "Drop your images here",
+        dropHint: "JPG · PNG · WebP · HEIC — several at once",
+        qualityLabel: "Quality {value}",
+        sizeLabel: "Size",
+        sizeOriginal: "Keep original size",
+        sizeMax: "Long edge {px}px",
+        formatLabel: "Output",
+        formatKeep: "Keep original format",
+        losslessNote: "PNG is lossless, so the quality slider will not shrink it. Reduce the size, or switch the output to WebP.",
+        run: "Compress {n} file(s)",
+        working: "Compressing…",
+        total: "{n} files · {before} → {after} ({percent}% smaller)",
+        errUnsupportedInput: "This browser can't read that format",
+        errGeneric: "Compression failed",
       },
     },
 

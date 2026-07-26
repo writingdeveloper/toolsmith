@@ -58,6 +58,7 @@ export const de = {
 
   toolNames: {
     "image-convert": "Bildkonverter",
+    "image-compress": "Bild verkleinern",
     "video-convert": "Videokonverter",
     "video-compress": "Video verkleinern",
     "video-trim": "Video zuschneiden",
@@ -411,6 +412,53 @@ export const de = {
           por: "Portugiesisch",
           chi_sim: "Chinesisch (vereinfacht)",
         },
+      },
+    },
+
+    "image-compress": {
+      blurb: "Macht Fotos kleiner, ohne das Format zu ändern. Sie sehen bei jeder Datei, wie viel gespart wurde.",
+      metaTitle: "Bilder verkleinern — JPG, PNG, WebP",
+      metaDescription:
+        "Verkleinern Sie Fotos im Browser, ohne sie hochzuladen. Das Originalformat bleibt erhalten und jede Datei zeigt ihre Ersparnis. Ohne Anmeldung und Limit.",
+      h1: "Bilder verkleinern",
+      lead: "Macht Bilddateien kleiner und gibt sie in dem Format zurück, in dem sie hereinkamen. Die Ersparnis sehen Sie vor dem Herunterladen bei jeder Datei.",
+      faq: [
+        {
+          q: "Wohin gehen meine Dateien?",
+          a: "Nirgendwohin. Die Komprimierung läuft in diesem Browser-Tab, Ihre Bilder verlassen das Gerät nie. Schließen Sie den Tab, und sie sind weg.",
+        },
+        {
+          q: "Warum wurde mein PNG nicht kleiner?",
+          a: "Weil PNG verlustfrei ist — der Qualitätsregler hat nichts herzugeben. Um ein PNG zu verkleinern, müssen Sie die Pixelmaße reduzieren oder auf WebP wechseln, das bei gleicher sichtbarer Qualität meist 60-80% kleiner ist. Beides finden Sie hier.",
+        },
+        {
+          q: "Welche Qualität soll ich nehmen?",
+          a: "75 ist ein guter Ausgangspunkt für Fotos fürs Web; kaum jemand unterscheidet sie vom Original. Unter etwa 50 fangen die Kanten an zu verschmieren. Jede Datei zeigt ihr Vorher und Nachher — probieren Sie eine aus und schauen Sie hin.",
+        },
+        {
+          q: "Bleibt mein Format erhalten?",
+          a: "Ja, standardmäßig. Ein JPG kommt als JPG zurück und passt dorthin, wo es herkam. Wenn Sie lieber WebP möchten, können Sie das umstellen.",
+        },
+        {
+          q: "Bleiben EXIF-Daten erhalten?",
+          a: "Nein. Beim Neukodieren fallen die Metadaten weg, auch die GPS-Koordinaten, die Handykameras hineinschreiben. Für Bilder, die online gehen, ist das meist erwünscht.",
+        },
+      ],
+      ui: {
+        dropLabel: "Bilder hier ablegen",
+        dropHint: "JPG · PNG · WebP · HEIC — mehrere auf einmal",
+        qualityLabel: "Qualität {value}",
+        sizeLabel: "Größe",
+        sizeOriginal: "Originalgröße behalten",
+        sizeMax: "Lange Kante {px}px",
+        formatLabel: "Ausgabe",
+        formatKeep: "Originalformat behalten",
+        losslessNote: "PNG ist verlustfrei, der Qualitätsregler verkleinert es also nicht. Reduzieren Sie die Größe oder stellen Sie die Ausgabe auf WebP.",
+        run: "{n} Datei(en) verkleinern",
+        working: "Wird verkleinert…",
+        total: "{n} Dateien · {before} → {after} ({percent}% kleiner)",
+        errUnsupportedInput: "Dieser Browser kann dieses Format nicht lesen",
+        errGeneric: "Die Komprimierung ist fehlgeschlagen",
       },
     },
 

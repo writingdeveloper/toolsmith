@@ -58,6 +58,7 @@ export const es = {
 
   toolNames: {
     "image-convert": "Convertidor de imágenes",
+    "image-compress": "Comprimir imagen",
     "video-convert": "Convertidor de vídeo",
     "video-compress": "Comprimir vídeo",
     "video-trim": "Recortar vídeo",
@@ -411,6 +412,53 @@ export const es = {
           por: "Portugués",
           chi_sim: "Chino simplificado",
         },
+      },
+    },
+
+    "image-compress": {
+      blurb: "Reduce el peso de las fotos sin cambiar su formato. Verás cuánto ahorra cada archivo.",
+      metaTitle: "Comprimir imágenes — JPG, PNG, WebP",
+      metaDescription:
+        "Reduce el peso de tus fotos en el navegador sin subirlas. Mantiene el formato original y muestra cuánto ahorra cada archivo. Sin registro ni límite.",
+      h1: "Comprimir imágenes",
+      lead: "Hace más pequeños los archivos de imagen y te los devuelve en el formato en que entraron. Ves el ahorro de cada archivo antes de descargar.",
+      faq: [
+        {
+          q: "¿Adónde van mis archivos?",
+          a: "A ninguna parte. La compresión ocurre dentro de esta pestaña y tus imágenes nunca salen por la red. Al cerrar la pestaña desaparecen.",
+        },
+        {
+          q: "¿Por qué no se redujo mi PNG?",
+          a: "Porque PNG no tiene pérdida: el control de calidad no tiene nada que ceder. Para reducir un PNG hay que bajar su tamaño en píxeles o pasarlo a WebP, que suele pesar entre un 60 y un 80% menos con la misma calidad visible. Ambas opciones están aquí.",
+        },
+        {
+          q: "¿Qué calidad elijo?",
+          a: "75 es un buen punto de partida para fotos que van a la web; casi nadie las distingue del original. Por debajo de 50 los bordes empiezan a emborronarse. Cada archivo muestra su antes y después, así que prueba uno y míralo.",
+        },
+        {
+          q: "¿Mantiene mi formato?",
+          a: "Sí, por defecto. Un JPG vuelve como JPG y encaja donde ya lo usabas. Puedes cambiarlo si prefieres WebP.",
+        },
+        {
+          q: "¿Se conservan los EXIF?",
+          a: "No. Al recodificar se pierden los metadatos, incluidas las coordenadas GPS que escriben los móviles. Para publicar fotos, eso suele ser lo que quieres.",
+        },
+      ],
+      ui: {
+        dropLabel: "Suelta tus imágenes aquí",
+        dropHint: "JPG · PNG · WebP · HEIC — varias a la vez",
+        qualityLabel: "Calidad {value}",
+        sizeLabel: "Tamaño",
+        sizeOriginal: "Mantener el tamaño original",
+        sizeMax: "Lado largo {px}px",
+        formatLabel: "Salida",
+        formatKeep: "Mantener el formato original",
+        losslessNote: "PNG no tiene pérdida, así que la calidad no lo reducirá. Baja el tamaño o cambia la salida a WebP.",
+        run: "Comprimir {n} archivo(s)",
+        working: "Comprimiendo…",
+        total: "{n} archivos · {before} → {after} ({percent}% menos)",
+        errUnsupportedInput: "Este navegador no puede leer ese formato",
+        errGeneric: "Falló la compresión",
       },
     },
 

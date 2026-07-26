@@ -157,3 +157,21 @@ export async function convertImage(file: Blob, options: ConvertOptions): Promise
     bitmap.close();
   }
 }
+
+/**
+ * 이 파일을 그대로 다시 인코딩할 수 있는 형식인가.
+ *
+ * 압축 도구는 **형식을 바꾸지 않는 것**이 기본이다 — JPG 를 넣었으면 JPG 가 나와야
+ * 어디서 쓰던 그대로 쓸 수 있다. 다만 우리가 인코딩할 수 있는 형식이어야 하므로,
+ * 읽을 수는 있지만 쓸 수 없는 것(HEIC·GIF·BMP)은 `null` 을 준다 — 그럴 때는 부르는
+ * 쪽이 사용자에게 무엇으로 내보낼지 물어야 한다.
+ */
+export function sourceFormat(file: Blob & { name?: string }): OutputFormat | null {
+  const type = file.type.toLowerCase();
+  const name = (file.name ?? "").toLowerCase();
+  if (type === "image/jpeg" || /\.jpe?g$/.test(name)) return "image/jpeg";
+  if (type === "image/png" || /\.png$/.test(name)) return "image/png";
+  if (type === "image/webp" || /\.webp$/.test(name)) return "image/webp";
+  if (type === "image/avif" || /\.avif$/.test(name)) return "image/avif";
+  return null;
+}
