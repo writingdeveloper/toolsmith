@@ -134,6 +134,21 @@ try {
     { stdio: "ignore" },
   );
   console.log(`clip.mp4 — ${(await stat(clipPath)).size} bytes`);
+
+  // 오디오 트랙이 아예 없는 영상 — "꺼낼 소리가 없다" 를 정직하게 말하는지 확인용
+  const silentPath = fileURLToPath(new URL("silent.mp4", OUT));
+  execFileSync(
+    "ffmpeg",
+    [
+      "-y",
+      "-f", "lavfi", "-i", "testsrc=size=160x120:rate=10:duration=1",
+      "-c:v", "libx264", "-profile:v", "baseline", "-pix_fmt", "yuv420p",
+      "-an",
+      silentPath,
+    ],
+    { stdio: "ignore" },
+  );
+  console.log(`silent.mp4 — ${(await stat(silentPath)).size} bytes`);
 } catch {
   console.warn("clip.mp4 — ffmpeg 가 없어 건너뜀 (영상 스펙은 이 픽스처가 있어야 돈다)");
 }

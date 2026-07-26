@@ -62,7 +62,7 @@ export async function compressVideo(
 ): Promise<CompressResult> {
   const source = await readMp4(bytes);
   const { video, audio } = source;
-  if (video.samples.length === 0) throw new MediaError("NO_VIDEO_TRACK");
+  if (!video || video.samples.length === 0) throw new MediaError("NO_VIDEO_TRACK");
 
   const target = evenFit(video.width, video.height, options.maxEdge);
   const codec = await pickVideoCodec(target.width, target.height, options.bitrate);

@@ -39,7 +39,7 @@
 | 5 | 영상 압축 | **WebCodecs** + mp4box/mp4-muxer | BSD-3/MIT | 최상 | **배포** |
 | 6 | 영상 트림·자르기 | **WebCodecs** | BSD-3/MIT | 상 | 미착수 |
 | 7 | 영상 → GIF | **WebCodecs** + gifenc | MIT | 상 | 미착수 |
-| 8 | 오디오 추출·변환 (WAV/M4A) | **WebCodecs** | BSD-3/MIT | 최상 | 미착수 |
+| 8 | 오디오 추출·변환 (WAV/M4A) | **WebCodecs** | BSD-3/MIT | 최상 | **배포** |
 | 9 | PDF 병합 | pdf-lib | MIT | 최상 | **배포** |
 | 10 | PDF 분할 | pdf-lib + fflate(ZIP) | MIT | 상 | **배포** |
 | 11 | PDF 회전·페이지 삭제 | pdf-lib + pdf.js(썸네일) | MIT / Apache-2.0 | 중 | **배포** |
@@ -160,6 +160,11 @@ ffmpeg.wasm 이 GPL 이라 못 쓰게 되면서 방향을 바꿨고, 결과적�
   **받는 척하지 말고 목록에서 빼는 쪽이 이 프로젝트의 방식이다.**
 - 브라우저 지원이 이미지·PDF 도구보다 좁다(Firefox 130+, Safari 16.4+).
   `VideoEncoder.isConfigSupported` 로 실제 능력을 물어 목록을 만든다.
+- **AAC 의 `description` 은 esds 박스가 아니라 그 안의 AudioSpecificConfig 다.**
+  avcC 는 박스 payload 가 곧 디코더 설정이라 헤더 8바이트만 떼면 되지만, esds 는
+  ES_Descriptor 가 겹겹이 싸인 구조다. 같은 방법을 쓰면 만들어진 M4A 가
+  `Unable to decode audio data` 로 거절당한다 — **소리가 안 나는 파일을 내주게 된다.**
+  mp4box 가 파싱해 둔 값을 쓰고, 없으면 2바이트를 직접 조립한다(`describeAac`).
 
 ## 기술 함정 (걸려본 것 / 걸릴 것)
 

@@ -38,6 +38,7 @@ export const en = {
   mediaErrors: {
     unsupportedContainer: "This file isn't an MP4 or MOV we can open",
     noVideoTrack: "This file has no video track",
+    noAudioTrack: "This file has no sound to pull out",
     unsupportedCodec: "This browser can't decode this video",
     tooLarge: "That is over 512MB",
     decodeFailed: "The video could not be read to the end",
@@ -344,6 +345,52 @@ export const en = {
         audioKept: "The sound was copied across untouched.",
         didNotShrink:
           "This came out no smaller — the original was already efficient. Try a lower quality or resolution.",
+      },
+    },
+
+    "audio-extract": {
+      blurb: "Pull the sound out of a video. Nothing is re-encoded, so nothing is lost.",
+      metaTitle: "Extract Audio from Video — MP4 to M4A or WAV",
+      metaDescription:
+        "Take the soundtrack out of an MP4 or MOV without uploading it. Keep it lossless as M4A or get a WAV that opens anywhere. Runs entirely in your browser.",
+      h1: "Extract audio from video",
+      lead: "Takes the soundtrack out of a video. Neither option re-encodes the sound, so nothing is lost along the way.",
+      faq: [
+        {
+          q: "Where do my files go?",
+          a: "Nowhere. The extraction runs inside this browser tab and the video is never uploaded. Close the tab and it is gone.",
+        },
+        {
+          q: "M4A or WAV — which should I pick?",
+          a: "M4A if you just want the audio: it lifts the original track out untouched, so it is identical to what was in the video and stays small. WAV if something downstream needs plain PCM — editors and older software often do. WAV is much larger because it is uncompressed.",
+        },
+        {
+          q: "Does the sound quality drop?",
+          a: "No. M4A copies the original audio exactly as it was — bit for bit. WAV decodes it back to raw samples, which is also lossless relative to what the video contained. Neither path re-compresses the sound.",
+        },
+        {
+          q: "Can I get an MP3?",
+          a: "Not today. Browsers can decode MP3 but not create one, and we won't ship a 30MB encoder to add it. M4A is the same idea — compressed, small, widely supported — and it comes straight out of your file with no quality cost.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "This browser can't extract audio.",
+        unsupportedHint:
+          "This needs WebCodecs — try an up-to-date Chrome, Edge, Safari 16.4+ or Firefox 130+.",
+        dropLabel: "Drop a video here",
+        dropHint: "MP4 and MOV — one at a time",
+        reading: "reading…",
+        seconds: "s",
+        channels: "{n} channels",
+        formatM4a: "M4A — keep the original",
+        formatM4aHint: "Lifts the track out untouched. Small, and identical to the video's audio.",
+        formatWav: "WAV — opens anywhere",
+        formatWavHint: "Uncompressed PCM for editors and older software. Much larger.",
+        run: "Extract audio",
+        working: "Extracting…",
+        outputNameM4a: "{stem}.m4a",
+        outputNameWav: "{stem}.wav",
+        losslessNote: "identical to the original track",
       },
     },
   },

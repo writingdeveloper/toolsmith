@@ -35,6 +35,7 @@ export const de = {
 
   mediaErrors: {
     unsupportedContainer: "Diese Datei ist kein MP4 oder MOV, das wir öffnen können",
+    noAudioTrack: "Diese Datei hat keinen Ton zum Herausziehen",
     noVideoTrack: "Diese Datei hat keine Videospur",
     unsupportedCodec: "Dieser Browser kann dieses Video nicht dekodieren",
     tooLarge: "Das liegt über 512 MB",
@@ -341,6 +342,52 @@ export const de = {
         audioKept: "Der Ton wurde unverändert übernommen.",
         didNotShrink:
           "Es wurde nicht kleiner — das Original war bereits effizient. Versuchen Sie weniger Qualität oder Auflösung.",
+      },
+    },
+
+    "audio-extract": {
+      blurb: "Holt den Ton aus einem Video. Nichts wird neu kodiert, also geht nichts verloren.",
+      metaTitle: "Audio aus Video extrahieren — MP4 zu M4A oder WAV",
+      metaDescription:
+        "Holen Sie die Tonspur aus einem MP4 oder MOV, ohne es hochzuladen. Verlustfrei als M4A behalten oder als WAV, das sich überall öffnet. Läuft vollständig im Browser.",
+      h1: "Audio aus Video extrahieren",
+      lead: "Holt die Tonspur aus einem Video. Keine der beiden Varianten kodiert den Ton neu — unterwegs geht nichts verloren.",
+      faq: [
+        {
+          q: "Wohin gehen meine Dateien?",
+          a: "Nirgendwohin. Das Extrahieren läuft in diesem Browser-Tab, und das Video wird nie hochgeladen. Tab schließen und es ist weg.",
+        },
+        {
+          q: "M4A oder WAV?",
+          a: "M4A, wenn Sie einfach den Ton wollen: die Originalspur wird unverändert herausgehoben, ist also identisch mit dem, was im Video steckte, und bleibt klein. WAV, wenn etwas weiter hinten reines PCM braucht — bei Schnittprogrammen und älterer Software oft der Fall. WAV ist deutlich größer, weil unkomprimiert.",
+        },
+        {
+          q: "Leidet die Klangqualität?",
+          a: "Nein. M4A kopiert den Originalton exakt, Bit für Bit. WAV dekodiert ihn zurück in rohe Samples, was gegenüber dem Videoinhalt ebenfalls verlustfrei ist. Keiner der beiden Wege komprimiert den Ton erneut.",
+        },
+        {
+          q: "Geht auch MP3?",
+          a: "Heute nicht. Browser können MP3 abspielen, aber nicht erzeugen, und wir liefern dafür keinen 30MB-Encoder aus. M4A übernimmt dieselbe Rolle — komprimiert, klein, überall zu öffnen — und kommt ohne Qualitätsverlust direkt aus Ihrer Datei.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "Dieser Browser kann kein Audio extrahieren.",
+        unsupportedHint:
+          "Dafür braucht es WebCodecs — versuchen Sie ein aktuelles Chrome oder Edge, Safari 16.4+ oder Firefox 130+.",
+        dropLabel: "Video hier ablegen",
+        dropHint: "MP4 und MOV — eine Datei nach der anderen",
+        reading: "wird gelesen…",
+        seconds: " s",
+        channels: "{n} Kanäle",
+        formatM4a: "M4A — Original behalten",
+        formatM4aHint: "Hebt die Spur unverändert heraus. Klein und identisch mit dem Videoton.",
+        formatWav: "WAV — öffnet sich überall",
+        formatWavHint: "Unkomprimiertes PCM für Schnittprogramme und ältere Software. Viel größer.",
+        run: "Audio extrahieren",
+        working: "Wird extrahiert…",
+        outputNameM4a: "{stem}.m4a",
+        outputNameWav: "{stem}.wav",
+        losslessNote: "identisch mit der Originalspur",
       },
     },
   },

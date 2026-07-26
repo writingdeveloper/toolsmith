@@ -10,6 +10,7 @@
 export type MediaErrorCode =
   | "UNSUPPORTED_CONTAINER"
   | "NO_VIDEO_TRACK"
+  | "NO_AUDIO_TRACK"
   | "UNSUPPORTED_CODEC"
   | "TOO_LARGE"
   | "DECODE_FAILED"
@@ -55,8 +56,14 @@ export interface AudioTrack {
 }
 
 export interface Mp4Source {
-  video: VideoTrack;
+  /** 오디오만 있는 파일도 있으므로 없을 수 있다 */
+  video?: VideoTrack;
   audio?: AudioTrack;
+}
+
+export interface ReadOptions {
+  /** 영상 트랙이 반드시 있어야 하는가. 오디오 추출에서는 false. */
+  requireVideo?: boolean;
 }
 
 /** 브라우저 메모리를 지키기 위한 안전판. 영상은 금방 커진다. */
@@ -86,10 +93,56 @@ interface Mp4BoxSample {
 
 const MICROS = 1_000_000;
 
+/** AAC 샘플레이트 인덱스 표(ISO/IEC 14496-3). */
+const AAC_RATES = [
+  96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000, 7350,
+];
+
 /**
- * 디코더 초기화 데이터(avcC/esds…)를 꺼낸다.
+ * AAC 의 AudioSpecificConfig 를 꺼낸다.
+ *
+ * **비디오와 같은 방법이 통하지 않는다.** avcC 는 박스 payload 가 곧 디코더 설정이지만,
+ * esds 는 ES_Descriptor 가 겹겹이 싸인 구조라 그 안쪽의 DecoderSpecificInfo 를 꺼내야 한다.
+ * 박스에서 헤더만 떼어 넘기면 디코더가 "Unable to decode audio data" 로 거절한다.
+ *
+ * mp4box 가 이미 파싱해 둔 값을 먼저 쓰고, 없으면 2바이트를 직접 조립한다.
+ */
+function describeAac(
+  entry: Record<string, unknown>,
+  sampleRate: number,
+  channels: number,
+): Uint8Array | undefined {
+  const esds = entry.esds as
+    | { esd?: { descs?: Array<{ descs?: Array<{ data?: Uint8Array }> }> } }
+    | undefined;
+  const parsed = esds?.esd?.descs?.[0]?.descs?.[0]?.data;
+  if (parsed && parsed.length > 0) return new Uint8Array(parsed);
+
+  const freqIndex = AAC_RATES.indexOf(sampleRate);
+  if (freqIndex < 0 || channels < 1) return undefined;
+  // 5비트 objectType(2 = AAC-LC) + 4비트 주파수 색인 + 4비트 채널 구성
+  const objectType = 2;
+  return new Uint8Array([
+    (objectType << 3) | (freqIndex >> 1),
+    ((freqIndex & 1) << 7) | (channels << 3),
+  ]);
+}
+
+/**
+ * 디코더 초기화 데이터(avcC/hvcC…)를 꺼낸다.
  * 박스를 통째로 직렬화한 뒤 8바이트 헤더를 떼면 WebCodecs 가 원하는 형태가 된다.
  */
+/** stsd 의 첫 항목(코덱별 설정이 매달려 있는 곳)을 꺼낸다. */
+function firstEntry(
+  file: { getTrackById(id: number): unknown },
+  trackId: number,
+): Record<string, unknown> | undefined {
+  const trak = file.getTrackById(trackId) as {
+    mdia?: { minf?: { stbl?: { stsd?: { entries?: Record<string, unknown>[] } } } };
+  };
+  return trak?.mdia?.minf?.stbl?.stsd?.entries?.[0];
+}
+
 function describeTrack(
   file: { getTrackById(id: number): unknown },
   trackId: number,
@@ -104,7 +157,7 @@ function describeTrack(
   };
   const entries = trak?.mdia?.minf?.stbl?.stsd?.entries ?? [];
   for (const entry of entries) {
-    for (const key of ["avcC", "hvcC", "vpcC", "av1C", "esds"]) {
+    for (const key of ["avcC", "hvcC", "vpcC", "av1C"]) {
       const box = entry[key] as { write(stream: unknown): void } | undefined;
       if (!box) continue;
       const stream = new DataStream(undefined, 0, BIG_ENDIAN);
@@ -116,7 +169,10 @@ function describeTrack(
   return undefined;
 }
 
-export async function readMp4(bytes: Uint8Array): Promise<Mp4Source> {
+export async function readMp4(
+  bytes: Uint8Array,
+  { requireVideo = true }: ReadOptions = {},
+): Promise<Mp4Source> {
   if (bytes.byteLength > MAX_VIDEO_BYTES) throw new MediaError("TOO_LARGE");
 
   const mp4box = (await import("mp4box")) as unknown as {
@@ -152,26 +208,32 @@ export async function readMp4(bytes: Uint8Array): Promise<Mp4Source> {
       const videoInfo = info.videoTracks[0];
       const audioInfo = info.audioTracks[0];
 
-      const video: VideoTrack = {
-        codec: videoInfo.codec,
-        width: videoInfo.video?.width ?? 0,
-        height: videoInfo.video?.height ?? 0,
-        duration: (videoInfo.duration / videoInfo.timescale) * MICROS,
-        frameCount: videoInfo.nb_samples,
-        description: describeTrack(file, videoInfo.id, mp4box.DataStream, BIG_ENDIAN),
-        samples: collected.get(videoInfo.id) ?? [],
-      };
-
-      const audio: AudioTrack | undefined = audioInfo
+      const video: VideoTrack | undefined = videoInfo
         ? {
-            codec: audioInfo.codec,
-            sampleRate: audioInfo.audio?.sample_rate ?? 48000,
-            channels: audioInfo.audio?.channel_count ?? 2,
-            duration: (audioInfo.duration / audioInfo.timescale) * MICROS,
-            description: describeTrack(file, audioInfo.id, mp4box.DataStream, BIG_ENDIAN),
-            samples: collected.get(audioInfo.id) ?? [],
+            codec: videoInfo.codec,
+            width: videoInfo.video?.width ?? 0,
+            height: videoInfo.video?.height ?? 0,
+            duration: (videoInfo.duration / videoInfo.timescale) * MICROS,
+            frameCount: videoInfo.nb_samples,
+            description: describeTrack(file, videoInfo.id, mp4box.DataStream, BIG_ENDIAN),
+            samples: collected.get(videoInfo.id) ?? [],
           }
         : undefined;
+
+      let audio: AudioTrack | undefined;
+      if (audioInfo) {
+        const sampleRate = audioInfo.audio?.sample_rate ?? 48000;
+        const channels = audioInfo.audio?.channel_count ?? 2;
+        const entry = firstEntry(file, audioInfo.id);
+        audio = {
+          codec: audioInfo.codec,
+          sampleRate,
+          channels,
+          duration: (audioInfo.duration / audioInfo.timescale) * MICROS,
+          description: entry ? describeAac(entry, sampleRate, channels) : undefined,
+          samples: collected.get(audioInfo.id) ?? [],
+        };
+      }
 
       resolve({ video, audio });
     };
@@ -182,11 +244,18 @@ export async function readMp4(bytes: Uint8Array): Promise<Mp4Source> {
 
     file.onReady = (ready: Mp4BoxInfo) => {
       info = ready;
-      if (!ready.videoTracks?.length) {
+      if (requireVideo && !ready.videoTracks?.length) {
         reject(new MediaError("NO_VIDEO_TRACK"));
         return;
       }
-      const tracks = [ready.videoTracks[0], ...(ready.audioTracks?.[0] ? [ready.audioTracks[0]] : [])];
+      const tracks = [
+        ...(ready.videoTracks?.[0] ? [ready.videoTracks[0]] : []),
+        ...(ready.audioTracks?.[0] ? [ready.audioTracks[0]] : []),
+      ];
+      if (tracks.length === 0) {
+        reject(new MediaError(requireVideo ? "NO_VIDEO_TRACK" : "NO_AUDIO_TRACK"));
+        return;
+      }
       expected = tracks.length;
       for (const track of tracks) {
         collected.set(track.id, []);

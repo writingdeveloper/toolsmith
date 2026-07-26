@@ -35,6 +35,7 @@ export const es = {
 
   mediaErrors: {
     unsupportedContainer: "Este archivo no es un MP4 o MOV que podamos abrir",
+    noAudioTrack: "Este archivo no tiene sonido que extraer",
     noVideoTrack: "Este archivo no tiene pista de vídeo",
     unsupportedCodec: "Este navegador no puede descodificar este vídeo",
     tooLarge: "Eso supera los 512 MB",
@@ -341,6 +342,52 @@ export const es = {
         audioKept: "El sonido se ha copiado sin tocarlo.",
         didNotShrink:
           "No ha salido más pequeño: el original ya era eficiente. Prueba con menos calidad o resolución.",
+      },
+    },
+
+    "audio-extract": {
+      blurb: "Saca el sonido de un vídeo. No se recodifica nada, así que no se pierde nada.",
+      metaTitle: "Extraer audio de un vídeo — de MP4 a M4A o WAV",
+      metaDescription:
+        "Saca la banda sonora de un MP4 o MOV sin subirlo. Consérvala sin pérdidas en M4A o llévate un WAV que se abre en cualquier parte. Todo en el navegador.",
+      h1: "Extraer audio de un vídeo",
+      lead: "Saca la banda sonora de un vídeo. Ninguna de las dos opciones recodifica el sonido, así que no se pierde nada por el camino.",
+      faq: [
+        {
+          q: "¿A dónde van mis archivos?",
+          a: "A ninguna parte. La extracción ocurre dentro de esta pestaña y el vídeo nunca se sube. Al cerrar la pestaña desaparece.",
+        },
+        {
+          q: "¿M4A o WAV?",
+          a: "M4A si solo quieres el audio: levanta la pista original intacta, así que es idéntica a la que había en el vídeo y ocupa poco. WAV si algo más adelante necesita PCM puro, como suele pasar con editores y software antiguo. El WAV es mucho más grande porque no está comprimido.",
+        },
+        {
+          q: "¿Baja la calidad del sonido?",
+          a: "No. El M4A copia el audio original exactamente como estaba, bit a bit. El WAV lo devuelve a muestras crudas, que también es sin pérdidas respecto a lo que contenía el vídeo. Ninguna de las dos vías vuelve a comprimir el sonido.",
+        },
+        {
+          q: "¿Puedo obtener un MP3?",
+          a: "Hoy no. Los navegadores saben descodificar MP3 pero no crearlo, y no vamos a repartir un codificador de 30MB solo para eso. El M4A cumple la misma función: comprimido, pequeño, compatible en todas partes, y sale directo de tu archivo sin coste de calidad.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "Este navegador no puede extraer audio.",
+        unsupportedHint:
+          "Esto necesita WebCodecs: prueba con un Chrome o Edge reciente, Safari 16.4+ o Firefox 130+.",
+        dropLabel: "Suelta un vídeo aquí",
+        dropHint: "MP4 y MOV — de uno en uno",
+        reading: "leyendo…",
+        seconds: " s",
+        channels: "{n} canales",
+        formatM4a: "M4A — conserva el original",
+        formatM4aHint: "Levanta la pista intacta. Pequeña e idéntica al audio del vídeo.",
+        formatWav: "WAV — se abre en cualquier parte",
+        formatWavHint: "PCM sin comprimir para editores y software antiguo. Mucho más grande.",
+        run: "Extraer audio",
+        working: "Extrayendo…",
+        outputNameM4a: "{stem}.m4a",
+        outputNameWav: "{stem}.wav",
+        losslessNote: "idéntico a la pista original",
       },
     },
   },

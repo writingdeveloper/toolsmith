@@ -1,9 +1,9 @@
-import { compressVideo, type CompressOptions, type CompressResult } from "@/lib/video/compress-core";
+import { extractAudio, type AudioFormat, type ExtractResult } from "@/lib/video/audio-core";
 import { readMp4 } from "@/lib/video/mp4-source";
 
 export type WorkerRequest =
   | { kind: "inspect"; id: number; file: File }
-  | { kind: "compress"; id: number; file: File; options: CompressOptions };
+  | { kind: "extract"; id: number; file: File; format: AudioFormat };
 
 /**
  * 유니온에 그냥 Omit 을 씌우면 공통 키만 남아 payload 가 사라진다.
@@ -19,13 +19,12 @@ export type WorkerResponse =
   | {
       kind: "inspected";
       id: number;
-      width: number;
-      height: number;
       durationSec: number;
-      hasAudio: boolean;
+      channels: number;
+      sampleRate: number;
     }
   | { kind: "progress"; id: number; ratio: number }
-  | { kind: "compressed"; id: number; blob: Blob; stats: Omit<CompressResult, "blob"> }
+  | { kind: "extracted"; id: number; blob: Blob; stats: Omit<ExtractResult, "blob"> }
   | { kind: "failed"; id: number; message: string };
 
 // DOM lib 의 window.postMessage 시그니처와 충돌하지 않도록 좁혀서 캐스팅한다.
@@ -43,25 +42,24 @@ ctx.onmessage = async (event) => {
 
   try {
     if (request.kind === "inspect") {
-      const { video, audio } = await readMp4(await bytesOf(request.file));
-      if (!video) throw new Error("NO_VIDEO_TRACK");
+      const { audio } = await readMp4(await bytesOf(request.file), { requireVideo: false });
+      if (!audio) throw new Error("NO_AUDIO_TRACK");
       ctx.postMessage({
         kind: "inspected",
         id: request.id,
-        width: video.width,
-        height: video.height,
-        durationSec: video.duration / 1_000_000,
-        hasAudio: Boolean(audio),
+        durationSec: audio.duration / 1_000_000,
+        channels: audio.channels,
+        sampleRate: audio.sampleRate,
       });
       return;
     }
 
-    const { blob, ...stats } = await compressVideo(
+    const { blob, ...stats } = await extractAudio(
       await bytesOf(request.file),
-      request.options,
+      request.format,
       (ratio) => ctx.postMessage({ kind: "progress", id: request.id, ratio }),
     );
-    ctx.postMessage({ kind: "compressed", id: request.id, blob, stats });
+    ctx.postMessage({ kind: "extracted", id: request.id, blob, stats });
   } catch (error) {
     ctx.postMessage({
       kind: "failed",

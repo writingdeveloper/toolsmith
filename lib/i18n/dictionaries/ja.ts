@@ -35,6 +35,7 @@ export const ja = {
 
   mediaErrors: {
     unsupportedContainer: "MP4 や MOV として開けないファイルです",
+    noAudioTrack: "取り出せる音声がありません",
     noVideoTrack: "映像トラックがありません",
     unsupportedCodec: "このブラウザがデコードできない映像です",
     tooLarge: "512MB を超えています",
@@ -59,7 +60,7 @@ export const ja = {
     "video-compress": "動画圧縮",
     "video-trim": "動画トリミング",
     "video-to-gif": "動画 → GIF",
-    "audio-extract": "音声抽出・変換",
+    "audio-extract": "音声抽出",
     "pdf-merge": "PDF 結合",
     "pdf-split": "PDF 分割",
     "pdf-organize": "PDF 回転・ページ削除",
@@ -341,6 +342,52 @@ export const ja = {
         audioKept: "音声は元のまま移しました。",
         didNotShrink:
           "小さくなりませんでした — 元がすでに効率的です。画質か解像度を下げてみてください。",
+      },
+    },
+
+    "audio-extract": {
+      blurb: "動画から音声だけを取り出します。再エンコードしないので失われるものがありません。",
+      metaTitle: "動画から音声を抽出 — MP4 を M4A・WAV に",
+      metaDescription:
+        "MP4・MOV から音声だけを取り出します。アップロードせずブラウザ内で処理し、M4A は原音のまま無劣化、WAV はどこでも開けます。",
+      h1: "動画から音声を抽出",
+      lead: "動画から音声だけを取り出します。どちらの方式も音声を再エンコードしないので、途中で失われるものがありません。",
+      faq: [
+        {
+          q: "ファイルはどこへ行きますか？",
+          a: "どこにも行きません。抽出はこのブラウザタブの中で実行され、動画がアップロードされることはありません。タブを閉じればそのまま消えます。",
+        },
+        {
+          q: "M4A と WAV のどちらを選べばよいですか？",
+          a: "音声だけが必要なら M4A です。元のトラックを手つかずで取り出すので動画の中にあったものと完全に同じで、サイズも小さく収まります。編集ソフトや古いソフトのように PCM を要求する相手に渡すなら WAV です。圧縮しないぶん、ずっと大きくなります。",
+        },
+        {
+          q: "音質は落ちますか？",
+          a: "落ちません。M4A は元の音声をビット単位でそのままコピーします。WAV はそれを生のサンプルに戻したもので、動画が持っていた音に対してやはり無劣化です。どちらも音声を再圧縮しません。",
+        },
+        {
+          q: "MP3 にはできませんか？",
+          a: "今はできません。ブラウザは MP3 を再生できても作ることはできず、そのために 30MB のエンコーダを配らせるつもりはありません。M4A が同じ役割を果たします — 圧縮されて小さく、広く開け、品質を損なわずにファイルからそのまま出てきます。",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "このブラウザでは音声抽出を実行できません。",
+        unsupportedHint:
+          "WebCodecs が必要です — 最新の Chrome・Edge、Safari 16.4 以降、Firefox 130 以降でお試しください。",
+        dropLabel: "動画をここにドロップ",
+        dropHint: "MP4 · MOV — 1つずつ",
+        reading: "読み込み中…",
+        seconds: "秒",
+        channels: "{n}チャンネル",
+        formatM4a: "M4A — 原音のまま",
+        formatM4aHint: "トラックを手つかずで取り出します。小さく、動画の音と完全に同じです。",
+        formatWav: "WAV — どこでも開ける",
+        formatWavHint: "編集ソフトや古いソフトのための無圧縮 PCM。ずっと大きくなります。",
+        run: "音声を抽出",
+        working: "抽出中…",
+        outputNameM4a: "{stem}.m4a",
+        outputNameWav: "{stem}.wav",
+        losslessNote: "元のトラックと同一",
       },
     },
   },

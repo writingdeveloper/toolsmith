@@ -33,6 +33,7 @@ export const ko = {
 
   mediaErrors: {
     unsupportedContainer: "MP4 나 MOV 로 열 수 없는 파일입니다",
+    noAudioTrack: "꺼낼 소리가 없는 파일입니다",
     noVideoTrack: "영상 트랙이 없는 파일입니다",
     unsupportedCodec: "이 브라우저가 디코드하지 못하는 영상입니다",
     tooLarge: "512MB 를 넘습니다",
@@ -57,7 +58,7 @@ export const ko = {
     "video-compress": "영상 압축",
     "video-trim": "영상 자르기",
     "video-to-gif": "영상 → GIF",
-    "audio-extract": "오디오 추출·변환",
+    "audio-extract": "오디오 추출",
     "pdf-merge": "PDF 병합",
     "pdf-split": "PDF 분할",
     "pdf-organize": "PDF 회전·페이지 삭제",
@@ -339,6 +340,52 @@ export const ko = {
         audioKept: "소리는 원본 그대로 옮겼습니다.",
         didNotShrink:
           "더 작아지지 않았습니다 — 원본이 이미 효율적입니다. 품질이나 해상도를 낮춰 보세요.",
+      },
+    },
+
+    "audio-extract": {
+      blurb: "영상에서 소리만 꺼냅니다. 다시 인코딩하지 않으므로 잃는 것이 없습니다.",
+      metaTitle: "영상에서 오디오 추출 — MP4 를 M4A·WAV 로",
+      metaDescription:
+        "MP4·MOV 에서 소리만 꺼냅니다. 업로드 없이 브라우저에서 처리하고, M4A 는 원본 그대로 무손실, WAV 는 어디서나 열립니다.",
+      h1: "영상에서 오디오 추출",
+      lead: "영상에서 소리만 꺼냅니다. 두 방식 모두 소리를 다시 인코딩하지 않으므로 중간에 잃는 것이 없습니다.",
+      faq: [
+        {
+          q: "파일은 어디로 가나요?",
+          a: "아무 데도 가지 않습니다. 추출은 이 브라우저 탭 안에서 실행되고 영상은 업로드되지 않습니다. 탭을 닫으면 그대로 사라집니다.",
+        },
+        {
+          q: "M4A 와 WAV 중 무엇을 고를까요?",
+          a: "그냥 소리만 필요하다면 M4A 입니다. 원본 트랙을 손대지 않고 그대로 꺼내므로 영상 안에 있던 것과 완전히 같고 크기도 작습니다. 편집 프로그램이나 오래된 소프트웨어처럼 PCM 을 요구하는 곳에 넣어야 한다면 WAV 를 고르세요. 압축하지 않으므로 훨씬 큽니다.",
+        },
+        {
+          q: "음질이 떨어지나요?",
+          a: "떨어지지 않습니다. M4A 는 원본 오디오를 비트 단위로 그대로 복사합니다. WAV 는 그것을 원시 샘플로 되돌린 것이라 영상이 담고 있던 것에 비해 역시 무손실입니다. 어느 쪽도 소리를 다시 압축하지 않습니다.",
+        },
+        {
+          q: "MP3 로는 안 되나요?",
+          a: "지금은 안 됩니다. 브라우저는 MP3 를 재생할 수는 있어도 만들지는 못하고, 그것 하나 때문에 30MB짜리 인코더를 내려받게 하지는 않겠습니다. M4A 가 같은 자리를 대신합니다 — 압축돼 작고 널리 열리며, 품질 손해 없이 파일에서 바로 나옵니다.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "이 브라우저에서는 오디오 추출을 실행할 수 없습니다.",
+        unsupportedHint:
+          "WebCodecs 가 필요합니다 — 최신 Chrome·Edge, Safari 16.4 이상, Firefox 130 이상에서 열어 주세요.",
+        dropLabel: "영상을 여기에 놓으세요",
+        dropHint: "MP4 · MOV — 한 개씩",
+        reading: "읽는 중…",
+        seconds: "초",
+        channels: "{n}채널",
+        formatM4a: "M4A — 원본 그대로",
+        formatM4aHint: "트랙을 손대지 않고 꺼냅니다. 작고, 영상 속 소리와 완전히 같습니다.",
+        formatWav: "WAV — 어디서나 열림",
+        formatWavHint: "편집 프로그램과 오래된 소프트웨어를 위한 무압축 PCM. 훨씬 큽니다.",
+        run: "오디오 추출",
+        working: "추출 중…",
+        outputNameM4a: "{stem}.m4a",
+        outputNameWav: "{stem}.wav",
+        losslessNote: "원본 트랙과 동일",
       },
     },
   },
