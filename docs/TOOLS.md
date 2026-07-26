@@ -40,7 +40,7 @@
 | 6 | 영상 트림·자르기 | ffmpeg.wasm | LGPL | 상 | 미착수 |
 | 7 | 영상 → GIF | ffmpeg.wasm | LGPL | 상 | 미착수 |
 | 8 | 오디오 추출·변환 (MP3/WAV/M4A) | ffmpeg.wasm | LGPL | 최상 | 미착수 |
-| 9 | PDF 병합 | pdf-lib | MIT | 최상 | 미착수 |
+| 9 | PDF 병합 | pdf-lib | MIT | 최상 | **배포** |
 | 10 | PDF 분할 | pdf-lib | MIT | 상 | 미착수 |
 | 11 | PDF 회전·페이지 삭제 | pdf-lib | MIT | 중 | 미착수 |
 | 12 | PDF 압축 | **pdf-lib + Canvas 이미지 재인코딩** | MIT | 최상 | 미착수 |
@@ -106,6 +106,15 @@
 - Vercel CLI 첫 배포는 git 연결이 없으면 **preview 가 아니라 production 으로 올라간다.**
   `--target preview` 를 명시해야 한다.
 - 워커에서 `Omit<Union, "id">` 는 공통 키만 남겨 payload 를 날린다. 조건부 타입으로 분배해야 한다.
+- **워커를 마운트 시점에 만들면 지연 로딩이 무너진다.** 워커 청크가 로드되면서 그 워커가
+  참조하는 동적 import 대상까지 함께 내려온다. **실측(2026-07-25)**: PDF 병합에서 워커를
+  `useEffect` 로 즉시 만들었더니 파일을 넣기도 전에 pdf-lib 청크가 내려왔다 → 첫 파일이
+  들어올 때 워커를 만들도록 바꿔 해결. 프로덕션 실측으로 셸 529KB / 파일 투입 후 461KB 확인.
+  `tests/pdf-merge.spec.ts` 가 이 순서를 고정한다.
+- pdf-lib 파서는 관대해서 PDF 가 아닌 바이트도 `PDFDocument.load` 는 통과시키고
+  `getPageCount()` 에서 TypeError 로 터진다. load 만 try 로 감싸면 오류 분류가 새어 나간다.
+- pdf-lib 은 암호화를 **복호화하지 않는다.** `ignoreEncryption: true` 로 열면 내용이 깨진
+  결과가 조용히 나온다 → 암호 PDF 는 열지 말고 거부해야 한다.
 - Next.js 가 상위 디렉터리 lockfile 때문에 워크스페이스 루트를 잘못 잡는다 →
   `next.config.ts` 의 `turbopack.root` 로 고정.
 - ffmpeg.wasm 멀티스레드와 `SharedArrayBuffer`는 COOP/COEP 없으면 조용히 단일 스레드로 떨어진다.

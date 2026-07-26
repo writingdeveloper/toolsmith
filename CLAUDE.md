@@ -28,6 +28,9 @@ pnpm build            # 타입체크 포함
 pnpm test             # Playwright (dev 서버 자동 기동)
 pnpm fixtures         # tests/fixtures 재생성
 
+# 배포본에 같은 스펙을 그대로 친다 (dev 서버를 띄우지 않는다)
+BASE_URL=https://toolsmith-two.vercel.app pnpm test
+
 vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 ```
 
@@ -54,7 +57,8 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 ## 현재 상태 (2026-07-25)
 
 - 도구 #1 이미지 변환·압축: **배포 완료.** https://toolsmith-two.vercel.app
-- Playwright 7종 통과. 프로덕션 URL 에서 실변환 재확인 완료.
+- 도구 #9 PDF 병합: **배포 완료.** `/tools/pdf-merge`
+- Playwright 15종 통과(이미지 7 + PDF 8). 두 도구 모두 프로덕션 URL 에서 실동작 재확인 완료.
 - 본 도메인 미정 → `app/robots.ts` 가 전면 `Disallow: /`. `NEXT_PUBLIC_SITE_URL` 설정 시 열린다.
 
 ### 남은 일 (사용자 몫)
@@ -62,13 +66,24 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 - Vercel **Spend Management** 지출 한도 알림 — 대시보드에서만 설정 가능.
 - GitHub 푸시 — 아직 로컬 `main` 만 있다.
 
+### 알려진 결함 (다음에 손볼 것)
+
+- **image-convert 가 libheif 를 미리 받는다.** 워커를 마운트 시점에 만들기 때문에 HEIC 를
+  넣지 않아도 `libheif-js/wasm-bundle` 청크가 내려온다(dev 실측). PDF 병합에서 쓴 지연
+  워커 생성 방식으로 고쳐야 규칙 2번을 지킨다. 프로덕션 전송량 실측은 아직 안 했다.
+- `pnpm lint` 가 4건(에러 3, 경고 1) 남아 있다. 대부분 `useEffect` 안의 `setSupported` —
+  SSR/hydration 때문에 지금 구조에서는 불가피하다. `useSyncExternalStore` 로 정리 가능.
+
 ### 미검증
 
 - **HEIC 실파일.** sharp 로 HEIC 픽스처를 만들 수 없다. 실제 아이폰 사진으로 Chrome(libheif
   경로)·Safari(네이티브 경로) 양쪽 수동 확인 필요.
 - **AVIF 인코딩.** 테스트 Chromium 이 미지원이라 목록에서 자동으로 빠진다.
+- **진짜 암호화 PDF.** `tests/fixtures/encrypted.pdf` 는 trailer 에 `/Encrypt` 만 주입한
+  합성 파일이다. 오류 분기는 그대로 타지만, 실제 RC4/AES 로 암호화된 PDF 는 미확인.
 
 ## 다음 도구 후보
 
-- **PDF 병합** (pdf-lib, MIT) — 검색수요 최상, AGPL 지뢰 없음, 공통 셸 그대로 재사용.
+- **PDF 분할** (pdf-lib) — 병합 코어(`lib/pdf/merge-core.ts`)와 셸을 그대로 재사용한다.
+  가장 싸게 하나 더 늘리는 길.
 - **영상 변환** (ffmpeg.wasm) — 검색수요 최상이지만 COEP 스코프 문제를 먼저 뚫어야 한다.

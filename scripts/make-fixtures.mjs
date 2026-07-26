@@ -4,6 +4,7 @@
  */
 import { mkdir, writeFile } from "node:fs/promises";
 import sharp from "sharp";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
 const OUT = new URL("../tests/fixtures/", import.meta.url);
 await mkdir(OUT, { recursive: true });
@@ -44,4 +45,47 @@ await write(
     .withMetadata({ orientation: 6 })
     .jpeg({ quality: 95 })
     .toBuffer(),
+);
+
+/*
+ * PDF 픽스처.
+ *
+ * 페이지마다 **크기를 다르게** 만든다. 병합 결과를 다시 파싱했을 때 페이지 크기 수열이
+ * 곧 지문이 되어, 순서가 실제로 보존됐는지를 UI 텍스트 없이 증명할 수 있다.
+ */
+async function makePdf(pages, options = {}) {
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  for (const [width, height, label] of pages) {
+    const page = doc.addPage([width, height]);
+    page.drawText(label, { x: 12, y: height - 40, size: 24, font, color: rgb(0.1, 0.1, 0.1) });
+  }
+  return Buffer.from(await doc.save(options));
+}
+
+await write("a.pdf", await makePdf([[200, 400, "A1"], [210, 410, "A2"]]));
+await write("b.pdf", await makePdf([[300, 300, "B1"]]));
+
+// PDF 가 아닌 파일에 .pdf 확장자만 붙인 것 — 조용히 통과하면 안 된다.
+await write("broken.pdf", Buffer.from("%PDF-1.7\nthis is not a pdf\n"));
+
+/*
+ * "암호가 걸린" PDF.
+ *
+ * pdf-lib 은 암호화를 만들지 못한다. 대신 trailer 딕셔너리에 /Encrypt 참조를 주입한다 —
+ * PDFDocument.load 가 EncryptedPDFError 를 던지는 조건이 바로 이것이라, 우리 쪽 오류
+ * 분기를 그대로 통과한다. 진짜 RC4/AES 암호화 파일은 아니므로 실파일 확인은 별도다.
+ * (xref 표는 trailer 앞에 오므로 이 주입으로 오프셋이 깨지지 않는다.)
+ */
+const plain = await makePdf([[250, 250, "E1"]], { useObjectStreams: false });
+const marker = "trailer\n<<\n";
+const at = plain.lastIndexOf(marker);
+if (at < 0) throw new Error("trailer 딕셔너리를 찾지 못했다 — pdf-lib 출력 형식이 바뀌었다");
+await write(
+  "encrypted.pdf",
+  Buffer.concat([
+    plain.subarray(0, at + marker.length),
+    Buffer.from("/Encrypt 1 0 R\n"),
+    plain.subarray(at + marker.length),
+  ]),
 );

@@ -36,3 +36,8 @@ export function hasWorkers(): boolean {
 export function canRunImageTools(): boolean {
   return hasOffscreenCanvas() && typeof createImageBitmap !== "undefined";
 }
+
+/** PDF 도구는 캔버스가 필요 없다 — 워커와 파일 API 만 있으면 된다. */
+export function canRunPdfTools(): boolean {
+  return hasWorkers() && typeof Blob !== "undefined";
+}
