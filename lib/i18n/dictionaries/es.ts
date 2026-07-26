@@ -298,6 +298,68 @@ export const es = {
       },
     },
 
+    ocr: {
+      blurb: "Saca el texto de una foto, una captura o un PDF escaneado. Nada se sube.",
+      metaTitle: "Imagen y PDF a texto (OCR) en el navegador",
+      metaDescription:
+        "Extrae el texto de una foto, una captura o un PDF escaneado sin subirlo. Siete idiomas, todo ocurre en tu navegador y sin registro.",
+      h1: "Imagen y PDF a texto (OCR)",
+      lead: "Lee las palabras de una imagen o de un PDF escaneado y te devuelve texto plano que puedes copiar. El reconocimiento ocurre en tu dispositivo.",
+      faq: [
+        {
+          q: "¿Adónde van mis archivos?",
+          a: "A ninguna parte. La imagen se lee dentro de esta pestaña del navegador y nunca se sube. Lo único que viaja es el motor de reconocimiento, que se descarga desde una CDN pública — va en el sentido contrario.",
+        },
+        {
+          q: "¿Por qué descarga unos megabytes antes de empezar?",
+          a: "Porque el OCR necesita un motor real y un modelo entrenado para el idioma elegido. Entre los dos suman unos 4 a 6MB. Lo descargamos en el momento en que pulsas el botón y no antes, y tu navegador lo conserva, así que el segundo documento empieza al instante.",
+        },
+        {
+          q: "¿Por qué el texto no es perfecto?",
+          a: "Usamos los modelos compactos, que son entre cinco y diez veces más pequeños que los precisos (inglés: 2MB frente a 11MB; japonés: 1,5MB frente a 16MB). En un escaneo limpio la diferencia es pequeña; en una foto movida se nota. Preferimos no hacerte descargar 16MB para descubrirlo. Endereza la página y dale más luz y mejora bastante.",
+        },
+        {
+          q: "¿Puede leer un PDF?",
+          a: "Sí, hasta 30 páginas de una vez. Cada página se dibuja primero como imagen y luego se lee. Si el PDF ya contiene texto real, copiarlo desde cualquier lector será más rápido y exacto — el OCR es para los que solo son fotos de papel.",
+        },
+        {
+          q: "¿Mantiene la maquetación?",
+          a: "No. Obtienes las palabras en orden de lectura, no columnas, tablas ni encabezados. Si la maquetación importa más que las palabras, esta no es la herramienta.",
+        },
+      ],
+      ui: {
+        dropLabel: "Suelta una imagen o un PDF aquí",
+        dropHint: "PNG · JPG · WebP · PDF — de uno en uno",
+        pdfLimit: "hasta {max} páginas",
+        languageLabel: "Idioma del documento",
+        downloadNote: "Al pulsar el botón se descargan unos {size} de motor y datos de idioma.",
+        cachedNote: "Se descarga una sola vez y tu navegador lo conserva: el siguiente documento empieza enseguida.",
+        run: "Leer el texto",
+        working: "Leyendo…",
+        stageEngine: "preparando el motor {percent}%",
+        stageRendering: "dibujando página {done}/{total}",
+        stageReading: "leyendo página {page}/{pages}",
+        resultSummary: "{pages} página(s) · confianza {confidence}%",
+        copy: "Copiar",
+        copied: "Copiado",
+        resultLabel: "Texto reconocido",
+        truncated: "Este documento tiene {total} páginas; solo se leyeron las {max} primeras.",
+        nothingFound: "No se encontró texto en esta imagen.",
+        lowConfidence: "La confianza es baja: compáralo con el original antes de fiarte.",
+        errEngine: "No se pudo cargar el motor de OCR",
+        errTooManyPages: "Solo se pueden leer {max} páginas a la vez",
+        languages: {
+          eng: "Inglés",
+          kor: "Coreano",
+          jpn: "Japonés",
+          spa: "Español",
+          deu: "Alemán",
+          por: "Portugués",
+          chi_sim: "Chino simplificado",
+        },
+      },
+    },
+
     "video-convert": {
       blurb: "De MOV a MP4 sin recodificar, o de MP4 a WebM para la web. Nada se sube.",
       metaTitle: "Convertir MOV a MP4 y MP4 a WebM",

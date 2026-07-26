@@ -298,6 +298,68 @@ export const de = {
       },
     },
 
+    ocr: {
+      blurb: "Holt den Text aus einem Foto, Screenshot oder gescannten PDF. Nichts wird hochgeladen.",
+      metaTitle: "Bild und PDF zu Text (OCR) im Browser",
+      metaDescription:
+        "Lesen Sie den Text aus einem Foto, Screenshot oder gescannten PDF, ohne es hochzuladen. Sieben Sprachen, komplett im Browser, ohne Anmeldung.",
+      h1: "Bild und PDF zu Text (OCR)",
+      lead: "Liest die Wörter aus einem Bild oder einem gescannten PDF und gibt Ihnen reinen Text zum Kopieren. Die Erkennung läuft auf Ihrem Gerät.",
+      faq: [
+        {
+          q: "Wohin gehen meine Dateien?",
+          a: "Nirgendwohin. Das Bild wird in diesem Browser-Tab gelesen und nie hochgeladen. Unterwegs ist allein die Erkennungs-Engine, die von einem öffentlichen CDN zu Ihnen herunterkommt — die Richtung ist also umgekehrt.",
+        },
+        {
+          q: "Warum werden vorher ein paar Megabyte geladen?",
+          a: "Weil OCR eine echte Engine und ein für die gewählte Sprache trainiertes Modell braucht. Zusammen sind das rund 4 bis 6MB. Wir holen sie in dem Moment, in dem Sie den Knopf drücken, und nicht früher; Ihr Browser behält sie danach, sodass das zweite Dokument sofort startet.",
+        },
+        {
+          q: "Warum ist der Text nicht perfekt?",
+          a: "Wir nutzen die kompakten Modelle, die fünf- bis zehnmal kleiner sind als die genauen (Englisch: 2MB gegen 11MB, Japanisch: 1,5MB gegen 16MB). Bei einem sauberen Scan ist der Unterschied klein, bei einem verwackelten Handyfoto zeigt er sich. Wir wollten Ihnen dafür keine 16MB zumuten. Legen Sie die Seite gerade hin und sorgen Sie für Licht — das hilft deutlich.",
+        },
+        {
+          q: "Kann es ein PDF lesen?",
+          a: "Ja, bis zu 30 Seiten auf einmal. Jede Seite wird zuerst als Bild gezeichnet und dann gelesen. Wenn im PDF bereits echter Text steckt, ist Kopieren aus einem beliebigen Reader schneller und exakt — OCR ist für die PDFs, die nur Bilder von Papier sind.",
+        },
+        {
+          q: "Bleibt das Layout erhalten?",
+          a: "Nein. Sie bekommen die Wörter in Lesereihenfolge, keine Spalten, Tabellen oder Überschriften. Wenn das Layout wichtiger ist als die Wörter, ist dies das falsche Werkzeug.",
+        },
+      ],
+      ui: {
+        dropLabel: "Bild oder PDF hier ablegen",
+        dropHint: "PNG · JPG · WebP · PDF — eines nach dem anderen",
+        pdfLimit: "bis zu {max} Seiten",
+        languageLabel: "Sprache im Dokument",
+        downloadNote: "Mit dem Knopfdruck werden rund {size} an Engine- und Sprachdaten geladen.",
+        cachedNote: "Das geschieht einmal, danach behält Ihr Browser es — das nächste Dokument startet sofort.",
+        run: "Text lesen",
+        working: "Wird gelesen…",
+        stageEngine: "Engine wird geladen {percent}%",
+        stageRendering: "Seite {done}/{total} wird gezeichnet",
+        stageReading: "Seite {page}/{pages} wird gelesen",
+        resultSummary: "{pages} Seite(n) · Konfidenz {confidence}%",
+        copy: "Kopieren",
+        copied: "Kopiert",
+        resultLabel: "Erkannter Text",
+        truncated: "Dieses Dokument hat {total} Seiten; gelesen wurden nur die ersten {max}.",
+        nothingFound: "In diesem Bild wurde kein Text gefunden.",
+        lowConfidence: "Die Konfidenz ist niedrig — gleichen Sie es mit dem Original ab, bevor Sie sich darauf verlassen.",
+        errEngine: "Die OCR-Engine konnte nicht geladen werden",
+        errTooManyPages: "Es können nur {max} Seiten auf einmal gelesen werden",
+        languages: {
+          eng: "Englisch",
+          kor: "Koreanisch",
+          jpn: "Japanisch",
+          spa: "Spanisch",
+          deu: "Deutsch",
+          por: "Portugiesisch",
+          chi_sim: "Chinesisch (vereinfacht)",
+        },
+      },
+    },
+
     "video-convert": {
       blurb: "MOV ohne Neukodierung zu MP4, oder MP4 zu WebM fürs Web. Nichts wird hochgeladen.",
       metaTitle: "MOV in MP4 und MP4 in WebM umwandeln",

@@ -301,6 +301,68 @@ export const en = {
       },
     },
 
+    ocr: {
+      blurb: "Pull the text out of a photo, screenshot or scanned PDF. Nothing is uploaded.",
+      metaTitle: "Image & PDF to Text — OCR in your browser",
+      metaDescription:
+        "Read the text out of a photo, screenshot or scanned PDF without uploading it. Seven languages, runs entirely in your browser, no sign-up.",
+      h1: "Image & PDF to text (OCR)",
+      lead: "Reads the words out of a picture or a scanned PDF and hands you plain text you can copy. The recognition runs on your device.",
+      faq: [
+        {
+          q: "Where do my files go?",
+          a: "Nowhere. The picture is read inside this browser tab and never uploaded. The one thing that does travel is the recognition engine itself, which is downloaded from a public CDN — your file goes the other way, which is to say nowhere.",
+        },
+        {
+          q: "Why does it download a few megabytes before it starts?",
+          a: "Because OCR needs a real engine and a trained model for the language you picked. Together that is roughly 4 to 6MB. We fetch it the moment you press the button and not before, and your browser keeps it afterwards, so the second document starts immediately.",
+        },
+        {
+          q: "Why isn't the text perfect?",
+          a: "We use the compact models, which are five to ten times smaller than the accurate ones (English: 2MB against 11MB, Japanese: 1.5MB against 16MB). On a clean scan the difference is small; on a blurry phone photo it shows. We would rather not make you download 16MB to find that out. Straighten the page and turn up the light and it improves a lot.",
+        },
+        {
+          q: "Can it read a PDF?",
+          a: "Yes, up to 30 pages at a time. Each page is drawn as an image first, then read. If the PDF already has real text in it, a copy-and-paste from any reader will be faster and exact — OCR is for the ones that are just pictures of paper.",
+        },
+        {
+          q: "Does it keep the layout?",
+          a: "No. You get the words in reading order, not columns, tables or headings. If the layout matters more than the words, this is the wrong tool.",
+        },
+      ],
+      ui: {
+        dropLabel: "Drop an image or PDF here",
+        dropHint: "PNG · JPG · WebP · PDF — one at a time",
+        pdfLimit: "up to {max} pages",
+        languageLabel: "Language in the document",
+        downloadNote: "Pressing the button downloads about {size} of engine and language data.",
+        cachedNote: "It is fetched once and kept by your browser — the next document starts straight away.",
+        run: "Read the text",
+        working: "Reading…",
+        stageEngine: "loading engine {percent}%",
+        stageRendering: "drawing page {done}/{total}",
+        stageReading: "reading page {page}/{pages}",
+        resultSummary: "{pages} page(s) · confidence {confidence}%",
+        copy: "Copy",
+        copied: "Copied",
+        resultLabel: "Recognised text",
+        truncated: "This document has {total} pages; only the first {max} were read.",
+        nothingFound: "No text was found in this image.",
+        lowConfidence: "Confidence is low — check it against the original before you trust it.",
+        errEngine: "The OCR engine could not be loaded",
+        errTooManyPages: "Only {max} pages can be read at once",
+        languages: {
+          eng: "English",
+          kor: "Korean",
+          jpn: "Japanese",
+          spa: "Spanish",
+          deu: "German",
+          por: "Portuguese",
+          chi_sim: "Chinese (Simplified)",
+        },
+      },
+    },
+
     "video-convert": {
       blurb: "MOV to MP4 without re-encoding, or MP4 to WebM for the web. Nothing is uploaded.",
       metaTitle: "MOV to MP4 & MP4 to WebM Converter",

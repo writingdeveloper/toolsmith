@@ -1,5 +1,9 @@
+# tesseract.js 의 postinstall 은 opencollective 후원 배너다. 빌드에 필요 없고
+# 우리가 배포하는 것에도 들어가지 않으므로 돌리지 않는다. 여기에 적어 두지 않으면
+# `pnpm install` 이 "결정하라" 며 실패한다.
 allowBuilds:
   sharp: true
+  tesseract.js: false
   unrs-resolver: true
 onlyBuiltDependencies:
   - sharp

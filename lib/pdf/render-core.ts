@@ -76,3 +76,70 @@ export async function renderThumbnails(bytes: Uint8Array): Promise<Thumbnail[]> 
     return thumbnails;
   });
 }
+
+/**
+ * OCR 로 넘기기 위해 페이지를 **크게** 그린다.
+ *
+ * 썸네일(260px)로는 글자를 읽을 수 없다. tesseract 는 대략 300dpi 근처에서 가장 잘
+ * 읽으므로 긴 변을 2000px 로 잡는다 — A4 세로면 약 170dpi 이고, 여기서 더 키우면
+ * 정확도는 거의 안 오르는데 메모리와 시간만 늘어난다(2000×1500×4 = 12MB/장).
+ *
+ * PNG 가 아니라 JPEG 로 낸다. 글자만 있는 페이지도 2000px PNG 면 몇 MB 가 되는데,
+ * 이 그림은 화면에 보여 줄 것이 아니라 곧바로 OCR 에 먹일 것이라 품질 0.9 로 충분하다.
+ */
+const OCR_EDGE = 2000;
+
+export async function renderPagesForOcr(
+  bytes: Uint8Array,
+  maxPages: number,
+  onProgress?: (done: number, total: number) => void,
+): Promise<Blob[]> {
+  return guarded(async () => {
+    const pdfjs = await loadPdfJs();
+    const task = pdfjs.getDocument({ data: bytes.slice() });
+    const doc = await task.promise;
+    if (doc.numPages === 0) throw new PdfError("NO_PAGES");
+
+    const total = Math.min(doc.numPages, maxPages);
+    const images: Blob[] = [];
+
+    for (let number = 1; number <= total; number += 1) {
+      const page = await doc.getPage(number);
+      const base = page.getViewport({ scale: 1 });
+      const scale = OCR_EDGE / Math.max(base.width, base.height);
+      const viewport = page.getViewport({ scale });
+
+      const canvas = new OffscreenCanvas(Math.ceil(viewport.width), Math.ceil(viewport.height));
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new PdfError("INVALID_PDF");
+      // PDF 배경은 투명이다. 흰 바탕을 깔지 않으면 검은 글자가 검은 바탕에 놓인다.
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      await page.render({
+        canvas: canvas as unknown as HTMLCanvasElement,
+        canvasContext: ctx as unknown as CanvasRenderingContext2D,
+        viewport,
+      }).promise;
+
+      images.push(await canvas.convertToBlob({ type: "image/jpeg", quality: 0.9 }));
+      page.cleanup();
+      onProgress?.(number, total);
+    }
+
+    await task.destroy();
+    return images;
+  });
+}
+
+/** 이 PDF 가 몇 장인지만 알아본다. "30장까지" 를 미리 말하려면 필요하다. */
+export async function countPages(bytes: Uint8Array): Promise<number> {
+  return guarded(async () => {
+    const pdfjs = await loadPdfJs();
+    const task = pdfjs.getDocument({ data: bytes.slice() });
+    const doc = await task.promise;
+    const total = doc.numPages;
+    await task.destroy();
+    return total;
+  });
+}

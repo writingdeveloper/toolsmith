@@ -218,3 +218,33 @@ await write(
     plain.subarray(at + marker.length),
   ]),
 );
+
+/*
+ * OCR 픽스처.
+ *
+ * 글자가 든 그림이 있어야 "정말 읽었는가" 를 확인할 수 있다. 결과 문자열을 대조할
+ * 것이므로 **읽기 쉬운 조건**으로 만든다 — 큰 산세리프, 검정 글씨, 흰 바탕.
+ * 흔들린 사진에서도 되는지는 이 픽스처가 답할 수 있는 질문이 아니다.
+ *
+ * 숫자를 섞어 둔 이유: 글자만 있으면 사전 보정으로 맞힐 수 있어서 "정말 그림을
+ * 읽었는가" 가 흐려진다. 12345 는 사전이 도와줄 수 없다.
+ */
+const OCR_TEXT_A = "TOOLSMITH OCR";
+const OCR_TEXT_B = "TEST 12345";
+const ocrSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500">
+  <rect width="1200" height="500" fill="white"/>
+  <text x="60" y="200" font-family="Arial, Helvetica, sans-serif" font-size="120" fill="black">${OCR_TEXT_A}</text>
+  <text x="60" y="380" font-family="Arial, Helvetica, sans-serif" font-size="120" fill="black">${OCR_TEXT_B}</text>
+</svg>`;
+const ocrPng = await sharp(Buffer.from(ocrSvg)).png().toBuffer();
+await write("text.png", ocrPng);
+
+/*
+ * 스캔본을 흉내 낸 PDF. 페이지 안에 **그림만** 들어 있어 진짜 글자가 없다 —
+ * 복사해서 붙일 수 없는, OCR 이 필요한 바로 그 PDF 다.
+ */
+const scan = await PDFDocument.create();
+const embedded = await scan.embedPng(ocrPng);
+const scanPage = scan.addPage([595, 842]); // A4
+scanPage.drawImage(embedded, { x: 40, y: 500, width: 515, height: 215 });
+await write("scan.pdf", Buffer.from(await scan.save()));
