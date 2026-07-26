@@ -110,6 +110,9 @@
   사이트맵 24개 URL(6 언어 × 4 페이지)이 채워졌다.
 - 배포 URL `toolsmith-two.vercel.app` 은 같은 문서를 내므로 `next.config.ts` 의 host 조건
   헤더로 `X-Robots-Tag: noindex` 를 붙였다. canonical 만으로는 권고에 그친다.
+- **Search Console 은 서브도메인마다 별도 속성**을 만드는 것이 이 계정의 방식이다.
+  `sc-domain:toolsmith.writingdeveloper.blog` 등록됨(자동 인증). 사이트맵 Success,
+  발견 페이지 30개. 새 도구를 배포하면 이 숫자가 언어 수(6)만큼 늘어야 한다.
 - **미완료: Vercel Spend Management 지출 한도 알림.** 대시보드에서 직접 켜야 한다.
 
 ## 구조화 데이터 (JSON-LD)

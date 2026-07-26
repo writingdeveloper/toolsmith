@@ -100,11 +100,15 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ### 끝난 일 (2026-07-25 실측 확인)
 
-- **Search Console.** `writingdeveloper.blog` **도메인 속성**이 이미 있고 서브도메인을 전부
-  덮는다 → 별도 속성이 필요 없다. 사이트맵 제출 완료, URL 검사 라이브 테스트에서
-  "URL is available to Google / Page can be indexed" 확인, `/en`·`/ko` 색인 요청 완료.
-  사이트맵 목록의 "Couldn't fetch" 는 제출 직후의 대기 표시일 뿐 — URL 검사의
-  Discovery 항목에 우리 사이트맵이 이미 잡혀 있다.
+- **Search Console.** 이 계정은 **서브도메인마다 별도 도메인 속성**을 만든다
+  (`sc-domain:fitcheck.…`, `sc-domain:receo.…` 처럼). 상위 `writingdeveloper.blog` 속성이
+  서브도메인을 덮긴 하지만, 사이트별 성과·색인을 따로 보려면 개별 속성이 있어야 한다.
+  → `sc-domain:toolsmith.writingdeveloper.blog` 생성 완료. Cloudflare 에 이미 DNS 가
+  있어 **자동 인증**(Domain name provider)됐다 — TXT 레코드 추가 작업은 없었다.
+- 사이트맵 **Success, 발견 페이지 30개**(6 언어 × (홈 + 도구 4)). 제출 직후 잠시 보이는
+  "Couldn't fetch" 는 대기 표시일 뿐이니 놀라지 말 것.
+- URL 검사 라이브 테스트 "URL is available to Google / Page can be indexed" 확인,
+  `/en`·`/ko` 색인 요청 완료.
 - **Vercel Spend Management 는 이미 켜져 있었다.** 팀 전역 설정이라 toolsmith 도 덮는다.
   On-Demand Budget **$50**, 알림 On, **Pause Projects On**(예산 초과 시 프로덕션 배포가
   멈춰 방문자에게 안 보이게 된다 — 색인 이탈 위험이므로 트래픽이 커지면 재검토할 것).
