@@ -62,6 +62,7 @@ export const en = {
   toolNames: {
     "image-convert": "Image converter",
     "image-compress": "Compress image",
+    "image-resize": "Resize & crop image",
     "video-convert": "Video converter",
     "video-compress": "Compress video",
     "video-trim": "Video trimmer",
@@ -462,6 +463,53 @@ export const en = {
         total: "{n} files · {before} → {after} ({percent}% smaller)",
         errUnsupportedInput: "This browser can't read that format",
         errGeneric: "Compression failed",
+      },
+    },
+
+    "image-resize": {
+      blurb: "Resize photos to an exact width and crop them square, 4:5 or 16:9. Nothing is uploaded.",
+      metaTitle: "Resize & Crop Images — exact px, 1:1, 4:5",
+      metaDescription:
+        "Resize a photo to an exact width and crop it to a square or 4:5 for social. Runs in your browser with no upload, no sign-up and no watermark.",
+      h1: "Resize & crop images",
+      lead: "Sets a photo to the width you want and, if you pick a ratio, crops the largest centred rectangle to match. You see the output size before you press.",
+      faq: [
+        {
+          q: "Where do my files go?",
+          a: "Nowhere. The resizing happens inside this browser tab and your images are never sent over the network. Close the tab and they are gone.",
+        },
+        {
+          q: "How does the crop work?",
+          a: "You pick a ratio and we take the largest rectangle of that shape from the middle of the picture. It is the right tool for social formats — a square for a grid, 4:5 for a portrait post. If you need to choose exactly which part to keep, use an editor; we would rather do one predictable thing well than a fiddly one badly.",
+        },
+        {
+          q: "Will it enlarge a small image?",
+          a: "No. If you ask for a width bigger than the picture has, you get the picture at its own size and we say so. Inventing pixels only makes it blurry while the number on screen goes up, which reads like an improvement and isn't.",
+        },
+        {
+          q: "Does the output size shown match the file?",
+          a: "Yes — exactly. The screen and the worker call the same function to work it out, so the two cannot drift apart.",
+        },
+        {
+          q: "Which format comes out?",
+          a: "The one you put in, unless you change it. HEIC is the exception: browsers can read it but not write it, so those come out as JPG.",
+        },
+      ],
+      ui: {
+        dropLabel: "Drop your images here",
+        dropHint: "JPG · PNG · WebP · HEIC — several at once",
+        widthLabel: "Width (px)",
+        cropLabel: "Crop to",
+        cropNone: "Keep original ratio",
+        qualityLabel: "Quality {value}",
+        formatLabel: "Output",
+        formatKeep: "Keep original format",
+        preview: "{from} → {to}",
+        noUpscale: "not enlarged",
+        run: "Resize {n} file(s)",
+        working: "Resizing…",
+        errUnsupportedInput: "This browser can't read that format",
+        errGeneric: "Resizing failed",
       },
     },
 

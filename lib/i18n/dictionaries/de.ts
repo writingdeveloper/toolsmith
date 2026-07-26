@@ -59,6 +59,7 @@ export const de = {
   toolNames: {
     "image-convert": "Bildkonverter",
     "image-compress": "Bild verkleinern",
+    "image-resize": "Bild skalieren & zuschneiden",
     "video-convert": "Videokonverter",
     "video-compress": "Video verkleinern",
     "video-trim": "Video zuschneiden",
@@ -459,6 +460,53 @@ export const de = {
         total: "{n} Dateien · {before} → {after} ({percent}% kleiner)",
         errUnsupportedInput: "Dieser Browser kann dieses Format nicht lesen",
         errGeneric: "Die Komprimierung ist fehlgeschlagen",
+      },
+    },
+
+    "image-resize": {
+      blurb: "Bringt Fotos auf die gewünschte Breite und schneidet sie quadratisch, 4:5 oder 16:9 zu.",
+      metaTitle: "Bilder skalieren & zuschneiden — 1:1, 4:5",
+      metaDescription:
+        "Bringen Sie ein Foto auf die exakte Breite und schneiden Sie es quadratisch oder 4:5 zu. Im Browser, ohne Upload, ohne Anmeldung, ohne Wasserzeichen.",
+      h1: "Bilder skalieren & zuschneiden",
+      lead: "Bringt das Foto auf die gewünschte Breite und schneidet, wenn Sie ein Seitenverhältnis wählen, das größte mittige Rechteck passend zu. Die Ausgabegröße sehen Sie vor dem Klick.",
+      faq: [
+        {
+          q: "Wohin gehen meine Dateien?",
+          a: "Nirgendwohin. Das Skalieren läuft in diesem Browser-Tab, Ihre Bilder verlassen das Gerät nie. Schließen Sie den Tab, und sie sind weg.",
+        },
+        {
+          q: "Wie funktioniert der Zuschnitt?",
+          a: "Sie wählen ein Verhältnis, und wir nehmen das größte Rechteck dieser Form aus der Mitte des Bildes. Für Social-Formate ist das genau richtig — quadratisch fürs Raster, 4:5 für einen Hochkant-Beitrag. Wenn Sie genau bestimmen wollen, welcher Ausschnitt bleibt, ist ein Bildeditor das passende Werkzeug; wir machen lieber eine vorhersehbare Sache richtig.",
+        },
+        {
+          q: "Wird ein kleines Bild vergrößert?",
+          a: "Nein. Fordern Sie eine größere Breite an, als das Bild hat, bekommen Sie es in seiner eigenen Größe und wir sagen es Ihnen. Erfundene Pixel machen es nur unschärfer, während die Zahl auf dem Bildschirm steigt — das sieht nach Verbesserung aus, ist aber keine.",
+        },
+        {
+          q: "Stimmt die angezeigte Ausgabegröße mit der Datei überein?",
+          a: "Ganz genau. Bildschirm und Worker rufen dieselbe Funktion auf, sie können also nicht auseinanderlaufen.",
+        },
+        {
+          q: "Welches Format kommt heraus?",
+          a: "Das, das Sie hineingegeben haben, sofern Sie es nicht ändern. HEIC ist die Ausnahme: Browser können es lesen, aber nicht schreiben, deshalb kommt es als JPG heraus.",
+        },
+      ],
+      ui: {
+        dropLabel: "Bilder hier ablegen",
+        dropHint: "JPG · PNG · WebP · HEIC — mehrere auf einmal",
+        widthLabel: "Breite (px)",
+        cropLabel: "Zuschneiden auf",
+        cropNone: "Originalverhältnis behalten",
+        qualityLabel: "Qualität {value}",
+        formatLabel: "Ausgabe",
+        formatKeep: "Originalformat behalten",
+        preview: "{from} → {to}",
+        noUpscale: "nicht vergrößert",
+        run: "{n} Datei(en) verarbeiten",
+        working: "Wird verarbeitet…",
+        errUnsupportedInput: "Dieser Browser kann dieses Format nicht lesen",
+        errGeneric: "Die Verarbeitung ist fehlgeschlagen",
       },
     },
 

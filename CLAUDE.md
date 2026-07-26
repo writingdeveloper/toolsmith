@@ -82,17 +82,18 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 현재 상태 (2026-07-26)
 
-**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 13) = 84 페이지
+**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 14) = 90 페이지
 + 루트 언어 선택. 전부 정적. Playwright **106종**(프로덕션 104 통과 / 2 스킵).
 dev 는 90 통과 / 15 스킵 — pdf-compress 1건이 냉컴파일 부하로 30초 타임아웃을 냈지만
 단독으로는 8/8 통과한다. 판정은 프로덕션 수치로 한다.
 
-### 배포된 도구 13개
+### 배포된 도구 14개
 
 | # | 도구 | 경로 | 핵심 |
 |---|---|---|---|
 | 1 | 이미지 변환·압축 | `/tools/image-convert` | HEIC 는 파일이 들어온 순간에만 libheif 를 받는다 |
 | 2 | 이미지 용량 줄이기 | `/tools/image-compress` | **형식을 유지한다.** PNG 는 왜 안 줄어드는지 미리 말한다 |
+| 3 | 이미지 크기 조절·자르기 | `/tools/image-resize` | `planResize` 를 화면과 워커가 함께 부른다. **늘리지 않는다** |
 | 4 | 영상 변환 | `/tools/video-convert` | MOV→MP4 는 재mux, MP4→WebM 만 재인코딩 |
 | 13 | 이미지·PDF → 텍스트 | `/tools/ocr` | **받아야 시작하는 첫 도구** — 용량을 미리 말한다 |
 | 14 | CSV·Parquet 쿼리 | `/tools/data-query` | DuckDB-wasm. **파일을 읽어 올리지 않는다**(핸들만 넘긴다) |
@@ -223,8 +224,8 @@ dev 는 90 통과 / 15 스킵 — pdf-compress 1건이 냉컴파일 부하로 30
 
 ## 다음 할 일
 
-1. **Tier 1 이 전부 끝났다.** 다음은 Tier 2(WebGPU AI) 이거나, 색인이 붙는 동안
-   기존 12개를 다듬는 쪽이다. Tier 2 는 모델이 100MB 단위라 규칙 5 가 훨씬 무겁게
+1. **Tier 1 14개가 전부 배포됐다.** 다음은 Tier 2(WebGPU AI) 이거나, 색인이 붙는 동안
+   기존 14개를 다듬는 쪽이다. Tier 2 는 모델이 100MB 단위라 규칙 5 가 훨씬 무겁게
    걸린다 — 시작하기 전에 `docs/TOOLS.md` 의 Tier 2 절을 다시 읽을 것.
 2. 색인 진행 상황 확인 — 며칠 뒤 Pages 리포트에 페이지가 잡히는지 본다.
    사이트맵 발견 페이지가 도구 수 × 6 + 6 으로 늘어야 한다(지금 60).

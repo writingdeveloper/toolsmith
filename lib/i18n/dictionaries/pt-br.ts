@@ -59,6 +59,7 @@ export const ptBR = {
   toolNames: {
     "image-convert": "Conversor de imagens",
     "image-compress": "Comprimir imagem",
+    "image-resize": "Redimensionar e cortar",
     "video-convert": "Conversor de vídeo",
     "video-compress": "Comprimir vídeo",
     "video-trim": "Cortar vídeo",
@@ -459,6 +460,53 @@ export const ptBR = {
         total: "{n} arquivos · {before} → {after} ({percent}% menor)",
         errUnsupportedInput: "Este navegador não consegue ler esse formato",
         errGeneric: "A compressão falhou",
+      },
+    },
+
+    "image-resize": {
+      blurb: "Ajusta a largura das fotos e corta em quadrado, 4:5 ou 16:9. Nada é enviado.",
+      metaTitle: "Redimensionar e cortar imagens — 1:1, 4:5",
+      metaDescription:
+        "Ajuste uma foto à largura exata e corte em quadrado ou 4:5 para redes. Tudo no navegador, sem envio, sem cadastro e sem marca d'água.",
+      h1: "Redimensionar e cortar imagens",
+      lead: "Coloca a foto na largura que você quiser e, se escolher uma proporção, corta o maior retângulo centralizado que se encaixa. Você vê o tamanho final antes de apertar.",
+      faq: [
+        {
+          q: "Para onde vão meus arquivos?",
+          a: "Para lugar nenhum. O redimensionamento acontece dentro desta aba e suas imagens nunca saem pela rede. Ao fechar a aba, acabou.",
+        },
+        {
+          q: "Como funciona o corte?",
+          a: "Você escolhe uma proporção e pegamos o maior retângulo daquele formato a partir do centro da imagem. É o certo para formatos de redes sociais — quadrado para o feed, 4:5 para um post vertical. Se precisa decidir exatamente qual parte manter, um editor é a ferramenta; preferimos fazer bem uma coisa previsível.",
+        },
+        {
+          q: "Ele amplia uma imagem pequena?",
+          a: "Não. Se pedir uma largura maior do que a imagem tem, você a recebe no tamanho original e avisamos. Inventar pixels só deixa embaçado enquanto o número na tela sobe, o que parece melhora e não é.",
+        },
+        {
+          q: "O tamanho mostrado bate com o arquivo?",
+          a: "Exatamente. A tela e o worker chamam a mesma função para calcular, então não têm como divergir.",
+        },
+        {
+          q: "Qual formato sai?",
+          a: "O mesmo que você colocou, a menos que mude. HEIC é a exceção: navegadores leem mas não escrevem, então sai como JPG.",
+        },
+      ],
+      ui: {
+        dropLabel: "Solte suas imagens aqui",
+        dropHint: "JPG · PNG · WebP · HEIC — várias de uma vez",
+        widthLabel: "Largura (px)",
+        cropLabel: "Cortar em",
+        cropNone: "Manter a proporção original",
+        qualityLabel: "Qualidade {value}",
+        formatLabel: "Saída",
+        formatKeep: "Manter o formato original",
+        preview: "{from} → {to}",
+        noUpscale: "não foi ampliada",
+        run: "Processar {n} arquivo(s)",
+        working: "Processando…",
+        errUnsupportedInput: "Este navegador não consegue ler esse formato",
+        errGeneric: "O processamento falhou",
       },
     },
 

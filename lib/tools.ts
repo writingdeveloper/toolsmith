@@ -12,6 +12,7 @@ export type ToolStatus = "live" | "building" | "planned";
 export type ToolSlug =
   | "image-convert"
   | "image-compress"
+  | "image-resize"
   | "video-convert"
   | "video-compress"
   | "video-trim"
@@ -46,6 +47,7 @@ export const TOOLS: Tool[] = [
   // Tier 1 — WASM/CPU. 전 기기.
   { slug: "image-convert", tier: 1, status: "live", needs: "all", family: "image" },
   { slug: "image-compress", tier: 1, status: "live", needs: "all", family: "image" },
+  { slug: "image-resize", tier: 1, status: "live", needs: "all", family: "image" },
   { slug: "pdf-merge", tier: 1, status: "live", needs: "all", family: "pdf" },
   { slug: "pdf-split", tier: 1, status: "live", needs: "all", family: "pdf" },
   { slug: "pdf-organize", tier: 1, status: "live", needs: "all", family: "pdf" },
