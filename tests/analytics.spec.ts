@@ -53,7 +53,13 @@ test("파일을 처리해도 파일명이 GA 로 나가지 않는다", async ({ 
 
   // 다운로드 링크까지 실제로 눌러 본다 — file_download 이벤트가 있다면 여기서 터진다
   await page.locator("a[download]").click();
-  await page.waitForTimeout(3000);
+
+  /*
+   * 양성 대조. GA 가 아무것도 보내지 않은 상태에서 "파일명이 없다" 를 확인하면
+   * 아무것도 증명하지 못한다. 전환 이벤트가 실제로 도착할 때까지 기다린 뒤에 본다.
+   * (GA4 는 이벤트를 모아 보내므로 고정 대기로는 놓친다.)
+   */
+  await expect.poll(() => seen.join("\n"), { timeout: 20_000 }).toContain("tool_completed");
 
   const traffic = seen.join("\n");
   for (const secret of ["pages5", "낱장", ".zip", ".pdf", "blob:"]) {
@@ -61,4 +67,33 @@ test("파일을 처리해도 파일명이 GA 로 나가지 않는다", async ({ 
   }
   // 이벤트 이름 자체도 나가면 안 된다
   expect(traffic).not.toContain("file_download");
+});
+
+/**
+ * 전환은 "방문했다" 가 아니라 "쓸모를 봤다" 여야 개선 효과를 잴 수 있다.
+ * 도구가 결과를 만들어 낸 순간 tool_completed 를 보내되, 실린 것은 도구 이름뿐이다.
+ */
+test("도구를 끝까지 쓰면 전환 이벤트가 나가고, 실린 것은 도구 이름뿐이다", async ({ page }) => {
+  test.skip(!process.env.BASE_URL, "BASE_URL 로 배포본을 가리켰을 때만 의미가 있다");
+
+  const seen = watchAnalytics(page);
+  await page.goto("/ko/tools/pdf-merge");
+  await page.waitForLoadState("networkidle");
+
+  const A = path.join(__dirname, "fixtures", "a.pdf");
+  const B = path.join(__dirname, "fixtures", "b.pdf");
+  await page.locator('input[type="file"]').setInputFiles([A, B]);
+  await expect(page.getByText("읽는 중")).toHaveCount(0, { timeout: 30_000 });
+  await page.getByRole("button", { name: /병합하기$/ }).click();
+  await expect(page.locator("a[download]")).toHaveCount(1, { timeout: 60_000 });
+
+  // GA4 는 이벤트를 모아 보낸다 — 고정 대기로는 놓친다
+  await expect.poll(() => seen.join("\n"), { timeout: 20_000 }).toContain("tool_completed");
+
+  const traffic = seen.join("\n");
+  expect(traffic).toContain("pdf-merge");
+  // 도구 이름 말고는 아무것도 실리지 않는다
+  for (const secret of ["a.pdf", "b.pdf", "merged", "blob:"]) {
+    expect(traffic, `전환 이벤트에 "${secret}" 가 들어 있다`).not.toContain(secret);
+  }
 });

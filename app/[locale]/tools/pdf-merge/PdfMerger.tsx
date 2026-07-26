@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FileDrop } from "@/components/FileDrop";
+import { trackToolCompleted } from "@/lib/analytics";
 import { canRunPdfTools } from "@/lib/capabilities";
 import { formatBytes } from "@/lib/format";
 import { fill } from "@/lib/i18n/config";
@@ -194,6 +195,7 @@ export function PdfMerger({ ui, common, errors }: { ui: Ui; common: Common; erro
         size: response.blob.size,
         pageCount: response.pageCount,
       });
+      trackToolCompleted("pdf-merge");
     } catch (error) {
       const message = error instanceof Error ? error.message : "UNKNOWN";
       setFailure(describeError(errors, message));

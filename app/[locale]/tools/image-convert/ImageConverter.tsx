@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FileDrop } from "@/components/FileDrop";
+import { trackToolCompleted } from "@/lib/analytics";
 import { canRunImageTools } from "@/lib/capabilities";
 import { formatBytes, replaceExtension, savingsPercent } from "@/lib/format";
 import { fill } from "@/lib/i18n/config";
@@ -126,6 +127,7 @@ export function ImageConverter({ ui, common }: { ui: Ui; common: Common }) {
   const convertAll = useCallback(async () => {
     const options: ConvertOptions = { format, quality, maxEdge };
     const targets = itemsRef.current;
+    let succeeded = 0;
     setBusy(true);
 
     for (const target of targets) {
@@ -135,6 +137,7 @@ export function ImageConverter({ ui, common }: { ui: Ui; common: Common }) {
       try {
         const response = await callWorker({ kind: "convert", file: target.file, options });
         if (response.kind !== "converted") throw new Error("UNKNOWN");
+        succeeded += 1;
         const url = URL.createObjectURL(response.blob);
         setItems((prev) =>
           prev.map((item) => {
@@ -165,6 +168,8 @@ export function ImageConverter({ ui, common }: { ui: Ui; common: Common }) {
       }
     }
 
+    // 몇 장을 했는지는 보내지 않는다 — 끝까지 썼다는 사실만으로 충분하다
+    if (succeeded > 0) trackToolCompleted("image-convert");
     setBusy(false);
   }, [callWorker, format, quality, maxEdge, ui]);
 

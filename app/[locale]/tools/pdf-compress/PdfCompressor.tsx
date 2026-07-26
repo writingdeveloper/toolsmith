@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FileDrop } from "@/components/FileDrop";
+import { trackToolCompleted } from "@/lib/analytics";
 import { canRunPdfTools } from "@/lib/capabilities";
 import { fileStem, formatBytes, savingsPercent } from "@/lib/format";
 import { fill } from "@/lib/i18n/config";
@@ -140,6 +141,7 @@ export function PdfCompressor({ ui, common, errors }: { ui: Ui; common: Common; 
         name: fill(ui.outputName, { stem: fileStem(file.name) }),
         ...response.stats,
       });
+      trackToolCompleted("pdf-compress");
     } catch (error) {
       setFailure(describeError(errors, error instanceof Error ? error.message : "UNKNOWN"));
     } finally {

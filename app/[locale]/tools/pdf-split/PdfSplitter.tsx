@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FileDrop } from "@/components/FileDrop";
+import { trackToolCompleted } from "@/lib/analytics";
 import { canRunPdfTools } from "@/lib/capabilities";
 import { fileStem, formatBytes } from "@/lib/format";
 import { fill } from "@/lib/i18n/config";
@@ -172,6 +173,7 @@ export function PdfSplitter({ ui, common, errors }: { ui: Ui; common: Common; er
           }),
         });
       }
+      trackToolCompleted("pdf-split");
     } catch (error) {
       setFailure(describeError(errors, error instanceof Error ? error.message : "UNKNOWN"));
     } finally {
