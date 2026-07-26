@@ -58,7 +58,9 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 - 도구 #1 이미지 변환·압축: **배포 완료.** https://toolsmith-two.vercel.app
 - 도구 #9 PDF 병합: **배포 완료.** `/tools/pdf-merge`
-- Playwright 15종 통과(이미지 7 + PDF 8). 두 도구 모두 프로덕션 URL 에서 실동작 재확인 완료.
+- 도구 #10 PDF 분할: **배포 완료.** `/tools/pdf-split` (범위 추출 + 낱장 ZIP)
+- Playwright 28종. 프로덕션 27 통과 / 1 스킵(dev 전용), dev 25 통과 / 3 스킵.
+- PDF 공통 토대는 `lib/pdf/document.ts` — 병합·분할이 함께 쓴다. 도구별 로직만 각자 파일에.
 - 본 도메인 미정 → `app/robots.ts` 가 전면 `Disallow: /`. `NEXT_PUBLIC_SITE_URL` 설정 시 열린다.
 
 ### 남은 일 (사용자 몫)
@@ -86,8 +88,10 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 - **진짜 암호화 PDF.** `tests/fixtures/encrypted.pdf` 는 trailer 에 `/Encrypt` 만 주입한
   합성 파일이다. 오류 분기는 그대로 타지만, 실제 RC4/AES 로 암호화된 PDF 는 미확인.
 
-## 다음 도구 후보
+## 다음 할 일
 
-- **PDF 분할** (pdf-lib) — 병합 코어(`lib/pdf/merge-core.ts`)와 셸을 그대로 재사용한다.
-  가장 싸게 하나 더 늘리는 길.
-- **영상 변환** (ffmpeg.wasm) — 검색수요 최상이지만 COEP 스코프 문제를 먼저 뚫어야 한다.
+1. **다국어(i18n) + SEO 골격** ← 사용자 요청(2026-07-25). 도구가 늘기 전에 지금 넣는 것이
+   가장 싸다. hreflang·canonical·sitemap 은 i18n 과 한 몸이라 함께 처리한다.
+   `app/sitemap.ts` 는 아직 없다.
+2. **PDF 회전·페이지 삭제** (#11) — `lib/pdf/document.ts` 재사용, 가장 싼 확장.
+3. **영상 변환** (ffmpeg.wasm) — 검색수요 최상이지만 COEP 스코프를 먼저 뚫어야 한다.

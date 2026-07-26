@@ -1,6 +1,6 @@
 import path from "node:path";
 import { expect, test, type Page } from "@playwright/test";
-import { PDFArray, PDFDocument, PDFRawStream, decodePDFRawStream, type PDFPage } from "pdf-lib";
+import { downloadResult, pagesOf } from "./pdf-helpers";
 
 const FIXTURES = path.join(__dirname, "fixtures");
 const A = path.join(FIXTURES, "a.pdf"); // 2쪽: 200x400(A1), 210x410(A2)
@@ -8,60 +8,13 @@ const B = path.join(FIXTURES, "b.pdf"); // 1쪽: 300x300(B1)
 const BROKEN = path.join(FIXTURES, "broken.pdf");
 const ENCRYPTED = path.join(FIXTURES, "encrypted.pdf");
 
-interface MergedPage {
-  /** "200x400" — 페이지 크기 수열이 곧 순서의 지문이다 */
-  size: string;
-  /** 페이지 콘텐츠 스트림에서 뽑은 문자열. 빈 페이지가 아님을 증명한다 */
-  text: string;
-}
-
-/** pdf-lib 은 텍스트를 `<4131> Tj` 형태의 16진 문자열로 쓴다. */
-function textOf(doc: PDFDocument, page: PDFPage): string {
-  const contents = page.node.Contents();
-  if (!contents) return "";
-  const streams =
-    contents instanceof PDFArray
-      ? contents.asArray().map((ref) => doc.context.lookup(ref))
-      : [contents];
-
-  let raw = "";
-  for (const stream of streams) {
-    if (!(stream instanceof PDFRawStream)) continue;
-    raw += new TextDecoder().decode(decodePDFRawStream(stream).decode());
-  }
-
-  return [...raw.matchAll(/<([0-9A-Fa-f]+)>\s*Tj/g)]
-    .map(([, hex]) => Buffer.from(hex, "hex").toString("latin1"))
-    .join("");
-}
-
 /**
  * 결과 blob 을 실제로 파싱해서 검사한다. "병합됨" 이라고 떴다는 것은 아무것도 증명하지 않는다.
  * 매직바이트 → 페이지 수 → 각 페이지의 크기와 실제 내용까지 본다.
  */
 async function inspectResult(page: Page) {
-  const payload = await page.evaluate(async () => {
-    const anchor = document.querySelector<HTMLAnchorElement>("a[download]");
-    if (!anchor) return null;
-    const blob = await (await fetch(anchor.href)).blob();
-    return {
-      name: anchor.download,
-      mime: blob.type,
-      bytes: [...new Uint8Array(await blob.arrayBuffer())],
-    };
-  });
-
-  expect(payload).not.toBeNull();
-  const bytes = Buffer.from(payload!.bytes);
-  expect(bytes.subarray(0, 5).toString("latin1")).toBe("%PDF-");
-
-  const doc = await PDFDocument.load(bytes);
-  const pages: MergedPage[] = doc.getPages().map((p) => ({
-    size: `${Math.round(p.getWidth())}x${Math.round(p.getHeight())}`,
-    text: textOf(doc, p),
-  }));
-
-  return { name: payload!.name, mime: payload!.mime, size: bytes.length, pages };
+  const downloaded = await downloadResult(page);
+  return { ...downloaded, size: downloaded.bytes.length, pages: await pagesOf(downloaded.bytes) };
 }
 
 /** @param total 추가 후 목록에 남아야 할 총 개수 */

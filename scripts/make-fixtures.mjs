@@ -66,6 +66,18 @@ async function makePdf(pages, options = {}) {
 await write("a.pdf", await makePdf([[200, 400, "A1"], [210, 410, "A2"]]));
 await write("b.pdf", await makePdf([[300, 300, "B1"]]));
 
+// 분할용 5쪽. 쪽마다 크기와 글자가 달라서 어느 쪽이 어디로 갔는지 되짚을 수 있다.
+await write(
+  "pages5.pdf",
+  await makePdf([
+    [201, 401, "P1"],
+    [202, 402, "P2"],
+    [203, 403, "P3"],
+    [204, 404, "P4"],
+    [205, 405, "P5"],
+  ]),
+);
+
 // PDF 가 아닌 파일에 .pdf 확장자만 붙인 것 — 조용히 통과하면 안 된다.
 await write("broken.pdf", Buffer.from("%PDF-1.7\nthis is not a pdf\n"));
 

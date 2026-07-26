@@ -1,4 +1,5 @@
-import { inspectPdf, mergePdfs } from "@/lib/pdf/merge-core";
+import { inspectPdf } from "@/lib/pdf/document";
+import { mergePdfs } from "@/lib/pdf/merge-core";
 
 export type WorkerRequest =
   | { kind: "inspect"; id: number; file: File }

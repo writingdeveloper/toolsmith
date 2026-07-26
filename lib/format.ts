@@ -16,8 +16,12 @@ export function savingsPercent(before: number, after: number): number {
   return Math.round(((before - after) / before) * 100);
 }
 
-export function replaceExtension(filename: string, extension: string): string {
+/** 확장자를 뗀 파일명. "보고서.pdf" → "보고서" */
+export function fileStem(filename: string): string {
   const dot = filename.lastIndexOf(".");
-  const stem = dot > 0 ? filename.slice(0, dot) : filename;
-  return `${stem}.${extension}`;
+  return dot > 0 ? filename.slice(0, dot) : filename;
+}
+
+export function replaceExtension(filename: string, extension: string): string {
+  return `${fileStem(filename)}.${extension}`;
 }

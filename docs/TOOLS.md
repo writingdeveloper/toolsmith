@@ -41,7 +41,7 @@
 | 7 | 영상 → GIF | ffmpeg.wasm | LGPL | 상 | 미착수 |
 | 8 | 오디오 추출·변환 (MP3/WAV/M4A) | ffmpeg.wasm | LGPL | 최상 | 미착수 |
 | 9 | PDF 병합 | pdf-lib | MIT | 최상 | **배포** |
-| 10 | PDF 분할 | pdf-lib | MIT | 상 | 미착수 |
+| 10 | PDF 분할 | pdf-lib + fflate(ZIP) | MIT | 상 | **배포** |
 | 11 | PDF 회전·페이지 삭제 | pdf-lib | MIT | 중 | 미착수 |
 | 12 | PDF 압축 | **pdf-lib + Canvas 이미지 재인코딩** | MIT | 최상 | 미착수 |
 | 13 | 이미지/PDF → 텍스트 (OCR) | tesseract.wasm | Apache-2.0 | 중 | 미착수 |
