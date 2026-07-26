@@ -2,6 +2,7 @@
 # 우리가 배포하는 것에도 들어가지 않으므로 돌리지 않는다. 여기에 적어 두지 않으면
 # `pnpm install` 이 "결정하라" 며 실패한다.
 allowBuilds:
+  protobufjs: set this to true or false
   sharp: true
   tesseract.js: false
   unrs-resolver: true

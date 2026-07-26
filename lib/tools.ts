@@ -61,9 +61,13 @@ export const TOOLS: Tool[] = [
   { slug: "data-query", tier: 1, status: "live", needs: "all", family: "data" },
 
   // Tier 2 — WebGPU AI. 데스크톱.
+  //
+  // remove-bg 의 needs 가 "all" 인 것은 오타가 아니다. WebGPU 가 있으면 그리로 가고
+  // 없으면 wasm 으로 내려가 **끝까지 돈다**(느릴 뿐이다). 할 수 있는 것을 못 한다고
+  // 적는 것도 규칙 3 위반이다 — 어느 쪽으로 돌았는지는 결과 옆에 그대로 적는다.
+  { slug: "remove-bg", tier: 2, status: "live", needs: "all", family: "image" },
   { slug: "subtitles", tier: 2, status: "planned", needs: "webgpu", family: "video" },
   { slug: "subtitle-translate", tier: 2, status: "planned", needs: "webgpu", family: "video" },
-  { slug: "remove-bg", tier: 2, status: "planned", needs: "webgpu", family: "image" },
   { slug: "cutout", tier: 2, status: "planned", needs: "webgpu", family: "image" },
   { slug: "upscale", tier: 2, status: "planned", needs: "webgpu", family: "image" },
   { slug: "stems", tier: 2, status: "planned", needs: "webgpu", family: "video" },

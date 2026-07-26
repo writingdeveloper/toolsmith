@@ -82,12 +82,12 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 현재 상태 (2026-07-26)
 
-**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 14) = 90 페이지
-+ 루트 언어 선택. 전부 정적. Playwright **106종**(프로덕션 104 통과 / 2 스킵).
-dev 는 90 통과 / 15 스킵 — pdf-compress 1건이 냉컴파일 부하로 30초 타임아웃을 냈지만
-단독으로는 8/8 통과한다. 판정은 프로덕션 수치로 한다.
+**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 15) = 96 페이지
++ 루트 언어 선택. 전부 정적. Playwright **164종**(프로덕션 162 통과 / 2 스킵 / 0 실패,
+28초). dev 는 144 통과 / 19 스킵 — 스킵은 헤드리스가 못 하는 코덱 분기다.
+판정은 프로덕션 수치로 한다.
 
-### 배포된 도구 14개
+### 배포된 도구 15개 (Tier 1 전부 + Tier 2 첫 칸)
 
 | # | 도구 | 경로 | 핵심 |
 |---|---|---|---|
@@ -105,6 +105,7 @@ dev 는 90 통과 / 15 스킵 — pdf-compress 1건이 냉컴파일 부하로 30
 | 8 | 오디오 추출 | `/tools/audio-extract` | M4A·WAV. **어느 쪽도 재인코딩하지 않는다** |
 | 7 | 영상 → GIF | `/tools/video-to-gif` | gifenc. **fps 는 1/100초 격자에만 앉는다** |
 | 6 | 영상 자르기 | `/tools/video-trim` | 코덱을 안 쓴다. **키프레임에서만 잘린다는 것을 미리 말한다** |
+| 17 | 배경 제거 (Tier 2) | `/tools/remove-bg` | U²-Net(Apache-2.0). **ORT 를 의존성에 두지 않는다** |
 
 경로 앞에 `/{locale}` 이 붙는다(`/ko/tools/pdf-merge`).
 
@@ -132,6 +133,10 @@ dev 는 90 통과 / 15 스킵 — pdf-compress 1건이 냉컴파일 부하로 30
   `useEffect` 안에서 `setSupported(...)` 를 부르지 말 것 — 서버에는 `Worker` 도
   `OffscreenCanvas` 도 없어 렌더 중에 물을 수도 없다. `useSyncExternalStore` 가
   서버엔 `null`, 클라이언트엔 실제 값을 준다.
+- `lib/matting/matte-core.ts` — Tier 2 의 토대. **onnxruntime-web 을 npm 의존성으로 두지
+  않는 이유**가 여기 적혀 있다(기본 export 가 wasm 을 base64 로 품은 bundle 변형이라
+  import 하는 순간 20MB 가 Vercel 에서 나간다). 모델을 쓰는 다음 도구도 이 방식을 따른다.
+  워커는 **모듈 워커**여야 한다 — 고전 워커에서는 CDN 동적 import 가 불가능하다.
 - `lib/i18n/dictionaries/en.ts` — 사전의 **타입 원본**. 여기에 키를 더하면 나머지 5개가
   타입 에러로 드러난다.
 
@@ -158,6 +163,11 @@ dev 는 90 통과 / 15 스킵 — pdf-compress 1건이 냉컴파일 부하로 30
 - **`.next` 가 깨진 것처럼 보이는 두 번째 원인은 Playwright 워커 수다.** 기본값(12)이면
   `next dev` 한 대가 감당 못 해 전 페이지가 `Unexpected non-whitespace character after JSON`
   으로 죽는다. `playwright.config.ts` 에 `workers: 4` 로 묶어 두었으니 **이 값을 올리지 말 것.**
+- **스위트가 도는 동안 소스를 고치지 말 것 (2026-07-26 실측).** 같은 증상을 만드는 세 번째
+  원인이다. 4 워커가 도는 중에 파일을 저장하면 Turbopack 이 재컴파일에 들어가고, 워커들이
+  그 매니페스트를 쓰는 도중에 읽는다. 한 번은 24.8분에 27건만 돌고 끝났다(실패 0건이라
+  더 헷갈린다 — 돌지 않은 것은 실패로 안 잡힌다). **통과 수가 `--list` 총계와 맞는지**를
+  먼저 보라.
 - **그 오류가 났다고 `.next` 를 지우고 곧바로 전체 스위트를 돌리면 오히려 그 오류를 만든다.**
   2026-07-26 에 두 번 연속 이렇게 무너뜨렸다(둘 다 11.8분, 2 통과). 4 워커가 텅 빈 `.next`
   에 동시에 냉컴파일을 요구하는 것이 바로 그 경합이기 때문이다. `.next` 를 지웠다면
@@ -224,8 +234,10 @@ dev 는 90 통과 / 15 스킵 — pdf-compress 1건이 냉컴파일 부하로 30
 
 ## 다음 할 일
 
-1. **Tier 1 14개가 전부 배포됐다.** 다음은 Tier 2(WebGPU AI) 이거나, 색인이 붙는 동안
-   기존 14개를 다듬는 쪽이다. Tier 2 는 모델이 100MB 단위라 규칙 5 가 훨씬 무겁게
-   걸린다 — 시작하기 전에 `docs/TOOLS.md` 의 Tier 2 절을 다시 읽을 것.
+1. **Tier 1 14개 + Tier 2 첫 칸(배경 제거)이 배포됐다.** 다음 Tier 2 도구(자막 생성,
+   업스케일 등)를 붙이려면 `lib/matting/matte-core.ts` 가 세운 방식을 그대로 따른다 —
+   **모델 라이선스를 먼저 확인하고**(가중치 라이선스는 코드 라이선스와 별개다),
+   런타임은 의존성에 넣지 말고 CDN 에서 받고, 워커는 모듈 워커로 만든다.
+   근거는 `docs/TOOLS.md` 의 "Tier 2 의 첫 도구".
 2. 색인 진행 상황 확인 — 며칠 뒤 Pages 리포트에 페이지가 잡히는지 본다.
    사이트맵 발견 페이지가 도구 수 × 6 + 6 으로 늘어야 한다(지금 60).

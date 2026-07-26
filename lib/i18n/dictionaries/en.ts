@@ -773,6 +773,62 @@ export const en = {
         losslessNote: "identical to the original track",
       },
     },
+    "remove-bg": {
+      blurb: "Cut the background out of a photo. The model runs on your device.",
+      metaTitle: "Background Remover — in your browser",
+      metaDescription:
+        "Remove the background from a photo without uploading it. An open Apache-2.0 model runs inside your browser and hands you a transparent PNG. No sign-up.",
+      h1: "Remove image background",
+      lead: "Separates the subject from everything behind it and gives you a transparent PNG. The model is downloaded to your device and runs there — the picture never leaves this tab.",
+      faq: [
+        {
+          q: "Where does my photo go?",
+          a: "Nowhere. It is opened inside this browser tab and never uploaded. Traffic goes the other way: the model is downloaded to you. That is the whole trade — you fetch a few megabytes once instead of handing over your picture every time.",
+        },
+        {
+          q: "Why does it download something before it starts?",
+          a: "Because the separation is done by a neural network, and the network has to be on your device to run there. The compact model is about 4MB, the accurate one about 168MB, plus a 5MB runtime. Nothing is fetched until you press the button, and your browser keeps it afterwards.",
+        },
+        {
+          q: "Which model should I pick?",
+          a: "Start with the compact one. It is 40 times smaller and good enough for a clear subject on a plain background. The large one holds on to hair, fur and thin straps that the compact one loses. Both are U²-Net, published by the University of Alberta under Apache-2.0 — we do not use the popular RMBG-1.4, because its licence forbids commercial use.",
+        },
+        {
+          q: "Why are the edges soft?",
+          a: "The model looks at a 320×320 version of your picture, so the mask it returns is 320×320 and has to be stretched back up to full size. On a 4000px photo that stretch is visible along the outline. It is a cut-out, not a hand-made mask — for a print job you will still want to touch up the edge.",
+        },
+        {
+          q: "Does it need a particular browser?",
+          a: "No. It uses WebGPU when your browser has it, which is much faster, and falls back to the CPU when it does not. We print which one actually ran underneath the result, so you are never guessing why it took as long as it did.",
+        },
+      ],
+      ui: {
+        dropLabel: "Drop a photo here",
+        dropHint: "PNG · JPG · WebP — one at a time",
+        modelLabel: "Model",
+        modelFast: "Compact — {size}, rougher outline",
+        modelFine: "Accurate — {size}, keeps hair",
+        backgroundLabel: "Behind the subject",
+        backgroundTransparent: "Transparent",
+        backgroundWhite: "White",
+        backgroundBlack: "Black",
+        downloadNote: "Pressing the button downloads about {size} of runtime and model.",
+        cachedNote: "It is fetched once and kept by your browser — the next photo starts straight away.",
+        run: "Remove the background",
+        working: "Working…",
+        stageEngine: "loading the runtime…",
+        stageModel: "downloading the model {percent}%",
+        stageMatting: "separating the subject…",
+        resultAlt: "The photo with its background removed",
+        runtimeWebgpu: "ran on the GPU",
+        runtimeWasm: "ran on the CPU",
+        nothingFound: "The model found no clear subject here, so almost everything was cut away. A plainer background helps.",
+        errEngine: "The runtime could not be loaded",
+        errModel: "The model could not be downloaded",
+        errUnsupportedInput: "This image could not be read",
+        errGeneric: "The background could not be removed",
+      },
+    },
   },
 };
 

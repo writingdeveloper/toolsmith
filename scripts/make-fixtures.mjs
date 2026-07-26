@@ -276,3 +276,21 @@ await write("sample.csv", Buffer.from(CSV_ROWS.map((r) => r.join(",")).join("\n"
  * `COPY t TO 'out.parquet'` 한 결과를 저장한 것이 tests/fixtures/sample.parquet 이다.
  * 다시 만들어야 하면 그 일회용 스펙을 되살리면 된다(커밋 이력에 있다).
  */
+
+/*
+ * 배경 제거 픽스처.
+ *
+ * U²-Net 은 **눈에 띄는 것**(salient object)을 찾는 모델이다. 그러니 픽스처도 그래야
+ * 한다 — 밝고 평평한 배경 한가운데에 어두운 덩어리 하나. 모서리는 확실히 배경이고
+ * 가운데는 확실히 피사체이므로, 나온 PNG 의 알파를 그 두 지점에서 읽으면 마스크가
+ * 물체 위에 앉았는지를 손으로 검산할 수 있다.
+ *
+ * 사람 사진이 아닌 것은 의도다. 저장소에 남의 얼굴을 넣지 않으면서도 배관은 그대로
+ * 검증된다. 실제 사진에서의 품질(머리카락 등)은 스펙이 아니라 사람이 눈으로 본다.
+ */
+const SUBJECT = `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480">
+  <rect width="640" height="480" fill="#eef1f4"/>
+  <ellipse cx="320" cy="300" rx="110" ry="140" fill="#1d2b3a"/>
+  <circle cx="320" cy="140" r="72" fill="#1d2b3a"/>
+</svg>`;
+await write("subject.png", await sharp(Buffer.from(SUBJECT)).png().toBuffer());

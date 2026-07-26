@@ -53,9 +53,9 @@
 
 | # | 도구 | 모델/출처 | 상태 |
 |---|---|---|---|
+| 17 | 배경 제거 | **U²-Net (Apache-2.0)** + onnxruntime-web. ~~RMBG-1.4 / MODNet~~ | **배포** |
 | 15 | 자막 생성 (음성→텍스트) | Voxtral Realtime WebGPU | 미착수 |
 | 16 | 자막 번역 (56개 언어) | TranslateGemma 4B WebGPU | 미착수 |
-| 17 | 배경 제거 | RMBG-1.4 / MODNet | 미착수 |
 | 18 | 클릭 객체 컷아웃 | SAM3 Tracker WebGPU (※ `segment-anything-webgpu` 레포 재활용) | 미착수 |
 | 19 | 이미지 업스케일 4× | Real-ESRGAN / Real-CUGAN (TF.js WebGPU) | 미착수 |
 | 20 | 스템 분리 미리듣기 (30초) | Demucs (ONNX Runtime Web) | 미착수 |
@@ -84,6 +84,9 @@
 | 대상 | 이유 |
 |---|---|
 | **ffmpeg.wasm (@ffmpeg/core)** | **GPL 빌드다.** 실측(2026-07-26): `ffmpeg-core.wasm` 안에 박힌 빌드 설정이 `--enable-gpl --enable-libx264 --enable-libx265`. libx264/x265 를 링크한 결과물은 GPL 이 되고, 30.7MB 바이너리를 브라우저에 보내는 것은 배포에 해당한다 → 사이트 전체가 GPL 이 된다. 표에 "LGPL/MIT" 로 적혀 있던 것은 **검증 전 기재였고 사실이 아니었다.** LGPL 빌드를 직접 만들면 쓸 수 있지만 그때도 H.264 인코딩은 빠진다 |
+| **briaai/RMBG-1.4** | 배경 제거로 검색하면 제일 먼저 나오는 모델이고 품질도 좋지만 **비상업** 라이선스다. 모델 카드가 직접 이렇게 적는다 — "The model is released under a Creative Commons license for non-commercial use… Commercial use is subject to a commercial agreement with BRIA." 코드가 아니라 **가중치**에 걸린 제약이라 우회할 방법이 없다. RMBG-2.0 은 더 엄하다 |
+| **MODNet** | CC BY-NC-SA 4.0. NC 도 SA 도 우리에게 맞지 않는다 |
+| **@imgly/background-removal** | 편하지만 AGPL-3.0. 규칙 6 |
 | Ghostscript.wasm | **AGPL** — 네트워크 배포 시 전체 소스 공개 의무. 상용 불가 |
 | mupdf-wasm | AGPL, 동일 |
 | mediabunny | MPL-2.0. 약한 카피레프트라 실무 위험은 낮지만, MIT/BSD 조합(mp4box + mp4-muxer + webm-muxer)으로 같은 일이 되므로 굳이 들이지 않는다 |
@@ -114,7 +117,7 @@
   헤더로 `X-Robots-Tag: noindex` 를 붙였다. canonical 만으로는 권고에 그친다.
 - **Search Console 은 서브도메인마다 별도 속성**을 만드는 것이 이 계정의 방식이다.
   `sc-domain:toolsmith.writingdeveloper.blog` 등록됨(자동 인증). 사이트맵 Success,
-  발견 페이지 **66개**(6 언어 × (홈 + 도구 10)). 새 도구를 배포하면 이 숫자가 언어 수(6)만큼 늘어야 한다.
+  발견 페이지 **96개**(6 언어 × (홈 + 도구 15)). 새 도구를 배포하면 이 숫자가 언어 수(6)만큼 늘어야 한다.
 - **미완료: Vercel Spend Management 지출 한도 알림.** 대시보드에서 직접 켜야 한다.
 
 ## 구조화 데이터 (JSON-LD)
@@ -447,6 +450,48 @@ PNG 가 들어온 **순간**(누르기 전에) 왜 안 줄어드는지와 무엇
   반환된 `blob.type` 을 대조해 다르면 던진다.
 - 계산 검증 2건은 **브라우저 없이** 돈다(`planResize` 직접 호출). 자르기 규칙이 바뀌면
   UI 를 띄우지 않고도 걸린다.
+
+## Tier 2 의 첫 도구 — 배경 제거 (2026-07-26)
+
+AI 도구의 첫 칸이다. Tier 1 과 달라지는 것은 **모델을 받아야 시작한다**는 것 하나뿐이고,
+규칙은 그대로다. 걸린 곳이 두 군데였는데 둘 다 라이선스와 배포 경로였다.
+
+**1. 가중치에 걸린 라이선스는 코드 라이선스와 별개다.** "배경 제거 브라우저" 로 검색하면
+`briaai/RMBG-1.4` 가 제일 먼저 나오고 품질도 이 바닥 최고 수준이다. 그런데 모델 카드가
+직접 비상업 라이선스라고 적는다. MODNet 은 CC BY-NC-SA, `@imgly/background-removal` 은
+AGPL. **ffmpeg.wasm 때와 똑같은 함정이고, 똑같이 걸러야 한다.** 채택한 것은 앨버타대학의
+**U²-Net(Apache-2.0)** 이다. 쓰는 ONNX 는 rembg 가 재배포한 공식 체크포인트를 HF 에 다시
+올린 `Heliosoph/u2net-onnx` 이고, 저장소가 `base_model: xuebinqin/U-2-Net` 로 출처를 밝힌다.
+`tests/remove-bg.spec.ts` 의 **브라우저 없이 도는 검사**가 모델 주소를 못 박는다 —
+언젠가 "품질이 더 좋다" 는 이유로 슬쩍 갈아 끼우는 일을 막기 위해서다.
+
+**2. `onnxruntime-web` 을 npm 의존성으로 두면 규칙 5 가 깨진다.** 이 패키지의 기본
+export(`import "onnxruntime-web"`)는 `*.bundle.min.mjs` 인데, **wasm 을 base64 로 품고 있다.**
+import 하는 순간 20MB 가 우리 번들에 들어와 Vercel 에서 나간다. 외부 wasm 을 쓰는 변형이
+있지만 그것을 고르려면 번들러의 export condition 을 건드려야 한다. 그래서 **의존성에서
+아예 뺐다** — jsDelivr 의 `ort.webgpu.min.js` 를 실행 시점에 받고, 타입은 tesseract 때처럼
+쓰는 만큼만 좁혀 적는다. 규칙을 문서가 아니라 **구조**가 지키게 한 것이다.
+
+- **워커가 모듈 워커다**(`{ type: "module" }`). 고전 워커에서는 `import()` 를 쓸 수 없는데,
+  엔진을 CDN 에서 실행 시점에 받으려면 그것이 필요하다. type 을 빼면 엔진 로딩이 통째로
+  실패한다. 이 저장소에서 모듈 워커는 여기가 처음이다.
+- **`numThreads = 1` 을 명시한다.** COOP/COEP 를 켜지 않으므로(규칙 4) `SharedArrayBuffer`
+  가 없다. 적지 않으면 ORT 가 스레드를 띄우려다 실패한다.
+- **모델 두 개를 내놓고 무엇이 다른지 미리 말한다.** `u2netp` 4.4MB / `u2net` 168MB.
+  40배 차이인데 결과도 눈에 띄게 다르다 — 작은 쪽은 배경의 유령이 남고, 큰 쪽은 인물과
+  소품만 깨끗이 떨어진다(1896년 공개 사진으로 실측). 그래서 "윤곽이 거침 / 머리카락까지"
+  라고 선택지에 그대로 적었다.
+- **모델은 320×320 으로 본다.** 마스크도 320×320 으로 나오므로 원본 크기로 다시 늘려야
+  하고, 4000px 사진이면 그 늘림이 윤곽선에 보인다. FAQ 에 적었다 — 손으로 딴 마스크가
+  아니라는 것을 알고 쓰게 해야 한다.
+- **`needs` 를 `"all"` 로 뒀다.** WebGPU 가 있으면 그리로 가고 없으면 wasm 으로 내려가
+  **끝까지 돈다**(느릴 뿐이다). 할 수 있는 것을 못 한다고 적는 것도 규칙 3 위반이다.
+  어느 쪽으로 돌았는지는 결과 옆에 그대로 쓴다. 실측: 헤드리스 Chromium 은 WebGPU 가
+  없어 CPU 로 떨어지는데, 960×1210 사진이 작은 모델 5.3초 / 정밀 모델 11.3초였다
+  (모델 내려받는 시간 포함).
+- 픽스처는 **밝은 배경 한가운데 어두운 덩어리**다(`subject.png`). U²-Net 은 눈에 띄는
+  것을 찾는 모델이므로 픽스처도 그래야 하고, 모서리·가운데의 알파를 읽으면 마스크가
+  물체 위에 앉았는지 손으로 검산된다. 실제 사진에서의 품질은 스펙이 아니라 사람이 본다.
 
 ## 의존성 경고 (2026-07-26 분류)
 

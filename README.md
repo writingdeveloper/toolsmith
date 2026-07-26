@@ -50,6 +50,7 @@ lib/
   i18n/dictionaries/*.ts       en 이 기준. 나머지는 satisfies Dictionary 로 강제된다
   capabilities.ts              WebGPU / OffscreenCanvas / crossOriginIsolated 감지
   image/convert-core.ts        디코드·인코드 핵심. window·document 를 참조하지 않는다
+  matting/matte-core.ts        배경 제거(U²-Net). 런타임·모델을 CDN 에서 받는다 — 의존성이 아니다
   pdf/document.ts              PDF 공통 토대(열기·오류 번역). pdf-lib 은 여기서만 동적 로드
   pdf/merge-core.ts            병합
   pdf/split-core.ts            범위 추출·낱장 분리·ZIP
