@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/JsonLd";
 import { getDictionary } from "@/lib/i18n";
 import { isLocale } from "@/lib/i18n/config";
+import { toolJsonLd } from "@/lib/schema";
 import { alternatesFor } from "@/lib/site";
 import { PdfSplitter } from "./PdfSplitter";
 
@@ -30,6 +32,8 @@ export default async function PdfSplitPage({ params }: { params: Promise<{ local
 
   return (
     <article className="space-y-10">
+      <JsonLd data={toolJsonLd(locale, dict, "pdf-split")} />
+
       <header className="space-y-3">
         <h1 className="text-3xl font-semibold tracking-tight">{tool.h1}</h1>
         <p className="max-w-2xl text-muted">{tool.lead}</p>

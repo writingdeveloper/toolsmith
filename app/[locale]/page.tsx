@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/JsonLd";
 import { getDictionary } from "@/lib/i18n";
 import { isLocale } from "@/lib/i18n/config";
+import { siteJsonLd } from "@/lib/schema";
 import { LIVE_TOOLS, UPCOMING_TOOLS } from "@/lib/tools";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
@@ -11,6 +13,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
   return (
     <div className="space-y-12">
+      <JsonLd data={siteJsonLd(locale, dict)} />
+
       <section className="space-y-4">
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{dict.home.title}</h1>
         <p className="max-w-2xl text-lg text-muted">{dict.home.lead}</p>

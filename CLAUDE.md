@@ -82,7 +82,12 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 - 도구 #11 PDF 회전·페이지 삭제: **배포 완료.** `/{locale}/tools/pdf-organize`
   (pdf.js 썸네일 그리드 + 회전 + 삭제). pdf.js 는 `lib/pdf/render-core.ts` 에서만 쓰인다.
 - **다국어 6개 언어 배포 완료.** 정적 페이지 30장(6 언어 × 4 + 루트 + robots/sitemap).
-- Playwright 48종. 프로덕션 47 통과 / 1 스킵(dev 전용), dev 41 통과 / 7 스킵.
+- Playwright 53종. 프로덕션 52 통과 / 1 스킵(dev 전용), dev 45 통과 / 8 스킵.
+- **JSON-LD 완료.** 도구 페이지에 WebApplication + FAQPage + BreadcrumbList,
+  홈에 WebSite. 구글 리치 결과 테스트 **유효 항목 2개**(탐색경로·소프트웨어 앱) 확인.
+  `aggregateRating` 누락 경고는 **의도한 것** — 받은 적 없는 평점을 지어내지 않는다.
+  FAQPage 는 리치 결과 목록에 안 뜨는데, 구글이 FAQ 표시를 정부·의료로 제한했기 때문이다.
+  그래도 GEO(LLM 인용)에는 그대로 유효해서 남긴다.
 - PDF 공통 토대는 `lib/pdf/document.ts` — 병합·분할이 함께 쓴다. 도구별 로직만 각자 파일에.
 - `app/sitemap.ts` 추가 — 언어 × 페이지 전부, 각 항목이 자기 언어판을 alternates 로 가리킨다.
   `NEXT_PUBLIC_SITE_URL` 이 없으면 빈 사이트맵을 낸다(robots 도 이때는 전면 차단이라 앞뒤가 맞다).
@@ -90,11 +95,19 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ### 남은 일 (사용자 몫)
 
-- **Google Search Console 에 `toolsmith.writingdeveloper.blog` 등록 + 사이트맵 제출.**
-  색인은 열렸지만 제출해야 빨리 도는다. `https://toolsmith.writingdeveloper.blog/sitemap.xml`
-- Vercel **Spend Management** 지출 한도 알림 — 대시보드에서만 설정 가능.
 - GitHub 푸시 — 아직 로컬 `main` 만 있다.
 - **번역 검수.** de·es·pt-BR 마케팅 문구는 한 번 읽어볼 값어치가 있다.
+
+### 끝난 일 (2026-07-25 실측 확인)
+
+- **Search Console.** `writingdeveloper.blog` **도메인 속성**이 이미 있고 서브도메인을 전부
+  덮는다 → 별도 속성이 필요 없다. 사이트맵 제출 완료, URL 검사 라이브 테스트에서
+  "URL is available to Google / Page can be indexed" 확인, `/en`·`/ko` 색인 요청 완료.
+  사이트맵 목록의 "Couldn't fetch" 는 제출 직후의 대기 표시일 뿐 — URL 검사의
+  Discovery 항목에 우리 사이트맵이 이미 잡혀 있다.
+- **Vercel Spend Management 는 이미 켜져 있었다.** 팀 전역 설정이라 toolsmith 도 덮는다.
+  On-Demand Budget **$50**, 알림 On, **Pause Projects On**(예산 초과 시 프로덕션 배포가
+  멈춰 방문자에게 안 보이게 된다 — 색인 이탈 위험이므로 트래픽이 커지면 재검토할 것).
 
 ### 실측으로 확인된 것 (2026-07-25, 프로덕션)
 
@@ -118,7 +131,8 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 다음 할 일
 
-1. 도구 페이지 JSON-LD(HowTo / SoftwareApplication) — 아직 없다. GEO(LLM 인용)에 유리하다.
-2. **PDF 압축** (#12) — `lib/pdf/render-core.ts` 의 pdf.js 를 재사용해 페이지를 래스터화하고
-   Canvas 로 재인코딩한다. 검색수요 최상.
-3. **영상 변환** (ffmpeg.wasm) — 검색수요 최상이지만 COEP 스코프를 먼저 뚫어야 한다.
+1. **PDF 압축** (#12) — `lib/pdf/render-core.ts` 의 pdf.js 를 재사용해 페이지를 래스터화하고
+   Canvas 로 재인코딩한다. 검색수요 최상이고 부품이 이미 다 있다.
+2. **영상 변환** (ffmpeg.wasm) — 검색수요 최상이지만 COEP 스코프를 먼저 뚫어야 한다.
+3. 색인 진행 상황 확인 — 며칠 뒤 Search Console 의 사이트맵 상태가 Success 로 바뀌고
+   Pages 리포트에 페이지가 잡히는지 본다.
