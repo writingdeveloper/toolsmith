@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { HTML_LANG, LOCALES } from "@/lib/i18n/config";
+import { DEFAULT_LOCALE, HTML_LANG, LOCALES } from "@/lib/i18n/config";
 import { SITE_URL } from "@/lib/site";
 import { LIVE_TOOLS } from "@/lib/tools";
 
@@ -20,9 +20,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: path === "" ? 1 : 0.8,
       alternates: {
-        languages: Object.fromEntries(
-          LOCALES.map((other) => [HTML_LANG[other], `${SITE_URL}/${other}${path}`]),
-        ),
+        languages: {
+          ...Object.fromEntries(
+            LOCALES.map((other) => [HTML_LANG[other], `${SITE_URL}/${other}${path}`]),
+          ),
+          // head 의 hreflang 과 어긋나면 구글이 둘 중 무엇을 믿을지 모른다 — 여기도 넣는다
+          "x-default": `${SITE_URL}/${DEFAULT_LOCALE}${path}`,
+        },
       },
     })),
   );

@@ -45,7 +45,7 @@ pnpm test             # Playwright (dev 서버 자동 기동)
 pnpm fixtures         # tests/fixtures 재생성
 
 # 배포본에 같은 스펙을 그대로 친다 (dev 서버를 띄우지 않는다)
-BASE_URL=https://toolsmith-two.vercel.app pnpm test
+BASE_URL=https://toolsmith.writingdeveloper.blog pnpm test
 
 vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 ```
@@ -72,7 +72,11 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 현재 상태 (2026-07-25)
 
-- 도구 #1 이미지 변환·압축: **배포 완료.** https://toolsmith-two.vercel.app
+- **본 도메인 확정: https://toolsmith.writingdeveloper.blog** (와일드카드 DNS 가 이미
+  Vercel 을 가리키고 있어 DNS 작업은 없었다). `NEXT_PUBLIC_SITE_URL` 을 프로덕션 env 로
+  넣어 **색인이 열렸다.** `*.vercel.app` 은 `next.config.ts` 가 `X-Robots-Tag: noindex` 를
+  붙여 중복 색인을 막는다.
+- 도구 #1 이미지 변환·압축: **배포 완료.**
 - 도구 #9 PDF 병합: **배포 완료.** `/tools/pdf-merge`
 - 도구 #10 PDF 분할: **배포 완료.** `/{locale}/tools/pdf-split` (범위 추출 + 낱장 ZIP)
 - **다국어 6개 언어 배포 완료.** 정적 페이지 30장(6 언어 × 4 + 루트 + robots/sitemap).
@@ -80,12 +84,15 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 - PDF 공통 토대는 `lib/pdf/document.ts` — 병합·분할이 함께 쓴다. 도구별 로직만 각자 파일에.
 - `app/sitemap.ts` 추가 — 언어 × 페이지 전부, 각 항목이 자기 언어판을 alternates 로 가리킨다.
   `NEXT_PUBLIC_SITE_URL` 이 없으면 빈 사이트맵을 낸다(robots 도 이때는 전면 차단이라 앞뒤가 맞다).
-- 본 도메인 미정 → `app/robots.ts` 가 전면 `Disallow: /`. `NEXT_PUBLIC_SITE_URL` 설정 시 열린다.
+- `tests/seo.spec.ts` 가 robots·사이트맵·중복 색인 차단을 배포본에서 고정한다.
 
 ### 남은 일 (사용자 몫)
 
+- **Google Search Console 에 `toolsmith.writingdeveloper.blog` 등록 + 사이트맵 제출.**
+  색인은 열렸지만 제출해야 빨리 도는다. `https://toolsmith.writingdeveloper.blog/sitemap.xml`
 - Vercel **Spend Management** 지출 한도 알림 — 대시보드에서만 설정 가능.
 - GitHub 푸시 — 아직 로컬 `main` 만 있다.
+- **번역 검수.** de·es·pt-BR 마케팅 문구는 한 번 읽어볼 값어치가 있다.
 
 ### 실측으로 확인된 것 (2026-07-25, 프로덕션)
 
@@ -109,8 +116,6 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 다음 할 일
 
-1. **본 도메인 결정**(사용자 몫) — 이것이 열리기 전까지 유입은 0 이다. `NEXT_PUBLIC_SITE_URL`
-   을 넣는 순간 robots 가 열리고 sitemap 이 채워진다. 그 다음 Search Console 에 제출.
-2. **PDF 회전·페이지 삭제** (#11) — `lib/pdf/document.ts` 재사용, 가장 싼 확장.
+1. **PDF 회전·페이지 삭제** (#11) — `lib/pdf/document.ts` 재사용, 가장 싼 확장.
+2. 도구 페이지 JSON-LD(HowTo / SoftwareApplication) — 아직 없다. GEO(LLM 인용)에 유리하다.
 3. **영상 변환** (ffmpeg.wasm) — 검색수요 최상이지만 COEP 스코프를 먼저 뚫어야 한다.
-4. 도구 페이지 JSON-LD(HowTo / SoftwareApplication) — 아직 없다. GEO(LLM 인용)에 유리하다.

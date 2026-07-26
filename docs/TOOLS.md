@@ -104,9 +104,12 @@
 
 ## 배포 상태
 
-- 라이브: https://toolsmith-two.vercel.app (Vercel Pro, 스코프 `sihyeong-lees-projects-64e0ba83`)
-- **본 도메인 미정.** 정해지기 전까지 `app/robots.ts` 가 전면 `Disallow: /` 를 내보낸다.
-  `NEXT_PUBLIC_SITE_URL` 환경변수를 설정하는 순간 색인이 열린다.
+- 라이브: **https://toolsmith.writingdeveloper.blog** (Vercel Pro, 스코프
+  `sihyeong-lees-projects-64e0ba83`). 다른 서비스와 같은 `*.writingdeveloper.blog` 패턴.
+- **색인 열림(2026-07-25).** `NEXT_PUBLIC_SITE_URL` 프로덕션 env 로 robots 가 열리고
+  사이트맵 24개 URL(6 언어 × 4 페이지)이 채워졌다.
+- 배포 URL `toolsmith-two.vercel.app` 은 같은 문서를 내므로 `next.config.ts` 의 host 조건
+  헤더로 `X-Robots-Tag: noindex` 를 붙였다. canonical 만으로는 권고에 그친다.
 - **미완료: Vercel Spend Management 지출 한도 알림.** 대시보드에서 직접 켜야 한다.
 
 ## 기술 함정 (걸려본 것 / 걸릴 것)
