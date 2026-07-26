@@ -135,6 +135,10 @@ dev 는 90 통과 / 15 스킵 — pdf-compress 1건이 냉컴파일 부하로 30
 - JSON-LD: WebApplication + FAQPage + BreadcrumbList. 리치 결과 테스트 유효 2개.
   `aggregateRating` 없음은 **의도** — 받은 적 없는 평점을 지어내지 않는다.
 - GA4 `G-V1SX1J2BG2`. 전환 이벤트 `tool_completed`(실리는 것은 도구 이름뿐).
+  **자동화된 브라우저에는 태그를 심지 않는다** — 프로덕션 스펙 한 번이 방문 100여 건을
+  만들어 통계를 통째로 뒤덮었다(2026-07-26 실측: 사용자 282 / 세션 283, 검색 노출 0).
+  판단은 `components/Analytics.tsx` 에 있고, 켜는 길은 `tests/analytics.spec.ts` 의
+  `__toolsmithAnalyticsOptIn` 하나뿐이다. 근거는 `docs/TOOLS.md`.
   **향상된 측정의 "파일 다운로드" 는 꺼 두었다** — 켜면 사용자 파일명이 구글로 간다.
 
 ### 이 저장소에서 두 번 이상 데인 것

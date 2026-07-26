@@ -4,6 +4,20 @@ import { isAnalytics } from "./net";
 
 const PAGES5 = path.join(__dirname, "fixtures", "pages5.pdf");
 
+/**
+ * 분석을 **켠다.**
+ *
+ * 배포본은 자동화된 브라우저(`navigator.webdriver`)에 GA 태그를 심지 않는다 —
+ * 우리 QA 가 통계를 만들면 개선 효과를 잴 수 없기 때문이다. 그런데 이 파일의 목적은
+ * 그 태그가 무엇을 보내는지 확인하는 것이므로, 여기서만 명시적으로 켠다.
+ * 켜는 길이 이 한 줄뿐이어야 다른 스펙이 실수로 통계를 더럽히지 않는다.
+ */
+async function optIn(page: Page) {
+  await page.addInitScript(() => {
+    (window as unknown as Record<string, unknown>).__toolsmithAnalyticsOptIn = true;
+  });
+}
+
 /** 분석 태그로 나간 요청을 URL·본문까지 통째로 모은다. */
 function watchAnalytics(page: Page): string[] {
   const seen: string[] = [];
@@ -26,6 +40,7 @@ test("측정 ID 가 없으면 태그를 심지 않는다 (dev)", async ({ page }
 test("배포본에는 GA 태그가 실려 있다", async ({ page }) => {
   test.skip(!process.env.BASE_URL, "BASE_URL 로 배포본을 가리켰을 때만 의미가 있다");
 
+  await optIn(page);
   await page.goto("/ko");
   await expect(page.locator('script[src*="googletagmanager.com/gtag/js"]')).toHaveCount(1, {
     timeout: 30_000,
@@ -41,6 +56,7 @@ test("배포본에는 GA 태그가 실려 있다", async ({ page }) => {
 test("파일을 처리해도 파일명이 GA 로 나가지 않는다", async ({ page }) => {
   test.skip(!process.env.BASE_URL, "BASE_URL 로 배포본을 가리켰을 때만 의미가 있다");
 
+  await optIn(page);
   const seen = watchAnalytics(page);
   await page.goto("/ko/tools/pdf-split");
   await page.waitForLoadState("networkidle");
@@ -76,6 +92,7 @@ test("파일을 처리해도 파일명이 GA 로 나가지 않는다", async ({ 
 test("도구를 끝까지 쓰면 전환 이벤트가 나가고, 실린 것은 도구 이름뿐이다", async ({ page }) => {
   test.skip(!process.env.BASE_URL, "BASE_URL 로 배포본을 가리켰을 때만 의미가 있다");
 
+  await optIn(page);
   const seen = watchAnalytics(page);
   await page.goto("/ko/tools/pdf-merge");
   await page.waitForLoadState("networkidle");
@@ -96,4 +113,50 @@ test("도구를 끝까지 쓰면 전환 이벤트가 나가고, 실린 것은 �
   for (const secret of ["a.pdf", "b.pdf", "merged", "blob:"]) {
     expect(traffic, `전환 이벤트에 "${secret}" 가 들어 있다`).not.toContain(secret);
   }
+});
+
+/**
+ * 이 사이트의 통계는 우리 QA 로 만들어진 적이 있다.
+ *
+ * 2026-07-26 기준 GA 는 활성 사용자 282 / 세션 283 을 보여 주었는데, 검색 노출은 0 이었고
+ * 인기 페이지 상위 5개가 전부 `/ko` 였다. Playwright 는 테스트마다 새 컨텍스트를 주므로
+ * GA 가 **매 테스트를 새 사용자로 센 것**이다. 그래서 자동화된 브라우저에는 태그를
+ * 심지 않기로 했고, 정말 안 심는지는 여기서 지킨다.
+ */
+test("자동화된 브라우저에는 GA 태그를 심지 않는다 (배포본)", async ({ page }) => {
+  test.skip(!process.env.BASE_URL, "BASE_URL 로 배포본을 가리켰을 때만 의미가 있다");
+
+  const seen = watchAnalytics(page);
+  // opt-in 을 하지 않는다 — 다른 스펙과 똑같은 조건이다
+  await page.goto("/ko/tools/pdf-merge");
+  await page.waitForLoadState("networkidle");
+
+  await expect(page.locator('script[src*="googletagmanager"]')).toHaveCount(0);
+  expect(seen, `분석 요청이 나갔다: ${seen.join(" | ")}`).toEqual([]);
+});
+
+/**
+ * 위의 차단이 **실사용자까지 막아 버리면** 통계가 통째로 죽는다. 조용히 죽는 실패라
+ * 아무도 눈치채지 못한 채 몇 주가 지날 수 있으므로 여기서 지킨다.
+ *
+ * `navigator.webdriver` 를 false 로 돌려놓아 실사용자와 똑같은 조건을 만든 뒤,
+ * 태그가 실제로 불려 나가는지 본다. 다만 **요청은 중간에서 끊는다** — 이 검사를
+ * 돌릴 때마다 진짜 방문 한 건이 GA 에 쌓이면 그것도 오염이다.
+ */
+test("실사용자에게는 GA 태그가 그대로 나간다 (배포본)", async ({ page }) => {
+  test.skip(!process.env.BASE_URL, "BASE_URL 로 배포본을 가리켰을 때만 의미가 있다");
+
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "webdriver", { get: () => false });
+  });
+
+  const attempted: string[] = [];
+  await page.route(/googletagmanager\.com|google-analytics\.com/, async (route) => {
+    attempted.push(route.request().url());
+    await route.abort();
+  });
+
+  await page.goto("/ko/tools/pdf-merge");
+  await expect.poll(() => attempted.length, { timeout: 20_000 }).toBeGreaterThan(0);
+  expect(attempted.join(" | ")).toContain("gtag/js");
 });

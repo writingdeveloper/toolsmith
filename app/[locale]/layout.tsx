@@ -1,8 +1,8 @@
-import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import "../globals.css";
+import { Analytics } from "@/components/Analytics";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { getDictionary } from "@/lib/i18n";
 import { HTML_LANG, isLocale, LOCALE_NAME, LOCALES, type Locale } from "@/lib/i18n/config";
@@ -78,8 +78,9 @@ export default async function LocaleLayout({
           </div>
         </footer>
 
-        {/* 측정 ID 가 없으면(로컬·프리뷰) 태그를 심지 않는다 */}
-        {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
+        {/* 측정 ID 가 없으면(로컬·프리뷰) 태그를 심지 않는다.
+            자동화된 브라우저에 심지 않는 판단은 Analytics 안에 있다. */}
+        {GA_ID && <Analytics gaId={GA_ID} />}
       </body>
     </html>
   );

@@ -11,7 +11,6 @@
     "fixtures": "node scripts/make-fixtures.mjs"
   },
   "dependencies": {
-    "@next/third-parties": "^16.2.11",
     "fflate": "^0.8.3",
     "gifenc": "^1.0.3",
     "libheif-js": "^1.19.8",
