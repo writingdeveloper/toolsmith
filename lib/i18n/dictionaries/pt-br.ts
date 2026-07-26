@@ -78,7 +78,7 @@ export const ptBR = {
   tools: {
     "image-convert": {
       blurb: "HEIC, PNG, JPG, WebP e AVIF em qualquer direção. Comprima e redimensione de uma vez.",
-      metaTitle: "Conversor de imagens — HEIC, PNG, JPG, WebP, AVIF",
+      metaTitle: "Conversor de imagens — HEIC, PNG, JPG, WebP",
       metaDescription:
         "Converta fotos HEIC do iPhone para JPG e PNG para WebP. Tudo no navegador, sem enviar nada. Sem cadastro e sem limite de arquivos.",
       h1: "Conversor e compressor de imagens",
@@ -161,7 +161,7 @@ export const ptBR = {
 
     "pdf-split": {
       blurb: "Tire as páginas que quiser ou separe cada página em seu próprio PDF dentro de um ZIP.",
-      metaTitle: "Dividir PDF — extrair páginas ou separar uma a uma",
+      metaTitle: "Dividir PDF — extrair ou separar páginas",
       metaDescription:
         "Extraia páginas específicas de um PDF ou separe cada página em seu próprio arquivo. Tudo no navegador, sem enviar nada, sem cadastro e sem marca d'água.",
       h1: "Dividir PDF",
@@ -209,7 +209,7 @@ export const ptBR = {
 
     "pdf-organize": {
       blurb: "Veja todas as páginas, endireite as que saíram deitadas e tire as que sobram.",
-      metaTitle: "Girar PDF e apagar páginas — ajeite um digitalizado no navegador",
+      metaTitle: "Girar PDF e apagar páginas no navegador",
       metaDescription:
         "Endireite páginas digitalizadas de lado e remova as que você não precisa. Cada página aparece em miniatura. Tudo no navegador, sem enviar nada e sem cadastro.",
       h1: "Girar PDF e apagar páginas",
@@ -255,7 +255,7 @@ export const ptBR = {
 
     "pdf-compress": {
       blurb: "Recomprime as fotos de dentro do PDF. O texto continua texto — nada é achatado.",
-      metaTitle: "Comprimir PDF — diminua o tamanho e mantenha o texto",
+      metaTitle: "Comprimir PDF sem perder o texto",
       metaDescription:
         "Diminua um PDF recomprimindo as fotos que ele carrega. O texto continua selecionável e pesquisável. Tudo no navegador, sem enviar nada e sem cadastro.",
       h1: "Comprimir PDF",
@@ -301,7 +301,7 @@ export const ptBR = {
       blurb: "Diminui um MP4 no navegador. Sem baixar 30MB de ferramentas — seu aparelho faz o trabalho.",
       metaTitle: "Comprimir vídeo — diminua um MP4 no navegador",
       metaDescription:
-        "Deixe um MP4 menor sem enviá-lo. Roda no seu aparelho usando o codificador de vídeo do próprio navegador, então não há nada para instalar e nenhum arquivo sai da sua máquina.",
+        "Deixe um MP4 menor sem enviá-lo. Roda no seu aparelho com o codificador de vídeo do navegador: nada para instalar e nada sai da sua máquina.",
       h1: "Comprimir vídeo",
       lead: "Recodifica a imagem com bitrate menor e deixa o som exatamente como estava. Tudo acontece no seu aparelho.",
       faq: [
@@ -347,9 +347,9 @@ export const ptBR = {
 
     "video-to-gif": {
       blurb: "Transforma um clipe em GIF em loop. Sem upload — quem trabalha é o seu aparelho.",
-      metaTitle: "Vídeo para GIF — converta MP4 em GIF no navegador",
+      metaTitle: "Vídeo para GIF — de MP4 a GIF no navegador",
       metaDescription:
-        "Crie um GIF em loop a partir de um MP4 ou MOV sem enviá-lo para lugar nenhum. Escolha a taxa de quadros e o tamanho e veja o resultado antes de salvar. Tudo acontece no seu navegador.",
+        "Crie um GIF em loop a partir de um MP4 ou MOV sem enviar nada. Escolha os quadros e o tamanho e veja o resultado antes de salvar. Tudo no navegador.",
       h1: "Vídeo para GIF",
       lead: "Transforma um clipe em GIF em loop. Escolha quão fluido e quão grande ele deve ser — o resto acontece no seu aparelho.",
       faq: [

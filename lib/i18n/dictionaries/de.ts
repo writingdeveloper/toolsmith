@@ -119,7 +119,7 @@ export const de = {
 
     "pdf-merge": {
       blurb: "Mehrere PDFs zu einem, in Ihrer Reihenfolge. Seiten werden kopiert, nicht neu gerendert.",
-      metaTitle: "PDF zusammenfügen — mehrere PDFs zu einem verbinden",
+      metaTitle: "PDF zusammenfügen — mehrere PDFs zu einem",
       metaDescription:
         "Fügen Sie mehrere PDFs in beliebiger Reihenfolge zusammen. Vollständig im Browser, ohne Upload, ohne Anmeldung, ohne Wasserzeichen und ohne Mengenbegrenzung.",
       h1: "PDF zusammenfügen",
@@ -161,9 +161,9 @@ export const de = {
 
     "pdf-split": {
       blurb: "Einzelne Seiten herausziehen oder jede Seite als eigenes PDF in einem ZIP.",
-      metaTitle: "PDF teilen — Seiten extrahieren oder einzeln auftrennen",
+      metaTitle: "PDF teilen — Seiten extrahieren oder auftrennen",
       metaDescription:
-        "Ziehen Sie bestimmte Seiten aus einem PDF oder trennen Sie jede Seite in eine eigene Datei. Vollständig im Browser, ohne Upload, ohne Anmeldung, ohne Wasserzeichen.",
+        "Ziehen Sie Seiten aus einem PDF oder trennen Sie jede Seite in eine eigene Datei. Im Browser, ohne Upload, ohne Anmeldung, ohne Wasserzeichen.",
       h1: "PDF teilen",
       lead: "Ziehen Sie die gewünschten Seiten in ein einzelnes PDF, oder trennen Sie jede Seite in ein eigenes PDF und erhalten Sie alles als ZIP.",
       faq: [
@@ -209,9 +209,9 @@ export const de = {
 
     "pdf-organize": {
       blurb: "Alle Seiten im Blick: quer liegende aufrichten, überflüssige herausnehmen.",
-      metaTitle: "PDF drehen und Seiten löschen — Scan im Browser geradeziehen",
+      metaTitle: "PDF drehen und Seiten löschen — Scan begradigen",
       metaDescription:
-        "Quer eingescannte Seiten aufrichten und überflüssige Seiten entfernen. Jede Seite wird als Miniatur gezeigt. Vollständig im Browser, ohne Upload und ohne Anmeldung.",
+        "Quer eingescannte Seiten aufrichten und überflüssige entfernen. Jede Seite wird als Miniatur gezeigt. Im Browser, ohne Upload, ohne Anmeldung.",
       h1: "PDF drehen und Seiten löschen",
       lead: "Alle Seiten liegen als Miniaturen vor Ihnen. Drehen Sie die quer liegenden, werfen Sie leere heraus und speichern Sie den Rest.",
       faq: [
@@ -257,7 +257,7 @@ export const de = {
       blurb: "Komprimiert die Fotos im PDF neu. Der Text bleibt Text — nichts wird plattgebügelt.",
       metaTitle: "PDF verkleinern — kleiner werden, Text behalten",
       metaDescription:
-        "Verkleinern Sie ein PDF, indem die enthaltenen Fotos neu komprimiert werden. Der Text bleibt markierbar und durchsuchbar. Vollständig im Browser, ohne Upload und ohne Anmeldung.",
+        "Verkleinern Sie ein PDF, indem die enthaltenen Fotos neu komprimiert werden. Der Text bleibt markierbar und durchsuchbar. Ohne Upload, ohne Anmeldung.",
       h1: "PDF verkleinern",
       lead: "Verkleinert ein PDF, indem die enthaltenen Fotos neu komprimiert werden. Der Text bleibt unangetastet und damit markierbar und durchsuchbar.",
       faq: [
@@ -301,7 +301,7 @@ export const de = {
       blurb: "Verkleinert ein MP4 im Browser. Ohne 30MB Werkzeugkasten — Ihr Gerät erledigt es selbst.",
       metaTitle: "Video verkleinern — MP4 im Browser schrumpfen",
       metaDescription:
-        "Machen Sie ein MP4 kleiner, ohne es hochzuladen. Läuft auf Ihrem Gerät mit dem Video-Encoder des Browsers — nichts zu installieren, und keine Datei verlässt Ihren Rechner.",
+        "Machen Sie ein MP4 kleiner, ohne es hochzuladen. Läuft mit dem Video-Encoder des Browsers auf Ihrem Gerät — keine Datei verlässt den Rechner.",
       h1: "Video verkleinern",
       lead: "Kodiert das Bild mit niedrigerer Bitrate neu und lässt den Ton unangetastet. Alles passiert auf Ihrem Gerät.",
       faq: [
@@ -346,12 +346,12 @@ export const de = {
     },
 
     "video-to-gif": {
-      blurb: "Aus einem Clip wird ein GIF in Dauerschleife. Ohne Upload — dein Gerät erledigt das.",
-      metaTitle: "Video zu GIF — MP4 im Browser in ein GIF umwandeln",
+      blurb: "Aus einem Clip wird ein GIF in Dauerschleife. Ohne Upload — Ihr Gerät erledigt das.",
+      metaTitle: "Video zu GIF — MP4 im Browser umwandeln",
       metaDescription:
-        "Erstelle aus einem MP4 oder MOV ein GIF in Dauerschleife, ohne es hochzuladen. Bildrate und Größe wählen und das Ergebnis vor dem Speichern ansehen. Läuft vollständig im Browser.",
+        "Erstellen Sie aus einem MP4 oder MOV ein GIF in Dauerschleife, ohne Upload. Bildrate und Größe wählen, Ergebnis vorab ansehen. Alles im Browser.",
       h1: "Video zu GIF",
-      lead: "Macht aus einem Clip ein GIF in Dauerschleife. Du wählst, wie flüssig und wie groß — alles Weitere passiert auf deinem Gerät.",
+      lead: "Macht aus einem Clip ein GIF in Dauerschleife. Sie wählen, wie flüssig und wie groß — alles Weitere passiert auf Ihrem Gerät.",
       faq: [
         {
           q: "Wohin gehen meine Dateien?",
@@ -363,11 +363,11 @@ export const de = {
         },
         {
           q: "Warum weicht die Bildrate leicht ab?",
-          a: "GIF speichert die Verzögerung je Bild in Hundertstelsekunden, deshalb lassen sich nur bestimmte Raten exakt schreiben. 20, 10 und 5 fps gehen genau auf; 15 fps werden zu 7/100 s und laufen tatsächlich mit 14,3. Wir zeigen dir die echte Zahl statt der gewünschten.",
+          a: "GIF speichert die Verzögerung je Bild in Hundertstelsekunden, deshalb lassen sich nur bestimmte Raten exakt schreiben. 20, 10 und 5 fps gehen genau auf; 15 fps werden zu 7/100 s und laufen tatsächlich mit 14,3. Wir zeigen Ihnen die echte Zahl statt der gewünschten.",
         },
         {
           q: "Wie lang darf der Clip sein?",
-          a: "Bis zu 400 Bilder — 20 Sekunden bei 20 fps oder 40 bei 10 fps. Darüber wird ein GIF zweistellig megabyteschwer und Browser kommen ins Straucheln; dann hören wir lieber auf, statt dir etwas Unbrauchbares zu geben. Mit einer niedrigeren Bildrate passt ein längerer Clip hinein.",
+          a: "Bis zu 400 Bilder — 20 Sekunden bei 20 fps oder 40 bei 10 fps. Darüber wird ein GIF zweistellig megabyteschwer und Browser kommen ins Straucheln; dann hören wir lieber auf, statt Ihnen etwas Unbrauchbares zu geben. Mit einer niedrigeren Bildrate passt ein längerer Clip hinein.",
         },
         {
           q: "Welche Dateien kann ich verwenden?",
@@ -377,7 +377,7 @@ export const de = {
       ui: {
         unsupportedTitle: "Dieser Browser kann aus Video kein GIF machen.",
         unsupportedHint:
-          "Zum Lesen des Videos wird WebCodecs benötigt — versuch es mit aktuellem Chrome oder Edge, Safari 16.4+ oder Firefox 130+.",
+          "Zum Lesen des Videos wird WebCodecs benötigt — versuchen Sie es mit aktuellem Chrome oder Edge, Safari 16.4+ oder Firefox 130+.",
         dropLabel: "Video hier ablegen",
         dropHint: "MP4 und MOV — eines nach dem anderen",
         reading: "wird gelesen…",
@@ -390,7 +390,7 @@ export const de = {
         sizeMax: "Lange Kante {px}px",
         framesEstimate: "etwa {n} Bilder",
         tooManyFrames:
-          "Das sind über {max} Bilder. Wähle eine niedrigere Bildrate — ein GIF dieser Länge wäre riesig.",
+          "Das sind über {max} Bilder. Wählen Sie eine niedrigere Bildrate — ein GIF dieser Länge wäre riesig.",
         run: "GIF erstellen",
         working: "Wird erstellt…",
         outputName: "{stem}.gif",
@@ -404,9 +404,9 @@ export const de = {
 
     "audio-extract": {
       blurb: "Holt den Ton aus einem Video. Nichts wird neu kodiert, also geht nichts verloren.",
-      metaTitle: "Audio aus Video extrahieren — MP4 zu M4A oder WAV",
+      metaTitle: "Audio aus Video — MP4 zu M4A oder WAV",
       metaDescription:
-        "Holen Sie die Tonspur aus einem MP4 oder MOV, ohne es hochzuladen. Verlustfrei als M4A behalten oder als WAV, das sich überall öffnet. Läuft vollständig im Browser.",
+        "Holen Sie die Tonspur aus einem MP4 oder MOV, ohne Upload. Verlustfrei als M4A behalten oder als WAV, das sich überall öffnet. Alles im Browser.",
       h1: "Audio aus Video extrahieren",
       lead: "Holt die Tonspur aus einem Video. Keine der beiden Varianten kodiert den Ton neu — unterwegs geht nichts verloren.",
       faq: [

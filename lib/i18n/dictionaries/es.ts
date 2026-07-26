@@ -78,7 +78,7 @@ export const es = {
   tools: {
     "image-convert": {
       blurb: "HEIC, PNG, JPG, WebP y AVIF en cualquier dirección. Comprime y redimensiona de una vez.",
-      metaTitle: "Convertidor de imágenes — HEIC, PNG, JPG, WebP, AVIF",
+      metaTitle: "Convertidor de imágenes — HEIC, PNG, JPG, WebP",
       metaDescription:
         "Convierte fotos HEIC del iPhone a JPG y PNG a WebP. Todo dentro del navegador, sin subir nada. Sin registro y sin límite de archivos.",
       h1: "Convertidor y compresor de imágenes",
@@ -161,7 +161,7 @@ export const es = {
 
     "pdf-split": {
       blurb: "Saca las páginas que quieras o separa cada página en su propio PDF dentro de un ZIP.",
-      metaTitle: "Dividir PDF — extraer páginas o separarlas una a una",
+      metaTitle: "Dividir PDF — extraer o separar páginas",
       metaDescription:
         "Extrae páginas concretas de un PDF o separa cada página en su propio archivo. Todo dentro del navegador, sin subir nada, sin registro y sin marcas de agua.",
       h1: "Dividir PDF",
@@ -209,9 +209,9 @@ export const es = {
 
     "pdf-organize": {
       blurb: "Mira todas las páginas, endereza las que salieron de lado y quita las que sobran.",
-      metaTitle: "Girar PDF y borrar páginas — arregla un escaneo en el navegador",
+      metaTitle: "Girar PDF y borrar páginas — arregla un escaneo",
       metaDescription:
-        "Endereza las páginas escaneadas de lado y elimina las que no necesitas. Cada página se muestra en miniatura. Todo en el navegador, sin subir nada y sin registro.",
+        "Endereza las páginas escaneadas de lado y quita las que no necesitas. Cada página se ve en miniatura. Todo en el navegador, sin subir nada.",
       h1: "Girar PDF y borrar páginas",
       lead: "Todas las páginas aparecen como miniaturas. Gira las que salieron de lado, quita las que están en blanco y guarda lo que queda.",
       faq: [
@@ -255,9 +255,9 @@ export const es = {
 
     "pdf-compress": {
       blurb: "Recomprime las fotos que hay dentro del PDF. El texto sigue siendo texto.",
-      metaTitle: "Comprimir PDF — reduce el tamaño y conserva el texto",
+      metaTitle: "Comprimir PDF sin perder el texto",
       metaDescription:
-        "Reduce el tamaño de un PDF recomprimiendo las fotos que lleva dentro. El texto sigue siendo seleccionable y buscable. Todo en el navegador, sin subir nada y sin registro.",
+        "Reduce el tamaño de un PDF recomprimiendo las fotos que lleva dentro. El texto sigue siendo seleccionable y buscable. Todo en el navegador.",
       h1: "Comprimir PDF",
       lead: "Reduce un PDF recomprimiendo las fotos que contiene. El texto se deja tal cual, así que sigue pudiéndose seleccionar y buscar.",
       faq: [
@@ -301,7 +301,7 @@ export const es = {
       blurb: "Reduce un MP4 en tu navegador. Sin descargar 30MB de herramientas: lo hace tu propio equipo.",
       metaTitle: "Comprimir vídeo — reduce un MP4 en el navegador",
       metaDescription:
-        "Haz un MP4 más pequeño sin subirlo. Funciona en tu equipo con el codificador de vídeo del propio navegador, así que no hay nada que instalar y ningún archivo sale de tu máquina.",
+        "Haz un MP4 más pequeño sin subirlo. Funciona en tu equipo con el codificador de vídeo del navegador: nada que instalar y ningún archivo se va.",
       h1: "Comprimir vídeo",
       lead: "Vuelve a codificar la imagen a menos bitrate y deja el sonido exactamente como estaba. Todo ocurre en tu equipo.",
       faq: [
@@ -347,9 +347,9 @@ export const es = {
 
     "video-to-gif": {
       blurb: "Convierte un clip en un GIF en bucle. Sin subidas: lo hace tu dispositivo.",
-      metaTitle: "Vídeo a GIF — convierte MP4 a GIF en tu navegador",
+      metaTitle: "Vídeo a GIF — de MP4 a GIF en el navegador",
       metaDescription:
-        "Crea un GIF en bucle a partir de un MP4 o MOV sin subirlo. Elige la velocidad de fotogramas y el tamaño, y mira el resultado antes de guardarlo. Todo ocurre en tu navegador.",
+        "Crea un GIF en bucle desde un MP4 o MOV sin subirlo. Elige los fotogramas y el tamaño y mira el resultado antes de guardarlo. Todo en tu navegador.",
       h1: "Vídeo a GIF",
       lead: "Convierte un clip en un GIF en bucle. Elige cuán fluido y cuán grande debe ser; todo lo demás ocurre en tu dispositivo.",
       faq: [

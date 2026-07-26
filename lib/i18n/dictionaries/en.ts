@@ -164,7 +164,7 @@ export const en = {
 
     "pdf-split": {
       blurb: "Pull out the pages you want, or explode every page into its own PDF inside a ZIP.",
-      metaTitle: "Split PDF — extract pages or burst into single pages",
+      metaTitle: "Split PDF — extract pages or burst to singles",
       metaDescription:
         "Pull selected pages out of a PDF or split every page into its own file. Runs entirely in your browser with no upload, no sign-up and no watermark.",
       h1: "Split PDF",
@@ -212,9 +212,9 @@ export const en = {
 
     "pdf-organize": {
       blurb: "See every page, turn the sideways ones upright and drop the ones you don't want.",
-      metaTitle: "Rotate PDF & delete pages — fix a scan in your browser",
+      metaTitle: "Rotate PDF & delete pages — fix a crooked scan",
       metaDescription:
-        "Turn sideways scans upright and remove the pages you don't need. Every page is shown as a thumbnail. Runs entirely in your browser with no upload and no sign-up.",
+        "Turn sideways scans upright and drop the pages you don't need. Every page is shown as a thumbnail. All in your browser — no upload, no sign-up.",
       h1: "Rotate PDF & delete pages",
       lead: "Every page is laid out as a thumbnail. Turn the ones that came out sideways, drop the blank ones, and save what is left.",
       faq: [
@@ -304,7 +304,7 @@ export const en = {
       blurb: "Shrink an MP4 in your browser. No 30MB toolchain to download — your device does the work.",
       metaTitle: "Compress Video — shrink MP4 in your browser",
       metaDescription:
-        "Make an MP4 smaller without uploading it. Runs on your device using the browser's own video encoder, so there is nothing to install and no file ever leaves your machine.",
+        "Make an MP4 smaller without uploading it. Runs on your device with the browser's own video encoder — nothing to install, no file ever leaves it.",
       h1: "Compress video",
       lead: "Re-encodes the picture at a lower bitrate and leaves the sound exactly as it was. Everything happens on your device.",
       faq: [
@@ -350,9 +350,9 @@ export const en = {
 
     "video-to-gif": {
       blurb: "Turn a clip into a looping GIF. Your device does the work — nothing is uploaded.",
-      metaTitle: "Video to GIF — convert MP4 to GIF in your browser",
+      metaTitle: "Video to GIF — MP4 to GIF in your browser",
       metaDescription:
-        "Make a looping GIF out of an MP4 or MOV without uploading it. Choose the frame rate and size, and watch the result before you save it. Runs entirely in your browser.",
+        "Make a looping GIF from an MP4 or MOV without uploading it. Choose the frame rate and size and see the result before you save. All in your browser.",
       h1: "Video to GIF",
       lead: "Turns a clip into a looping GIF. Pick how smooth and how big it should be — everything happens on your device.",
       faq: [

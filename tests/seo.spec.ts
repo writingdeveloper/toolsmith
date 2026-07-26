@@ -1,6 +1,34 @@
 import { expect, test } from "@playwright/test";
+import { getDictionary } from "../lib/i18n";
 import { LOCALES } from "../lib/i18n/config";
 import { LIVE_TOOLS } from "../lib/tools";
+
+/**
+ * 검색결과에서 잘리는 길이를 넘지 않는지 본다. 브라우저가 필요 없는 데이터 검사라
+ * 배포본이 아니어도 돈다.
+ *
+ * 제목은 `%s | toolsmith` 템플릿이 붙어서 나가므로 접미사를 더해서 센다. 이 검사가
+ * 없으면 번역이 길어질 때마다 조용히 잘린다 — 독일어가 특히 잘 넘친다.
+ * (구글은 실제로는 픽셀로 자르지만, 글자 수가 손으로 지킬 수 있는 유일한 근사치다.)
+ */
+test("모든 언어의 제목·설명이 검색결과 잘림선 안에 있다", () => {
+  const SUFFIX = " | toolsmith".length;
+  const tooLong: string[] = [];
+
+  for (const locale of LOCALES) {
+    const dict = getDictionary(locale);
+    for (const tool of LIVE_TOOLS) {
+      const entry = dict.tools[tool.slug as keyof typeof dict.tools];
+      const title = entry.metaTitle.length + SUFFIX;
+      if (title > 60) tooLong.push(`${locale}/${tool.slug} 제목 ${title}자`);
+      if (entry.metaDescription.length > 160) {
+        tooLong.push(`${locale}/${tool.slug} 설명 ${entry.metaDescription.length}자`);
+      }
+    }
+  }
+
+  expect(tooLong.join("\n")).toBe("");
+});
 
 /**
  * 색인 설정은 배포본에서만 의미가 있다 (NEXT_PUBLIC_SITE_URL 이 있어야 robots 가 열린다).
