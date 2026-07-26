@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/JsonLd";
+import { RelatedTools } from "@/components/RelatedTools";
 import { getDictionary } from "@/lib/i18n";
 import { isLocale } from "@/lib/i18n/config";
 import { toolJsonLd } from "@/lib/schema";
@@ -45,7 +46,7 @@ export default async function VideoToGifPage({
 
       <GifMaker ui={tool.ui} common={dict.common} errors={dict.mediaErrors} />
 
-      <section className="space-y-4 border-t border-border pt-8 text-sm text-muted">
+      <section data-faq className="space-y-4 border-t border-border pt-8 text-sm text-muted">
         {tool.faq.map((entry) => (
           <div key={entry.q}>
             <h2 className="font-medium text-fg">{entry.q}</h2>
@@ -53,6 +54,7 @@ export default async function VideoToGifPage({
           </div>
         ))}
       </section>
+      <RelatedTools locale={locale} slug="video-to-gif" dict={dict} />
     </article>
   );
 }

@@ -24,6 +24,7 @@ export const ja = {
   },
 
   common: {
+    relatedHeading: "ほかの道具",
     chooseFile: "ファイルを選択",
     download: "ダウンロード",
     clear: "クリア",

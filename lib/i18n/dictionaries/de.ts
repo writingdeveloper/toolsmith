@@ -24,6 +24,7 @@ export const de = {
   },
 
   common: {
+    relatedHeading: "Weitere Werkzeuge",
     chooseFile: "Dateien wählen",
     download: "Herunterladen",
     clear: "Leeren",

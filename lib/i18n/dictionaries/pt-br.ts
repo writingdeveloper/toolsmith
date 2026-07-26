@@ -24,6 +24,7 @@ export const ptBR = {
   },
 
   common: {
+    relatedHeading: "Outras ferramentas",
     chooseFile: "Escolher arquivos",
     download: "Baixar",
     clear: "Limpar",

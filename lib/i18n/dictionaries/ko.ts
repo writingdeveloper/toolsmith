@@ -23,6 +23,7 @@ export const ko = {
   },
 
   common: {
+    relatedHeading: "다른 도구",
     chooseFile: "파일 선택",
     download: "다운로드",
     clear: "비우기",

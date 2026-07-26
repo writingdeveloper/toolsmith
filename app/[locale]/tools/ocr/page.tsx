@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/JsonLd";
+import { RelatedTools } from "@/components/RelatedTools";
 import { getDictionary } from "@/lib/i18n";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import type { OcrLanguage } from "@/lib/ocr/ocr-core";
@@ -61,7 +62,7 @@ export default async function OcrPage({ params }: { params: Promise<{ locale: st
         defaultLanguage={DEFAULT_LANGUAGE[locale]}
       />
 
-      <section className="space-y-4 border-t border-border pt-8 text-sm text-muted">
+      <section data-faq className="space-y-4 border-t border-border pt-8 text-sm text-muted">
         {tool.faq.map((entry) => (
           <div key={entry.q}>
             <h2 className="font-medium text-fg">{entry.q}</h2>
@@ -69,6 +70,7 @@ export default async function OcrPage({ params }: { params: Promise<{ locale: st
           </div>
         ))}
       </section>
+      <RelatedTools locale={locale} slug="ocr" dict={dict} />
     </article>
   );
 }

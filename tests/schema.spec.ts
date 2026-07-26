@@ -45,8 +45,10 @@ test("구조화 데이터의 FAQ 가 화면에 실제로 보이는 Q&A 와 같�
   const faq = nodes.find((node) => node["@type"] === "FAQPage")!;
   const questions = (faq.mainEntity as Record<string, unknown>[]).map((q) => q.name as string);
 
-  // 보이지 않는 Q&A 를 구조화 데이터에만 넣는 것은 구글 정책 위반이다
-  const visible = await page.getByRole("heading", { level: 2 }).allInnerTexts();
+  // 보이지 않는 Q&A 를 구조화 데이터에만 넣는 것은 구글 정책 위반이다.
+  // FAQ 구역 안만 본다 — 페이지 아래의 "다른 도구" 도 h2 라서 함께 잡히면
+  // 이 검사가 무엇을 지키는지 흐려진다.
+  const visible = await page.locator("[data-faq] h2").allInnerTexts();
   expect(questions).toEqual(visible);
 });
 
