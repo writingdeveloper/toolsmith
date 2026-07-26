@@ -1,0 +1,105 @@
+# toolsmith — 마스터 도구 목록 (단일 진실원천)
+
+> 이 파일이 "무엇을 만들 것인가"의 유일한 기준이다. 새 세션은 여기부터 읽는다.
+> 도구를 하나 끝낼 때마다 **상태**를 갱신한다. 상태는 `미착수 → 구현 → QA → 배포`.
+
+## 원칙 (바꾸지 말 것)
+
+1. **서버 연산 0.** v1의 모든 처리는 브라우저 안에서 끝난다. 업로드가 없다.
+2. **무거운 자산은 Vercel에 두지 않는다.** AI 모델은 HuggingFace CDN, wasm 바이너리는 R2/jsDelivr.
+   Vercel(Pro, 월 1TB)에는 앱 셸만. 근거: 모델 100MB × 방문 1만 = 1TB.
+3. **버튼을 누르기 전엔 아무것도 다운로드하지 않는다.** 모든 무거운 모듈은 지연 로딩.
+4. **3단 폴백.** WebGPU → WASM(CPU) → 명확한 미지원 안내. 조용한 실패 금지.
+5. **카피레프트 금지.** AGPL/GPL 라이브러리는 채택하지 않는다 (아래 라이선스 지뢰 참조).
+6. **메인 스레드에서 처리하지 않는다.** 전부 Web Worker.
+
+## 층 구조와 각 층의 역할
+
+| 층 | 런타임 | 역할 | 원가 |
+|---|---|---|---|
+| **Tier 1** | WASM / 브라우저 네이티브 (CPU) | **SEO 트래픽**. 전 기기(모바일 포함) 동작 | 0 |
+| **Tier 2** | WebGPU | **차별화·재방문**. 데스크톱 한정 | 0 |
+| **Tier 3** | WebGPU (Lab) | **백링크·소셜**. 화제성 전용, 실용성 무관 | 0 |
+| (유료, 보류) | 4080 노트북 서버 | 긴 파일·대형 모델·배치·모바일 | GPU 시간 |
+
+유료층은 **Tier 1~2가 실제 유입을 만든 뒤에만** 착수한다. v1에서는 4080을 쓰지 않는다.
+
+---
+
+## Tier 1 — WASM/CPU (SEO 앵커)
+
+전 기기에서 돌고, 다운로드가 작고, 검색 수요가 크다. **여기가 트래픽의 원천이다.**
+
+| # | 도구 | 라이브러리 | 라이선스 | 검색수요 | 상태 |
+|---|---|---|---|---|---|
+| 1 | 이미지 변환 (HEIC/PNG/JPG/WebP/AVIF) | Canvas/createImageBitmap + libheif-js | LGPL(동적) | 최상 | **구현** |
+| 2 | 이미지 압축 (품질 조절) | Canvas | — | 상 | 미착수 |
+| 3 | 이미지 리사이즈·크롭 | Canvas | — | 상 | 미착수 |
+| 4 | 영상 변환 (MP4/WebM/MOV) | ffmpeg.wasm | LGPL/MIT | 최상 | 미착수 |
+| 5 | 영상 압축 | ffmpeg.wasm | LGPL | 최상 | 미착수 |
+| 6 | 영상 트림·자르기 | ffmpeg.wasm | LGPL | 상 | 미착수 |
+| 7 | 영상 → GIF | ffmpeg.wasm | LGPL | 상 | 미착수 |
+| 8 | 오디오 추출·변환 (MP3/WAV/M4A) | ffmpeg.wasm | LGPL | 최상 | 미착수 |
+| 9 | PDF 병합 | pdf-lib | MIT | 최상 | 미착수 |
+| 10 | PDF 분할 | pdf-lib | MIT | 상 | 미착수 |
+| 11 | PDF 회전·페이지 삭제 | pdf-lib | MIT | 중 | 미착수 |
+| 12 | PDF 압축 | **pdf-lib + Canvas 이미지 재인코딩** | MIT | 최상 | 미착수 |
+| 13 | 이미지/PDF → 텍스트 (OCR) | tesseract.wasm | Apache-2.0 | 중 | 미착수 |
+| 14 | CSV/Parquet 뷰어·SQL 쿼리 | DuckDB-wasm | MIT | 중(무주공산) | 미착수 |
+
+## Tier 2 — WebGPU AI (차별화)
+
+`webml-community` Transformers.js V4 데모가 사실상 부품 카탈로그. 데스크톱 전용, VRAM 1~4GB 상한.
+
+| # | 도구 | 모델/출처 | 상태 |
+|---|---|---|---|
+| 15 | 자막 생성 (음성→텍스트) | Voxtral Realtime WebGPU | 미착수 |
+| 16 | 자막 번역 (56개 언어) | TranslateGemma 4B WebGPU | 미착수 |
+| 17 | 배경 제거 | RMBG-1.4 / MODNet | 미착수 |
+| 18 | 클릭 객체 컷아웃 | SAM3 Tracker WebGPU (※ `segment-anything-webgpu` 레포 재활용) | 미착수 |
+| 19 | 이미지 업스케일 4× | Real-ESRGAN / Real-CUGAN (TF.js WebGPU) | 미착수 |
+| 20 | 스템 분리 미리듣기 (30초) | Demucs (ONNX Runtime Web) | 미착수 |
+| 21 | 문서·웹페이지 요약 | LFM2.5 Summarizer | 미착수 |
+
+**핵심 퍼널**: 15(자막) → 16(번역) → ffmpeg.wasm(SRT 굽기)까지 전부 무료.
+마지막 칸(4080 Qwen3-TTS 더빙)만 유료. 이 흐름이 유료 전환의 축이다.
+
+## Tier 3 — Lab (백링크 전용)
+
+실용성이 아니라 **화제성**이 목적. 도메인 권위를 올려 Tier 1 페이지의 SEO를 밀어 올린다.
+
+| # | 데모 | 비고 | 상태 |
+|---|---|---|---|
+| 22 | Bonsai 27B 1-bit 브라우저 구동 | 54GB→3.8GB(-93%), 지능 90% 유지. 커널을 Fable 5 + GPT-5.6 Sol이 작성한 것이 화제의 본체 | 미착수 |
+| 23 | 실시간 영상 캡셔닝 | LFM2-VL WebGPU | 미착수 |
+| 24 | Text Behind Video | 소셜 바이럴형 | 미착수 |
+
+**주의**: Tier 3은 3.8GB 다운로드 등 일반 방문자에겐 불가능한 물건이다.
+`/lab` 경로에 격리하고, Tier 1·2 도구 페이지에서 링크하지 않는다.
+
+---
+
+## 채택하지 않기로 한 것 (재논의 금지)
+
+| 대상 | 이유 |
+|---|---|
+| Ghostscript.wasm | **AGPL** — 네트워크 배포 시 전체 소스 공개 의무. 상용 불가 |
+| mupdf-wasm | AGPL, 동일 |
+| LibreOffice WASM (문서 변환) | 2026년에도 너무 크고 느리고 불안정. 문서 변환은 v1 범위 밖 |
+| 브라우저 챗봇 (Gemma/Qwen/GPT-OSS) | 차별화 0, 다운로드만 큼. 도구 사이트와 무관 |
+| YouTube URL 입력 | DMCA + 결제 처리사 계정 위험. **업로드만 받는다** |
+| 광고 수익 모델 | RPM $3~8. 트래픽 폭증 시 서버 원가를 못 이김. 크레딧 선불제로 간다 |
+
+## 기술 함정 (걸려본 것 / 걸릴 것)
+
+- `COEP: require-corp`를 켜면 **교차 출처 리소스가 전부 차단**된다 → HF CDN 모델 로드와 정면 충돌.
+  `credentialless`를 쓰거나 COEP가 필요한 경로에만 헤더를 건다. **배포 전 실측 필수.**
+- ffmpeg.wasm 멀티스레드와 `SharedArrayBuffer`는 COOP/COEP 없으면 조용히 단일 스레드로 떨어진다.
+- Vercel Functions 요청 본문 4.5MB 제한 → 나중에 유료층 업로드는 **Vercel을 우회**해 4080/R2로 직행.
+- 도구 사이트는 스크래퍼가 wasm 자산을 긁어 대역폭을 태운다 → Vercel Firewall 레이트 리밋 필요.
+- WebGPU 어댑터 VRAM은 데스크톱 1~4GB, 모바일은 그 이하. iOS Safari는 여전히 불안정.
+
+## 작업 규율
+
+도구 하나당 **구현 → QA → 배포**를 끝내고 다음으로 간다. 여러 도구를 동시에 열지 않는다.
+각 단계 완료 시 이 파일의 상태 칸을 갱신하고 커밋한다.
