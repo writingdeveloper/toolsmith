@@ -52,9 +52,9 @@ export function PdfMerger() {
   /**
    * 워커를 첫 파일이 들어올 때 만든다.
    *
-   * 마운트 시점에 만들면 워커 청크가 곧바로 로드되고, 그와 함께 pdf-lib 까지 내려온다
-   * (실측: tests/pdf-merge.spec.ts). PDF 도구는 시작할 때 워커에 물어볼 것이 없으므로
-   * 생성을 미루는 편이 규칙 2번("버튼을 누르기 전엔 무거운 자산을 받지 않는다")에 맞다.
+   * PDF 도구는 시작할 때 워커에 물어볼 것이 없다(이미지 도구와 달리 인코더 감지가 필요
+   * 없다). 그러니 워커 청크조차 받을 이유가 없다 — 규칙 2번을 가장 엄격하게 지키는 형태다.
+   * 프로덕션 실측: 셸 529KB, PDF 를 넣은 뒤에야 +461KB. tests/pdf-merge.spec.ts 가 고정한다.
    */
   const ensureWorker = useCallback((): Worker | null => {
     if (workerRef.current) return workerRef.current;

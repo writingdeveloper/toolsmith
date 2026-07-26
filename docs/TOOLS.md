@@ -106,11 +106,15 @@
 - Vercel CLI 첫 배포는 git 연결이 없으면 **preview 가 아니라 production 으로 올라간다.**
   `--target preview` 를 명시해야 한다.
 - 워커에서 `Omit<Union, "id">` 는 공통 키만 남겨 payload 를 날린다. 조건부 타입으로 분배해야 한다.
-- **워커를 마운트 시점에 만들면 지연 로딩이 무너진다.** 워커 청크가 로드되면서 그 워커가
-  참조하는 동적 import 대상까지 함께 내려온다. **실측(2026-07-25)**: PDF 병합에서 워커를
-  `useEffect` 로 즉시 만들었더니 파일을 넣기도 전에 pdf-lib 청크가 내려왔다 → 첫 파일이
-  들어올 때 워커를 만들도록 바꿔 해결. 프로덕션 실측으로 셸 529KB / 파일 투입 후 461KB 확인.
-  `tests/pdf-merge.spec.ts` 가 이 순서를 고정한다.
+- **지연 로딩은 dev 서버에서 판정하지 말 것.** Turbopack dev 는 동적 import 청크를 미리
+  당겨온다 → dev 만 보면 멀쩡한 코드가 규칙 2번 위반처럼 보인다.
+  **실측(2026-07-25, 프로덕션)**:
+  - `/tools/image-convert` 로드 546KB → HEIC 를 넣은 순간 **+1.48MB**(libheif). 정상.
+  - `/tools/pdf-merge` 로드 529KB → PDF 를 넣은 순간 **+461KB**(워커+pdf-lib). 정상.
+
+  같은 페이지를 dev 에서 보면 둘 다 로드 시점에 이미 내려와 있다. **판정은 반드시
+  `BASE_URL=<배포주소> pnpm test` 로 한다.** 두 스펙 모두 프로덕션 전용 검사를 갖고 있고,
+  dev 에서는 자동으로 스킵된다.
 - pdf-lib 파서는 관대해서 PDF 가 아닌 바이트도 `PDFDocument.load` 는 통과시키고
   `getPageCount()` 에서 TypeError 로 터진다. load 만 try 로 감싸면 오류 분류가 새어 나간다.
 - pdf-lib 은 암호화를 **복호화하지 않는다.** `ignoreEncryption: true` 로 열면 내용이 깨진

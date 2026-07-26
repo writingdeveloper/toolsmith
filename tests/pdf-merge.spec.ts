@@ -139,7 +139,10 @@ test("제거한 파일은 결과에서 빠진다", async ({ page }) => {
   expect(result.pages.map((p) => p.text)).toEqual(["B1", "A1", "A2"]);
 });
 
-test("PDF 를 넣기 전에는 pdf-lib 을 내려받지 않는다", async ({ page }) => {
+/** dev 서버는 청크 URL 에 모듈 경로가 드러나므로 이름으로 확인할 수 있다. */
+test("PDF 를 넣기 전에는 pdf-lib 을 내려받지 않는다 (dev)", async ({ page }) => {
+  test.skip(!!process.env.BASE_URL, "프로덕션 청크는 해시 이름이라 아래 크기 기준 테스트가 맡는다");
+
   const requested: string[] = [];
   page.on("request", (request) => requested.push(request.url()));
 
@@ -151,6 +154,31 @@ test("PDF 를 넣기 전에는 pdf-lib 을 내려받지 않는다", async ({ pag
   await addFiles(page, [A], 1);
   // 파일이 들어온 뒤에야 받는다
   expect(requested.filter((url) => /pdf-lib/i.test(url)).length).toBeGreaterThan(0);
+});
+
+/** 프로덕션은 청크 이름이 해시라 크기로 본다. pdf-lib 은 약 450KB. */
+test("PDF 를 넣기 전에는 pdf-lib 을 내려받지 않는다 (프로덕션)", async ({ page }) => {
+  test.skip(!process.env.BASE_URL, "BASE_URL 로 배포본을 가리켰을 때만 의미가 있다");
+
+  let afterFile = 0;
+  let armed = false;
+  page.on("response", async (response) => {
+    if (!armed || !/\.(js|wasm)(\?|$)/.test(response.url())) return;
+    try {
+      afterFile += (await response.body()).length;
+    } catch {
+      /* 무시 */
+    }
+  });
+
+  await page.goto("/tools/pdf-merge");
+  await page.waitForLoadState("networkidle");
+
+  armed = true;
+  await addFiles(page, [A], 1);
+
+  // 미리 받아뒀다면 이 시점에 새로 받을 것이 없다.
+  expect(afterFile).toBeGreaterThan(300_000);
 });
 
 test("병합 중 파일이 네트워크로 나가지 않는다", async ({ page }) => {

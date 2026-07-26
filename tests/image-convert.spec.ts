@@ -140,6 +140,42 @@ test("변환 중 파일이 네트워크로 나가지 않는다", async ({ page }
   expect(outbound).toEqual([]);
 });
 
+/**
+ * 지연 로딩은 **프로덕션 번들에서만** 확인할 수 있다.
+ * Turbopack dev 서버는 동적 import 청크를 미리 당겨오기 때문에 dev 에서는 항상 실패한다.
+ *   BASE_URL=https://toolsmith-two.vercel.app pnpm test
+ */
+test("HEIC 를 넣기 전에는 libheif(1.4MB) 를 내려받지 않는다", async ({ page }) => {
+  test.skip(!process.env.BASE_URL, "BASE_URL 로 배포본을 가리켰을 때만 의미가 있다");
+
+  let afterFile = 0;
+  let armed = false;
+  page.on("response", async (response) => {
+    if (!armed || !/\.(js|wasm)(\?|$)/.test(response.url())) return;
+    try {
+      afterFile += (await response.body()).length;
+    } catch {
+      /* 무시 */
+    }
+  });
+
+  await page.goto("/tools/image-convert");
+  await page.waitForLoadState("networkidle");
+
+  armed = true;
+  // 디코드가 불가능한 .heic — createImageBitmap 이 실패해야 libheif 경로로 넘어간다
+  await page.locator('input[type="file"]').setInputFiles({
+    name: "fake.heic",
+    mimeType: "image/heic",
+    buffer: Buffer.from(Array.from({ length: 4096 }, (_, i) => (i * 31) % 256)),
+  });
+  await page.getByRole("button", { name: /변환하기$/ }).click();
+  await expect(page.getByText("이 브라우저가 읽지 못하는 형식입니다")).toBeVisible({ timeout: 60_000 });
+
+  // 미리 받아뒀다면 이 시점에 새로 받을 것이 없다. 1MB 를 넘으면 지금 받은 것이다.
+  expect(afterFile).toBeGreaterThan(1_000_000);
+});
+
 test("콘솔 에러 없이 동작한다", async ({ page }) => {
   const errors: string[] = [];
   page.on("console", (message) => {

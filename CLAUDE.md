@@ -66,11 +66,15 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 - Vercel **Spend Management** 지출 한도 알림 — 대시보드에서만 설정 가능.
 - GitHub 푸시 — 아직 로컬 `main` 만 있다.
 
+### 실측으로 확인된 것 (2026-07-25, 프로덕션)
+
+- **지연 로딩은 두 도구 모두 정상이다.** image-convert 546KB → HEIC 투입 시 +1.48MB(libheif),
+  pdf-merge 529KB → PDF 투입 시 +461KB(pdf-lib). **dev 서버에서는 둘 다 미리 내려온 것처럼
+  보인다** — Turbopack dev 가 동적 import 청크를 당겨오기 때문. 규칙 2번 판정은 반드시
+  `BASE_URL=<배포주소> pnpm test` 로 한다. 각 스펙의 프로덕션 전용 검사가 이것을 고정한다.
+
 ### 알려진 결함 (다음에 손볼 것)
 
-- **image-convert 가 libheif 를 미리 받는다.** 워커를 마운트 시점에 만들기 때문에 HEIC 를
-  넣지 않아도 `libheif-js/wasm-bundle` 청크가 내려온다(dev 실측). PDF 병합에서 쓴 지연
-  워커 생성 방식으로 고쳐야 규칙 2번을 지킨다. 프로덕션 전송량 실측은 아직 안 했다.
 - `pnpm lint` 가 4건(에러 3, 경고 1) 남아 있다. 대부분 `useEffect` 안의 `setSupported` —
   SSR/hydration 때문에 지금 구조에서는 불가피하다. `useSyncExternalStore` 로 정리 가능.
 
