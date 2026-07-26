@@ -1,0 +1,198 @@
+import type { Dictionary } from "./en";
+
+export const ja = {
+  site: {
+    title: "toolsmith — ファイルをアップロードしないブラウザツール",
+    titleTemplate: "%s | toolsmith",
+    description:
+      "ファイルは端末から出ません。画像・動画・PDFの変換をすべてブラウザの中で処理します。登録不要、アップロードなし。",
+    tagline: "アップロードなし · すべてブラウザ内で処理",
+    footerNote:
+      "選んだファイルがサーバーに送られることはありません。処理はすべてこのブラウザタブの中で完結します。",
+  },
+
+  home: {
+    title: "アップロードしないファイル変換ツール",
+    lead: "画像・動画・PDFをブラウザの中で直接処理します。ファイルが端末を離れないので、アップロードを待つ必要も、あとで削除を気にする必要もありません。",
+    availableHeading: "利用できるツール",
+    upcomingHeading: "準備中",
+  },
+
+  localePicker: {
+    title: "言語を選んでください",
+    lead: "toolsmith はすべてのファイルをブラウザの中で処理します。言語を選んで続けてください。",
+  },
+
+  common: {
+    chooseFile: "ファイルを選択",
+    download: "ダウンロード",
+    clear: "クリア",
+    downloadAll: "すべてダウンロード",
+    workerUnsupportedTitle: "このブラウザではこのツールを実行できません。",
+    workerUnsupportedHint:
+      "Web Worker に対応した最新の Chrome、Edge、Firefox、Safari で開いてください。",
+  },
+
+  pdfErrors: {
+    encrypted: "パスワードで保護された PDF です",
+    noPages: "ページのない PDF です",
+    tooLarge: "512MB を超えています",
+    invalid: "PDF として読み取れません",
+    badRange: "ページ番号を解釈できませんでした",
+    outOfBounds: "この PDF に存在しないページです",
+    generic: "処理に失敗しました",
+  },
+
+  toolNames: {
+    "image-convert": "画像変換・圧縮",
+    "video-convert": "動画変換",
+    "video-compress": "動画圧縮",
+    "video-trim": "動画トリミング",
+    "video-to-gif": "動画 → GIF",
+    "audio-extract": "音声抽出・変換",
+    "pdf-merge": "PDF 結合",
+    "pdf-split": "PDF 分割",
+    "pdf-compress": "PDF 圧縮",
+    ocr: "画像 → テキスト",
+    "data-query": "CSV・Parquet クエリ",
+    subtitles: "字幕生成",
+    "subtitle-translate": "字幕翻訳",
+    "remove-bg": "背景除去",
+    cutout: "クリック切り抜き",
+    upscale: "画像アップスケール",
+    stems: "ステム分離",
+  },
+
+  tools: {
+    "image-convert": {
+      blurb: "HEIC・PNG・JPG・WebP・AVIF を相互変換。圧縮とリサイズも一度に。",
+      metaTitle: "画像変換・圧縮 — HEIC, PNG, JPG, WebP, AVIF",
+      metaDescription:
+        "iPhone の HEIC 写真を JPG に、PNG を WebP に。アップロードなしでブラウザ内で変換・圧縮します。登録不要、枚数制限なし。",
+      h1: "画像変換・圧縮",
+      lead: "HEIC・PNG・JPG・WebP・AVIF を相互に変換し、画質を調整して容量を減らし、同時にサイズも縮小します。複数枚をまとめて処理できます。",
+      faq: [
+        {
+          q: "ファイルはどこへ行きますか？",
+          a: "どこにも行きません。変換はこのブラウザタブの中で実行され、選んだ画像がネットワークに送られることはありません。タブを閉じればそのまま消えます。",
+        },
+        {
+          q: "iPhone の HEIC 写真も使えますか？",
+          a: "使えます。Safari は HEIC を直接読み、Chrome・Firefox では HEIC を入れた瞬間にだけデコーダを取得します。HEIC を使わなければダウンロードも発生しません。",
+        },
+        {
+          q: "どの形式を選べばよいですか？",
+          a: "ウェブに載せるなら同じ画質で最も軽い WebP。どこでも開く必要があるなら JPG、透過が必要なら PNG です。ブラウザが実際に生成できる形式だけが一覧に出ます。",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "このブラウザでは画像変換を実行できません。",
+        unsupportedHint:
+          "OffscreenCanvas に対応した最新の Chrome、Edge、Firefox、Safari 17 以降で開いてください。",
+        dropLabel: "画像をここにドロップ",
+        dropHint: "HEIC · PNG · JPG · WebP · AVIF · GIF · BMP — まとめて処理",
+        formatLabel: "出力形式",
+        qualityLabel: "画質 {value}",
+        qualityLossless: "画質（PNG は可逆）",
+        sizeLabel: "サイズ",
+        sizeOriginal: "元のサイズのまま",
+        sizeMax: "長辺 {px}px",
+        convert: "{n}枚を変換",
+        converting: "変換中…",
+        itemWorking: "変換中…",
+        errUnsupportedInput: "このブラウザが読み取れない形式です",
+        errGeneric: "変換に失敗しました",
+      },
+    },
+
+    "pdf-merge": {
+      blurb: "複数の PDF を好きな順番でひとつに。再レンダリングせず原本のまま繋ぎます。",
+      metaTitle: "PDF 結合 — 複数の PDF をひとつにまとめる",
+      metaDescription:
+        "複数の PDF を好きな順番で繋ぎます。アップロードなしでブラウザ内で処理し、登録も透かしもファイル数制限もありません。",
+      h1: "PDF 結合",
+      lead: "複数の PDF をひとつのファイルに繋ぎます。リストの順番を変えれば、その順番どおりに結合されます。",
+      faq: [
+        {
+          q: "ファイルはどこへ行きますか？",
+          a: "どこにも行きません。結合はこのブラウザタブの中で実行され、選んだ PDF がネットワークに送られることはありません。タブを閉じればそのまま消えます。",
+        },
+        {
+          q: "ページの順番はどう決めますか？",
+          a: "リストの上から下がそのまま結果のページ順です。↑ ↓ でファイルを動かし、✕ でリストから外せます。各ファイル内のページは元の順序を保ちます。",
+        },
+        {
+          q: "パスワード付きの PDF も使えますか？",
+          a: "使えません。保護された PDF はそのように表示され、結合から除外されます。開けたふりをして中身が壊れた結果を渡さないためです。先にパスワードを解除してください。",
+        },
+        {
+          q: "品質は落ちますか？",
+          a: "落ちません。ページを再レンダリングせず、元のページをそのままコピーします。文字は文字のまま、画像は元の解像度のまま残ります。",
+        },
+      ],
+      ui: {
+        dropLabel: "PDF をここにドロップ",
+        dropHint: "2つ以上入れると上から順に繋ぎます",
+        listLabel: "結合するファイル",
+        reading: "読み込み中…",
+        pageCount: "{n}ページ",
+        moveUp: "{name} を上へ",
+        moveDown: "{name} を下へ",
+        remove: "{name} を削除",
+        merge: "{n}個を結合",
+        merging: "結合中…",
+        totalPages: "合計 {n}ページ",
+        needTwo: "PDF が2つ以上必要です",
+        resultDetail: "{pages}ページ · {size}",
+      },
+    },
+
+    "pdf-split": {
+      blurb: "必要なページだけ取り出す、または全ページを1枚ずつに分けて ZIP で。",
+      metaTitle: "PDF 分割 — ページ抽出・1ページずつ分割",
+      metaDescription:
+        "PDF から必要なページだけ取り出したり、全ページを1枚ずつに分割します。アップロードなしでブラウザ内で処理し、登録も透かしもありません。",
+      h1: "PDF 分割",
+      lead: "必要なページだけを取り出してひとつの PDF にするか、全ページを1枚ずつの PDF に分けて ZIP で受け取ります。",
+      faq: [
+        {
+          q: "ファイルはどこへ行きますか？",
+          a: "どこにも行きません。分割はこのブラウザタブの中で実行され、選んだ PDF がネットワークに送られることはありません。タブを閉じればそのまま消えます。",
+        },
+        {
+          q: "ページ番号はどう書きますか？",
+          a: "1-3, 5, 8- のように書きます。1-3 は1ページから3ページまで、5 は5ページ1枚、8- は8ページから最後までという意味です。書いた順番がそのまま結果の順番になります。",
+        },
+        {
+          q: "存在しないページを書いたらどうなりますか？",
+          a: "その場でお知らせします。10ページの文書に 1-99 と書いたとき、黙って10ページまでに切り詰めて成功させると、無いページがあると思い込んだまま進んでしまいます。そうはしません。",
+        },
+        {
+          q: "品質は落ちますか？",
+          a: "落ちません。ページを再レンダリングせず、元のページをそのままコピーします。文字は文字のまま、画像は元の解像度のまま残ります。",
+        },
+      ],
+      ui: {
+        dropLabel: "PDF をここにドロップ",
+        dropHint: "1つずつ処理します — 必要なページだけ取り出すか、全ページを1枚ずつに分けます",
+        reading: "読み込み中…",
+        pageCount: "{n}ページ",
+        modeExtract: "ページ範囲を抽出",
+        modeExtractHint: "選んだページだけを集めて1つの PDF に",
+        modePages: "全ページを1枚ずつ",
+        modePagesHint: "{n}個の1ページ PDF を ZIP ひとつにまとめます",
+        rangeLabel: "抽出するページ",
+        rangePlaceholder: "例: 1-3, 5, 8-（全{n}ページ）",
+        selected: "{n}ページ選択中",
+        needRange: "取り出すページを入力してください",
+        runExtract: "抽出する",
+        runPages: "1枚ずつに分ける",
+        processing: "処理中…",
+        extractName: "{stem}-抽出.pdf",
+        zipName: "{stem}-分割.zip",
+        extractDetail: "{pages}ページ · {size}",
+        zipDetail: "PDF {count}個 · {size}",
+      },
+    },
+  },
+} satisfies Dictionary;

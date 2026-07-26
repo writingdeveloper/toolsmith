@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FileDrop } from "@/components/FileDrop";
 import { canRunImageTools } from "@/lib/capabilities";
 import { formatBytes, replaceExtension, savingsPercent } from "@/lib/format";
+import { fill } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/dictionaries/en";
 import {
   FORMAT_EXTENSION,
   FORMAT_LABEL,
@@ -13,13 +15,10 @@ import {
 } from "@/lib/image/convert-core";
 import type { WorkerRequest, WorkerRequestPayload, WorkerResponse } from "./convert.worker";
 
-const MAX_EDGE_CHOICES = [
-  { value: 0, label: "원본 크기 유지" },
-  { value: 4000, label: "긴 변 4000px" },
-  { value: 2000, label: "긴 변 2000px" },
-  { value: 1200, label: "긴 변 1200px" },
-  { value: 800, label: "긴 변 800px" },
-];
+type Ui = Dictionary["tools"]["image-convert"]["ui"];
+type Common = Dictionary["common"];
+
+const MAX_EDGES = [0, 4000, 2000, 1200, 800];
 
 interface Item {
   id: number;
@@ -29,12 +28,11 @@ interface Item {
   error?: string;
 }
 
-function describeError(message: string): string {
-  if (message === "UNSUPPORTED_INPUT") return "이 브라우저가 읽지 못하는 형식입니다";
-  return "변환에 실패했습니다";
+function describeError(ui: Ui, message: string): string {
+  return message === "UNSUPPORTED_INPUT" ? ui.errUnsupportedInput : ui.errGeneric;
 }
 
-export function ImageConverter() {
+export function ImageConverter({ ui, common }: { ui: Ui; common: Common }) {
   const [supported, setSupported] = useState<boolean | null>(null);
   const [formats, setFormats] = useState<OutputFormat[]>([]);
   const [format, setFormat] = useState<OutputFormat>("image/jpeg");
@@ -159,14 +157,16 @@ export function ImageConverter() {
         const message = error instanceof Error ? error.message : "UNKNOWN";
         setItems((prev) =>
           prev.map((item) =>
-            item.id === target.id ? { ...item, status: "error", error: describeError(message) } : item,
+            item.id === target.id
+              ? { ...item, status: "error", error: describeError(ui, message) }
+              : item,
           ),
         );
       }
     }
 
     setBusy(false);
-  }, [callWorker, format, quality, maxEdge]);
+  }, [callWorker, format, quality, maxEdge, ui]);
 
   const downloadAll = useCallback(() => {
     for (const item of itemsRef.current) {
@@ -181,10 +181,8 @@ export function ImageConverter() {
   if (supported === false) {
     return (
       <div className="rounded-xl border border-border bg-panel p-6">
-        <p className="font-medium text-warn">이 브라우저에서는 이미지 변환을 실행할 수 없습니다.</p>
-        <p className="mt-2 text-sm text-muted">
-          OffscreenCanvas 를 지원하는 최신 Chrome, Edge, Firefox, Safari 17 이상에서 열어 주세요.
-        </p>
+        <p className="font-medium text-warn">{ui.unsupportedTitle}</p>
+        <p className="mt-2 text-sm text-muted">{ui.unsupportedHint}</p>
       </div>
     );
   }
@@ -197,14 +195,15 @@ export function ImageConverter() {
       <FileDrop
         accept="image/*,.heic,.heif"
         onFiles={addFiles}
-        label="이미지를 여기에 놓으세요"
-        hint="HEIC · PNG · JPG · WebP · AVIF · GIF · BMP — 여러 장 한 번에"
+        label={ui.dropLabel}
+        hint={ui.dropHint}
+        cta={common.chooseFile}
         disabled={busy}
       />
 
       <div className="grid gap-4 rounded-xl border border-border bg-panel p-5 sm:grid-cols-3">
         <label className="space-y-1.5">
-          <span className="block text-sm text-muted">출력 형식</span>
+          <span className="block text-sm text-muted">{ui.formatLabel}</span>
           <select
             value={format}
             disabled={busy || formats.length === 0}
@@ -221,7 +220,9 @@ export function ImageConverter() {
 
         <label className="space-y-1.5">
           <span className="block text-sm text-muted">
-            {isLossy ? `품질 ${Math.round(quality * 100)}` : "품질 (PNG는 무손실)"}
+            {isLossy
+              ? fill(ui.qualityLabel, { value: Math.round(quality * 100) })
+              : ui.qualityLossless}
           </span>
           <input
             type="range"
@@ -236,16 +237,16 @@ export function ImageConverter() {
         </label>
 
         <label className="space-y-1.5">
-          <span className="block text-sm text-muted">크기</span>
+          <span className="block text-sm text-muted">{ui.sizeLabel}</span>
           <select
             value={maxEdge}
             disabled={busy}
             onChange={(event) => setMaxEdge(Number(event.target.value))}
             className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm"
           >
-            {MAX_EDGE_CHOICES.map((choice) => (
-              <option key={choice.value} value={choice.value}>
-                {choice.label}
+            {MAX_EDGES.map((px) => (
+              <option key={px} value={px}>
+                {px === 0 ? ui.sizeOriginal : fill(ui.sizeMax, { px })}
               </option>
             ))}
           </select>
@@ -261,7 +262,7 @@ export function ImageConverter() {
               disabled={busy || formats.length === 0}
               className="rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg disabled:opacity-50"
             >
-              {busy ? "변환 중…" : `${items.length}장 변환하기`}
+              {busy ? ui.converting : fill(ui.convert, { n: items.length })}
             </button>
             {doneCount > 1 && (
               <button
@@ -270,7 +271,7 @@ export function ImageConverter() {
                 disabled={busy}
                 className="rounded-lg border border-border px-5 py-2.5 text-sm font-medium disabled:opacity-50"
               >
-                전체 다운로드
+                {common.downloadAll}
               </button>
             )}
             <button
@@ -279,7 +280,7 @@ export function ImageConverter() {
               disabled={busy}
               className="text-sm text-muted underline disabled:opacity-50"
             >
-              비우기
+              {common.clear}
             </button>
           </div>
 
@@ -308,7 +309,9 @@ export function ImageConverter() {
                   </p>
                 </div>
 
-                {item.status === "working" && <span className="text-sm text-muted">변환 중…</span>}
+                {item.status === "working" && (
+                  <span className="text-sm text-muted">{ui.itemWorking}</span>
+                )}
                 {item.status === "error" && <span className="text-sm text-err">{item.error}</span>}
                 {item.status === "done" && item.result && (
                   <a
@@ -316,7 +319,7 @@ export function ImageConverter() {
                     download={item.result.name}
                     className="rounded-lg border border-border px-4 py-2 text-sm font-medium"
                   >
-                    다운로드
+                    {common.download}
                   </a>
                 )}
               </li>

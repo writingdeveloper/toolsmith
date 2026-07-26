@@ -26,7 +26,7 @@ async function runAndDownload(page: Page, button: RegExp) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/tools/pdf-split");
+  await page.goto("/ko/tools/pdf-split");
 });
 
 test("고른 페이지만, 적은 순서 그대로 뽑는다", async ({ page }) => {
@@ -148,7 +148,7 @@ test("PDF 를 넣기 전에는 pdf-lib 을 내려받지 않는다 (프로덕션)
     }
   });
 
-  await page.goto("/tools/pdf-split");
+  await page.goto("/ko/tools/pdf-split");
   await page.waitForLoadState("networkidle");
 
   armed = true;

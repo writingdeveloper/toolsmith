@@ -56,7 +56,7 @@ async function convert(page: Page, expected: number) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/tools/image-convert");
+  await page.goto("/ko/tools/image-convert");
 });
 
 test("브라우저가 실제로 인코딩 가능한 형식만 노출한다", async ({ page }) => {
@@ -159,7 +159,7 @@ test("HEIC 를 넣기 전에는 libheif(1.4MB) 를 내려받지 않는다", asyn
     }
   });
 
-  await page.goto("/tools/image-convert");
+  await page.goto("/ko/tools/image-convert");
   await page.waitForLoadState("networkidle");
 
   armed = true;

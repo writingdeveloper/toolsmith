@@ -14,11 +14,27 @@
 **도구 하나씩 `구현 → QA → 배포`.** 여러 도구를 동시에 열지 않는다.
 
 1. `docs/TOOLS.md` 에서 다음 도구를 고른다 (Tier 1 부터, 검색수요 높은 순).
-2. `lib/tools.ts` 에 등록하고 `app/tools/<slug>/` 를 만든다.
+2. `lib/tools.ts` 에 등록하고 `app/[locale]/tools/<slug>/` 를 만든다.
 3. 처리 로직은 `lib/<domain>/` 에 **순수 모듈**로 두고 워커가 그것을 부른다.
    순수 모듈은 `window` / `document` 를 참조하지 않는다 (워커·메인 양쪽에서 쓰인다).
-4. `tests/<slug>.spec.ts` 작성 → `pnpm test`.
-5. 배포 → `docs/TOOLS.md` 의 상태 칸을 `배포` 로 갱신 → 커밋.
+4. **사전 6개를 채운다.** `lib/i18n/dictionaries/en.ts` 에 키를 추가하면 나머지 5개는
+   타입 에러로 빠짐없이 드러난다. 사람이 읽는 문자열을 컴포넌트에 직접 쓰지 않는다.
+5. `tests/<slug>.spec.ts` 작성 → `pnpm test`. 스펙은 `/ko/tools/<slug>` 를 친다.
+6. 배포 → `BASE_URL=<배포주소> pnpm test` → `docs/TOOLS.md` 상태 칸 갱신 → 커밋.
+
+## 다국어 (2026-07-25 도입)
+
+- 지원: **en · ko · ja · es · de · pt-br** (`lib/i18n/config.ts` 가 유일한 목록).
+- URL 은 전부 접두사: `/{locale}/tools/{slug}`. URL 세그먼트는 **소문자**(`pt-br`),
+  `<html lang>` 과 hreflang 은 표준 표기(`pt-BR`) — `HTML_LANG` 이 그 변환을 갖는다.
+- `/` 는 정적 언어 선택 페이지. **리다이렉트를 쓰지 않는다** — 미들웨어를 켜면
+  Vercel Function 이 돌아 "서버 연산 0" 이 깨진다.
+- 루트 레이아웃이 두 개다: `app/(root)/layout.tsx`(언어 선택)와
+  `app/[locale]/layout.tsx`(그 외 전부). `app/layout.tsx` 를 만들면 안 된다 —
+  그 순간 모든 페이지가 하나의 `<html lang>` 을 공유하게 된다.
+- 사전은 **서버 컴포넌트에서만** 읽고 클라이언트에는 필요한 조각만 prop 으로 넘긴다.
+  그래서 사전에 함수를 담을 수 없다 → 자리표시자는 `fill()` 로 채운다.
+- `tests/i18n.spec.ts` 가 언어 × 페이지, lang 속성, hreflang, canonical, 404 를 고정한다.
 
 ## 명령어
 
@@ -58,9 +74,12 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 - 도구 #1 이미지 변환·압축: **배포 완료.** https://toolsmith-two.vercel.app
 - 도구 #9 PDF 병합: **배포 완료.** `/tools/pdf-merge`
-- 도구 #10 PDF 분할: **배포 완료.** `/tools/pdf-split` (범위 추출 + 낱장 ZIP)
-- Playwright 28종. 프로덕션 27 통과 / 1 스킵(dev 전용), dev 25 통과 / 3 스킵.
+- 도구 #10 PDF 분할: **배포 완료.** `/{locale}/tools/pdf-split` (범위 추출 + 낱장 ZIP)
+- **다국어 6개 언어 배포 완료.** 정적 페이지 30장(6 언어 × 4 + 루트 + robots/sitemap).
+- Playwright 35종. 프로덕션 34 통과 / 1 스킵(dev 전용), dev 32 통과 / 3 스킵.
 - PDF 공통 토대는 `lib/pdf/document.ts` — 병합·분할이 함께 쓴다. 도구별 로직만 각자 파일에.
+- `app/sitemap.ts` 추가 — 언어 × 페이지 전부, 각 항목이 자기 언어판을 alternates 로 가리킨다.
+  `NEXT_PUBLIC_SITE_URL` 이 없으면 빈 사이트맵을 낸다(robots 도 이때는 전면 차단이라 앞뒤가 맞다).
 - 본 도메인 미정 → `app/robots.ts` 가 전면 `Disallow: /`. `NEXT_PUBLIC_SITE_URL` 설정 시 열린다.
 
 ### 남은 일 (사용자 몫)
@@ -90,8 +109,8 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 다음 할 일
 
-1. **다국어(i18n) + SEO 골격** ← 사용자 요청(2026-07-25). 도구가 늘기 전에 지금 넣는 것이
-   가장 싸다. hreflang·canonical·sitemap 은 i18n 과 한 몸이라 함께 처리한다.
-   `app/sitemap.ts` 는 아직 없다.
+1. **본 도메인 결정**(사용자 몫) — 이것이 열리기 전까지 유입은 0 이다. `NEXT_PUBLIC_SITE_URL`
+   을 넣는 순간 robots 가 열리고 sitemap 이 채워진다. 그 다음 Search Console 에 제출.
 2. **PDF 회전·페이지 삭제** (#11) — `lib/pdf/document.ts` 재사용, 가장 싼 확장.
 3. **영상 변환** (ffmpeg.wasm) — 검색수요 최상이지만 COEP 스코프를 먼저 뚫어야 한다.
+4. 도구 페이지 JSON-LD(HowTo / SoftwareApplication) — 아직 없다. GEO(LLM 인용)에 유리하다.

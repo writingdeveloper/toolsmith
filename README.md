@@ -35,16 +35,24 @@ pnpm test             # Playwright — dev 서버를 자동으로 띄운다
 
 ```
 app/
-  page.tsx                     홈 — 도구 그리드 (lib/tools.ts 레지스트리 기반)
-  tools/<slug>/
-    page.tsx                   서버 컴포넌트: 메타데이터 + SEO 본문
-    <Tool>.tsx                 'use client' — UI와 워커 RPC
-    *.worker.ts                실제 처리. 메인 스레드에서 돌리지 않는다
+  (root)/page.tsx              "/" 언어 선택 (정적, 리다이렉트 없음)
+  [locale]/
+    layout.tsx                 <html lang>, 헤더·푸터, hreflang
+    page.tsx                   홈 — 도구 그리드 (lib/tools.ts 레지스트리 기반)
+    tools/<slug>/
+      page.tsx                 서버 컴포넌트: 메타데이터 + SEO 본문
+      <Tool>.tsx               'use client' — UI와 워커 RPC (문자열은 prop 으로 받는다)
+      *.worker.ts              실제 처리. 메인 스레드에서 돌리지 않는다
+  sitemap.ts / robots.ts       언어 × 페이지 전부
 lib/
   tools.ts                     도구 레지스트리 (docs/TOOLS.md 의 코드측 거울)
+  i18n/config.ts               지원 언어 목록 ← 라우팅·hreflang·sitemap 이 전부 이걸 읽는다
+  i18n/dictionaries/*.ts       en 이 기준. 나머지는 satisfies Dictionary 로 강제된다
   capabilities.ts              WebGPU / OffscreenCanvas / crossOriginIsolated 감지
   image/convert-core.ts        디코드·인코드 핵심. window·document 를 참조하지 않는다
-  pdf/merge-core.ts            PDF 읽기·병합 핵심. pdf-lib 은 여기서만 동적으로 불린다
+  pdf/document.ts              PDF 공통 토대(열기·오류 번역). pdf-lib 은 여기서만 동적 로드
+  pdf/merge-core.ts            병합
+  pdf/split-core.ts            범위 추출·낱장 분리·ZIP
 tests/                         Playwright 스펙 + 픽스처
 docs/TOOLS.md                  마스터 도구 목록 ← 단일 진실원천
 ```

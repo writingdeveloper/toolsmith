@@ -8,10 +8,20 @@ interface FileDropProps {
   onFiles: (files: File[]) => void;
   label: string;
   hint: string;
+  /** 파일 선택 버튼 문구 */
+  cta: string;
   disabled?: boolean;
 }
 
-export function FileDrop({ accept, multiple = true, onFiles, label, hint, disabled }: FileDropProps) {
+export function FileDrop({
+  accept,
+  multiple = true,
+  onFiles,
+  label,
+  hint,
+  cta,
+  disabled,
+}: FileDropProps) {
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const inputId = useId();
@@ -60,7 +70,7 @@ export function FileDrop({ accept, multiple = true, onFiles, label, hint, disabl
         htmlFor={inputId}
         className="mt-5 inline-block cursor-pointer rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg"
       >
-        파일 선택
+        {cta}
       </label>
     </div>
   );

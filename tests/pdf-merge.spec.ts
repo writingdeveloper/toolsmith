@@ -33,7 +33,7 @@ async function merge(page: Page) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/tools/pdf-merge");
+  await page.goto("/ko/tools/pdf-merge");
 });
 
 test("페이지 수·순서·내용이 원본 그대로 보존된다", async ({ page }) => {
@@ -99,7 +99,7 @@ test("PDF 를 넣기 전에는 pdf-lib 을 내려받지 않는다 (dev)", async 
   const requested: string[] = [];
   page.on("request", (request) => requested.push(request.url()));
 
-  await page.goto("/tools/pdf-merge");
+  await page.goto("/ko/tools/pdf-merge");
   await page.waitForLoadState("networkidle");
   const before = requested.filter((url) => /pdf-lib/i.test(url));
   expect(before).toEqual([]);
@@ -124,7 +124,7 @@ test("PDF 를 넣기 전에는 pdf-lib 을 내려받지 않는다 (프로덕션)
     }
   });
 
-  await page.goto("/tools/pdf-merge");
+  await page.goto("/ko/tools/pdf-merge");
   await page.waitForLoadState("networkidle");
 
   armed = true;

@@ -4,9 +4,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FileDrop } from "@/components/FileDrop";
 import { canRunPdfTools } from "@/lib/capabilities";
 import { fileStem, formatBytes } from "@/lib/format";
+import { fill } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/dictionaries/en";
 import { PdfError } from "@/lib/pdf/document";
 import { parsePageRanges } from "@/lib/pdf/split-core";
 import type { WorkerRequest, WorkerRequestPayload, WorkerResponse } from "./split.worker";
+
+type Ui = Dictionary["tools"]["pdf-split"]["ui"];
+type Common = Dictionary["common"];
+type Errors = Dictionary["pdfErrors"];
 
 type Mode = "extract" | "pages";
 
@@ -16,26 +22,26 @@ interface Result {
   detail: string;
 }
 
-function describeError(message: string): string {
+function describeError(errors: Errors, message: string): string {
   switch (message) {
     case "ENCRYPTED":
-      return "암호로 보호된 PDF 입니다";
+      return errors.encrypted;
     case "NO_PAGES":
-      return "페이지가 없는 PDF 입니다";
+      return errors.noPages;
     case "TOO_LARGE":
-      return "512MB 를 넘습니다";
+      return errors.tooLarge;
     case "INVALID_PDF":
-      return "PDF 로 읽을 수 없습니다";
+      return errors.invalid;
     case "BAD_RANGE":
-      return "페이지 번호를 이해하지 못했습니다";
+      return errors.badRange;
     case "RANGE_OUT_OF_BOUNDS":
-      return "이 PDF 에 없는 페이지입니다";
+      return errors.outOfBounds;
     default:
-      return "처리에 실패했습니다";
+      return errors.generic;
   }
 }
 
-export function PdfSplitter() {
+export function PdfSplitter({ ui, common, errors }: { ui: Ui; common: Common; errors: Errors }) {
   const [supported, setSupported] = useState<boolean | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState<number | null>(null);
@@ -116,10 +122,10 @@ export function PdfSplitter() {
         setPageCount(response.pageCount);
       } catch (error) {
         setPageCount(null);
-        setFileError(describeError(error instanceof Error ? error.message : "UNKNOWN"));
+        setFileError(describeError(errors, error instanceof Error ? error.message : "UNKNOWN"));
       }
     },
-    [callWorker],
+    [callWorker, errors],
   );
 
   /** 입력하는 즉시 몇 쪽이 잡히는지 보여준다. 여기서는 pdf-lib 을 부르지 않는다. */
@@ -130,10 +136,10 @@ export function PdfSplitter() {
     } catch (error) {
       return {
         indices: [] as number[],
-        error: describeError(error instanceof PdfError ? error.code : "UNKNOWN"),
+        error: describeError(errors, error instanceof PdfError ? error.code : "UNKNOWN"),
       };
     }
-  }, [spec, pageCount]);
+  }, [spec, pageCount, errors]);
 
   const run = useCallback(async () => {
     if (!file || pageCount === null) return;
@@ -148,32 +154,36 @@ export function PdfSplitter() {
         if (response.kind !== "extracted") throw new Error("UNKNOWN");
         setResult({
           url: URL.createObjectURL(response.blob),
-          name: `${stem}-추출.pdf`,
-          detail: `${response.pageCount}페이지 · ${formatBytes(response.blob.size)}`,
+          name: fill(ui.extractName, { stem }),
+          detail: fill(ui.extractDetail, {
+            pages: response.pageCount,
+            size: formatBytes(response.blob.size),
+          }),
         });
       } else {
         const response = await callWorker({ kind: "split", file, stem });
         if (response.kind !== "split") throw new Error("UNKNOWN");
         setResult({
           url: URL.createObjectURL(response.blob),
-          name: `${stem}-낱장.zip`,
-          detail: `PDF ${response.count}개 · ${formatBytes(response.blob.size)}`,
+          name: fill(ui.zipName, { stem }),
+          detail: fill(ui.zipDetail, {
+            count: response.count,
+            size: formatBytes(response.blob.size),
+          }),
         });
       }
     } catch (error) {
-      setFailure(describeError(error instanceof Error ? error.message : "UNKNOWN"));
+      setFailure(describeError(errors, error instanceof Error ? error.message : "UNKNOWN"));
     } finally {
       setBusy(false);
     }
-  }, [callWorker, file, mode, pageCount, selection.indices]);
+  }, [callWorker, errors, file, mode, pageCount, selection.indices, ui]);
 
   if (supported === false) {
     return (
       <div className="rounded-xl border border-border bg-panel p-6">
-        <p className="font-medium text-warn">이 브라우저에서는 PDF 분할을 실행할 수 없습니다.</p>
-        <p className="mt-2 text-sm text-muted">
-          Web Worker 를 지원하는 최신 Chrome, Edge, Firefox, Safari 에서 열어 주세요.
-        </p>
+        <p className="font-medium text-warn">{common.workerUnsupportedTitle}</p>
+        <p className="mt-2 text-sm text-muted">{common.workerUnsupportedHint}</p>
       </div>
     );
   }
@@ -187,8 +197,9 @@ export function PdfSplitter() {
         accept="application/pdf,.pdf"
         multiple={false}
         onFiles={accept}
-        label="PDF 를 여기에 놓으세요"
-        hint="한 개씩 처리합니다 — 원하는 페이지만 뽑거나, 모든 페이지를 낱장으로 쪼갭니다"
+        label={ui.dropLabel}
+        hint={ui.dropHint}
+        cta={common.chooseFile}
         disabled={busy}
       />
 
@@ -197,8 +208,8 @@ export function PdfSplitter() {
           <p className="truncate font-medium">{file.name}</p>
           <p className="mt-1 text-sm text-muted">
             {formatBytes(file.size)}
-            {pageCount !== null && ` · ${pageCount}페이지`}
-            {pageCount === null && !fileError && " · 읽는 중…"}
+            {pageCount !== null && ` · ${fill(ui.pageCount, { n: pageCount })}`}
+            {pageCount === null && !fileError && ` · ${ui.reading}`}
           </p>
           {fileError && <p className="mt-2 text-sm text-err">{fileError}</p>}
         </div>
@@ -212,15 +223,15 @@ export function PdfSplitter() {
                 type="radio"
                 name="mode"
                 value="extract"
-                aria-label="페이지 범위 추출"
+                aria-label={ui.modeExtract}
                 checked={mode === "extract"}
                 disabled={busy}
                 onChange={() => setMode("extract")}
                 className="mt-1 accent-accent"
               />
               <span>
-                <span className="block text-sm font-medium">페이지 범위 추출</span>
-                <span className="block text-sm text-muted">고른 페이지만 모아 PDF 한 개로</span>
+                <span className="block text-sm font-medium">{ui.modeExtract}</span>
+                <span className="block text-sm text-muted">{ui.modeExtractHint}</span>
               </span>
             </label>
 
@@ -229,16 +240,16 @@ export function PdfSplitter() {
                 type="radio"
                 name="mode"
                 value="pages"
-                aria-label="모든 페이지를 낱장으로"
+                aria-label={ui.modePages}
                 checked={mode === "pages"}
                 disabled={busy}
                 onChange={() => setMode("pages")}
                 className="mt-1 accent-accent"
               />
               <span>
-                <span className="block text-sm font-medium">모든 페이지를 낱장으로</span>
+                <span className="block text-sm font-medium">{ui.modePages}</span>
                 <span className="block text-sm text-muted">
-                  {pageCount}개의 한 장짜리 PDF 를 ZIP 하나로 묶어 드립니다
+                  {fill(ui.modePagesHint, { n: pageCount })}
                 </span>
               </span>
             </label>
@@ -246,23 +257,25 @@ export function PdfSplitter() {
 
           {mode === "extract" && (
             <label className="block space-y-1.5 border-t border-border pt-4">
-              <span className="block text-sm text-muted">추출할 페이지</span>
+              <span className="block text-sm text-muted">{ui.rangeLabel}</span>
               <input
                 type="text"
                 value={spec}
-                aria-label="추출할 페이지"
+                aria-label={ui.rangeLabel}
                 disabled={busy}
                 onChange={(event) => setSpec(event.target.value)}
-                placeholder={`예: 1-3, 5, 8-  (전체 ${pageCount}쪽)`}
+                placeholder={fill(ui.rangePlaceholder, { n: pageCount })}
                 className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm"
               />
               <span className="block text-sm">
                 {selection.error && <span className="text-err">{selection.error}</span>}
                 {!selection.error && selection.indices.length > 0 && (
-                  <span className="text-muted">{selection.indices.length}쪽 선택됨</span>
+                  <span className="text-muted">
+                    {fill(ui.selected, { n: selection.indices.length })}
+                  </span>
                 )}
                 {!selection.error && selection.indices.length === 0 && (
-                  <span className="text-muted">뽑을 페이지를 적어 주세요</span>
+                  <span className="text-muted">{ui.needRange}</span>
                 )}
               </span>
             </label>
@@ -278,7 +291,7 @@ export function PdfSplitter() {
             disabled={!canRun}
             className="rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg disabled:opacity-50"
           >
-            {busy ? "처리 중…" : mode === "extract" ? "추출하기" : "낱장으로 쪼개기"}
+            {busy ? ui.processing : mode === "extract" ? ui.runExtract : ui.runPages}
           </button>
         </div>
       )}
@@ -296,7 +309,7 @@ export function PdfSplitter() {
             download={result.name}
             className="rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg"
           >
-            다운로드
+            {common.download}
           </a>
         </div>
       )}

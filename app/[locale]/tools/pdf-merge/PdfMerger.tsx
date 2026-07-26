@@ -4,7 +4,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FileDrop } from "@/components/FileDrop";
 import { canRunPdfTools } from "@/lib/capabilities";
 import { formatBytes } from "@/lib/format";
+import { fill } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/dictionaries/en";
 import type { WorkerRequestPayload, WorkerRequest, WorkerResponse } from "./merge.worker";
+
+type Ui = Dictionary["tools"]["pdf-merge"]["ui"];
+type Common = Dictionary["common"];
+type Errors = Dictionary["pdfErrors"];
 
 const OUTPUT_NAME = "merged.pdf";
 
@@ -22,22 +28,22 @@ interface Result {
   pageCount: number;
 }
 
-function describeError(message: string): string {
+function describeError(errors: Errors, message: string): string {
   switch (message) {
     case "ENCRYPTED":
-      return "암호로 보호된 PDF 입니다";
+      return errors.encrypted;
     case "NO_PAGES":
-      return "페이지가 없는 PDF 입니다";
+      return errors.noPages;
     case "TOO_LARGE":
-      return "합쳐서 512MB 를 넘습니다";
+      return errors.tooLarge;
     case "INVALID_PDF":
-      return "PDF 로 읽을 수 없습니다";
+      return errors.invalid;
     default:
-      return "처리에 실패했습니다";
+      return errors.generic;
   }
 }
 
-export function PdfMerger() {
+export function PdfMerger({ ui, common, errors }: { ui: Ui; common: Common; errors: Errors }) {
   const [supported, setSupported] = useState<boolean | null>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [result, setResult] = useState<Result | null>(null);
@@ -135,13 +141,15 @@ export function PdfMerger() {
           const message = error instanceof Error ? error.message : "UNKNOWN";
           setItems((prev) =>
             prev.map((item) =>
-              item.id === entry.id ? { ...item, status: "error", error: describeError(message) } : item,
+              item.id === entry.id
+                ? { ...item, status: "error", error: describeError(errors, message) }
+                : item,
             ),
           );
         }
       }
     },
-    [callWorker, clearResult],
+    [callWorker, clearResult, errors],
   );
 
   const move = useCallback(
@@ -188,19 +196,17 @@ export function PdfMerger() {
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : "UNKNOWN";
-      setFailure(describeError(message));
+      setFailure(describeError(errors, message));
     } finally {
       setBusy(false);
     }
-  }, [callWorker, clearResult, items]);
+  }, [callWorker, clearResult, errors, items]);
 
   if (supported === false) {
     return (
       <div className="rounded-xl border border-border bg-panel p-6">
-        <p className="font-medium text-warn">이 브라우저에서는 PDF 병합을 실행할 수 없습니다.</p>
-        <p className="mt-2 text-sm text-muted">
-          Web Worker 를 지원하는 최신 Chrome, Edge, Firefox, Safari 에서 열어 주세요.
-        </p>
+        <p className="font-medium text-warn">{common.workerUnsupportedTitle}</p>
+        <p className="mt-2 text-sm text-muted">{common.workerUnsupportedHint}</p>
       </div>
     );
   }
@@ -213,14 +219,18 @@ export function PdfMerger() {
       <FileDrop
         accept="application/pdf,.pdf"
         onFiles={addFiles}
-        label="PDF 를 여기에 놓으세요"
-        hint="두 개 이상 넣으면 위에서부터 순서대로 이어 붙입니다"
+        label={ui.dropLabel}
+        hint={ui.dropHint}
+        cta={common.chooseFile}
         disabled={busy}
       />
 
       {items.length > 0 && (
         <>
-          <ul aria-label="병합할 파일" className="divide-y divide-border rounded-xl border border-border">
+          <ul
+            aria-label={ui.listLabel}
+            className="divide-y divide-border rounded-xl border border-border"
+          >
             {items.map((item, index) => (
               <li key={item.id} className="flex flex-wrap items-center gap-3 p-4">
                 <span className="w-6 shrink-0 text-sm text-muted tabular-nums">{index + 1}</span>
@@ -229,8 +239,8 @@ export function PdfMerger() {
                   <p className="truncate text-sm font-medium">{item.file.name}</p>
                   <p className="text-xs text-muted">
                     {formatBytes(item.file.size)}
-                    {item.status === "reading" && " · 읽는 중…"}
-                    {item.status === "ready" && ` · ${item.pageCount}페이지`}
+                    {item.status === "reading" && ` · ${ui.reading}`}
+                    {item.status === "ready" && ` · ${fill(ui.pageCount, { n: item.pageCount ?? 0 })}`}
                   </p>
                 </div>
 
@@ -239,7 +249,7 @@ export function PdfMerger() {
                 <div className="flex items-center gap-1">
                   <button
                     type="button"
-                    aria-label={`${item.file.name} 위로`}
+                    aria-label={fill(ui.moveUp, { name: item.file.name })}
                     onClick={() => move(item.id, -1)}
                     disabled={busy || index === 0}
                     className="rounded-lg border border-border px-2.5 py-1.5 text-sm disabled:opacity-30"
@@ -248,7 +258,7 @@ export function PdfMerger() {
                   </button>
                   <button
                     type="button"
-                    aria-label={`${item.file.name} 아래로`}
+                    aria-label={fill(ui.moveDown, { name: item.file.name })}
                     onClick={() => move(item.id, 1)}
                     disabled={busy || index === items.length - 1}
                     className="rounded-lg border border-border px-2.5 py-1.5 text-sm disabled:opacity-30"
@@ -257,7 +267,7 @@ export function PdfMerger() {
                   </button>
                   <button
                     type="button"
-                    aria-label={`${item.file.name} 제거`}
+                    aria-label={fill(ui.remove, { name: item.file.name })}
                     onClick={() => remove(item.id)}
                     disabled={busy}
                     className="rounded-lg border border-border px-2.5 py-1.5 text-sm text-muted disabled:opacity-30"
@@ -276,19 +286,19 @@ export function PdfMerger() {
               disabled={busy || ready.length < 2}
               className="rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg disabled:opacity-50"
             >
-              {busy ? "병합 중…" : `${ready.length}개 병합하기`}
+              {busy ? ui.merging : fill(ui.merge, { n: ready.length })}
             </button>
             {ready.length >= 2 && !busy && (
-              <span className="text-sm text-muted">합계 {totalPages}페이지</span>
+              <span className="text-sm text-muted">{fill(ui.totalPages, { n: totalPages })}</span>
             )}
-            {ready.length === 1 && <span className="text-sm text-muted">PDF 가 두 개 이상 필요합니다</span>}
+            {ready.length === 1 && <span className="text-sm text-muted">{ui.needTwo}</span>}
             <button
               type="button"
               onClick={reset}
               disabled={busy}
               className="text-sm text-muted underline disabled:opacity-50"
             >
-              비우기
+              {common.clear}
             </button>
           </div>
         </>
@@ -303,7 +313,10 @@ export function PdfMerger() {
           <div className="min-w-0 flex-1">
             <p className="font-medium">{OUTPUT_NAME}</p>
             <p className="mt-1 text-sm text-muted">
-              {result.pageCount}페이지 · {formatBytes(result.size)}
+              {fill(ui.resultDetail, {
+                pages: result.pageCount,
+                size: formatBytes(result.size),
+              })}
             </p>
           </div>
           <a
@@ -311,7 +324,7 @@ export function PdfMerger() {
             download={OUTPUT_NAME}
             className="rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg"
           >
-            다운로드
+            {common.download}
           </a>
         </div>
       )}
