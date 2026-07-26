@@ -348,6 +348,63 @@ export const en = {
       },
     },
 
+    "video-to-gif": {
+      blurb: "Turn a clip into a looping GIF. Your device does the work — nothing is uploaded.",
+      metaTitle: "Video to GIF — convert MP4 to GIF in your browser",
+      metaDescription:
+        "Make a looping GIF out of an MP4 or MOV without uploading it. Choose the frame rate and size, and watch the result before you save it. Runs entirely in your browser.",
+      h1: "Video to GIF",
+      lead: "Turns a clip into a looping GIF. Pick how smooth and how big it should be — everything happens on your device.",
+      faq: [
+        {
+          q: "Where do my files go?",
+          a: "Nowhere. The video is decoded and the GIF is built inside this browser tab. Nothing is uploaded, and closing the tab is all the cleanup there is.",
+        },
+        {
+          q: "Why is the GIF bigger than the video?",
+          a: "Because GIF is a 1987 format that stores every frame as a palette of at most 256 colours with no motion compression. A video codec looks at what changed between frames; GIF mostly doesn't. Expect a GIF to be several times the size of the MP4 it came from — that is the format, not the tool.",
+        },
+        {
+          q: "Why does the frame rate come out slightly different?",
+          a: "GIF stores each frame's delay in hundredths of a second, so only some rates can be written exactly. 20, 10 and 5 fps land exactly; 15 fps becomes 7/100s, which plays at 14.3. We tell you the real number rather than the one you asked for.",
+        },
+        {
+          q: "How long a clip can I use?",
+          a: "Up to 400 frames — 20 seconds at 20 fps, or 40 at 10 fps. Past that a GIF becomes tens of megabytes and browsers start to struggle, so we stop rather than hand you something unusable. Lower the frame rate to fit a longer clip.",
+        },
+        {
+          q: "Which files can I use?",
+          a: "MP4 and MOV. We read the container ourselves rather than shipping a 30MB media toolchain, so AVI and MKV are not offered rather than accepted and then failed on.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "This browser can't make GIFs from video.",
+        unsupportedHint:
+          "Reading the video needs WebCodecs — try an up-to-date Chrome, Edge, Safari 16.4+ or Firefox 130+.",
+        dropLabel: "Drop a video here",
+        dropHint: "MP4 and MOV — one at a time",
+        reading: "reading…",
+        seconds: "s",
+        fpsLabel: "Frame rate",
+        fpsOption: "{n} fps",
+        fpsActual: "really {n} fps",
+        sizeLabel: "Size",
+        sizeOriginal: "Keep original size",
+        sizeMax: "Long edge {px}px",
+        framesEstimate: "about {n} frames",
+        tooManyFrames:
+          "That is over {max} frames. Pick a lower frame rate — a GIF this long would be enormous.",
+        run: "Make GIF",
+        working: "Building…",
+        outputName: "{stem}.gif",
+        resultFrames: "{n} frames · {fps} fps",
+        truncated: "Only the first {n} frames fit, so the end of the clip is missing.",
+        biggerNote:
+          "The GIF is larger than the video. That is normal — GIF has no motion compression.",
+        previewAlt: "The GIF that was just made",
+      },
+    },
+
     "audio-extract": {
       blurb: "Pull the sound out of a video. Nothing is re-encoded, so nothing is lost.",
       metaTitle: "Extract Audio from Video — MP4 to M4A or WAV",

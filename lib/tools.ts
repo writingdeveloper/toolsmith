@@ -46,9 +46,9 @@ export const TOOLS: Tool[] = [
   { slug: "pdf-compress", tier: 1, status: "live", needs: "all" },
   { slug: "video-compress", tier: 1, status: "live", needs: "all" },
   { slug: "audio-extract", tier: 1, status: "live", needs: "all" },
+  { slug: "video-to-gif", tier: 1, status: "live", needs: "all" },
   { slug: "video-convert", tier: 1, status: "planned", needs: "all" },
   { slug: "video-trim", tier: 1, status: "planned", needs: "all" },
-  { slug: "video-to-gif", tier: 1, status: "planned", needs: "all" },
   { slug: "ocr", tier: 1, status: "planned", needs: "all" },
   { slug: "data-query", tier: 1, status: "planned", needs: "all" },
 

@@ -345,6 +345,63 @@ export const de = {
       },
     },
 
+    "video-to-gif": {
+      blurb: "Aus einem Clip wird ein GIF in Dauerschleife. Ohne Upload — dein Gerät erledigt das.",
+      metaTitle: "Video zu GIF — MP4 im Browser in ein GIF umwandeln",
+      metaDescription:
+        "Erstelle aus einem MP4 oder MOV ein GIF in Dauerschleife, ohne es hochzuladen. Bildrate und Größe wählen und das Ergebnis vor dem Speichern ansehen. Läuft vollständig im Browser.",
+      h1: "Video zu GIF",
+      lead: "Macht aus einem Clip ein GIF in Dauerschleife. Du wählst, wie flüssig und wie groß — alles Weitere passiert auf deinem Gerät.",
+      faq: [
+        {
+          q: "Wohin gehen meine Dateien?",
+          a: "Nirgendwohin. Das Video wird in diesem Browser-Tab dekodiert und das GIF hier zusammengesetzt. Nichts wird hochgeladen, und den Tab zu schließen ist das ganze Aufräumen.",
+        },
+        {
+          q: "Warum ist das GIF größer als das Video?",
+          a: "Weil GIF ein Format von 1987 ist: Jedes Bild wird vollständig mit einer Palette von höchstens 256 Farben gespeichert, Bewegung wird nicht komprimiert. Ein Video-Codec schaut, was sich zwischen zwei Bildern ändert; GIF tut das kaum. Ein Vielfaches des Ausgangs-MP4 ist normal — das liegt am Format, nicht am Werkzeug.",
+        },
+        {
+          q: "Warum weicht die Bildrate leicht ab?",
+          a: "GIF speichert die Verzögerung je Bild in Hundertstelsekunden, deshalb lassen sich nur bestimmte Raten exakt schreiben. 20, 10 und 5 fps gehen genau auf; 15 fps werden zu 7/100 s und laufen tatsächlich mit 14,3. Wir zeigen dir die echte Zahl statt der gewünschten.",
+        },
+        {
+          q: "Wie lang darf der Clip sein?",
+          a: "Bis zu 400 Bilder — 20 Sekunden bei 20 fps oder 40 bei 10 fps. Darüber wird ein GIF zweistellig megabyteschwer und Browser kommen ins Straucheln; dann hören wir lieber auf, statt dir etwas Unbrauchbares zu geben. Mit einer niedrigeren Bildrate passt ein längerer Clip hinein.",
+        },
+        {
+          q: "Welche Dateien kann ich verwenden?",
+          a: "MP4 und MOV. Wir lesen den Container selbst, statt eine 30 MB große Medienbibliothek auszuliefern — deshalb werden AVI und MKV gar nicht erst angeboten, statt angenommen zu werden und dann zu scheitern.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "Dieser Browser kann aus Video kein GIF machen.",
+        unsupportedHint:
+          "Zum Lesen des Videos wird WebCodecs benötigt — versuch es mit aktuellem Chrome oder Edge, Safari 16.4+ oder Firefox 130+.",
+        dropLabel: "Video hier ablegen",
+        dropHint: "MP4 und MOV — eines nach dem anderen",
+        reading: "wird gelesen…",
+        seconds: "s",
+        fpsLabel: "Bildrate",
+        fpsOption: "{n} fps",
+        fpsActual: "tatsächlich {n} fps",
+        sizeLabel: "Größe",
+        sizeOriginal: "Originalgröße behalten",
+        sizeMax: "Lange Kante {px}px",
+        framesEstimate: "etwa {n} Bilder",
+        tooManyFrames:
+          "Das sind über {max} Bilder. Wähle eine niedrigere Bildrate — ein GIF dieser Länge wäre riesig.",
+        run: "GIF erstellen",
+        working: "Wird erstellt…",
+        outputName: "{stem}.gif",
+        resultFrames: "{n} Bilder · {fps} fps",
+        truncated: "Es haben nur die ersten {n} Bilder hineingepasst, das Ende des Clips fehlt.",
+        biggerNote:
+          "Das GIF ist größer als das Video. Das ist normal — GIF komprimiert keine Bewegung.",
+        previewAlt: "Das eben erstellte GIF",
+      },
+    },
+
     "audio-extract": {
       blurb: "Holt den Ton aus einem Video. Nichts wird neu kodiert, also geht nichts verloren.",
       metaTitle: "Audio aus Video extrahieren — MP4 zu M4A oder WAV",

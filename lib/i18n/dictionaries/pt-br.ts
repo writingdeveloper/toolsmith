@@ -345,6 +345,63 @@ export const ptBR = {
       },
     },
 
+    "video-to-gif": {
+      blurb: "Transforma um clipe em GIF em loop. Sem upload — quem trabalha é o seu aparelho.",
+      metaTitle: "Vídeo para GIF — converta MP4 em GIF no navegador",
+      metaDescription:
+        "Crie um GIF em loop a partir de um MP4 ou MOV sem enviá-lo para lugar nenhum. Escolha a taxa de quadros e o tamanho e veja o resultado antes de salvar. Tudo acontece no seu navegador.",
+      h1: "Vídeo para GIF",
+      lead: "Transforma um clipe em GIF em loop. Escolha quão fluido e quão grande ele deve ser — o resto acontece no seu aparelho.",
+      faq: [
+        {
+          q: "Para onde vão meus arquivos?",
+          a: "Para lugar nenhum. O vídeo é decodificado e o GIF é montado dentro desta aba do navegador. Nada é enviado, e fechar a aba é toda a limpeza necessária.",
+        },
+        {
+          q: "Por que o GIF ficou maior que o vídeo?",
+          a: "Porque GIF é um formato de 1987 que guarda cada quadro inteiro com uma paleta de no máximo 256 cores e não comprime movimento. Um codec de vídeo olha o que mudou entre os quadros; o GIF quase não faz isso. É normal que fique várias vezes maior que o MP4 de origem — é o formato, não a ferramenta.",
+        },
+        {
+          q: "Por que a taxa de quadros sai um pouco diferente?",
+          a: "O GIF guarda o intervalo de cada quadro em centésimos de segundo, então só algumas taxas podem ser escritas exatamente. 20, 10 e 5 fps caem certinho; 15 fps vira 7/100 s, que reproduz a 14,3. Mostramos o número real em vez do que você pediu.",
+        },
+        {
+          q: "Que duração posso usar?",
+          a: "Até 400 quadros — 20 segundos a 20 fps ou 40 a 10 fps. Acima disso o GIF chega a dezenas de megabytes e o navegador começa a sofrer, então preferimos parar a entregar algo inutilizável. Baixe a taxa de quadros para caber um clipe mais longo.",
+        },
+        {
+          q: "Quais arquivos posso usar?",
+          a: "MP4 e MOV. Lemos o contêiner por conta própria em vez de baixar um conjunto de ferramentas de 30 MB, então AVI e MKV não são oferecidos em vez de aceitos e depois falharem.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "Este navegador não consegue criar GIF a partir de vídeo.",
+        unsupportedHint:
+          "Ler o vídeo exige WebCodecs — tente um Chrome ou Edge atualizado, Safari 16.4+ ou Firefox 130+.",
+        dropLabel: "Solte um vídeo aqui",
+        dropHint: "MP4 e MOV — um de cada vez",
+        reading: "lendo…",
+        seconds: "s",
+        fpsLabel: "Quadros por segundo",
+        fpsOption: "{n} fps",
+        fpsActual: "na prática {n} fps",
+        sizeLabel: "Tamanho",
+        sizeOriginal: "Manter o tamanho original",
+        sizeMax: "Lado maior {px}px",
+        framesEstimate: "cerca de {n} quadros",
+        tooManyFrames:
+          "Passa de {max} quadros. Escolha menos quadros por segundo — um GIF desse tamanho ficaria enorme.",
+        run: "Criar GIF",
+        working: "Criando…",
+        outputName: "{stem}.gif",
+        resultFrames: "{n} quadros · {fps} fps",
+        truncated: "Só couberam os primeiros {n} quadros, então o final do clipe ficou de fora.",
+        biggerNote:
+          "O GIF ficou maior que o vídeo. Isso é normal — GIF não comprime movimento.",
+        previewAlt: "O GIF recém-criado",
+      },
+    },
+
     "audio-extract": {
       blurb: "Tira o som de um vídeo. Nada é recodificado, então nada se perde.",
       metaTitle: "Extrair áudio de vídeo — de MP4 para M4A ou WAV",

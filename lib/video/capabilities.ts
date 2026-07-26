@@ -8,6 +8,7 @@
 
 let cached: boolean | null = null;
 let audioCached: boolean | null = null;
+let gifCached: boolean | null = null;
 
 export async function canRunVideoTools(): Promise<boolean> {
   if (cached !== null) return cached;
@@ -30,6 +31,25 @@ export async function canRunVideoTools(): Promise<boolean> {
     return (cached = Boolean(probe.supported));
   } catch {
     return (cached = false);
+  }
+}
+
+/**
+ * GIF 는 **인코더가 필요 없다.** 색을 줄이고 GIF 를 짜는 일은 gifenc 가 JS 로 한다.
+ * VideoEncoder 를 물어보면(canRunVideoTools) H.264 인코더가 없는 기기에서 멀쩡한
+ * 도구를 못 쓴다고 잘못 말하게 된다 — 그래서 **디코더**만 확인한다.
+ */
+export async function canRunGifTools(): Promise<boolean> {
+  if (gifCached !== null) return gifCached;
+  if (typeof VideoDecoder === "undefined" || typeof OffscreenCanvas === "undefined") {
+    return (gifCached = false);
+  }
+
+  try {
+    const probe = await VideoDecoder.isConfigSupported({ codec: "avc1.42001f" });
+    return (gifCached = Boolean(probe.supported));
+  } catch {
+    return (gifCached = false);
   }
 }
 

@@ -345,6 +345,63 @@ export const es = {
       },
     },
 
+    "video-to-gif": {
+      blurb: "Convierte un clip en un GIF en bucle. Sin subidas: lo hace tu dispositivo.",
+      metaTitle: "Vídeo a GIF — convierte MP4 a GIF en tu navegador",
+      metaDescription:
+        "Crea un GIF en bucle a partir de un MP4 o MOV sin subirlo. Elige la velocidad de fotogramas y el tamaño, y mira el resultado antes de guardarlo. Todo ocurre en tu navegador.",
+      h1: "Vídeo a GIF",
+      lead: "Convierte un clip en un GIF en bucle. Elige cuán fluido y cuán grande debe ser; todo lo demás ocurre en tu dispositivo.",
+      faq: [
+        {
+          q: "¿Adónde van mis archivos?",
+          a: "A ninguna parte. El vídeo se descodifica y el GIF se construye dentro de esta pestaña del navegador. No se sube nada, y cerrar la pestaña es toda la limpieza que hace falta.",
+        },
+        {
+          q: "¿Por qué el GIF es más grande que el vídeo?",
+          a: "Porque GIF es un formato de 1987 que guarda cada fotograma completo con una paleta de 256 colores como máximo y no comprime el movimiento. Un códec de vídeo mira qué cambió entre fotogramas; GIF casi no lo hace. Es normal que ocupe varias veces el MP4 de origen: es el formato, no la herramienta.",
+        },
+        {
+          q: "¿Por qué la velocidad de fotogramas sale algo distinta?",
+          a: "GIF guarda el retardo de cada fotograma en centésimas de segundo, así que solo algunas velocidades se pueden escribir exactamente. 20, 10 y 5 fps encajan justo; 15 fps se convierte en 7/100 s, que se reproduce a 14,3. Te mostramos el número real, no el que pediste.",
+        },
+        {
+          q: "¿Qué duración admite?",
+          a: "Hasta 400 fotogramas: 20 segundos a 20 fps o 40 a 10 fps. Más allá, un GIF llega a decenas de megabytes y el navegador empieza a sufrir, así que preferimos parar antes que darte algo inservible. Baja la velocidad de fotogramas para que quepa un clip más largo.",
+        },
+        {
+          q: "¿Qué archivos puedo usar?",
+          a: "MP4 y MOV. Leemos el contenedor nosotros mismos en lugar de enviarte una cadena de herramientas de 30 MB, así que AVI y MKV no se ofrecen en vez de aceptarse y luego fallar.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "Este navegador no puede crear GIF a partir de vídeo.",
+        unsupportedHint:
+          "Leer el vídeo requiere WebCodecs: prueba con un Chrome o Edge actualizado, Safari 16.4+ o Firefox 130+.",
+        dropLabel: "Suelta un vídeo aquí",
+        dropHint: "MP4 y MOV — de uno en uno",
+        reading: "leyendo…",
+        seconds: "s",
+        fpsLabel: "Fotogramas por segundo",
+        fpsOption: "{n} fps",
+        fpsActual: "en realidad {n} fps",
+        sizeLabel: "Tamaño",
+        sizeOriginal: "Mantener el tamaño original",
+        sizeMax: "Lado largo {px}px",
+        framesEstimate: "unos {n} fotogramas",
+        tooManyFrames:
+          "Supera los {max} fotogramas. Elige menos fotogramas por segundo: un GIF así de largo sería enorme.",
+        run: "Crear GIF",
+        working: "Creando…",
+        outputName: "{stem}.gif",
+        resultFrames: "{n} fotogramas · {fps} fps",
+        truncated: "Solo cupieron los primeros {n} fotogramas, así que falta el final del clip.",
+        biggerNote:
+          "El GIF es más grande que el vídeo. Es normal: GIF no comprime el movimiento.",
+        previewAlt: "El GIF recién creado",
+      },
+    },
+
     "audio-extract": {
       blurb: "Saca el sonido de un vídeo. No se recodifica nada, así que no se pierde nada.",
       metaTitle: "Extraer audio de un vídeo — de MP4 a M4A o WAV",

@@ -38,7 +38,7 @@
 | 4 | 영상 변환 (MP4/WebM/MOV) | **WebCodecs** + mp4box/mp4-muxer | BSD-3/MIT | 최상 | 미착수 |
 | 5 | 영상 압축 | **WebCodecs** + mp4box/mp4-muxer | BSD-3/MIT | 최상 | **배포** |
 | 6 | 영상 트림·자르기 | **WebCodecs** | BSD-3/MIT | 상 | 미착수 |
-| 7 | 영상 → GIF | **WebCodecs** + gifenc | MIT | 상 | 미착수 |
+| 7 | 영상 → GIF | **WebCodecs** + gifenc | MIT | 상 | **배포** |
 | 8 | 오디오 추출·변환 (WAV/M4A) | **WebCodecs** | BSD-3/MIT | 최상 | **배포** |
 | 9 | PDF 병합 | pdf-lib | MIT | 최상 | **배포** |
 | 10 | PDF 분할 | pdf-lib + fflate(ZIP) | MIT | 상 | **배포** |
@@ -165,6 +165,26 @@ ffmpeg.wasm 이 GPL 이라 못 쓰게 되면서 방향을 바꿨고, 결과적�
   ES_Descriptor 가 겹겹이 싸인 구조다. 같은 방법을 쓰면 만들어진 M4A 가
   `Unable to decode audio data` 로 거절당한다 — **소리가 안 나는 파일을 내주게 된다.**
   mp4box 가 파싱해 둔 값을 쓰고, 없으면 2바이트를 직접 조립한다(`describeAac`).
+- **GIF 는 인코더가 필요 없다.** 색 줄이기와 GIF 조립은 gifenc(MIT, 20KB)가 JS 로 한다.
+  그래서 능력 판정도 `VideoEncoder` 가 아니라 **`VideoDecoder`** 로 물어야 한다
+  (`canRunGifTools`). 인코더로 물으면 H.264 인코더가 없는 기기에서 멀쩡한 도구를
+  "못 한다" 고 잘못 막는다.
+
+## GIF 는 1/100초 격자 위에서만 움직인다 (2026-07-26)
+
+GIF89a 는 프레임 지연을 **1/100초 단위 정수**로만 적는다. 임의의 fps 를 담을 수 없다.
+
+- 20 · 10 · 5 fps 는 딱 떨어진다(5 · 10 · 20 칸). **15fps 는 7칸 = 14.29fps 가 된다.**
+- 그래서 `lib/video/gif-timing.ts` 가 그 반올림을 **한 곳에 모은다.** 워커와 UI 가 같은
+  함수를 부르므로 화면의 숫자와 파일 안의 숫자가 어긋날 수 없다. 요청값과 실제값이
+  다를 때만 "실제로는 14.3 fps" 를 덧붙인다 — 규칙 3의 GIF 판.
+- 2칸(50fps) 미만은 브라우저마다 10칸으로 바꿔 버리므로 하한을 2칸으로 둔다.
+- **400프레임 상한.** 넘으면 버튼을 막고 이유를 말한다. GIF 는 움직임 압축이 없어
+  길이가 곧 용량이다 — 30초짜리는 수십 MB 가 되고 브라우저가 먼저 무너진다.
+- 프레임을 **모아 두지 않는다.** 디코더가 프레임을 내놓는 그 자리에서 양자화해 스트림에
+  흘린다. 480×270 400장을 ImageData 로 쥐면 200MB 다.
+- 색표는 **프레임마다 새로 뽑는다**(첫 장은 전역 색표, 나머지는 지역 색표). 장면이 바뀌어도
+  색이 무너지지 않는 대신 프레임당 768바이트를 더 쓴다 — 그만한 값어치가 있다.
 
 ## 기술 함정 (걸려본 것 / 걸릴 것)
 
@@ -180,6 +200,7 @@ ffmpeg.wasm 이 GPL 이라 못 쓰게 되면서 방향을 바꿨고, 결과적�
   **실측(2026-07-25, 프로덕션)**:
   - `/tools/image-convert` 로드 546KB → HEIC 를 넣은 순간 **+1.48MB**(libheif). 정상.
   - `/tools/pdf-merge` 로드 529KB → PDF 를 넣은 순간 **+461KB**(워커+pdf-lib). 정상.
+  - `/tools/video-to-gif` 로드 530KB → 영상을 넣은 순간 **+204KB**(mp4box+gifenc). 정상.
 
   같은 페이지를 dev 에서 보면 둘 다 로드 시점에 이미 내려와 있다. **판정은 반드시
   `BASE_URL=<배포주소> pnpm test` 로 한다.** 두 스펙 모두 프로덕션 전용 검사를 갖고 있고,
@@ -208,6 +229,12 @@ ffmpeg.wasm 이 GPL 이라 못 쓰게 되면서 방향을 바꿨고, 결과적�
 - **dev 서버가 떠 있는 동안 `pnpm build` 를 돌리지 말 것.** 둘이 같은 `.next` 를 쓰기 때문에
   실행 중인 dev 서버의 캐시가 깨지고, 그때부터 테스트가 `SyntaxError: Unexpected end of
   JSON input` 과 함께 무더기로 무너진다. 겪고 나면 원인을 찾기 어렵다.
+- **Playwright 워커 수도 같은 증상을 만든다(2026-07-26).** 기본값(코어의 절반, 이 기계는 12)
+  으로 돌리면 `next dev` 한 대에 12개가 동시에 컴파일을 요구하다가 `.next` 매니페스트를
+  쓰는 중에 읽어 버린다 → 전 페이지가 `SyntaxError: Unexpected non-whitespace character
+  after JSON` 으로 죽고 85개 중 1개만 통과한다. **`.next` 를 지워도 낫지 않는다** — 부하
+  문제이지 캐시 문제가 아니기 때문. `playwright.config.ts` 에 `workers: 4` 로 고정했다
+  (그러자 42초에 전부 통과). 배포본(정적)을 칠 때는 제한하지 않는다.
 - Next.js 가 상위 디렉터리 lockfile 때문에 워크스페이스 루트를 잘못 잡는다 →
   `next.config.ts` 의 `turbopack.root` 로 고정.
 - ffmpeg.wasm 멀티스레드와 `SharedArrayBuffer`는 COOP/COEP 없으면 조용히 단일 스레드로 떨어진다.

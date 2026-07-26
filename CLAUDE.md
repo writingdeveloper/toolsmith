@@ -82,10 +82,10 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 현재 상태 (2026-07-26)
 
-**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 7) = 48 페이지
-+ 루트 언어 선택. 전부 정적. Playwright **78종**(프로덕션 76 통과 / 2 스킵, dev 66 / 12 스킵).
+**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 8) = 54 페이지
++ 루트 언어 선택. 전부 정적. Playwright **85종**(프로덕션 83 통과 / 2 스킵, dev 72 / 13 스킵).
 
-### 배포된 도구 7개
+### 배포된 도구 8개
 
 | # | 도구 | 경로 | 핵심 |
 |---|---|---|---|
@@ -96,6 +96,7 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 | 12 | PDF 압축 | `/tools/pdf-compress` | JPEG 만 재인코딩 — **글자가 살아 있다** |
 | 5 | 영상 압축 | `/tools/video-compress` | WebCodecs. 오디오는 원본 그대로 옮김 |
 | 8 | 오디오 추출 | `/tools/audio-extract` | M4A·WAV. **어느 쪽도 재인코딩하지 않는다** |
+| 7 | 영상 → GIF | `/tools/video-to-gif` | gifenc. **fps 는 1/100초 격자에만 앉는다** |
 
 경로 앞에 `/{locale}` 이 붙는다(`/ko/tools/pdf-merge`).
 
@@ -105,6 +106,10 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 - `lib/pdf/render-core.ts` — pdf.js 썸네일. **썸네일 전에 pdf-lib 으로 먼저 연다**
   (암호 판정이 정확해지고, 못 그릴 파일에 1.5MB 를 안 받는다).
 - `lib/video/mp4-source.ts` — MP4 demux. 영상·오디오 도구가 전부 이걸 쓴다.
+- `lib/video/capabilities.ts` — 능력 판정. 도구마다 **필요한 것만** 물어야 한다:
+  압축은 `VideoEncoder`, 오디오는 `AudioDecoder`, GIF 는 `VideoDecoder`.
+- `lib/video/gif-timing.ts` — GIF 의 1/100초 반올림. 워커와 UI 가 같은 함수를 부르므로
+  화면 숫자와 파일 안 숫자가 어긋날 수 없다.
 - `lib/i18n/dictionaries/en.ts` — 사전의 **타입 원본**. 여기에 키를 더하면 나머지 5개가
   타입 에러로 드러난다.
 
@@ -124,6 +129,10 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   겪었다면 3111 포트 프로세스를 죽이고 `.next` 를 지운 뒤 다시 돌린다.
 - 지연 로딩은 **dev 에서 판정하지 말 것.** Turbopack dev 가 동적 import 를 당겨온다.
   `BASE_URL=<배포주소> pnpm test` 로만 판단한다.
+- **`.next` 가 깨진 것처럼 보이는 두 번째 원인은 Playwright 워커 수다.** 기본값(12)이면
+  `next dev` 한 대가 감당 못 해 전 페이지가 `Unexpected non-whitespace character after JSON`
+  으로 죽는다 — `.next` 를 지워도 안 낫는다. `playwright.config.ts` 에 `workers: 4` 로
+  묶어 두었으니 **이 값을 올리지 말 것.**
 
 ### 남은 일 (사용자 몫)
 
@@ -164,8 +173,10 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ### 알려진 결함 (다음에 손볼 것)
 
-- `pnpm lint` 가 4건(에러 3, 경고 1) 남아 있다. 대부분 `useEffect` 안의 `setSupported` —
-  SSR/hydration 때문에 지금 구조에서는 불가피하다. `useSyncExternalStore` 로 정리 가능.
+- `pnpm lint` 가 7건(에러 6, 경고 1) 남아 있다. 전부 `useEffect` 안의 동기 `setSupported` —
+  image-convert 와 pdf-* 네 개다. SSR/hydration 때문에 지금 구조에서는 불가피하고,
+  `useSyncExternalStore` 로 정리 가능하다. 영상 도구들은 능력 판정이 비동기(`.then`)라
+  이 규칙에 걸리지 않는다 — 정리할 때 그 모양을 따라가면 된다.
 
 ### 미검증
 
@@ -177,12 +188,11 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 다음 할 일
 
-1. **#7 영상 → GIF** — 오디오가 없어 파이프라인이 가장 단순하다(디코드 → 프레임 →
-   gifenc(MIT)). 검색수요 '상'.
-2. **#6 영상 트림** — 재인코딩 없이 구간만 잘라 다시 mux 하면 순식간이지만,
+1. **#6 영상 트림** — 재인코딩 없이 구간만 잘라 다시 mux 하면 순식간이지만,
    **키프레임 경계에서만 정확히 잘린다.** 임의 지점에서 자르려면 앞부분만 재인코딩해야
    한다. 어느 쪽이든 "요청한 지점과 실제 지점이 다를 수 있다" 를 정직하게 보여줘야 한다.
-3. **#4 영상 변환** — WebM 출력이면 오디오도 Opus 로 재인코딩해야 한다(지금은
-   오디오를 손대는 코드가 없다). 넷 중 가장 크다.
+   GIF 의 1/100초 격자를 다룬 방식(`gif-timing.ts`)이 그대로 본보기가 된다.
+2. **#4 영상 변환** — WebM 출력이면 오디오도 Opus 로 재인코딩해야 한다(지금은
+   오디오를 손대는 코드가 없다). 남은 셋 중 가장 크다.
 3. 색인 진행 상황 확인 — 며칠 뒤 Pages 리포트에 페이지가 잡히는지 본다.
-   새 도구를 배포했으므로 사이트맵 발견 페이지가 30 → 36 으로 늘어야 한다.
+   사이트맵 발견 페이지가 도구 수 × 6 + 6 으로 늘어야 한다(지금 54).
