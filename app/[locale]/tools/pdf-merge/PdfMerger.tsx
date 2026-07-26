@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FileDrop } from "@/components/FileDrop";
 import { trackToolCompleted } from "@/lib/analytics";
 import { canRunPdfTools } from "@/lib/capabilities";
+import { useCapability } from "@/lib/use-capability";
 import { formatBytes } from "@/lib/format";
 import { fill } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries/en";
@@ -45,7 +46,10 @@ function describeError(errors: Errors, message: string): string {
 }
 
 export function PdfMerger({ ui, common, errors }: { ui: Ui; common: Common; errors: Errors }) {
-  const [supported, setSupported] = useState<boolean | null>(null);
+  /** 워커를 못 만든 경우. 능력 판정(capable)과 원인이 달라 따로 둔다. */
+  const [broken, setBroken] = useState(false);
+  const capable = useCapability(canRunPdfTools);
+  const supported = capable === null ? null : capable && !broken;
   const [items, setItems] = useState<Item[]>([]);
   const [result, setResult] = useState<Result | null>(null);
   const [busy, setBusy] = useState(false);
@@ -78,7 +82,7 @@ export function PdfMerger({ ui, common, errors }: { ui: Ui; common: Common; erro
       workerRef.current = worker;
       return worker;
     } catch {
-      setSupported(false);
+      setBroken(true);
       return null;
     }
   }, []);
@@ -97,7 +101,6 @@ export function PdfMerger({ ui, common, errors }: { ui: Ui; common: Common; erro
   );
 
   useEffect(() => {
-    setSupported(canRunPdfTools());
     const pending = pendingRef.current;
     return () => {
       workerRef.current?.terminate();

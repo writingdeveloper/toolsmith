@@ -113,6 +113,10 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   화면 숫자와 파일 안 숫자가 어긋날 수 없다.
 - `lib/video/trim-core.ts` — 재인코딩 없는 재mux. **cts/dts 를 다루는 유일한 곳**이다.
   `Sample.decodeTime` 과 `readMp4` 의 `rebase()` 가 여기 때문에 생겼다.
+- `lib/use-capability.ts` — "이 브라우저가 할 수 있는가" 를 묻는 유일한 방법.
+  `useEffect` 안에서 `setSupported(...)` 를 부르지 말 것 — 서버에는 `Worker` 도
+  `OffscreenCanvas` 도 없어 렌더 중에 물을 수도 없다. `useSyncExternalStore` 가
+  서버엔 `null`, 클라이언트엔 실제 값을 준다.
 - `lib/i18n/dictionaries/en.ts` — 사전의 **타입 원본**. 여기에 키를 더하면 나머지 5개가
   타입 에러로 드러난다.
 
@@ -184,10 +188,7 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ### 알려진 결함 (다음에 손볼 것)
 
-- `pnpm lint` 가 7건(에러 6, 경고 1) 남아 있다. 전부 `useEffect` 안의 동기 `setSupported` —
-  image-convert 와 pdf-* 네 개다. SSR/hydration 때문에 지금 구조에서는 불가피하고,
-  `useSyncExternalStore` 로 정리 가능하다. 영상 도구들은 능력 판정이 비동기(`.then`)라
-  이 규칙에 걸리지 않는다 — 정리할 때 그 모양을 따라가면 된다.
+지금은 없다. `pnpm lint` 0건, `npx tsc --noEmit` 0건.
 
 ### 미검증
 
@@ -203,6 +204,5 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
    Opus 로 **재인코딩**해야 하는데, 이 저장소에는 아직 오디오를 인코딩하는 코드가 한 줄도
    없다(`AudioEncoder` 를 부르는 곳이 없다). MP4↔WebM 양방향이면 muxer 도 둘 다 쓴다.
 2. **#2 OCR / #3 CSV·Parquet 쿼리** — Tier 1 에서 영상이 아닌 두 개.
-3. `pnpm lint` 7건 정리 — 아래 "알려진 결함".
-4. 색인 진행 상황 확인 — 며칠 뒤 Pages 리포트에 페이지가 잡히는지 본다.
+3. 색인 진행 상황 확인 — 며칠 뒤 Pages 리포트에 페이지가 잡히는지 본다.
    사이트맵 발견 페이지가 도구 수 × 6 + 6 으로 늘어야 한다(지금 60).

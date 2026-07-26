@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FileDrop } from "@/components/FileDrop";
 import { trackToolCompleted } from "@/lib/analytics";
 import { canRunImageTools } from "@/lib/capabilities";
+import { useCapability } from "@/lib/use-capability";
 import { formatBytes, replaceExtension, savingsPercent } from "@/lib/format";
 import { fill } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries/en";
@@ -34,7 +35,10 @@ function describeError(ui: Ui, message: string): string {
 }
 
 export function ImageConverter({ ui, common }: { ui: Ui; common: Common }) {
-  const [supported, setSupported] = useState<boolean | null>(null);
+  /** 워커를 못 만들었거나 형식 조사가 실패한 경우. 능력 판정과 원인이 다르다. */
+  const [broken, setBroken] = useState(false);
+  const capable = useCapability(canRunImageTools);
+  const supported = capable === null ? null : capable && !broken;
   const [formats, setFormats] = useState<OutputFormat[]>([]);
   const [format, setFormat] = useState<OutputFormat>("image/jpeg");
   const [quality, setQuality] = useState(0.82);
@@ -58,20 +62,19 @@ export function ImageConverter({ ui, common }: { ui: Ui; common: Common }) {
   }, []);
 
   useEffect(() => {
-    if (!canRunImageTools()) {
-      setSupported(false);
-      return;
-    }
+    if (!capable) return;
 
+    const pending = pendingRef.current;
     let worker: Worker;
     try {
       worker = new Worker(new URL("./convert.worker.ts", import.meta.url));
     } catch {
-      setSupported(false);
+      // 렌더 중이 아니라 효과 안이고, 실패는 마운트당 한 번뿐이다
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setBroken(true);
       return;
     }
     workerRef.current = worker;
-    setSupported(true);
 
     worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
       const message = event.data;
@@ -90,18 +93,20 @@ export function ImageConverter({ ui, common }: { ui: Ui; common: Common }) {
         if (response.formats.includes("image/webp")) setFormat("image/webp");
         else if (response.formats.length > 0) setFormat(response.formats[0]);
       })
-      .catch(() => setSupported(false));
+      .catch(() => setBroken(true));
 
     return () => {
       worker.terminate();
       workerRef.current = null;
-      pendingRef.current.clear();
+      pending.clear();
     };
-  }, [callWorker]);
+  }, [callWorker, capable]);
 
   // 언마운트 시 objectURL 회수
   const itemsRef = useRef(items);
-  itemsRef.current = items;
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
   useEffect(() => {
     return () => {
       for (const item of itemsRef.current) {
