@@ -186,6 +186,22 @@ GIF89a 는 프레임 지연을 **1/100초 단위 정수**로만 적는다. 임�
 - 색표는 **프레임마다 새로 뽑는다**(첫 장은 전역 색표, 나머지는 지역 색표). 장면이 바뀌어도
   색이 무너지지 않는 대신 프레임당 768바이트를 더 쓴다 — 그만한 값어치가 있다.
 
+## 의존성 경고 (2026-07-26 분류)
+
+GitHub 에 처음 푸시하자 Dependabot 이 5건(high 4, moderate 1)을 띄웠다. **다섯 건 모두
+빌드 시점에만 도는 패키지이고 브라우저로 나가지 않는다.** 그래도 올릴 수 있는 것은 올렸다.
+
+| 패키지 | 판정 | 조치 |
+|---|---|---|
+| postcss 8.4.31 (next 경유) | 경로 순회로 임의 `.map` 파일 노출. 공격자가 우리 CSS 에 `sourceMappingURL` 을 심을 수 있어야 성립 — 우리 CSS 는 우리가 쓴다 | `overrides` 로 **8.5.23** |
+| sharp 0.34.5 (next 경유) | libvips CVE 4건. **`next/image` 를 쓰지 않아 런타임에는 아예 실행되지 않는다.** `scripts/make-fixtures.mjs` 만 부르고, 입력은 우리가 만든 버퍼다 | `overrides` 로 **0.35.3** |
+| brace-expansion 1.1.16 (eslint → minimatch@3 경유) | DoS. 패치는 5.0.8 뿐이고 **1.x 라인에는 없다.** minimatch@3 은 CJS 라 5.x 로 올리면 깨진다. eslint 가 우리 glob 패턴을 읽을 때만 돈다 | **두지 않는다.** eslint-config-next 가 minimatch 를 올릴 때 따라 올라간다 |
+
+- `overrides` 는 `package.json` 이 아니라 **`pnpm-workspace.yaml`** 에 쓴다.
+  pnpm 11 부터 `package.json` 의 `pnpm.overrides` 는 **조용히 무시된다**(경고만 뜬다).
+- sharp 0.35 로 올린 뒤 `pnpm fixtures` 를 다시 돌려 보았다. **이미지·영상 픽스처는
+  바이트까지 동일**하다(달라진 것은 pdf-lib 이 PDF 에 박는 생성 시각뿐). 회귀 없음.
+
 ## 기술 함정 (걸려본 것 / 걸릴 것)
 
 - `COEP: require-corp`를 켜면 **교차 출처 리소스가 전부 차단**된다 → HF CDN 모델 로드와 정면 충돌.

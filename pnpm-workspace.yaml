@@ -4,3 +4,12 @@ allowBuilds:
 onlyBuiltDependencies:
   - sharp
   - unrs-resolver
+
+# Dependabot 경고 대응 (2026-07-26). 셋 다 **빌드 시점**에만 도는 것이라 브라우저로
+# 나가지 않지만, 올릴 수 있는 것은 올려 둔다. 판단 근거는 docs/TOOLS.md "의존성 경고".
+#   postcss — next 가 8.4.31 을 물고 온다(경로 순회 high). tailwind 쪽은 이미 8.5.23.
+#   sharp   — next 의 이미지 최적화용. next/image 를 쓰지 않아 실행되지 않지만
+#             scripts/make-fixtures.mjs 가 픽스처를 만들 때 부른다.
+overrides:
+  postcss: ^8.5.18
+  sharp: ^0.35.0
