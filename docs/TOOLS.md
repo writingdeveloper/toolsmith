@@ -32,7 +32,7 @@
 
 | # | 도구 | 라이브러리 | 라이선스 | 검색수요 | 상태 |
 |---|---|---|---|---|---|
-| 1 | 이미지 변환 (HEIC/PNG/JPG/WebP/AVIF) | Canvas/createImageBitmap + libheif-js | LGPL(동적) | 최상 | **구현** |
+| 1 | 이미지 변환 (HEIC/PNG/JPG/WebP/AVIF) | Canvas/createImageBitmap + libheif-js | LGPL(동적) | 최상 | **배포** |
 | 2 | 이미지 압축 (품질 조절) | Canvas | — | 상 | 미착수 |
 | 3 | 이미지 리사이즈·크롭 | Canvas | — | 상 | 미착수 |
 | 4 | 영상 변환 (MP4/WebM/MOV) | ffmpeg.wasm | LGPL/MIT | 최상 | 미착수 |
@@ -90,10 +90,24 @@
 | YouTube URL 입력 | DMCA + 결제 처리사 계정 위험. **업로드만 받는다** |
 | 광고 수익 모델 | RPM $3~8. 트래픽 폭증 시 서버 원가를 못 이김. 크레딧 선불제로 간다 |
 
+## 배포 상태
+
+- 라이브: https://toolsmith-two.vercel.app (Vercel Pro, 스코프 `sihyeong-lees-projects-64e0ba83`)
+- **본 도메인 미정.** 정해지기 전까지 `app/robots.ts` 가 전면 `Disallow: /` 를 내보낸다.
+  `NEXT_PUBLIC_SITE_URL` 환경변수를 설정하는 순간 색인이 열린다.
+- **미완료: Vercel Spend Management 지출 한도 알림.** 대시보드에서 직접 켜야 한다.
+
 ## 기술 함정 (걸려본 것 / 걸릴 것)
 
 - `COEP: require-corp`를 켜면 **교차 출처 리소스가 전부 차단**된다 → HF CDN 모델 로드와 정면 충돌.
-  `credentialless`를 쓰거나 COEP가 필요한 경로에만 헤더를 건다. **배포 전 실측 필수.**
+  `credentialless`를 쓰거나 COEP가 필요한 경로에만 헤더를 건다.
+  **실측(2026-07-25)**: v1 은 COOP/COEP 를 걸지 않았고 `crossOriginIsolated === false` 인 상태로
+  이미지 도구가 정상 동작한다. ffmpeg.wasm 을 붙이는 시점에 `/tools/video/*` 로 스코프해서 켠다.
+- Vercel CLI 첫 배포는 git 연결이 없으면 **preview 가 아니라 production 으로 올라간다.**
+  `--target preview` 를 명시해야 한다.
+- 워커에서 `Omit<Union, "id">` 는 공통 키만 남겨 payload 를 날린다. 조건부 타입으로 분배해야 한다.
+- Next.js 가 상위 디렉터리 lockfile 때문에 워크스페이스 루트를 잘못 잡는다 →
+  `next.config.ts` 의 `turbopack.root` 로 고정.
 - ffmpeg.wasm 멀티스레드와 `SharedArrayBuffer`는 COOP/COEP 없으면 조용히 단일 스레드로 떨어진다.
 - Vercel Functions 요청 본문 4.5MB 제한 → 나중에 유료층 업로드는 **Vercel을 우회**해 4080/R2로 직행.
 - 도구 사이트는 스크래퍼가 wasm 자산을 긁어 대역폭을 태운다 → Vercel Firewall 레이트 리밋 필요.
