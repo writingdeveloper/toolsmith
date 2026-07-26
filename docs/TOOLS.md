@@ -42,7 +42,7 @@
 | 8 | 오디오 추출·변환 (MP3/WAV/M4A) | ffmpeg.wasm | LGPL | 최상 | 미착수 |
 | 9 | PDF 병합 | pdf-lib | MIT | 최상 | **배포** |
 | 10 | PDF 분할 | pdf-lib + fflate(ZIP) | MIT | 상 | **배포** |
-| 11 | PDF 회전·페이지 삭제 | pdf-lib | MIT | 중 | 미착수 |
+| 11 | PDF 회전·페이지 삭제 | pdf-lib + pdf.js(썸네일) | MIT / Apache-2.0 | 중 | **배포** |
 | 12 | PDF 압축 | **pdf-lib + Canvas 이미지 재인코딩** | MIT | 최상 | 미착수 |
 | 13 | 이미지/PDF → 텍스트 (OCR) | tesseract.wasm | Apache-2.0 | 중 | 미착수 |
 | 14 | CSV/Parquet 뷰어·SQL 쿼리 | DuckDB-wasm | MIT | 중(무주공산) | 미착수 |
@@ -134,6 +134,15 @@
   `getPageCount()` 에서 TypeError 로 터진다. load 만 try 로 감싸면 오류 분류가 새어 나간다.
 - pdf-lib 은 암호화를 **복호화하지 않는다.** `ignoreEncryption: true` 로 열면 내용이 깨진
   결과가 조용히 나온다 → 암호 PDF 는 열지 말고 거부해야 한다.
+- **pdf-lib 과 pdf.js 는 같은 사정을 다른 말로 알린다.** pdf-lib 은 `EncryptedPDFError`,
+  pdf.js 는 `PasswordException`("No password given" — 'encrypted' 라는 말이 없다).
+  pdf.js 에게 먼저 물으면 암호 걸린 파일에 "읽을 수 없습니다" 라고 잘못 안내하게 된다 →
+  **썸네일을 그리기 전에 pdf-lib 으로 먼저 연다.** 덤으로 못 그릴 파일에 pdf.js(1.5MB)를
+  내려받지 않는다.
+- pdf.js 6 에는 `PDFDocumentProxy.destroy` 가 없다. `getDocument()` 가 준 **로딩 태스크**를
+  destroy 해야 pdf.js 가 띄운 워커까지 정리된다.
+- **회전은 원본 값에 더한다.** 스캔본은 `/Rotate 90` 을 달고 있는 일이 흔하고, 사용자가 화면에서
+  본 것은 그 회전이 적용된 모습이다. 덮어쓰면 눈에 보이던 것과 다른 결과가 나온다.
 - Next.js 가 상위 디렉터리 lockfile 때문에 워크스페이스 루트를 잘못 잡는다 →
   `next.config.ts` 의 `turbopack.root` 로 고정.
 - ffmpeg.wasm 멀티스레드와 `SharedArrayBuffer`는 COOP/COEP 없으면 조용히 단일 스레드로 떨어진다.

@@ -18,6 +18,7 @@ export type ToolSlug =
   | "audio-extract"
   | "pdf-merge"
   | "pdf-split"
+  | "pdf-organize"
   | "pdf-compress"
   | "ocr"
   | "data-query"
@@ -41,6 +42,7 @@ export const TOOLS: Tool[] = [
   { slug: "image-convert", tier: 1, status: "live", needs: "all" },
   { slug: "pdf-merge", tier: 1, status: "live", needs: "all" },
   { slug: "pdf-split", tier: 1, status: "live", needs: "all" },
+  { slug: "pdf-organize", tier: 1, status: "live", needs: "all" },
   { slug: "video-convert", tier: 1, status: "planned", needs: "all" },
   { slug: "video-compress", tier: 1, status: "planned", needs: "all" },
   { slug: "video-trim", tier: 1, status: "planned", needs: "all" },

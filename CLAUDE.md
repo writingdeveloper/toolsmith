@@ -79,8 +79,10 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 - 도구 #1 이미지 변환·압축: **배포 완료.**
 - 도구 #9 PDF 병합: **배포 완료.** `/tools/pdf-merge`
 - 도구 #10 PDF 분할: **배포 완료.** `/{locale}/tools/pdf-split` (범위 추출 + 낱장 ZIP)
+- 도구 #11 PDF 회전·페이지 삭제: **배포 완료.** `/{locale}/tools/pdf-organize`
+  (pdf.js 썸네일 그리드 + 회전 + 삭제). pdf.js 는 `lib/pdf/render-core.ts` 에서만 쓰인다.
 - **다국어 6개 언어 배포 완료.** 정적 페이지 30장(6 언어 × 4 + 루트 + robots/sitemap).
-- Playwright 35종. 프로덕션 34 통과 / 1 스킵(dev 전용), dev 32 통과 / 3 스킵.
+- Playwright 48종. 프로덕션 47 통과 / 1 스킵(dev 전용), dev 41 통과 / 7 스킵.
 - PDF 공통 토대는 `lib/pdf/document.ts` — 병합·분할이 함께 쓴다. 도구별 로직만 각자 파일에.
 - `app/sitemap.ts` 추가 — 언어 × 페이지 전부, 각 항목이 자기 언어판을 alternates 로 가리킨다.
   `NEXT_PUBLIC_SITE_URL` 이 없으면 빈 사이트맵을 낸다(robots 도 이때는 전면 차단이라 앞뒤가 맞다).
@@ -116,6 +118,7 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 다음 할 일
 
-1. **PDF 회전·페이지 삭제** (#11) — `lib/pdf/document.ts` 재사용, 가장 싼 확장.
-2. 도구 페이지 JSON-LD(HowTo / SoftwareApplication) — 아직 없다. GEO(LLM 인용)에 유리하다.
+1. 도구 페이지 JSON-LD(HowTo / SoftwareApplication) — 아직 없다. GEO(LLM 인용)에 유리하다.
+2. **PDF 압축** (#12) — `lib/pdf/render-core.ts` 의 pdf.js 를 재사용해 페이지를 래스터화하고
+   Canvas 로 재인코딩한다. 검색수요 최상.
 3. **영상 변환** (ffmpeg.wasm) — 검색수요 최상이지만 COEP 스코프를 먼저 뚫어야 한다.

@@ -4,7 +4,7 @@
  */
 import { mkdir, writeFile } from "node:fs/promises";
 import sharp from "sharp";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, StandardFonts, degrees, rgb } from "pdf-lib";
 
 const OUT = new URL("../tests/fixtures/", import.meta.url);
 await mkdir(OUT, { recursive: true });
@@ -77,6 +77,19 @@ await write(
     [205, 405, "P5"],
   ]),
 );
+
+/*
+ * /Rotate 90 이 이미 박힌 1쪽짜리. 스캔 문서가 흔히 이렇다.
+ * 회전을 "덮어쓰는지 더하는지" 를 가르는 픽스처다.
+ */
+const tilted = await PDFDocument.create();
+{
+  const font = await tilted.embedFont(StandardFonts.Helvetica);
+  const page = tilted.addPage([300, 500]);
+  page.drawText("T1", { x: 12, y: 460, size: 24, font, color: rgb(0.1, 0.1, 0.1) });
+  page.setRotation(degrees(90));
+}
+await write("tilted.pdf", Buffer.from(await tilted.save()));
 
 // PDF 가 아닌 파일에 .pdf 확장자만 붙인 것 — 조용히 통과하면 안 된다.
 await write("broken.pdf", Buffer.from("%PDF-1.7\nthis is not a pdf\n"));

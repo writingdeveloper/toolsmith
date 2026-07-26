@@ -48,7 +48,20 @@ function translate(error: unknown): PdfError {
   if (error instanceof PdfError) return error;
   const name = error instanceof Error ? error.name : "";
   const message = error instanceof Error ? error.message : String(error);
-  if (name === "EncryptedPDFError" || /encrypted/i.test(message)) return new PdfError("ENCRYPTED");
+
+  /*
+   * 두 라이브러리가 서로 다른 말로 같은 사정을 알린다.
+   *   pdf-lib  → EncryptedPDFError / "…is encrypted."
+   *   pdf.js   → PasswordException / "No password given"  ← 'encrypted' 라는 말이 없다
+   * 후자를 놓치면 암호 걸린 파일에 "PDF 로 읽을 수 없습니다" 라고 잘못 안내하게 된다.
+   */
+  if (
+    name === "EncryptedPDFError" ||
+    name === "PasswordException" ||
+    /encrypted|password/i.test(message)
+  ) {
+    return new PdfError("ENCRYPTED");
+  }
   return new PdfError("INVALID_PDF");
 }
 
