@@ -38,6 +38,7 @@ export const es = {
     noAudioTrack: "Este archivo no tiene sonido que extraer",
     noVideoTrack: "Este archivo no tiene pista de vídeo",
     unsupportedCodec: "Este navegador no puede descodificar este vídeo",
+    badRange: "El final tiene que ir después del inicio",
     tooLarge: "Eso supera los 512 MB",
     decodeFailed: "No se ha podido leer el vídeo hasta el final",
     encodeFailed: "Este navegador no ha podido codificar el resultado",
@@ -342,6 +343,55 @@ export const es = {
         audioKept: "El sonido se ha copiado sin tocarlo.",
         didNotShrink:
           "No ha salido más pequeño: el original ya era eficiente. Prueba con menos calidad o resolución.",
+      },
+    },
+
+    "video-trim": {
+      blurb: "Recorta un fragmento de un vídeo sin recodificarlo. No se pierde nada y tarda segundos.",
+      metaTitle: "Recortar vídeo — corta un MP4 en el navegador",
+      metaDescription:
+        "Recorta un fragmento de un MP4 o MOV sin subirlo. No se recodifica nada, así que la calidad queda intacta y termina en segundos. Todo en tu navegador.",
+      h1: "Recortar vídeo",
+      lead: "Saca un fragmento de un vídeo y lo copia tal cual: sin recodificar, así que la calidad es exactamente la de partida.",
+      faq: [
+        {
+          q: "¿Adónde van mis archivos?",
+          a: "A ninguna parte. El vídeo se lee y se vuelve a escribir dentro de esta pestaña, y no se sube nada. Al cerrar la pestaña desaparece.",
+        },
+        {
+          q: "¿Por qué empieza un poco antes de lo que pedí?",
+          a: "Porque un corte solo puede caer en un fotograma clave. Los fotogramas clave se dibujan solos; los que hay entre medias únicamente describen lo que cambió respecto a uno anterior. Si cortas entre ellos, el primer segundo sale roto, así que movemos el inicio al fotograma clave más cercano anterior y te decimos dónde queda antes de pulsar el botón.",
+        },
+        {
+          q: "¿Puedo obtener el segundo exacto que pedí?",
+          a: "Solo recodificando el principio, lo que cuesta calidad y tiempo. Preferimos enseñarte el punto de corte real antes que hacer ese cambio por ti en silencio. Si necesitas precisión de fotograma, un editor completo es la herramienta adecuada.",
+        },
+        {
+          q: "¿Baja la calidad?",
+          a: "No. No se recodifica ni un solo fotograma: la imagen y el sonido se copian exactamente como estaban. Por eso también termina casi al instante, incluso con archivos grandes.",
+        },
+        {
+          q: "¿Qué archivos puedo usar?",
+          a: "MP4 y MOV. Leemos el contenedor nosotros mismos en lugar de enviarte una cadena de herramientas de 30 MB, así que AVI y MKV no se ofrecen en vez de aceptarse y luego fallar.",
+        },
+      ],
+      ui: {
+        dropLabel: "Suelta un vídeo aquí",
+        dropHint: "MP4 y MOV — de uno en uno",
+        reading: "leyendo…",
+        seconds: "s",
+        noAudio: "sin sonido",
+        startLabel: "Inicio (segundos)",
+        endLabel: "Fin (segundos)",
+        grabHere: "Posición actual",
+        snapped: "Corta en el segundo {actual}, no en el {asked}: es el fotograma clave más cercano antes.",
+        onKeyframe: "Este inicio cae justo en un fotograma clave.",
+        run: "Recortar",
+        working: "Recortando…",
+        outputName: "{stem}-recorte.mp4",
+        resultRange: "{from}s → {to}s · {length}s de duración",
+        lossless: "No se ha recodificado nada.",
+        audioKept: "El sonido se copió intacto.",
       },
     },
 

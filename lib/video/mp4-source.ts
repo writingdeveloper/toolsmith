@@ -12,6 +12,7 @@ export type MediaErrorCode =
   | "NO_VIDEO_TRACK"
   | "NO_AUDIO_TRACK"
   | "UNSUPPORTED_CODEC"
+  | "BAD_RANGE"
   | "TOO_LARGE"
   | "DECODE_FAILED"
   | "ENCODE_FAILED";
@@ -28,8 +29,17 @@ export class MediaError extends Error {
 /** 한 트랙에서 뽑아낸 인코딩 상태 그대로의 샘플. */
 export interface Sample {
   data: Uint8Array;
-  /** 마이크로초 */
+  /** 표시 시각(cts), 마이크로초 */
   timestamp: number;
+  /**
+   * 디코드 시각(dts), 마이크로초.
+   *
+   * **B프레임이 있으면 cts 와 다르다.** 디코드는 앞뒤 프레임을 참조하느라 표시 순서보다
+   * 먼저 일어난다. 다시 mux 할 때 이 차이를 버리면 재생이 미세하게 흔들린다 —
+   * 재인코딩하는 도구에서는 디코더가 알아서 정리해 주므로 티가 안 나지만,
+   * 트림처럼 샘플을 그대로 옮기는 경로에서는 우리가 지켜야 한다.
+   */
+  decodeTime: number;
   duration: number;
   key: boolean;
 }
@@ -86,12 +96,40 @@ interface Mp4BoxInfo {
 interface Mp4BoxSample {
   data: Uint8Array;
   cts: number;
+  dts: number;
   duration: number;
   timescale: number;
   is_sync: boolean;
 }
 
 const MICROS = 1_000_000;
+
+/**
+ * 트랙의 시간축을 0 에서 시작하게 옮기고, 실제 길이를 돌려준다.
+ *
+ * **B프레임이 있는 파일은 cts 가 0 에서 시작하지 않는다.** 인코더가 표시 순서를
+ * 되살리려고 전체를 재정렬 지연(보통 2프레임)만큼 뒤로 민 다음, edit list 로 그만큼을
+ * 다시 잘라내라고 적어 둔다. 플레이어는 그 지시를 따르므로 사용자에게는 0 초부터
+ * 보인다 — 우리가 원본 cts 를 그대로 쓰면 미리보기의 재생 위치(0 기준)와 우리가
+ * 계산한 키프레임 위치(0.133 기준)가 어긋나서, 사용자가 찍은 지점보다 한 GOP 앞에서
+ * 잘리게 된다. 트랙마다 자기 최솟값을 빼는 것이 그 edit list 를 지키는 것과 같다.
+ */
+function rebase(samples: Sample[]): number {
+  if (samples.length === 0) return 0;
+
+  let min = Infinity;
+  for (const sample of samples) {
+    if (sample.timestamp < min) min = sample.timestamp;
+  }
+  let end = 0;
+  for (const sample of samples) {
+    sample.timestamp -= min;
+    sample.decodeTime -= min;
+    const stop = sample.timestamp + sample.duration;
+    if (stop > end) end = stop;
+  }
+  return end;
+}
 
 /** AAC 샘플레이트 인덱스 표(ISO/IEC 14496-3). */
 const AAC_RATES = [
@@ -208,30 +246,36 @@ export async function readMp4(
       const videoInfo = info.videoTracks[0];
       const audioInfo = info.audioTracks[0];
 
-      const video: VideoTrack | undefined = videoInfo
-        ? {
-            codec: videoInfo.codec,
-            width: videoInfo.video?.width ?? 0,
-            height: videoInfo.video?.height ?? 0,
-            duration: (videoInfo.duration / videoInfo.timescale) * MICROS,
-            frameCount: videoInfo.nb_samples,
-            description: describeTrack(file, videoInfo.id, mp4box.DataStream, BIG_ENDIAN),
-            samples: collected.get(videoInfo.id) ?? [],
-          }
-        : undefined;
+      let video: VideoTrack | undefined;
+      if (videoInfo) {
+        const samples = collected.get(videoInfo.id) ?? [];
+        const measured = rebase(samples);
+        video = {
+          codec: videoInfo.codec,
+          width: videoInfo.video?.width ?? 0,
+          height: videoInfo.video?.height ?? 0,
+          // 샘플에서 잰 길이를 쓴다 — 트랙 헤더의 값은 재정렬 지연만큼 부풀어 있다
+          duration: measured || (videoInfo.duration / videoInfo.timescale) * MICROS,
+          frameCount: videoInfo.nb_samples,
+          description: describeTrack(file, videoInfo.id, mp4box.DataStream, BIG_ENDIAN),
+          samples,
+        };
+      }
 
       let audio: AudioTrack | undefined;
       if (audioInfo) {
         const sampleRate = audioInfo.audio?.sample_rate ?? 48000;
         const channels = audioInfo.audio?.channel_count ?? 2;
         const entry = firstEntry(file, audioInfo.id);
+        const samples = collected.get(audioInfo.id) ?? [];
+        const measured = rebase(samples);
         audio = {
           codec: audioInfo.codec,
           sampleRate,
           channels,
-          duration: (audioInfo.duration / audioInfo.timescale) * MICROS,
+          duration: measured || (audioInfo.duration / audioInfo.timescale) * MICROS,
           description: entry ? describeAac(entry, sampleRate, channels) : undefined,
-          samples: collected.get(audioInfo.id) ?? [],
+          samples,
         };
       }
 
@@ -272,6 +316,7 @@ export async function readMp4(
           // mp4box 가 내부 버퍼를 재사용하므로 복사해 둔다
           data: new Uint8Array(sample.data),
           timestamp: (sample.cts / sample.timescale) * MICROS,
+          decodeTime: (sample.dts / sample.timescale) * MICROS,
           duration: (sample.duration / sample.timescale) * MICROS,
           key: sample.is_sync,
         });

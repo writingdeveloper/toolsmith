@@ -40,6 +40,7 @@ export const en = {
     noVideoTrack: "This file has no video track",
     noAudioTrack: "This file has no sound to pull out",
     unsupportedCodec: "This browser can't decode this video",
+    badRange: "The end has to come after the start",
     tooLarge: "That is over 512MB",
     decodeFailed: "The video could not be read to the end",
     encodeFailed: "This browser could not encode the result",
@@ -345,6 +346,55 @@ export const en = {
         audioKept: "The sound was copied across untouched.",
         didNotShrink:
           "This came out no smaller — the original was already efficient. Try a lower quality or resolution.",
+      },
+    },
+
+    "video-trim": {
+      blurb: "Cut a clip out of a video without re-encoding it. Nothing is lost, and it takes seconds.",
+      metaTitle: "Trim Video — cut an MP4 in your browser",
+      metaDescription:
+        "Cut a section out of an MP4 or MOV without uploading it. Nothing is re-encoded, so the quality is untouched and it finishes in seconds. Runs in your browser.",
+      h1: "Trim video",
+      lead: "Cuts a section out of a video and copies it across untouched — no re-encoding, so the quality is exactly what you started with.",
+      faq: [
+        {
+          q: "Where do my files go?",
+          a: "Nowhere. The video is read and rewritten inside this browser tab, and nothing is uploaded. Close the tab and it is gone.",
+        },
+        {
+          q: "Why does it start slightly earlier than I asked?",
+          a: "Because a cut can only land on a keyframe. Keyframes are the frames that can be drawn on their own; the ones in between only describe what changed since an earlier frame. Cut between them and the first second comes out broken, so we move the start back to the nearest keyframe — and tell you where that is before you press the button.",
+        },
+        {
+          q: "Can I get the exact second I asked for?",
+          a: "Only by re-encoding the beginning, which costs quality and time. We would rather show you the honest cut point than quietly make that trade for you. If you need frame-exact edits, a full editor is the right tool.",
+        },
+        {
+          q: "Does the quality drop?",
+          a: "No. Not a single frame is re-encoded — the picture and sound are copied across exactly as they were. That is also why it finishes almost instantly, even on a large file.",
+        },
+        {
+          q: "Which files can I use?",
+          a: "MP4 and MOV. We read the container ourselves rather than shipping a 30MB media toolchain, so AVI and MKV are not offered rather than accepted and then failed on.",
+        },
+      ],
+      ui: {
+        dropLabel: "Drop a video here",
+        dropHint: "MP4 and MOV — one at a time",
+        reading: "reading…",
+        seconds: "s",
+        noAudio: "no sound",
+        startLabel: "Start (seconds)",
+        endLabel: "End (seconds)",
+        grabHere: "Use playhead",
+        snapped: "Cuts at {actual}s, not {asked}s — that is the nearest keyframe before it.",
+        onKeyframe: "This start lands exactly on a keyframe.",
+        run: "Trim",
+        working: "Trimming…",
+        outputName: "{stem}-trimmed.mp4",
+        resultRange: "{from}s → {to}s · {length}s long",
+        lossless: "Nothing was re-encoded.",
+        audioKept: "The sound came across untouched.",
       },
     },
 

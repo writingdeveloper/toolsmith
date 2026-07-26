@@ -82,10 +82,10 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 현재 상태 (2026-07-26)
 
-**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 8) = 54 페이지
-+ 루트 언어 선택. 전부 정적. Playwright **85종**(프로덕션 83 통과 / 2 스킵, dev 72 / 13 스킵).
+**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 9) = 60 페이지
++ 루트 언어 선택. 전부 정적. Playwright **95종**(프로덕션 93 통과 / 2 스킵, dev 81 / 14 스킵).
 
-### 배포된 도구 8개
+### 배포된 도구 9개
 
 | # | 도구 | 경로 | 핵심 |
 |---|---|---|---|
@@ -97,6 +97,7 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 | 5 | 영상 압축 | `/tools/video-compress` | WebCodecs. 오디오는 원본 그대로 옮김 |
 | 8 | 오디오 추출 | `/tools/audio-extract` | M4A·WAV. **어느 쪽도 재인코딩하지 않는다** |
 | 7 | 영상 → GIF | `/tools/video-to-gif` | gifenc. **fps 는 1/100초 격자에만 앉는다** |
+| 6 | 영상 자르기 | `/tools/video-trim` | 코덱을 안 쓴다. **키프레임에서만 잘린다는 것을 미리 말한다** |
 
 경로 앞에 `/{locale}` 이 붙는다(`/ko/tools/pdf-merge`).
 
@@ -110,6 +111,8 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   압축은 `VideoEncoder`, 오디오는 `AudioDecoder`, GIF 는 `VideoDecoder`.
 - `lib/video/gif-timing.ts` — GIF 의 1/100초 반올림. 워커와 UI 가 같은 함수를 부르므로
   화면 숫자와 파일 안 숫자가 어긋날 수 없다.
+- `lib/video/trim-core.ts` — 재인코딩 없는 재mux. **cts/dts 를 다루는 유일한 곳**이다.
+  `Sample.decodeTime` 과 `readMp4` 의 `rebase()` 가 여기 때문에 생겼다.
 - `lib/i18n/dictionaries/en.ts` — 사전의 **타입 원본**. 여기에 키를 더하면 나머지 5개가
   타입 에러로 드러난다.
 
@@ -136,11 +139,19 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ### 남은 일 (사용자 몫)
 
-- GitHub 푸시 — 아직 로컬 `main` 만 있다.
-- **번역 검수.** de·es·pt-BR 마케팅 문구는 한 번 읽어볼 값어치가 있다.
-- **GA 에서 `tool_completed` 를 핵심 이벤트로 표시** — 이벤트 전송은 코드·테스트로
-  확인했지만, GA 는 새 이벤트가 목록에 뜬 뒤에야(최대 24시간) 별표를 누를 수 있고
-  이름을 미리 등록하는 경로가 없다. 관리 > 데이터 표시 > 이벤트에서 별표 한 번이면 끝.
+지금은 없다. 2026-07-26 에 셋 다 끝냈다 — 아래 "끝난 일" 참고.
+
+### 끝난 일 (2026-07-26)
+
+- **GitHub 푸시 완료.** `writingdeveloper/toolsmith`(private). 그 자리에서 Dependabot 이
+  5건을 띄웠고 분류·조치했다 — 판단 근거는 `docs/TOOLS.md` "의존성 경고".
+- **GA `tool_completed` 를 핵심 이벤트로 표시했다.** 관리 > 데이터 표시 > 이벤트 >
+  최근 이벤트 탭에서 별표. GA 계정은 **`authuser=3`** 이다(기본 프로필에는 GA 계정이
+  없어 프로비저닝 화면으로 튕긴다). 속성 Toolsmith = `a68310012p547076149`.
+- **번역 검수 1차 완료.** 독일어 video-to-gif 만 반말(du)이던 것을 존칭(Sie)으로 통일하고,
+  6개 언어의 제목·설명이 검색결과에서 잘리던 것(제목 14곳, 설명 19곳)을 줄였다.
+  `tests/seo.spec.ts` 가 길이를 고정한다. **원어민 감수는 여전히 값어치가 있다** —
+  기계가 잡을 수 있는 것(말투 일관성·길이)까지만 손봤다.
 
 ### 끝난 일 (2026-07-25 실측 확인)
 
@@ -188,11 +199,10 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 다음 할 일
 
-1. **#6 영상 트림** — 재인코딩 없이 구간만 잘라 다시 mux 하면 순식간이지만,
-   **키프레임 경계에서만 정확히 잘린다.** 임의 지점에서 자르려면 앞부분만 재인코딩해야
-   한다. 어느 쪽이든 "요청한 지점과 실제 지점이 다를 수 있다" 를 정직하게 보여줘야 한다.
-   GIF 의 1/100초 격자를 다룬 방식(`gif-timing.ts`)이 그대로 본보기가 된다.
-2. **#4 영상 변환** — WebM 출력이면 오디오도 Opus 로 재인코딩해야 한다(지금은
-   오디오를 손대는 코드가 없다). 남은 셋 중 가장 크다.
-3. 색인 진행 상황 확인 — 며칠 뒤 Pages 리포트에 페이지가 잡히는지 본다.
-   사이트맵 발견 페이지가 도구 수 × 6 + 6 으로 늘어야 한다(지금 54).
+1. **#4 영상 변환** — Tier 1 영상 도구 중 마지막이자 가장 크다. WebM 출력이면 오디오도
+   Opus 로 **재인코딩**해야 하는데, 이 저장소에는 아직 오디오를 인코딩하는 코드가 한 줄도
+   없다(`AudioEncoder` 를 부르는 곳이 없다). MP4↔WebM 양방향이면 muxer 도 둘 다 쓴다.
+2. **#2 OCR / #3 CSV·Parquet 쿼리** — Tier 1 에서 영상이 아닌 두 개.
+3. `pnpm lint` 7건 정리 — 아래 "알려진 결함".
+4. 색인 진행 상황 확인 — 며칠 뒤 Pages 리포트에 페이지가 잡히는지 본다.
+   사이트맵 발견 페이지가 도구 수 × 6 + 6 으로 늘어야 한다(지금 60).

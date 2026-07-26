@@ -135,6 +135,33 @@ try {
   );
   console.log(`clip.mp4 — ${(await stat(clipPath)).size} bytes`);
 
+  /*
+   * 트림용. 6초, **1초마다 키프레임**, main 프로파일이라 B프레임이 들어 있다.
+   *
+   * clip.mp4 로는 트림을 검증할 수 없다 — ffmpeg 기본 GOP 가 250이라 2초짜리에는
+   * 키프레임이 맨 앞 하나뿐이고, 어디를 찍어도 0초로 떨어져 "스냅했다" 를 증명하지
+   * 못한다. 여기서는 2.5초를 요청하면 2.0초로 내려앉는 것이 눈에 보인다.
+   *
+   * B프레임(-bf 2)은 일부러 넣었다. cts ≠ dts 인 파일을 다시 mux 할 때 우리가
+   * compositionTimeOffset 을 제대로 넘기는지가 여기서만 드러난다.
+   */
+  const trimPath = fileURLToPath(new URL("trim.mp4", OUT));
+  execFileSync(
+    "ffmpeg",
+    [
+      "-y",
+      "-f", "lavfi", "-i", "testsrc=size=320x240:rate=15:duration=6",
+      "-f", "lavfi", "-i", "sine=frequency=440:duration=6",
+      "-c:v", "libx264", "-profile:v", "main", "-pix_fmt", "yuv420p",
+      "-g", "15", "-keyint_min", "15", "-sc_threshold", "0", "-bf", "2",
+      "-c:a", "aac", "-b:a", "64k",
+      "-shortest", "-movflags", "+faststart",
+      trimPath,
+    ],
+    { stdio: "ignore" },
+  );
+  console.log(`trim.mp4 — ${(await stat(trimPath)).size} bytes`);
+
   // 오디오 트랙이 아예 없는 영상 — "꺼낼 소리가 없다" 를 정직하게 말하는지 확인용
   const silentPath = fileURLToPath(new URL("silent.mp4", OUT));
   execFileSync(

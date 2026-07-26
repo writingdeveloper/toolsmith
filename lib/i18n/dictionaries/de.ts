@@ -38,6 +38,7 @@ export const de = {
     noAudioTrack: "Diese Datei hat keinen Ton zum Herausziehen",
     noVideoTrack: "Diese Datei hat keine Videospur",
     unsupportedCodec: "Dieser Browser kann dieses Video nicht dekodieren",
+    badRange: "Das Ende muss nach dem Anfang liegen",
     tooLarge: "Das liegt über 512 MB",
     decodeFailed: "Das Video konnte nicht bis zum Ende gelesen werden",
     encodeFailed: "Dieser Browser konnte das Ergebnis nicht kodieren",
@@ -342,6 +343,55 @@ export const de = {
         audioKept: "Der Ton wurde unverändert übernommen.",
         didNotShrink:
           "Es wurde nicht kleiner — das Original war bereits effizient. Versuchen Sie weniger Qualität oder Auflösung.",
+      },
+    },
+
+    "video-trim": {
+      blurb: "Schneiden Sie einen Ausschnitt heraus, ohne neu zu kodieren. Nichts geht verloren, und es dauert Sekunden.",
+      metaTitle: "Video zuschneiden — MP4 im Browser kürzen",
+      metaDescription:
+        "Schneiden Sie einen Ausschnitt aus einem MP4 oder MOV, ohne es hochzuladen. Nichts wird neu kodiert, die Qualität bleibt und es dauert Sekunden.",
+      h1: "Video zuschneiden",
+      lead: "Holt einen Ausschnitt aus einem Video und überträgt ihn unverändert — ohne Neukodierung, die Qualität bleibt genau die des Originals.",
+      faq: [
+        {
+          q: "Wohin gehen meine Dateien?",
+          a: "Nirgendwohin. Das Video wird in diesem Browser-Tab gelesen und neu geschrieben, nichts wird hochgeladen. Tab schließen und es ist weg.",
+        },
+        {
+          q: "Warum beginnt es etwas früher als gewünscht?",
+          a: "Weil ein Schnitt nur auf einem Keyframe landen kann. Keyframes sind die Bilder, die für sich allein darstellbar sind; die dazwischen beschreiben nur, was sich seit einem früheren Bild geändert hat. Schneidet man dazwischen, kommt die erste Sekunde kaputt heraus. Deshalb rücken wir den Anfang auf den nächstgelegenen früheren Keyframe — und sagen Ihnen vor dem Klick, wo der liegt.",
+        },
+        {
+          q: "Geht auch die exakt gewünschte Sekunde?",
+          a: "Nur, indem der Anfang neu kodiert wird, und das kostet Qualität und Zeit. Wir zeigen Ihnen lieber den ehrlichen Schnittpunkt, statt diesen Tausch stillschweigend für Sie zu machen. Wer bildgenau schneiden muss, ist mit einem richtigen Schnittprogramm besser bedient.",
+        },
+        {
+          q: "Leidet die Qualität?",
+          a: "Nein. Kein einziges Bild wird neu kodiert — Bild und Ton werden genau so übernommen, wie sie waren. Deshalb ist es auch bei großen Dateien fast sofort fertig.",
+        },
+        {
+          q: "Welche Dateien kann ich verwenden?",
+          a: "MP4 und MOV. Wir lesen den Container selbst, statt eine 30 MB große Medienbibliothek auszuliefern — deshalb werden AVI und MKV gar nicht erst angeboten, statt angenommen zu werden und dann zu scheitern.",
+        },
+      ],
+      ui: {
+        dropLabel: "Video hier ablegen",
+        dropHint: "MP4 und MOV — eines nach dem anderen",
+        reading: "wird gelesen…",
+        seconds: "s",
+        noAudio: "kein Ton",
+        startLabel: "Anfang (Sekunden)",
+        endLabel: "Ende (Sekunden)",
+        grabHere: "Abspielposition",
+        snapped: "Schneidet bei {actual}s statt {asked}s — das ist der nächste Keyframe davor.",
+        onKeyframe: "Dieser Anfang liegt genau auf einem Keyframe.",
+        run: "Zuschneiden",
+        working: "Wird zugeschnitten…",
+        outputName: "{stem}-Ausschnitt.mp4",
+        resultRange: "{from}s → {to}s · {length}s lang",
+        lossless: "Es wurde nichts neu kodiert.",
+        audioKept: "Der Ton wurde unverändert übernommen.",
       },
     },
 

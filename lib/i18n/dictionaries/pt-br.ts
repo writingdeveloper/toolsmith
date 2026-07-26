@@ -38,6 +38,7 @@ export const ptBR = {
     noAudioTrack: "Este arquivo não tem som para extrair",
     noVideoTrack: "Este arquivo não tem faixa de vídeo",
     unsupportedCodec: "Este navegador não consegue decodificar este vídeo",
+    badRange: "O fim precisa vir depois do início",
     tooLarge: "Isso passa de 512 MB",
     decodeFailed: "Não foi possível ler o vídeo até o fim",
     encodeFailed: "Este navegador não conseguiu codificar o resultado",
@@ -342,6 +343,55 @@ export const ptBR = {
         audioKept: "O som foi copiado sem alteração.",
         didNotShrink:
           "Não ficou menor — o original já era eficiente. Tente qualidade ou resolução menor.",
+      },
+    },
+
+    "video-trim": {
+      blurb: "Corte um trecho do vídeo sem recodificar. Nada se perde e leva segundos.",
+      metaTitle: "Cortar vídeo — recorte um MP4 no navegador",
+      metaDescription:
+        "Corte um trecho de um MP4 ou MOV sem enviá-lo. Nada é recodificado, então a qualidade fica intacta e termina em segundos. Tudo no seu navegador.",
+      h1: "Cortar vídeo",
+      lead: "Tira um trecho do vídeo e copia do jeito que está — sem recodificar, então a qualidade é exatamente a original.",
+      faq: [
+        {
+          q: "Para onde vão meus arquivos?",
+          a: "Para lugar nenhum. O vídeo é lido e reescrito dentro desta aba do navegador, e nada é enviado. Ao fechar a aba, acabou.",
+        },
+        {
+          q: "Por que começa um pouco antes do que pedi?",
+          a: "Porque um corte só pode cair em um quadro-chave. Quadros-chave são os que se desenham sozinhos; os que ficam entre eles só descrevem o que mudou em relação a um quadro anterior. Cortar no meio faz o primeiro segundo sair quebrado, então movemos o início para o quadro-chave mais próximo antes dele — e avisamos onde é antes de você clicar.",
+        },
+        {
+          q: "Dá para pegar exatamente o segundo que pedi?",
+          a: "Só recodificando o começo, o que custa qualidade e tempo. Preferimos mostrar o ponto de corte honesto a fazer essa troca por você em silêncio. Se você precisa de precisão de quadro, um editor completo é a ferramenta certa.",
+        },
+        {
+          q: "A qualidade cai?",
+          a: "Não. Nenhum quadro é recodificado — imagem e som são copiados exatamente como estavam. É também por isso que termina quase na hora, mesmo em arquivos grandes.",
+        },
+        {
+          q: "Quais arquivos posso usar?",
+          a: "MP4 e MOV. Lemos o contêiner por conta própria em vez de baixar um conjunto de ferramentas de 30 MB, então AVI e MKV não são oferecidos em vez de aceitos e depois falharem.",
+        },
+      ],
+      ui: {
+        dropLabel: "Solte um vídeo aqui",
+        dropHint: "MP4 e MOV — um de cada vez",
+        reading: "lendo…",
+        seconds: "s",
+        noAudio: "sem som",
+        startLabel: "Início (segundos)",
+        endLabel: "Fim (segundos)",
+        grabHere: "Posição atual",
+        snapped: "Corta em {actual}s, não em {asked}s — é o quadro-chave mais próximo antes.",
+        onKeyframe: "Este início cai exatamente em um quadro-chave.",
+        run: "Cortar",
+        working: "Cortando…",
+        outputName: "{stem}-corte.mp4",
+        resultRange: "{from}s → {to}s · {length}s de duração",
+        lossless: "Nada foi recodificado.",
+        audioKept: "O som veio intacto.",
       },
     },
 
