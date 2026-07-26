@@ -79,6 +79,25 @@ await write(
 );
 
 /*
+ * 압축용. 큰 JPEG 사진이 박힌 2쪽 + 글자.
+ * "이미지는 줄었는데 글자는 살아 있는가" 를 가리는 픽스처다.
+ */
+const photoJpeg = await sharp(noise, { raw: { width: 1600, height: 1200, channels: 3 } })
+  .jpeg({ quality: 100 })
+  .toBuffer();
+{
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const image = await doc.embedJpg(photoJpeg);
+  for (const label of ["C1", "C2"]) {
+    const page = doc.addPage([600, 500]);
+    page.drawImage(image, { x: 20, y: 120, width: 560, height: 350 });
+    page.drawText(label, { x: 20, y: 60, size: 28, font, color: rgb(0.1, 0.1, 0.1) });
+  }
+  await write("photo.pdf", Buffer.from(await doc.save()));
+}
+
+/*
  * /Rotate 90 이 이미 박힌 1쪽짜리. 스캔 문서가 흔히 이렇다.
  * 회전을 "덮어쓰는지 더하는지" 를 가르는 픽스처다.
  */

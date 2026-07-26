@@ -43,7 +43,7 @@
 | 9 | PDF 병합 | pdf-lib | MIT | 최상 | **배포** |
 | 10 | PDF 분할 | pdf-lib + fflate(ZIP) | MIT | 상 | **배포** |
 | 11 | PDF 회전·페이지 삭제 | pdf-lib + pdf.js(썸네일) | MIT / Apache-2.0 | 중 | **배포** |
-| 12 | PDF 압축 | **pdf-lib + Canvas 이미지 재인코딩** | MIT | 최상 | 미착수 |
+| 12 | PDF 압축 | **pdf-lib + Canvas 이미지 재인코딩** | MIT | 최상 | **배포** |
 | 13 | 이미지/PDF → 텍스트 (OCR) | tesseract.wasm | Apache-2.0 | 중 | 미착수 |
 | 14 | CSV/Parquet 뷰어·SQL 쿼리 | DuckDB-wasm | MIT | 중(무주공산) | 미착수 |
 
@@ -168,6 +168,17 @@
   destroy 해야 pdf.js 가 띄운 워커까지 정리된다.
 - **회전은 원본 값에 더한다.** 스캔본은 `/Rotate 90` 을 달고 있는 일이 흔하고, 사용자가 화면에서
   본 것은 그 회전이 적용된 모습이다. 덮어쓰면 눈에 보이던 것과 다른 결과가 나온다.
+- **PDF 압축은 페이지를 굽지 않는다.** 페이지를 통째로 래스터화하면 훨씬 많이 줄지만 글자가
+  글자이기를 그만둔다(선택·검색·화면낭독기 전멸). 안에 박힌 **JPEG(DCTDecode)만** 다시
+  인코딩한다. Flate 이미지는 색공간·비트깊이 조합이 너무 다양해 건드리지 않고,
+  `Decode` 배열(색 반전 등)이 있으면 건너뛴다. `SMask`/`Mask` 가 있으면 크기를 바꾸지
+  않는다 — 마스크와 픽셀 수가 어긋나면 문서가 깨진다.
+- **다시 저장하는 것만으로도 몇 % 줄어든다.** 그 몫을 절감률로 표시하면 하지 않은 일을 한
+  것처럼 보인다 → 실제로 사진을 갈아 끼웠을 때(`rewritten > 0`)만 `-N%` 를 붙인다.
+  이건 테스트가 잡아낸 실제 결함이다.
+- **dev 서버가 떠 있는 동안 `pnpm build` 를 돌리지 말 것.** 둘이 같은 `.next` 를 쓰기 때문에
+  실행 중인 dev 서버의 캐시가 깨지고, 그때부터 테스트가 `SyntaxError: Unexpected end of
+  JSON input` 과 함께 무더기로 무너진다. 겪고 나면 원인을 찾기 어렵다.
 - Next.js 가 상위 디렉터리 lockfile 때문에 워크스페이스 루트를 잘못 잡는다 →
   `next.config.ts` 의 `turbopack.root` 로 고정.
 - ffmpeg.wasm 멀티스레드와 `SharedArrayBuffer`는 COOP/COEP 없으면 조용히 단일 스레드로 떨어진다.

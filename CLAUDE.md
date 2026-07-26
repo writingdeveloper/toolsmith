@@ -81,8 +81,13 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 - 도구 #10 PDF 분할: **배포 완료.** `/{locale}/tools/pdf-split` (범위 추출 + 낱장 ZIP)
 - 도구 #11 PDF 회전·페이지 삭제: **배포 완료.** `/{locale}/tools/pdf-organize`
   (pdf.js 썸네일 그리드 + 회전 + 삭제). pdf.js 는 `lib/pdf/render-core.ts` 에서만 쓰인다.
+- 도구 #12 PDF 압축: **배포 완료.** `/{locale}/tools/pdf-compress`
+  안에 박힌 JPEG 만 다시 인코딩한다 — **페이지를 그림으로 굽지 않아 글자가 살아 있다.**
 - **다국어 6개 언어 배포 완료.** 정적 페이지 30장(6 언어 × 4 + 루트 + robots/sitemap).
-- Playwright 53종. 프로덕션 52 통과 / 1 스킵(dev 전용), dev 45 통과 / 8 스킵.
+- Playwright 64종. 프로덕션 62 통과 / 2 스킵, dev 54 통과 / 10 스킵.
+- **`pnpm build` 는 dev 서버가 떠 있을 때 돌리지 않는다.** 같은 `.next` 를 쓰기 때문에
+  실행 중인 dev 서버 캐시가 깨져 테스트가 무더기로 무너진다(`Unexpected end of JSON input`).
+  이미 겪었다면 `.next` 를 지우고 다시 돌리면 된다.
 - **JSON-LD 완료.** 도구 페이지에 WebApplication + FAQPage + BreadcrumbList,
   홈에 WebSite. 구글 리치 결과 테스트 **유효 항목 2개**(탐색경로·소프트웨어 앱) 확인.
   `aggregateRating` 누락 경고는 **의도한 것** — 받은 적 없는 평점을 지어내지 않는다.
@@ -142,8 +147,9 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 다음 할 일
 
-1. **PDF 압축** (#12) — `lib/pdf/render-core.ts` 의 pdf.js 를 재사용해 페이지를 래스터화하고
-   Canvas 로 재인코딩한다. 검색수요 최상이고 부품이 이미 다 있다.
+1. **GA4 핵심 이벤트(전환) 정의** — 지금은 전환이 0이라 개선 효과를 잴 수 없다.
+   **파일명·파일 크기를 파라미터로 실어 보내면 안 된다.** "도구를 끝까지 썼다"(결과가
+   만들어졌다) 정도의 신호만 커스텀 이벤트로 보내고 그것을 핵심 이벤트로 표시한다.
 2. **영상 변환** (ffmpeg.wasm) — 검색수요 최상이지만 COEP 스코프를 먼저 뚫어야 한다.
-3. 색인 진행 상황 확인 — 며칠 뒤 Search Console 의 사이트맵 상태가 Success 로 바뀌고
-   Pages 리포트에 페이지가 잡히는지 본다.
+3. 색인 진행 상황 확인 — 며칠 뒤 Pages 리포트에 페이지가 잡히는지 본다.
+   새 도구를 배포했으므로 사이트맵 발견 페이지가 30 → 36 으로 늘어야 한다.

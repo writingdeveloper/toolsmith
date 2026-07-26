@@ -241,5 +241,49 @@ export const de = {
         resultDetail: "{pages} Seiten · {size}",
       },
     },
+
+    "pdf-compress": {
+      blurb: "Komprimiert die Fotos im PDF neu. Der Text bleibt Text — nichts wird plattgebügelt.",
+      metaTitle: "PDF verkleinern — kleiner werden, Text behalten",
+      metaDescription:
+        "Verkleinern Sie ein PDF, indem die enthaltenen Fotos neu komprimiert werden. Der Text bleibt markierbar und durchsuchbar. Vollständig im Browser, ohne Upload und ohne Anmeldung.",
+      h1: "PDF verkleinern",
+      lead: "Verkleinert ein PDF, indem die enthaltenen Fotos neu komprimiert werden. Der Text bleibt unangetastet und damit markierbar und durchsuchbar.",
+      faq: [
+        {
+          q: "Wohin gehen meine Dateien?",
+          a: "Nirgendwohin. Das Verkleinern läuft in diesem Browser-Tab, und das gewählte PDF geht nie über das Netz. Tab schließen und es ist weg.",
+        },
+        {
+          q: "Wird der Text unscharf?",
+          a: "Nein. Neu codiert werden nur die Fotos; Text und Vektorgrafiken werden unverändert kopiert. Viele Kompressoren backen jede Seite in ein einziges Bild — das schrumpft stärker, aber Ihr Text ist dann kein Text mehr und lässt sich weder markieren noch durchsuchen noch vorlesen. Das machen wir nicht.",
+        },
+        {
+          q: "Warum ist meine Datei kaum kleiner geworden?",
+          a: "Weil es wenig auszupressen gab. Ein PDF aus überwiegend Text ist schon klein, und Fotos, die von Anfang an gut gespeichert wurden, lassen sich ohne sichtbaren Schaden nicht viel weiter verkleinern. Dann sagen wir es Ihnen, statt eine gleich große Datei zurückzugeben und sie „komprimiert“ zu nennen.",
+        },
+        {
+          q: "Welche Qualität soll ich einstellen?",
+          a: "Etwa 70 ist ein guter Kompromiss für Dokumente, die am Bildschirm gelesen werden. Gehen Sie tiefer für Entwürfe, die nur per Mail rausgehen; lassen Sie Qualität hoch und Auflösung unangetastet, wenn es auf die Fotos ankommt.",
+        },
+      ],
+      ui: {
+        dropLabel: "PDF hier ablegen",
+        dropHint: "Eine Datei nach der anderen — die Fotos darin werden neu komprimiert",
+        reading: "wird gelesen…",
+        pageCount: "{n} Seiten",
+        qualityLabel: "Fotoqualität {value}",
+        qualityAria: "Fotoqualität",
+        sizeLabel: "Fotoauflösung",
+        sizeOriginal: "Originalauflösung behalten",
+        sizeMax: "Längste Kante {px} px",
+        run: "Verkleinern",
+        working: "Wird verkleinert…",
+        outputName: "{stem}-verkleinert.pdf",
+        rewroteImages: "{n} von {total} Fotos neu komprimiert",
+        noImages: "In diesem PDF gibt es keine Fotos zum Neukomprimieren.",
+        alreadySmall: "Die Fotos waren bereits gut komprimiert — kleiner ging es nicht.",
+      },
+    },
   },
 } satisfies Dictionary;

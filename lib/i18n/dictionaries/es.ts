@@ -241,5 +241,49 @@ export const es = {
         resultDetail: "{pages} páginas · {size}",
       },
     },
+
+    "pdf-compress": {
+      blurb: "Recomprime las fotos que hay dentro del PDF. El texto sigue siendo texto.",
+      metaTitle: "Comprimir PDF — reduce el tamaño y conserva el texto",
+      metaDescription:
+        "Reduce el tamaño de un PDF recomprimiendo las fotos que lleva dentro. El texto sigue siendo seleccionable y buscable. Todo en el navegador, sin subir nada y sin registro.",
+      h1: "Comprimir PDF",
+      lead: "Reduce un PDF recomprimiendo las fotos que contiene. El texto se deja tal cual, así que sigue pudiéndose seleccionar y buscar.",
+      faq: [
+        {
+          q: "¿A dónde van mis archivos?",
+          a: "A ninguna parte. La compresión ocurre dentro de esta pestaña y el PDF que eliges nunca se envía por la red. Al cerrar la pestaña desaparece.",
+        },
+        {
+          q: "¿Se emborrona el texto?",
+          a: "No. Solo se recodifican las fotos; el texto y los dibujos vectoriales se copian intactos. Muchos compresores aplanan cada página en una sola imagen: encogen más, pero tu texto deja de ser texto y ya no se puede seleccionar, buscar ni leer en voz alta. Nosotros no hacemos eso.",
+        },
+        {
+          q: "¿Por qué apenas se ha reducido?",
+          a: "Porque había poco que exprimir. Un PDF de solo texto ya es pequeño, y las fotos bien guardadas de origen no se pueden encoger mucho más sin daño visible. Cuando pasa, te lo decimos en lugar de devolverte un archivo del mismo tamaño y llamarlo comprimido.",
+        },
+        {
+          q: "¿Qué calidad debería poner?",
+          a: "Alrededor de 70 va bien para documentos que se van a leer en pantalla. Baja más para borradores que solo vas a enviar por correo; súbela y deja la resolución intacta si las fotos importan.",
+        },
+      ],
+      ui: {
+        dropLabel: "Suelta un PDF aquí",
+        dropHint: "De uno en uno — se recomprimen las fotos de dentro",
+        reading: "leyendo…",
+        pageCount: "{n} páginas",
+        qualityLabel: "Calidad de las fotos {value}",
+        qualityAria: "Calidad de las fotos",
+        sizeLabel: "Resolución de las fotos",
+        sizeOriginal: "Mantener la resolución original",
+        sizeMax: "Lado largo {px} px",
+        run: "Comprimir",
+        working: "Comprimiendo…",
+        outputName: "{stem}-comprimido.pdf",
+        rewroteImages: "Se han recomprimido {n} de {total} fotos",
+        noImages: "Este PDF no tiene fotos que recomprimir.",
+        alreadySmall: "Las fotos ya estaban bien comprimidas: no se ha podido reducir más.",
+      },
+    },
   },
 } satisfies Dictionary;

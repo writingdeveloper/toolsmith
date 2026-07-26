@@ -241,5 +241,49 @@ export const ptBR = {
         resultDetail: "{pages} páginas · {size}",
       },
     },
+
+    "pdf-compress": {
+      blurb: "Recomprime as fotos de dentro do PDF. O texto continua texto — nada é achatado.",
+      metaTitle: "Comprimir PDF — diminua o tamanho e mantenha o texto",
+      metaDescription:
+        "Diminua um PDF recomprimindo as fotos que ele carrega. O texto continua selecionável e pesquisável. Tudo no navegador, sem enviar nada e sem cadastro.",
+      h1: "Comprimir PDF",
+      lead: "Diminui um PDF recomprimindo as fotos de dentro dele. O texto fica intocado, então continua dando para selecionar e pesquisar.",
+      faq: [
+        {
+          q: "Para onde vão meus arquivos?",
+          a: "Para lugar nenhum. A compressão acontece dentro desta aba e o PDF escolhido nunca é enviado pela rede. Ao fechar a aba, ele some.",
+        },
+        {
+          q: "O texto fica borrado?",
+          a: "Não. Só as fotos são recodificadas; texto e desenhos vetoriais são copiados intactos. Muitos compressores achatam cada página numa única imagem — encolhe mais, mas seu texto deixa de ser texto e não dá mais para selecionar, pesquisar nem ler em voz alta. Não fazemos isso.",
+        },
+        {
+          q: "Por que quase não diminuiu?",
+          a: "Porque havia pouco a espremer. Um PDF só de texto já é pequeno, e fotos bem salvas desde o início não encolhem muito mais sem estrago visível. Quando é o caso, avisamos, em vez de devolver um arquivo do mesmo tamanho e chamar de comprimido.",
+        },
+        {
+          q: "Qual qualidade devo usar?",
+          a: "Perto de 70 vai bem para documentos que serão lidos na tela. Baixe mais para rascunhos que você só vai mandar por e-mail; mantenha alta e deixe a resolução intacta se as fotos importam.",
+        },
+      ],
+      ui: {
+        dropLabel: "Solte um PDF aqui",
+        dropHint: "Um de cada vez — as fotos de dentro são recomprimidas",
+        reading: "lendo…",
+        pageCount: "{n} páginas",
+        qualityLabel: "Qualidade das fotos {value}",
+        qualityAria: "Qualidade das fotos",
+        sizeLabel: "Resolução das fotos",
+        sizeOriginal: "Manter a resolução original",
+        sizeMax: "Lado maior {px} px",
+        run: "Comprimir",
+        working: "Comprimindo…",
+        outputName: "{stem}-comprimido.pdf",
+        rewroteImages: "Recomprimimos {n} de {total} fotos",
+        noImages: "Este PDF não tem fotos para recomprimir.",
+        alreadySmall: "As fotos já estavam bem comprimidas — não deu para diminuir mais.",
+      },
+    },
   },
 } satisfies Dictionary;

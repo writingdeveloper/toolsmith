@@ -244,6 +244,50 @@ export const en = {
         resultDetail: "{pages} pages · {size}",
       },
     },
+
+    "pdf-compress": {
+      blurb: "Re-compress the photos inside a PDF. The text stays text — nothing is flattened.",
+      metaTitle: "Compress PDF — shrink the file, keep the text",
+      metaDescription:
+        "Make a PDF smaller by re-compressing the photos inside it. Text stays selectable and searchable. Runs entirely in your browser with no upload and no sign-up.",
+      h1: "Compress PDF",
+      lead: "Shrinks a PDF by re-compressing the photos inside it. The text is left exactly as it was, so it stays selectable and searchable.",
+      faq: [
+        {
+          q: "Where do my files go?",
+          a: "Nowhere. Compression runs inside this browser tab and the PDF you pick is never sent over the network. Close the tab and it is gone.",
+        },
+        {
+          q: "Does the text get blurry?",
+          a: "No. Only the photos are re-encoded; text and vector drawings are copied untouched. Many compressors bake each page into one flat image — that shrinks more, but your text stops being text and can no longer be selected, searched or read aloud. We don't do that.",
+        },
+        {
+          q: "Why did my file barely shrink?",
+          a: "Because there was little to squeeze. A PDF of mostly text is already small, and photos that were saved well the first time cannot be made much smaller without visible damage. We tell you when that happens instead of handing back a file of the same size and calling it compressed.",
+        },
+        {
+          q: "How low should I set the quality?",
+          a: "Around 70 is a good balance for documents meant to be read on screen. Go lower for drafts you just need to email; keep it high and leave the resolution untouched if the photos matter.",
+        },
+      ],
+      ui: {
+        dropLabel: "Drop a PDF here",
+        dropHint: "One at a time — the photos inside get re-compressed",
+        reading: "reading…",
+        pageCount: "{n} pages",
+        qualityLabel: "Photo quality {value}",
+        qualityAria: "Photo quality",
+        sizeLabel: "Photo resolution",
+        sizeOriginal: "Keep original resolution",
+        sizeMax: "Long edge {px}px",
+        run: "Compress",
+        working: "Compressing…",
+        outputName: "{stem}-compressed.pdf",
+        rewroteImages: "Re-compressed {n} of {total} photos",
+        noImages: "This PDF has no photos to re-compress.",
+        alreadySmall: "The photos were already well compressed — this could not be made smaller.",
+      },
+    },
   },
 };
 
