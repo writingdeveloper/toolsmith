@@ -56,6 +56,16 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 `tests/image-convert.spec.ts` 의 `inspectResults()` 가 템플릿이다. 매직바이트, 실제 픽셀값,
 출력 크기를 본다. "변환됨" 이라는 글자가 떴다는 것은 아무것도 증명하지 않는다.
 
+## 영상·오디오는 ffmpeg.wasm 이 아니다 (2026-07-26)
+
+**`@ffmpeg/core` 는 GPL 빌드다.** wasm 안의 빌드 설정이 증거:
+`--enable-gpl --enable-libx264 --enable-libx265`. 30.7MB 바이너리를 브라우저로 보내는 것은
+배포이므로 사이트 전체가 GPL 이 된다 → 규칙 6 위반. **다시 집어들지 말 것.**
+
+대신 **WebCodecs**(브라우저 내장)로 간다. 받을 것이 0MB 이고 하드웨어 가속을 탄다.
+컨테이너만 우리가 연다: mp4box.js(BSD-3, demux) + mp4-muxer/webm-muxer(MIT, mux).
+자세한 근거와 실측은 `docs/TOOLS.md` 의 "영상·오디오는 WebCodecs 로 간다".
+
 ## 절대 규칙
 
 1. **서버 연산 0.** v1 의 모든 처리는 브라우저 안에서 끝난다. 업로드가 없다.
@@ -83,8 +93,11 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   (pdf.js 썸네일 그리드 + 회전 + 삭제). pdf.js 는 `lib/pdf/render-core.ts` 에서만 쓰인다.
 - 도구 #12 PDF 압축: **배포 완료.** `/{locale}/tools/pdf-compress`
   안에 박힌 JPEG 만 다시 인코딩한다 — **페이지를 그림으로 굽지 않아 글자가 살아 있다.**
+- 도구 #5 영상 압축: **배포 완료.** `/{locale}/tools/video-compress`
+  **ffmpeg.wasm 이 아니라 WebCodecs 다** — 그쪽이 GPL 이라 못 쓴다(아래 참조).
+  비디오만 다시 인코딩하고 오디오는 원본 청크를 그대로 옮긴다. 받는 것은 mp4box 90KB 뿐.
 - **다국어 6개 언어 배포 완료.** 정적 페이지 30장(6 언어 × 4 + 루트 + robots/sitemap).
-- Playwright 64종. 프로덕션 62 통과 / 2 스킵, dev 54 통과 / 10 스킵.
+- Playwright 72종. 프로덕션 70 통과 / 2 스킵, dev 60 통과 / 12 스킵.
 - **`pnpm build` 는 dev 서버가 떠 있을 때 돌리지 않는다.** 같은 `.next` 를 쓰기 때문에
   실행 중인 dev 서버 캐시가 깨져 테스트가 무더기로 무너진다(`Unexpected end of JSON input`).
   이미 겪었다면 `.next` 를 지우고 다시 돌리면 된다.
@@ -150,6 +163,9 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 다음 할 일
 
-1. **영상 변환** (ffmpeg.wasm) — 검색수요 최상이지만 COEP 스코프를 먼저 뚫어야 한다.
+1. **영상 토대 재사용** — `lib/video/mp4-source.ts`(demux)와 압축 파이프라인이 이미 섰다.
+   여기서 갈라지는 것들: **#6 트림**(재인코딩 없이 구간만 잘라 다시 mux — 가장 쉽다),
+   **#8 오디오 추출**(오디오 트랙만 꺼내면 된다), **#4 변환**(WebM 출력 = 오디오도
+   재인코딩해야 한다), **#7 GIF**(gifenc 추가).
 3. 색인 진행 상황 확인 — 며칠 뒤 Pages 리포트에 페이지가 잡히는지 본다.
    새 도구를 배포했으므로 사이트맵 발견 페이지가 30 → 36 으로 늘어야 한다.

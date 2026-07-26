@@ -33,6 +33,16 @@ export const ja = {
       "Web Worker に対応した最新の Chrome、Edge、Firefox、Safari で開いてください。",
   },
 
+  mediaErrors: {
+    unsupportedContainer: "MP4 や MOV として開けないファイルです",
+    noVideoTrack: "映像トラックがありません",
+    unsupportedCodec: "このブラウザがデコードできない映像です",
+    tooLarge: "512MB を超えています",
+    decodeFailed: "映像を最後まで読み取れませんでした",
+    encodeFailed: "このブラウザが結果をエンコードできませんでした",
+    generic: "処理に失敗しました",
+  },
+
   pdfErrors: {
     encrypted: "パスワードで保護された PDF です",
     noPages: "ページのない PDF です",
@@ -283,6 +293,54 @@ export const ja = {
         rewroteImages: "写真 {total}枚のうち {n}枚を再圧縮しました",
         noImages: "この PDF には再圧縮できる写真がありません。",
         alreadySmall: "写真がすでに十分圧縮されていて、これ以上小さくできませんでした。",
+      },
+    },
+
+    "video-compress": {
+      blurb: "MP4 をブラウザの中で小さくします。30MB のツールを落としません — 端末が自分でやります。",
+      metaTitle: "動画圧縮 — ブラウザで MP4 を小さく",
+      metaDescription:
+        "アップロードせずに MP4 の容量を減らします。ブラウザ内蔵の動画エンコーダで端末上で処理するので、インストールも不要で、ファイルが外に出ることもありません。",
+      h1: "動画圧縮",
+      lead: "映像だけを低いビットレートで再エンコードし、音声は元のまま移します。すべて端末の中で完結します。",
+      faq: [
+        {
+          q: "ファイルはどこへ行きますか？",
+          a: "どこにも行きません。このブラウザタブの中で、端末の動画エンコーダを使って処理します。アップロードがないことは動画でこそ効きます — たいてい最も大きく、最も私的なファイルだからです。",
+        },
+        {
+          q: "音声はなぜそのままなのですか？",
+          a: "再エンコードしても悪くなるだけだからです。音声はそのまま移すので劣化がなく、速く済みます。再エンコードするのは映像だけです。",
+        },
+        {
+          q: "どのファイルが使えますか？",
+          a: "MP4 と MOV です。30MB のメディアツールを配る代わりにコンテナを自分で開いているので、正直に開ける範囲が今はここまでです。AVI・MKV は受け取ってから失敗するより、最初から並べないことにしました。",
+        },
+        {
+          q: "ブラウザができないと言います",
+          a: "動画エンコードには WebCodecs が要りますが、古いブラウザにはありません。Chrome・Edge は2021年から、Safari は16.4、Firefox は130から使えます。ツールを出す前に、このブラウザが実際に H.264 をエンコードできるかを確認しています。",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "このブラウザでは動画圧縮を実行できません。",
+        unsupportedHint:
+          "動画エンコードには WebCodecs が必要です — 最新の Chrome・Edge、Safari 16.4 以降、Firefox 130 以降でお試しください。",
+        dropLabel: "動画をここにドロップ",
+        dropHint: "MP4 · MOV — 1つずつ",
+        reading: "読み込み中…",
+        seconds: "秒",
+        noAudio: "音声なし",
+        qualityLabel: "画質",
+        quality: { high: "高い", balanced: "ほどよく", small: "最小" },
+        sizeLabel: "解像度",
+        sizeOriginal: "元の解像度のまま",
+        sizeMax: "長辺 {px}px",
+        run: "圧縮する",
+        working: "圧縮中…",
+        outputName: "{stem}-圧縮.mp4",
+        audioKept: "音声は元のまま移しました。",
+        didNotShrink:
+          "小さくなりませんでした — 元がすでに効率的です。画質か解像度を下げてみてください。",
       },
     },
   },

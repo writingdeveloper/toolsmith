@@ -35,11 +35,11 @@
 | 1 | 이미지 변환 (HEIC/PNG/JPG/WebP/AVIF) | Canvas/createImageBitmap + libheif-js | LGPL(동적) | 최상 | **배포** |
 | 2 | 이미지 압축 (품질 조절) | Canvas | — | 상 | 미착수 |
 | 3 | 이미지 리사이즈·크롭 | Canvas | — | 상 | 미착수 |
-| 4 | 영상 변환 (MP4/WebM/MOV) | ffmpeg.wasm | LGPL/MIT | 최상 | 미착수 |
-| 5 | 영상 압축 | ffmpeg.wasm | LGPL | 최상 | 미착수 |
-| 6 | 영상 트림·자르기 | ffmpeg.wasm | LGPL | 상 | 미착수 |
-| 7 | 영상 → GIF | ffmpeg.wasm | LGPL | 상 | 미착수 |
-| 8 | 오디오 추출·변환 (MP3/WAV/M4A) | ffmpeg.wasm | LGPL | 최상 | 미착수 |
+| 4 | 영상 변환 (MP4/WebM/MOV) | **WebCodecs** + mp4box/mp4-muxer | BSD-3/MIT | 최상 | 미착수 |
+| 5 | 영상 압축 | **WebCodecs** + mp4box/mp4-muxer | BSD-3/MIT | 최상 | **배포** |
+| 6 | 영상 트림·자르기 | **WebCodecs** | BSD-3/MIT | 상 | 미착수 |
+| 7 | 영상 → GIF | **WebCodecs** + gifenc | MIT | 상 | 미착수 |
+| 8 | 오디오 추출·변환 (WAV/M4A) | **WebCodecs** | BSD-3/MIT | 최상 | 미착수 |
 | 9 | PDF 병합 | pdf-lib | MIT | 최상 | **배포** |
 | 10 | PDF 분할 | pdf-lib + fflate(ZIP) | MIT | 상 | **배포** |
 | 11 | PDF 회전·페이지 삭제 | pdf-lib + pdf.js(썸네일) | MIT / Apache-2.0 | 중 | **배포** |
@@ -83,8 +83,10 @@
 
 | 대상 | 이유 |
 |---|---|
+| **ffmpeg.wasm (@ffmpeg/core)** | **GPL 빌드다.** 실측(2026-07-26): `ffmpeg-core.wasm` 안에 박힌 빌드 설정이 `--enable-gpl --enable-libx264 --enable-libx265`. libx264/x265 를 링크한 결과물은 GPL 이 되고, 30.7MB 바이너리를 브라우저에 보내는 것은 배포에 해당한다 → 사이트 전체가 GPL 이 된다. 표에 "LGPL/MIT" 로 적혀 있던 것은 **검증 전 기재였고 사실이 아니었다.** LGPL 빌드를 직접 만들면 쓸 수 있지만 그때도 H.264 인코딩은 빠진다 |
 | Ghostscript.wasm | **AGPL** — 네트워크 배포 시 전체 소스 공개 의무. 상용 불가 |
 | mupdf-wasm | AGPL, 동일 |
+| mediabunny | MPL-2.0. 약한 카피레프트라 실무 위험은 낮지만, MIT/BSD 조합(mp4box + mp4-muxer + webm-muxer)으로 같은 일이 되므로 굳이 들이지 않는다 |
 | LibreOffice WASM (문서 변환) | 2026년에도 너무 크고 느리고 불안정. 문서 변환은 v1 범위 밖 |
 | 브라우저 챗봇 (Gemma/Qwen/GPT-OSS) | 차별화 0, 다운로드만 큼. 도구 사이트와 무관 |
 | YouTube URL 입력 | DMCA + 결제 처리사 계정 위험. **업로드만 받는다** |
@@ -144,6 +146,20 @@
 - **GA4 는 이벤트를 모아 보낸다.** 테스트에서 고정 대기(3초)로는 놓친다 →
   `expect.poll` 로 기다린다. "파일명이 없다" 를 검사할 때도 먼저 전환 이벤트가
   도착한 것을 확인한 뒤에 본다(양성 대조). 아무것도 안 온 상태의 "없음"은 아무 증명도 아니다.
+
+## 영상·오디오는 WebCodecs 로 간다 (2026-07-26 결정)
+
+ffmpeg.wasm 이 GPL 이라 못 쓰게 되면서 방향을 바꿨고, 결과적으로 이 프로젝트 규칙에 더 잘 맞는다.
+
+- **다운로드 0MB.** ffmpeg.wasm 은 30.7MB 였다. 규칙 2·5 를 애초에 어길 일이 없다.
+- **COEP 불필요.** SharedArrayBuffer 를 쓰지 않으므로 헤더 스코프 문제 자체가 사라진다.
+- **하드웨어 가속.** 실측(2026-07-26, 테스트 Chromium): 인코더 H.264(baseline·main)·VP8·
+  VP9·AV1, 오디오 AAC·Opus 전부 지원.
+- 대가: **입력 컨테이너를 직접 열어야 한다.** MP4/MOV 는 mp4box.js(BSD-3)로 demux 하고,
+  출력은 mp4-muxer/webm-muxer(MIT)로 쓴다. AVI·MKV 같은 입력은 받지 않는다 —
+  **받는 척하지 말고 목록에서 빼는 쪽이 이 프로젝트의 방식이다.**
+- 브라우저 지원이 이미지·PDF 도구보다 좁다(Firefox 130+, Safari 16.4+).
+  `VideoEncoder.isConfigSupported` 로 실제 능력을 물어 목록을 만든다.
 
 ## 기술 함정 (걸려본 것 / 걸릴 것)
 

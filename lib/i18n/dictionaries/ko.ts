@@ -31,6 +31,16 @@ export const ko = {
     workerUnsupportedHint: "Web Worker 를 지원하는 최신 Chrome, Edge, Firefox, Safari 에서 열어 주세요.",
   },
 
+  mediaErrors: {
+    unsupportedContainer: "MP4 나 MOV 로 열 수 없는 파일입니다",
+    noVideoTrack: "영상 트랙이 없는 파일입니다",
+    unsupportedCodec: "이 브라우저가 디코드하지 못하는 영상입니다",
+    tooLarge: "512MB 를 넘습니다",
+    decodeFailed: "영상을 끝까지 읽지 못했습니다",
+    encodeFailed: "이 브라우저가 결과를 인코딩하지 못했습니다",
+    generic: "처리에 실패했습니다",
+  },
+
   pdfErrors: {
     encrypted: "암호로 보호된 PDF 입니다",
     noPages: "페이지가 없는 PDF 입니다",
@@ -281,6 +291,54 @@ export const ko = {
         rewroteImages: "사진 {total}개 중 {n}개를 다시 압축했습니다",
         noImages: "이 PDF 에는 다시 압축할 사진이 없습니다.",
         alreadySmall: "사진이 이미 잘 압축돼 있어 더 줄이지 못했습니다.",
+      },
+    },
+
+    "video-compress": {
+      blurb: "MP4 를 브라우저 안에서 줄입니다. 30MB짜리 도구를 받지 않습니다 — 기기가 직접 합니다.",
+      metaTitle: "영상 압축 — 브라우저에서 MP4 용량 줄이기",
+      metaDescription:
+        "업로드 없이 MP4 용량을 줄입니다. 브라우저에 내장된 영상 인코더로 기기에서 직접 처리하므로 설치할 것도, 서버로 나가는 파일도 없습니다.",
+      h1: "영상 압축",
+      lead: "화면만 낮은 비트레이트로 다시 인코딩하고 소리는 원본 그대로 옮깁니다. 전부 기기 안에서 끝납니다.",
+      faq: [
+        {
+          q: "파일은 어디로 가나요?",
+          a: "아무 데도 가지 않습니다. 이 브라우저 탭 안에서 기기의 영상 인코더로 처리합니다. 업로드가 없다는 점은 영상에서 특히 중요합니다 — 보통 가장 크고 가장 사적인 파일이니까요.",
+        },
+        {
+          q: "소리는 왜 그대로 두나요?",
+          a: "다시 인코딩해봐야 나빠지기만 하기 때문입니다. 오디오는 있는 그대로 옮기므로 손실이 없고 더 빠릅니다. 다시 인코딩하는 것은 화면뿐입니다.",
+        },
+        {
+          q: "어떤 파일을 넣을 수 있나요?",
+          a: "MP4 와 MOV 입니다. 30MB짜리 미디어 도구를 내려받는 대신 컨테이너를 직접 열기 때문에, 오늘 정직하게 열 수 있는 범위가 여기까지입니다. 그래서 AVI·MKV 는 받는 척하다 실패하는 대신 아예 목록에 두지 않았습니다.",
+        },
+        {
+          q: "브라우저가 못 한다고 하는데요?",
+          a: "영상 인코딩에는 WebCodecs 가 필요한데 오래된 브라우저에는 없습니다. Chrome·Edge 는 2021년부터, Safari 는 16.4, Firefox 는 130 부터 됩니다. 도구를 열기 전에 이 브라우저가 실제로 H.264 를 인코딩할 수 있는지 먼저 물어봅니다.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "이 브라우저에서는 영상 압축을 실행할 수 없습니다.",
+        unsupportedHint:
+          "영상 인코딩에는 WebCodecs 가 필요합니다 — 최신 Chrome·Edge, Safari 16.4 이상, Firefox 130 이상에서 열어 주세요.",
+        dropLabel: "영상을 여기에 놓으세요",
+        dropHint: "MP4 · MOV — 한 개씩",
+        reading: "읽는 중…",
+        seconds: "초",
+        noAudio: "소리 없음",
+        qualityLabel: "품질",
+        quality: { high: "높음", balanced: "적당히", small: "가장 작게" },
+        sizeLabel: "해상도",
+        sizeOriginal: "원본 해상도 유지",
+        sizeMax: "긴 변 {px}px",
+        run: "압축하기",
+        working: "압축 중…",
+        outputName: "{stem}-압축.mp4",
+        audioKept: "소리는 원본 그대로 옮겼습니다.",
+        didNotShrink:
+          "더 작아지지 않았습니다 — 원본이 이미 효율적입니다. 품질이나 해상도를 낮춰 보세요.",
       },
     },
   },

@@ -33,6 +33,16 @@ export const ptBR = {
       "Abra em uma versão recente do Chrome, Edge, Firefox ou Safari com suporte a Web Workers.",
   },
 
+  mediaErrors: {
+    unsupportedContainer: "Este arquivo não é um MP4 ou MOV que consigamos abrir",
+    noVideoTrack: "Este arquivo não tem faixa de vídeo",
+    unsupportedCodec: "Este navegador não consegue decodificar este vídeo",
+    tooLarge: "Isso passa de 512 MB",
+    decodeFailed: "Não foi possível ler o vídeo até o fim",
+    encodeFailed: "Este navegador não conseguiu codificar o resultado",
+    generic: "Algo deu errado",
+  },
+
   pdfErrors: {
     encrypted: "Este PDF está protegido por senha",
     noPages: "Este PDF não tem páginas",
@@ -46,7 +56,7 @@ export const ptBR = {
   toolNames: {
     "image-convert": "Conversor de imagens",
     "video-convert": "Conversor de vídeo",
-    "video-compress": "Compressor de vídeo",
+    "video-compress": "Comprimir vídeo",
     "video-trim": "Cortar vídeo",
     "video-to-gif": "Vídeo para GIF",
     "audio-extract": "Extrair áudio",
@@ -283,6 +293,54 @@ export const ptBR = {
         rewroteImages: "Recomprimimos {n} de {total} fotos",
         noImages: "Este PDF não tem fotos para recomprimir.",
         alreadySmall: "As fotos já estavam bem comprimidas — não deu para diminuir mais.",
+      },
+    },
+
+    "video-compress": {
+      blurb: "Diminui um MP4 no navegador. Sem baixar 30MB de ferramentas — seu aparelho faz o trabalho.",
+      metaTitle: "Comprimir vídeo — diminua um MP4 no navegador",
+      metaDescription:
+        "Deixe um MP4 menor sem enviá-lo. Roda no seu aparelho usando o codificador de vídeo do próprio navegador, então não há nada para instalar e nenhum arquivo sai da sua máquina.",
+      h1: "Comprimir vídeo",
+      lead: "Recodifica a imagem com bitrate menor e deixa o som exatamente como estava. Tudo acontece no seu aparelho.",
+      faq: [
+        {
+          q: "Para onde vão meus arquivos?",
+          a: "Para lugar nenhum. Tudo acontece dentro desta aba usando o codificador de vídeo do seu aparelho. O arquivo nunca é enviado — e em vídeo isso pesa mais do que em qualquer outro lugar: costumam ser os arquivos maiores e mais pessoais.",
+        },
+        {
+          q: "Por que o som não é mexido?",
+          a: "Porque recodificar só pioraria. O áudio é copiado como está, sem perdas e mais rápido. Só a imagem é recodificada.",
+        },
+        {
+          q: "Quais arquivos posso usar?",
+          a: "MP4 e MOV. Lemos o contêiner por conta própria em vez de entregar 30MB de ferramentas, e esse é o limite honesto do que conseguimos abrir hoje. Por isso AVI e MKV não são oferecidos, em vez de aceitos e depois falharem.",
+        },
+        {
+          q: "Por que meu navegador diz que não consegue?",
+          a: "Codificar vídeo precisa de WebCodecs, que navegadores antigos não têm. Chrome e Edge desde 2021, Safari desde 16.4, Firefox desde 130. Antes de oferecer a ferramenta, perguntamos ao seu navegador se ele realmente consegue codificar H.264.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "Este navegador não consegue comprimir vídeo.",
+        unsupportedHint:
+          "Codificar vídeo precisa de WebCodecs — tente um Chrome ou Edge recente, Safari 16.4+ ou Firefox 130+.",
+        dropLabel: "Solte um vídeo aqui",
+        dropHint: "MP4 e MOV — um de cada vez",
+        reading: "lendo…",
+        seconds: " s",
+        noAudio: "sem som",
+        qualityLabel: "Qualidade",
+        quality: { high: "Alta", balanced: "Equilibrada", small: "O menor possível" },
+        sizeLabel: "Resolução",
+        sizeOriginal: "Manter a resolução original",
+        sizeMax: "Lado maior {px} px",
+        run: "Comprimir",
+        working: "Comprimindo…",
+        outputName: "{stem}-comprimido.mp4",
+        audioKept: "O som foi copiado sem alteração.",
+        didNotShrink:
+          "Não ficou menor — o original já era eficiente. Tente qualidade ou resolução menor.",
       },
     },
   },

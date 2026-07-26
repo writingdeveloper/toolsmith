@@ -35,6 +35,16 @@ export const en = {
       "Please open it in an up-to-date Chrome, Edge, Firefox or Safari that supports Web Workers.",
   },
 
+  mediaErrors: {
+    unsupportedContainer: "This file isn't an MP4 or MOV we can open",
+    noVideoTrack: "This file has no video track",
+    unsupportedCodec: "This browser can't decode this video",
+    tooLarge: "That is over 512MB",
+    decodeFailed: "The video could not be read to the end",
+    encodeFailed: "This browser could not encode the result",
+    generic: "Something went wrong",
+  },
+
   pdfErrors: {
     encrypted: "This PDF is password-protected",
     noPages: "This PDF has no pages",
@@ -49,7 +59,7 @@ export const en = {
   toolNames: {
     "image-convert": "Image converter",
     "video-convert": "Video converter",
-    "video-compress": "Video compressor",
+    "video-compress": "Compress video",
     "video-trim": "Video trimmer",
     "video-to-gif": "Video to GIF",
     "audio-extract": "Audio extractor",
@@ -286,6 +296,54 @@ export const en = {
         rewroteImages: "Re-compressed {n} of {total} photos",
         noImages: "This PDF has no photos to re-compress.",
         alreadySmall: "The photos were already well compressed — this could not be made smaller.",
+      },
+    },
+
+    "video-compress": {
+      blurb: "Shrink an MP4 in your browser. No 30MB toolchain to download — your device does the work.",
+      metaTitle: "Compress Video — shrink MP4 in your browser",
+      metaDescription:
+        "Make an MP4 smaller without uploading it. Runs on your device using the browser's own video encoder, so there is nothing to install and no file ever leaves your machine.",
+      h1: "Compress video",
+      lead: "Re-encodes the picture at a lower bitrate and leaves the sound exactly as it was. Everything happens on your device.",
+      faq: [
+        {
+          q: "Where do my files go?",
+          a: "Nowhere. The whole thing runs inside this browser tab using your device's own video encoder. The file is never uploaded — which for video matters more than anywhere else, since these are usually the largest and most personal files people have.",
+        },
+        {
+          q: "Why is the sound untouched?",
+          a: "Because re-encoding it would only make it worse. The audio is copied across exactly as it was, which is faster and lossless. Only the picture is re-encoded.",
+        },
+        {
+          q: "Which files can I use?",
+          a: "MP4 and MOV. We read the container ourselves rather than shipping a 30MB media toolchain, and that is the honest limit of what we can open today — so AVI and MKV are not offered rather than accepted and then failed on.",
+        },
+        {
+          q: "Why does my browser say it can't do this?",
+          a: "Video encoding needs WebCodecs, which older browsers lack. Chrome and Edge have had it since 2021, Safari since 16.4, Firefox since 130. We ask your browser whether it can actually encode H.264 before offering the tool.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "This browser can't compress video.",
+        unsupportedHint:
+          "Video encoding needs WebCodecs — try an up-to-date Chrome, Edge, Safari 16.4+ or Firefox 130+.",
+        dropLabel: "Drop a video here",
+        dropHint: "MP4 and MOV — one at a time",
+        reading: "reading…",
+        seconds: "s",
+        noAudio: "no sound",
+        qualityLabel: "Quality",
+        quality: { high: "High", balanced: "Balanced", small: "Smallest file" },
+        sizeLabel: "Resolution",
+        sizeOriginal: "Keep original resolution",
+        sizeMax: "Long edge {px}px",
+        run: "Compress",
+        working: "Compressing…",
+        outputName: "{stem}-compressed.mp4",
+        audioKept: "The sound was copied across untouched.",
+        didNotShrink:
+          "This came out no smaller — the original was already efficient. Try a lower quality or resolution.",
       },
     },
   },

@@ -33,6 +33,16 @@ export const de = {
       "Bitte in einem aktuellen Chrome, Edge, Firefox oder Safari mit Web-Worker-Unterstützung öffnen.",
   },
 
+  mediaErrors: {
+    unsupportedContainer: "Diese Datei ist kein MP4 oder MOV, das wir öffnen können",
+    noVideoTrack: "Diese Datei hat keine Videospur",
+    unsupportedCodec: "Dieser Browser kann dieses Video nicht dekodieren",
+    tooLarge: "Das liegt über 512 MB",
+    decodeFailed: "Das Video konnte nicht bis zum Ende gelesen werden",
+    encodeFailed: "Dieser Browser konnte das Ergebnis nicht kodieren",
+    generic: "Da ist etwas schiefgelaufen",
+  },
+
   pdfErrors: {
     encrypted: "Dieses PDF ist passwortgeschützt",
     noPages: "Dieses PDF hat keine Seiten",
@@ -46,7 +56,7 @@ export const de = {
   toolNames: {
     "image-convert": "Bildkonverter",
     "video-convert": "Videokonverter",
-    "video-compress": "Video komprimieren",
+    "video-compress": "Video verkleinern",
     "video-trim": "Video zuschneiden",
     "video-to-gif": "Video zu GIF",
     "audio-extract": "Audio extrahieren",
@@ -283,6 +293,54 @@ export const de = {
         rewroteImages: "{n} von {total} Fotos neu komprimiert",
         noImages: "In diesem PDF gibt es keine Fotos zum Neukomprimieren.",
         alreadySmall: "Die Fotos waren bereits gut komprimiert — kleiner ging es nicht.",
+      },
+    },
+
+    "video-compress": {
+      blurb: "Verkleinert ein MP4 im Browser. Ohne 30MB Werkzeugkasten — Ihr Gerät erledigt es selbst.",
+      metaTitle: "Video verkleinern — MP4 im Browser schrumpfen",
+      metaDescription:
+        "Machen Sie ein MP4 kleiner, ohne es hochzuladen. Läuft auf Ihrem Gerät mit dem Video-Encoder des Browsers — nichts zu installieren, und keine Datei verlässt Ihren Rechner.",
+      h1: "Video verkleinern",
+      lead: "Kodiert das Bild mit niedrigerer Bitrate neu und lässt den Ton unangetastet. Alles passiert auf Ihrem Gerät.",
+      faq: [
+        {
+          q: "Wohin gehen meine Dateien?",
+          a: "Nirgendwohin. Alles läuft in diesem Browser-Tab mit dem Video-Encoder Ihres Geräts. Die Datei wird nie hochgeladen — bei Video wiegt das schwerer als sonst irgendwo, denn es sind meist die größten und persönlichsten Dateien.",
+        },
+        {
+          q: "Warum bleibt der Ton unberührt?",
+          a: "Weil Neukodieren ihn nur schlechter machen würde. Der Ton wird unverändert übernommen — verlustfrei und schneller. Nur das Bild wird neu kodiert.",
+        },
+        {
+          q: "Welche Dateien kann ich nehmen?",
+          a: "MP4 und MOV. Wir lesen den Container selbst, statt 30MB Medienwerkzeug auszuliefern — das ist die ehrliche Grenze dessen, was wir heute öffnen können. Deshalb stehen AVI und MKV gar nicht erst zur Auswahl, statt angenommen zu werden und dann zu scheitern.",
+        },
+        {
+          q: "Warum sagt mein Browser, er könne das nicht?",
+          a: "Video-Kodierung braucht WebCodecs, das älteren Browsern fehlt. Chrome und Edge seit 2021, Safari seit 16.4, Firefox seit 130. Wir fragen Ihren Browser, ob er H.264 wirklich kodieren kann, bevor wir das Werkzeug anbieten.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "Dieser Browser kann keine Videos verkleinern.",
+        unsupportedHint:
+          "Video-Kodierung braucht WebCodecs — versuchen Sie ein aktuelles Chrome oder Edge, Safari 16.4+ oder Firefox 130+.",
+        dropLabel: "Video hier ablegen",
+        dropHint: "MP4 und MOV — eine Datei nach der anderen",
+        reading: "wird gelesen…",
+        seconds: " s",
+        noAudio: "ohne Ton",
+        qualityLabel: "Qualität",
+        quality: { high: "Hoch", balanced: "Ausgewogen", small: "So klein wie möglich" },
+        sizeLabel: "Auflösung",
+        sizeOriginal: "Originalauflösung behalten",
+        sizeMax: "Längste Kante {px} px",
+        run: "Verkleinern",
+        working: "Wird verkleinert…",
+        outputName: "{stem}-verkleinert.mp4",
+        audioKept: "Der Ton wurde unverändert übernommen.",
+        didNotShrink:
+          "Es wurde nicht kleiner — das Original war bereits effizient. Versuchen Sie weniger Qualität oder Auflösung.",
       },
     },
   },

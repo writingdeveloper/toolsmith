@@ -33,6 +33,16 @@ export const es = {
       "Ábrela en una versión reciente de Chrome, Edge, Firefox o Safari compatible con Web Workers.",
   },
 
+  mediaErrors: {
+    unsupportedContainer: "Este archivo no es un MP4 o MOV que podamos abrir",
+    noVideoTrack: "Este archivo no tiene pista de vídeo",
+    unsupportedCodec: "Este navegador no puede descodificar este vídeo",
+    tooLarge: "Eso supera los 512 MB",
+    decodeFailed: "No se ha podido leer el vídeo hasta el final",
+    encodeFailed: "Este navegador no ha podido codificar el resultado",
+    generic: "Algo ha salido mal",
+  },
+
   pdfErrors: {
     encrypted: "Este PDF está protegido con contraseña",
     noPages: "Este PDF no tiene páginas",
@@ -46,7 +56,7 @@ export const es = {
   toolNames: {
     "image-convert": "Convertidor de imágenes",
     "video-convert": "Convertidor de vídeo",
-    "video-compress": "Compresor de vídeo",
+    "video-compress": "Comprimir vídeo",
     "video-trim": "Recortar vídeo",
     "video-to-gif": "Vídeo a GIF",
     "audio-extract": "Extraer audio",
@@ -283,6 +293,54 @@ export const es = {
         rewroteImages: "Se han recomprimido {n} de {total} fotos",
         noImages: "Este PDF no tiene fotos que recomprimir.",
         alreadySmall: "Las fotos ya estaban bien comprimidas: no se ha podido reducir más.",
+      },
+    },
+
+    "video-compress": {
+      blurb: "Reduce un MP4 en tu navegador. Sin descargar 30MB de herramientas: lo hace tu propio equipo.",
+      metaTitle: "Comprimir vídeo — reduce un MP4 en el navegador",
+      metaDescription:
+        "Haz un MP4 más pequeño sin subirlo. Funciona en tu equipo con el codificador de vídeo del propio navegador, así que no hay nada que instalar y ningún archivo sale de tu máquina.",
+      h1: "Comprimir vídeo",
+      lead: "Vuelve a codificar la imagen a menos bitrate y deja el sonido exactamente como estaba. Todo ocurre en tu equipo.",
+      faq: [
+        {
+          q: "¿A dónde van mis archivos?",
+          a: "A ninguna parte. Todo ocurre dentro de esta pestaña usando el codificador de vídeo de tu equipo. El archivo nunca se sube, y en vídeo eso importa más que en nada: suelen ser los archivos más grandes y más personales que tiene la gente.",
+        },
+        {
+          q: "¿Por qué no se toca el sonido?",
+          a: "Porque recodificarlo solo lo empeoraría. El audio se copia tal cual, sin pérdidas y más rápido. Solo se recodifica la imagen.",
+        },
+        {
+          q: "¿Qué archivos puedo usar?",
+          a: "MP4 y MOV. Leemos el contenedor nosotros mismos en lugar de repartir 30MB de herramientas, y ese es el límite honesto de lo que hoy sabemos abrir. Por eso AVI y MKV no se ofrecen, en vez de aceptarlos y fallar después.",
+        },
+        {
+          q: "¿Por qué mi navegador dice que no puede?",
+          a: "Codificar vídeo necesita WebCodecs, que los navegadores antiguos no tienen. Chrome y Edge desde 2021, Safari desde 16.4, Firefox desde 130. Antes de ofrecer la herramienta le preguntamos a tu navegador si de verdad puede codificar H.264.",
+        },
+      ],
+      ui: {
+        unsupportedTitle: "Este navegador no puede comprimir vídeo.",
+        unsupportedHint:
+          "Codificar vídeo necesita WebCodecs: prueba con un Chrome o Edge reciente, Safari 16.4+ o Firefox 130+.",
+        dropLabel: "Suelta un vídeo aquí",
+        dropHint: "MP4 y MOV — de uno en uno",
+        reading: "leyendo…",
+        seconds: " s",
+        noAudio: "sin sonido",
+        qualityLabel: "Calidad",
+        quality: { high: "Alta", balanced: "Equilibrada", small: "Lo más pequeño" },
+        sizeLabel: "Resolución",
+        sizeOriginal: "Mantener la resolución original",
+        sizeMax: "Lado largo {px} px",
+        run: "Comprimir",
+        working: "Comprimiendo…",
+        outputName: "{stem}-comprimido.mp4",
+        audioKept: "El sonido se ha copiado sin tocarlo.",
+        didNotShrink:
+          "No ha salido más pequeño: el original ya era eficiente. Prueba con menos calidad o resolución.",
       },
     },
   },

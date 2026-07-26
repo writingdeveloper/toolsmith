@@ -2,7 +2,9 @@
  * QA 픽스처 생성. `node scripts/make-fixtures.mjs`
  * HEIC 는 sharp 로 인코딩할 수 없어 여기서 만들지 못한다 — 실기기 사진으로 수동 검증한다.
  */
-import { mkdir, writeFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+import { mkdir, stat, writeFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import { PDFDocument, StandardFonts, degrees, rgb } from "pdf-lib";
 
@@ -109,6 +111,32 @@ const tilted = await PDFDocument.create();
   page.setRotation(degrees(90));
 }
 await write("tilted.pdf", Buffer.from(await tilted.save()));
+
+/*
+ * 영상 픽스처. 로컬 ffmpeg 로 만든다(브라우저에서 쓰는 것이 아니라 **입력 재료**일 뿐이라
+ * GPL 문제와 무관하다 — 우리가 배포하는 코드에는 ffmpeg 가 들어가지 않는다).
+ *
+ * H.264 + AAC, 320x240, 2초. WebCodecs 파이프라인이 실제로 다루는 조합이다.
+ */
+const clipPath = fileURLToPath(new URL("clip.mp4", OUT));
+try {
+  execFileSync(
+    "ffmpeg",
+    [
+      "-y",
+      "-f", "lavfi", "-i", "testsrc=size=320x240:rate=15:duration=2",
+      "-f", "lavfi", "-i", "sine=frequency=440:duration=2",
+      "-c:v", "libx264", "-profile:v", "baseline", "-pix_fmt", "yuv420p",
+      "-c:a", "aac", "-b:a", "64k",
+      "-shortest", "-movflags", "+faststart",
+      clipPath,
+    ],
+    { stdio: "ignore" },
+  );
+  console.log(`clip.mp4 — ${(await stat(clipPath)).size} bytes`);
+} catch {
+  console.warn("clip.mp4 — ffmpeg 가 없어 건너뜀 (영상 스펙은 이 픽스처가 있어야 돈다)");
+}
 
 // PDF 가 아닌 파일에 .pdf 확장자만 붙인 것 — 조용히 통과하면 안 된다.
 await write("broken.pdf", Buffer.from("%PDF-1.7\nthis is not a pdf\n"));
