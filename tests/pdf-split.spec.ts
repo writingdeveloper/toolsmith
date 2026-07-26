@@ -1,5 +1,6 @@
 import path from "node:path";
 import { expect, test, type Page } from "@playwright/test";
+import { isAnalytics } from "./net";
 import { unzipSync } from "fflate";
 import { downloadResult, pagesOf } from "./pdf-helpers";
 
@@ -123,7 +124,10 @@ test("처리 중 파일이 네트워크로 나가지 않는다", async ({ page }
   const outbound: string[] = [];
   page.on("request", (request) => {
     const method = request.method();
-    if (method === "POST" || method === "PUT") outbound.push(request.url());
+    // 분석 태그는 파일과 무관하다 — 내용 검사는 tests/analytics.spec.ts 가 맡는다
+    if ((method === "POST" || method === "PUT") && !isAnalytics(request.url())) {
+      outbound.push(request.url());
+    }
   });
 
   await openAndWait(page, PAGES5, 5);

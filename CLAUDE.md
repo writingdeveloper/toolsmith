@@ -109,6 +109,13 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   "Couldn't fetch" 는 대기 표시일 뿐이니 놀라지 말 것.
 - URL 검사 라이브 테스트 "URL is available to Google / Page can be indexed" 확인,
   `/en`·`/ko` 색인 요청 완료.
+- **GA4.** 계정 "글쓰는 개발자" 아래 속성 **Toolsmith**(한국 시간대·원화),
+  스트림 "Toolsmith Web", 측정 ID `G-V1SX1J2BG2` → `NEXT_PUBLIC_GA_ID` 프로덕션 env.
+  실시간 보고서에 방문이 잡히는 것까지 확인했다.
+  **향상된 측정의 "파일 다운로드" 는 껐다.** 켜져 있으면 클릭된 다운로드 링크의 이름이
+  그대로 전송되는데, 우리 결과 파일 이름에는 사용자의 원본 파일명이 들어간다
+  ("보고서-추출.pdf"). 이 사이트가 내건 약속과 정면 충돌한다.
+  `tests/analytics.spec.ts` 가 실제 GA 요청을 뒤져 파일명이 없는지 확인한다.
 - **Vercel Spend Management 는 이미 켜져 있었다.** 팀 전역 설정이라 toolsmith 도 덮는다.
   On-Demand Budget **$50**, 알림 On, **Pause Projects On**(예산 초과 시 프로덕션 배포가
   멈춰 방문자에게 안 보이게 된다 — 색인 이탈 위험이므로 트래픽이 커지면 재검토할 것).

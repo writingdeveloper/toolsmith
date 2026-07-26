@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -5,7 +6,7 @@ import "../globals.css";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { getDictionary } from "@/lib/i18n";
 import { HTML_LANG, isLocale, LOCALE_NAME, LOCALES, type Locale } from "@/lib/i18n/config";
-import { alternatesFor, SITE_URL } from "@/lib/site";
+import { alternatesFor, GA_ID, SITE_URL } from "@/lib/site";
 
 /** 6개 언어를 빌드 시점에 전부 찍어낸다. 런타임 서버 연산은 없다. */
 export function generateStaticParams() {
@@ -76,6 +77,9 @@ export default async function LocaleLayout({
             </ul>
           </div>
         </footer>
+
+        {/* 측정 ID 가 없으면(로컬·프리뷰) 태그를 심지 않는다 */}
+        {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
       </body>
     </html>
   );
