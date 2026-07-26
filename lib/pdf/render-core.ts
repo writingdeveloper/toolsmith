@@ -7,6 +7,7 @@
  */
 
 import { guarded, PdfError } from "./document";
+import { PDFJS_OPTIONS } from "./pdfjs-options";
 
 export interface Thumbnail {
   /** 0-based 페이지 번호 */
@@ -21,6 +22,7 @@ export interface Thumbnail {
 
 /** 썸네일 긴 변(px). 그리드에서 읽을 수 있으면서 메모리를 아끼는 선. */
 const THUMB_EDGE = 260;
+
 
 async function loadPdfJs() {
   const pdfjs = await import("pdfjs-dist");
@@ -37,7 +39,7 @@ export async function renderThumbnails(bytes: Uint8Array): Promise<Thumbnail[]> 
   return guarded(async () => {
     const pdfjs = await loadPdfJs();
     // pdf.js 는 넘긴 버퍼를 가져가 버린다(detach). 원본은 뒤에서 pdf-lib 이 다시 쓴다.
-    const task = pdfjs.getDocument({ data: bytes.slice() });
+    const task = pdfjs.getDocument({ data: bytes.slice(), ...PDFJS_OPTIONS });
     const doc = await task.promise;
     if (doc.numPages === 0) throw new PdfError("NO_PAGES");
 
@@ -96,7 +98,7 @@ export async function renderPagesForOcr(
 ): Promise<Blob[]> {
   return guarded(async () => {
     const pdfjs = await loadPdfJs();
-    const task = pdfjs.getDocument({ data: bytes.slice() });
+    const task = pdfjs.getDocument({ data: bytes.slice(), ...PDFJS_OPTIONS });
     const doc = await task.promise;
     if (doc.numPages === 0) throw new PdfError("NO_PAGES");
 
@@ -136,7 +138,7 @@ export async function renderPagesForOcr(
 export async function countPages(bytes: Uint8Array): Promise<number> {
   return guarded(async () => {
     const pdfjs = await loadPdfJs();
-    const task = pdfjs.getDocument({ data: bytes.slice() });
+    const task = pdfjs.getDocument({ data: bytes.slice(), ...PDFJS_OPTIONS });
     const doc = await task.promise;
     const total = doc.numPages;
     await task.destroy();

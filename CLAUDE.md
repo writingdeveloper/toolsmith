@@ -108,6 +108,9 @@ dev 는 90 통과 / 15 스킵 — pdf-compress 1건이 냉컴파일 부하로 30
 ### 공통 토대 (새 도구는 여기서 갈라진다)
 
 - `lib/pdf/document.ts` — PDF 열기·오류 번역. 병합·분할·회전·압축이 함께 쓴다.
+- `lib/pdf/pdfjs-options.ts` — pdf.js 를 **워커에서** 쓰기 위한 설정. `disableFontFace`
+  가 빠지면 CJK PDF 가 통째로 빈 네모로 그려진다(예외 없이, 그림만 틀린다). 근거와
+  실측은 `docs/TOOLS.md`.
 - `lib/pdf/render-core.ts` — pdf.js 썸네일. **썸네일 전에 pdf-lib 으로 먼저 연다**
   (암호 판정이 정확해지고, 못 그릴 파일에 1.5MB 를 안 받는다).
 - `lib/video/mp4-source.ts` — MP4 demux. 영상·오디오 도구가 전부 이걸 쓴다.
