@@ -80,38 +80,50 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 6. **카피레프트 금지.** AGPL/GPL 라이브러리는 채택하지 않는다.
 7. **메인 스레드에서 처리하지 않는다.** 전부 Web Worker.
 
-## 현재 상태 (2026-07-25)
+## 현재 상태 (2026-07-26)
 
-- **본 도메인 확정: https://toolsmith.writingdeveloper.blog** (와일드카드 DNS 가 이미
-  Vercel 을 가리키고 있어 DNS 작업은 없었다). `NEXT_PUBLIC_SITE_URL` 을 프로덕션 env 로
-  넣어 **색인이 열렸다.** `*.vercel.app` 은 `next.config.ts` 가 `X-Robots-Tag: noindex` 를
-  붙여 중복 색인을 막는다.
-- 도구 #1 이미지 변환·압축: **배포 완료.**
-- 도구 #9 PDF 병합: **배포 완료.** `/tools/pdf-merge`
-- 도구 #10 PDF 분할: **배포 완료.** `/{locale}/tools/pdf-split` (범위 추출 + 낱장 ZIP)
-- 도구 #11 PDF 회전·페이지 삭제: **배포 완료.** `/{locale}/tools/pdf-organize`
-  (pdf.js 썸네일 그리드 + 회전 + 삭제). pdf.js 는 `lib/pdf/render-core.ts` 에서만 쓰인다.
-- 도구 #12 PDF 압축: **배포 완료.** `/{locale}/tools/pdf-compress`
-  안에 박힌 JPEG 만 다시 인코딩한다 — **페이지를 그림으로 굽지 않아 글자가 살아 있다.**
-- 도구 #5 영상 압축: **배포 완료.** `/{locale}/tools/video-compress`
-  **ffmpeg.wasm 이 아니라 WebCodecs 다** — 그쪽이 GPL 이라 못 쓴다(아래 참조).
-  비디오만 다시 인코딩하고 오디오는 원본 청크를 그대로 옮긴다. 받는 것은 mp4box 90KB 뿐.
-- **다국어 6개 언어 배포 완료.** 정적 페이지 30장(6 언어 × 4 + 루트 + robots/sitemap).
-- 도구 #8 오디오 추출: **배포 완료.** `/{locale}/tools/audio-extract`
-  M4A(원본 트랙 그대로 옮김) · WAV(디코드한 PCM). **어느 쪽도 재인코딩하지 않는다.**
-- Playwright 78종. 프로덕션 76 통과 / 2 스킵, dev 66 통과 / 12 스킵.
+**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 7) = 48 페이지
++ 루트 언어 선택. 전부 정적. Playwright **78종**(프로덕션 76 통과 / 2 스킵, dev 66 / 12 스킵).
+
+### 배포된 도구 7개
+
+| # | 도구 | 경로 | 핵심 |
+|---|---|---|---|
+| 1 | 이미지 변환·압축 | `/tools/image-convert` | HEIC 는 파일이 들어온 순간에만 libheif 를 받는다 |
+| 9 | PDF 병합 | `/tools/pdf-merge` | 재렌더링 없이 페이지 복사 |
+| 10 | PDF 분할 | `/tools/pdf-split` | 범위 추출 + 낱장 ZIP(fflate) |
+| 11 | PDF 회전·삭제 | `/tools/pdf-organize` | pdf.js 썸네일. 회전은 **원본 값에 더한다** |
+| 12 | PDF 압축 | `/tools/pdf-compress` | JPEG 만 재인코딩 — **글자가 살아 있다** |
+| 5 | 영상 압축 | `/tools/video-compress` | WebCodecs. 오디오는 원본 그대로 옮김 |
+| 8 | 오디오 추출 | `/tools/audio-extract` | M4A·WAV. **어느 쪽도 재인코딩하지 않는다** |
+
+경로 앞에 `/{locale}` 이 붙는다(`/ko/tools/pdf-merge`).
+
+### 공통 토대 (새 도구는 여기서 갈라진다)
+
+- `lib/pdf/document.ts` — PDF 열기·오류 번역. 병합·분할·회전·압축이 함께 쓴다.
+- `lib/pdf/render-core.ts` — pdf.js 썸네일. **썸네일 전에 pdf-lib 으로 먼저 연다**
+  (암호 판정이 정확해지고, 못 그릴 파일에 1.5MB 를 안 받는다).
+- `lib/video/mp4-source.ts` — MP4 demux. 영상·오디오 도구가 전부 이걸 쓴다.
+- `lib/i18n/dictionaries/en.ts` — 사전의 **타입 원본**. 여기에 키를 더하면 나머지 5개가
+  타입 에러로 드러난다.
+
+### SEO·분석 (전부 끝났고 검증됨)
+
+- 색인 열림. `*.vercel.app` 은 `next.config.ts` 가 `X-Robots-Tag: noindex` 로 막는다.
+- Search Console: **서브도메인마다 별도 속성**(`sc-domain:toolsmith.…`). 사이트맵 Success.
+- JSON-LD: WebApplication + FAQPage + BreadcrumbList. 리치 결과 테스트 유효 2개.
+  `aggregateRating` 없음은 **의도** — 받은 적 없는 평점을 지어내지 않는다.
+- GA4 `G-V1SX1J2BG2`. 전환 이벤트 `tool_completed`(실리는 것은 도구 이름뿐).
+  **향상된 측정의 "파일 다운로드" 는 꺼 두었다** — 켜면 사용자 파일명이 구글로 간다.
+
+### 이 저장소에서 두 번 이상 데인 것
+
 - **`pnpm build` 는 dev 서버가 떠 있을 때 돌리지 않는다.** 같은 `.next` 를 쓰기 때문에
   실행 중인 dev 서버 캐시가 깨져 테스트가 무더기로 무너진다(`Unexpected end of JSON input`).
-  이미 겪었다면 `.next` 를 지우고 다시 돌리면 된다.
-- **JSON-LD 완료.** 도구 페이지에 WebApplication + FAQPage + BreadcrumbList,
-  홈에 WebSite. 구글 리치 결과 테스트 **유효 항목 2개**(탐색경로·소프트웨어 앱) 확인.
-  `aggregateRating` 누락 경고는 **의도한 것** — 받은 적 없는 평점을 지어내지 않는다.
-  FAQPage 는 리치 결과 목록에 안 뜨는데, 구글이 FAQ 표시를 정부·의료로 제한했기 때문이다.
-  그래도 GEO(LLM 인용)에는 그대로 유효해서 남긴다.
-- PDF 공통 토대는 `lib/pdf/document.ts` — 병합·분할이 함께 쓴다. 도구별 로직만 각자 파일에.
-- `app/sitemap.ts` 추가 — 언어 × 페이지 전부, 각 항목이 자기 언어판을 alternates 로 가리킨다.
-  `NEXT_PUBLIC_SITE_URL` 이 없으면 빈 사이트맵을 낸다(robots 도 이때는 전면 차단이라 앞뒤가 맞다).
-- `tests/seo.spec.ts` 가 robots·사이트맵·중복 색인 차단을 배포본에서 고정한다.
+  겪었다면 3111 포트 프로세스를 죽이고 `.next` 를 지운 뒤 다시 돌린다.
+- 지연 로딩은 **dev 에서 판정하지 말 것.** Turbopack dev 가 동적 import 를 당겨온다.
+  `BASE_URL=<배포주소> pnpm test` 로만 판단한다.
 
 ### 남은 일 (사용자 몫)
 
