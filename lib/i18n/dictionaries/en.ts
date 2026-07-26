@@ -301,6 +301,59 @@ export const en = {
       },
     },
 
+    "data-query": {
+      blurb: "Run SQL over a CSV or Parquet file. The file never leaves your device.",
+      metaTitle: "CSV & Parquet SQL Query — in your browser",
+      metaDescription:
+        "Open a CSV or Parquet file and query it with SQL. Powered by DuckDB, running entirely in your browser — no upload, no sign-up, no row limit.",
+      h1: "CSV & Parquet query (SQL)",
+      lead: "Opens a CSV or Parquet file and lets you query it with real SQL. DuckDB runs inside this tab, so the file is never uploaded.",
+      faq: [
+        {
+          q: "Where do my files go?",
+          a: "Nowhere. DuckDB is handed a reference to the file and reads it straight off your disk. Nothing is uploaded. What does get downloaded is the DuckDB engine itself, from a public CDN — that traffic goes the other way.",
+        },
+        {
+          q: "Why does it download about 6MB first?",
+          a: "Because DuckDB is a real analytical database compiled to WebAssembly. It is 35MB uncompressed and about 6MB over the wire. We fetch it the moment you press the button and not before, and your browser keeps it afterwards.",
+        },
+        {
+          q: "How large a file can it handle?",
+          a: "Larger than you would expect, especially for Parquet. The file is not loaded into memory up front — DuckDB reads only the parts a query needs, so a query touching two columns of a wide Parquet file barely reads anything. A CSV has to be scanned, so it is slower.",
+        },
+        {
+          q: "What SQL can I write?",
+          a: "DuckDB's dialect, which is close to PostgreSQL. Your file is available as the table `data`, so `SELECT * FROM data LIMIT 50` is the starting point. Joins, window functions, aggregates and CTEs all work. Errors come back from DuckDB word for word so you can fix them.",
+        },
+        {
+          q: "Does it show every row?",
+          a: "The table on screen stops at 200 rows so the page stays usable, and it tells you when it has. The query itself is not limited, and the CSV download contains every row that was displayed.",
+        },
+      ],
+      ui: {
+        dropLabel: "Drop a CSV or Parquet file here",
+        dropHint: "CSV · TSV · Parquet · JSON — one at a time",
+        downloadNote: "Opening the file downloads the DuckDB engine, about {size}.",
+        localNote: "The file itself is not uploaded — DuckDB reads it from your disk.",
+        open: "Open and query",
+        opening: "Opening…",
+        rowCount: "{rows} rows",
+        columnCount: "{columns} columns",
+        schemaLabel: "Columns",
+        sqlLabel: "SQL",
+        sqlHint: "Your file is the table `data`.",
+        run: "Run",
+        running: "Running…",
+        resultSummary: "{rows} rows · {ms}ms",
+        showingFirst: "showing the first {n}",
+        noRows: "This query returned no rows.",
+        downloadCsv: "Download CSV",
+        errEngine: "The DuckDB engine could not be loaded",
+        errFormat: "This file type can't be opened — CSV, TSV, Parquet or JSON",
+        errRead: "The file could not be read",
+      },
+    },
+
     ocr: {
       blurb: "Pull the text out of a photo, screenshot or scanned PDF. Nothing is uploaded.",
       metaTitle: "Image & PDF to Text — OCR in your browser",

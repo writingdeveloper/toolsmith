@@ -50,7 +50,7 @@ export const TOOLS: Tool[] = [
   { slug: "video-trim", tier: 1, status: "live", needs: "all" },
   { slug: "video-convert", tier: 1, status: "live", needs: "all" },
   { slug: "ocr", tier: 1, status: "live", needs: "all" },
-  { slug: "data-query", tier: 1, status: "planned", needs: "all" },
+  { slug: "data-query", tier: 1, status: "live", needs: "all" },
 
   // Tier 2 — WebGPU AI. 데스크톱.
   { slug: "subtitles", tier: 2, status: "planned", needs: "webgpu" },

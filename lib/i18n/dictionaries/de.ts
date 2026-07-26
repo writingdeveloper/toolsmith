@@ -298,6 +298,59 @@ export const de = {
       },
     },
 
+    "data-query": {
+      blurb: "Führt SQL auf einer CSV- oder Parquet-Datei aus. Die Datei verlässt Ihr Gerät nicht.",
+      metaTitle: "SQL-Abfragen auf CSV und Parquet",
+      metaDescription:
+        "Öffnen Sie eine CSV- oder Parquet-Datei und fragen Sie sie mit SQL ab. DuckDB läuft in Ihrem Browser — ohne Upload, ohne Anmeldung, ohne Zeilenlimit.",
+      h1: "CSV- und Parquet-Abfrage (SQL)",
+      lead: "Öffnet eine CSV- oder Parquet-Datei und lässt Sie sie mit echtem SQL abfragen. DuckDB läuft in diesem Tab, die Datei wird nie hochgeladen.",
+      faq: [
+        {
+          q: "Wohin gehen meine Dateien?",
+          a: "Nirgendwohin. DuckDB bekommt nur eine Referenz auf die Datei und liest sie direkt von Ihrer Festplatte. Hochgeladen wird nichts. Heruntergeladen wird die DuckDB-Engine selbst, von einem öffentlichen CDN — dieser Verkehr läuft in die andere Richtung.",
+        },
+        {
+          q: "Warum werden vorher etwa 6MB geladen?",
+          a: "Weil DuckDB eine echte analytische Datenbank ist, übersetzt nach WebAssembly. Unkomprimiert sind das 35MB, über die Leitung rund 6MB. Wir holen sie in dem Moment, in dem Sie den Knopf drücken, und nicht früher; Ihr Browser behält sie danach.",
+        },
+        {
+          q: "Wie groß darf die Datei sein?",
+          a: "Größer als Sie denken, besonders bei Parquet. Die Datei wird nicht vorab in den Speicher geladen — DuckDB liest nur die Teile, die eine Abfrage braucht. Eine Abfrage über zwei Spalten einer breiten Parquet-Datei liest daher fast nichts. Eine CSV muss durchlaufen werden und ist deshalb langsamer.",
+        },
+        {
+          q: "Welches SQL kann ich schreiben?",
+          a: "Den Dialekt von DuckDB, der PostgreSQL sehr nahe kommt. Ihre Datei steht als Tabelle `data` bereit, `SELECT * FROM data LIMIT 50` ist also der Einstieg. Joins, Fensterfunktionen, Aggregate und CTEs funktionieren alle. Fehlermeldungen kommen wörtlich von DuckDB, damit Sie sie beheben können.",
+        },
+        {
+          q: "Werden alle Zeilen angezeigt?",
+          a: "Die Tabelle auf dem Bildschirm hört bei 200 Zeilen auf, damit die Seite bedienbar bleibt, und sagt Ihnen, wenn sie das tut. Die Abfrage selbst ist nicht begrenzt, und die heruntergeladene CSV enthält alle angezeigten Zeilen.",
+        },
+      ],
+      ui: {
+        dropLabel: "CSV- oder Parquet-Datei hier ablegen",
+        dropHint: "CSV · TSV · Parquet · JSON — eine nach der anderen",
+        downloadNote: "Beim Öffnen wird die DuckDB-Engine geladen, rund {size}.",
+        localNote: "Die Datei selbst wird nicht hochgeladen — DuckDB liest sie von Ihrer Festplatte.",
+        open: "Öffnen und abfragen",
+        opening: "Wird geöffnet…",
+        rowCount: "{rows} Zeilen",
+        columnCount: "{columns} Spalten",
+        schemaLabel: "Spalten",
+        sqlLabel: "SQL",
+        sqlHint: "Ihre Datei ist die Tabelle `data`.",
+        run: "Ausführen",
+        running: "Wird ausgeführt…",
+        resultSummary: "{rows} Zeilen · {ms}ms",
+        showingFirst: "die ersten {n} werden gezeigt",
+        noRows: "Diese Abfrage lieferte keine Zeilen.",
+        downloadCsv: "CSV herunterladen",
+        errEngine: "Die DuckDB-Engine konnte nicht geladen werden",
+        errFormat: "Dieser Dateityp lässt sich nicht öffnen — CSV, TSV, Parquet oder JSON",
+        errRead: "Die Datei konnte nicht gelesen werden",
+      },
+    },
+
     ocr: {
       blurb: "Holt den Text aus einem Foto, Screenshot oder gescannten PDF. Nichts wird hochgeladen.",
       metaTitle: "Bild und PDF zu Text (OCR) im Browser",

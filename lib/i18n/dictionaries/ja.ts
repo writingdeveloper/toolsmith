@@ -298,6 +298,59 @@ export const ja = {
       },
     },
 
+    "data-query": {
+      blurb: "CSV・Parquet ファイルに SQL を投げます。ファイルは端末を離れません。",
+      metaTitle: "CSV・Parquet SQL クエリ — ブラウザで",
+      metaDescription:
+        "CSV や Parquet を開いて SQL で照会します。DuckDB がブラウザ内で動くため、アップロードも登録も行数制限もありません。",
+      h1: "CSV・Parquet クエリ (SQL)",
+      lead: "CSV や Parquet を開き、本物の SQL で照会します。DuckDB がこのタブの中で動くので、ファイルはアップロードされません。",
+      faq: [
+        {
+          q: "ファイルはどこへ行きますか？",
+          a: "どこへも行きません。DuckDB にはファイルの参照だけを渡し、DuckDB がディスクから直接読みます。アップロードされるものはありません。降りてくるのは DuckDB エンジン自体で、公開 CDN から来ます — 向きが逆です。",
+        },
+        {
+          q: "なぜ先に 6MB ほど受信するのですか？",
+          a: "DuckDB は WebAssembly にコンパイルされた本物の分析用データベースだからです。展開すると 35MB、転送量では約 6MB です。ボタンを押したその瞬間に取得し、それ以前には取得しません。一度取得すればブラウザが保持します。",
+        },
+        {
+          q: "どれくらい大きなファイルまで扱えますか？",
+          a: "思ったより大きく扱えます。特に Parquet がそうです。ファイルを丸ごとメモリに載せず、クエリに必要な部分だけを読むため、広い Parquet で 2 列だけ見るクエリはほとんど何も読みません。CSV は先頭から走査するので遅くなります。",
+        },
+        {
+          q: "どんな SQL が書けますか？",
+          a: "DuckDB の方言で、PostgreSQL に近いものです。開いたファイルは `data` というテーブルになるので、`SELECT * FROM data LIMIT 50` が出発点です。結合・ウィンドウ関数・集計・CTE がすべて使えます。エラーは DuckDB の文言をそのまま表示するので、どこが誤りか分かります。",
+        },
+        {
+          q: "すべての行を表示しますか？",
+          a: "画面の表は 200 行で止まります。ページが耐えられる範囲だからで、止めたことも併記します。クエリ自体に制限はなく、ダウンロードする CSV には画面に出た行がすべて入ります。",
+        },
+      ],
+      ui: {
+        dropLabel: "ここに CSV か Parquet を置いてください",
+        dropHint: "CSV · TSV · Parquet · JSON — 1 つずつ",
+        downloadNote: "ファイルを開くと DuckDB エンジン約 {size} を受信します。",
+        localNote: "ファイル自体はアップロードされません — DuckDB がディスクから直接読みます。",
+        open: "開いて照会",
+        opening: "開いています…",
+        rowCount: "{rows} 行",
+        columnCount: "{columns} 列",
+        schemaLabel: "列の構成",
+        sqlLabel: "SQL",
+        sqlHint: "開いたファイルが `data` テーブルです。",
+        run: "実行",
+        running: "実行中…",
+        resultSummary: "{rows} 行 · {ms}ms",
+        showingFirst: "先頭 {n} 行のみ表示",
+        noRows: "このクエリの結果はありません。",
+        downloadCsv: "CSV をダウンロード",
+        errEngine: "DuckDB エンジンを読み込めませんでした",
+        errFormat: "開けない形式です — CSV・TSV・Parquet・JSON",
+        errRead: "ファイルを読めませんでした",
+      },
+    },
+
     ocr: {
       blurb: "写真・スクリーンショット・スキャンした PDF から文字を取り出します。アップロードはありません。",
       metaTitle: "画像・PDF から文字を抽出 (OCR)",

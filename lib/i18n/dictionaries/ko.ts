@@ -296,6 +296,59 @@ export const ko = {
       },
     },
 
+    "data-query": {
+      blurb: "CSV·Parquet 파일에 SQL 을 던집니다. 파일은 기기를 떠나지 않습니다.",
+      metaTitle: "CSV·Parquet SQL 쿼리 — 브라우저에서",
+      metaDescription:
+        "CSV 나 Parquet 파일을 열어 SQL 로 조회합니다. DuckDB 가 브라우저 안에서 돌기 때문에 업로드도 가입도 행 수 제한도 없습니다.",
+      h1: "CSV·Parquet 쿼리 (SQL)",
+      lead: "CSV 나 Parquet 파일을 열어 진짜 SQL 로 조회합니다. DuckDB 가 이 탭 안에서 돌기 때문에 파일이 올라가지 않습니다.",
+      faq: [
+        {
+          q: "제 파일은 어디로 가나요?",
+          a: "어디로도 가지 않습니다. DuckDB 에는 파일 참조만 넘기고, DuckDB 가 디스크에서 곧바로 읽습니다. 올라가는 것은 없습니다. 내려오는 것은 DuckDB 엔진 자체이고 공개 CDN 에서 옵니다 — 방향이 반대입니다.",
+        },
+        {
+          q: "왜 먼저 6MB 정도를 받나요?",
+          a: "DuckDB 는 WebAssembly 로 컴파일된 진짜 분석용 데이터베이스이기 때문입니다. 압축을 풀면 35MB, 전송량으로는 약 6MB 입니다. 버튼을 누른 그 순간에 받고 그 전에는 받지 않으며, 한 번 받으면 브라우저가 갖고 있습니다.",
+        },
+        {
+          q: "얼마나 큰 파일까지 되나요?",
+          a: "생각보다 큽니다. 특히 Parquet 이 그렇습니다. 파일을 통째로 메모리에 올리지 않고 질의에 필요한 부분만 읽기 때문에, 넓은 Parquet 에서 두 열만 보는 질의는 거의 아무것도 읽지 않습니다. CSV 는 처음부터 훑어야 해서 더 느립니다.",
+        },
+        {
+          q: "어떤 SQL 을 쓸 수 있나요?",
+          a: "DuckDB 의 문법이고 PostgreSQL 과 가깝습니다. 올린 파일은 `data` 라는 테이블이 되므로 `SELECT * FROM data LIMIT 50` 이 출발점입니다. 조인·윈도 함수·집계·CTE 가 전부 됩니다. 오류는 DuckDB 가 준 문장을 그대로 보여 주므로 어디가 틀렸는지 알 수 있습니다.",
+        },
+        {
+          q: "모든 행을 보여 주나요?",
+          a: "화면의 표는 200행에서 멈춥니다. 페이지가 감당해야 하기 때문이고, 멈췄다는 사실을 함께 적습니다. 질의 자체에는 제한이 없고, 내려받는 CSV 에는 화면에 나온 행이 전부 들어갑니다.",
+        },
+      ],
+      ui: {
+        dropLabel: "여기에 CSV 나 Parquet 파일을 놓으세요",
+        dropHint: "CSV · TSV · Parquet · JSON — 한 번에 하나",
+        downloadNote: "파일을 열면 DuckDB 엔진 약 {size} 를 받습니다.",
+        localNote: "파일 자체는 올라가지 않습니다 — DuckDB 가 디스크에서 직접 읽습니다.",
+        open: "열어서 조회",
+        opening: "여는 중…",
+        rowCount: "{rows}행",
+        columnCount: "{columns}열",
+        schemaLabel: "열 구성",
+        sqlLabel: "SQL",
+        sqlHint: "올린 파일이 `data` 테이블입니다.",
+        run: "실행",
+        running: "실행 중…",
+        resultSummary: "{rows}행 · {ms}ms",
+        showingFirst: "앞 {n}행만 표시",
+        noRows: "이 질의의 결과가 없습니다.",
+        downloadCsv: "CSV 내려받기",
+        errEngine: "DuckDB 엔진을 불러오지 못했습니다",
+        errFormat: "열 수 없는 형식입니다 — CSV·TSV·Parquet·JSON",
+        errRead: "파일을 읽지 못했습니다",
+      },
+    },
+
     ocr: {
       blurb: "사진·스크린샷·스캔한 PDF 에서 글자를 꺼냅니다. 업로드가 없습니다.",
       metaTitle: "이미지·PDF 에서 글자 추출 (OCR)",

@@ -248,3 +248,31 @@ const embedded = await scan.embedPng(ocrPng);
 const scanPage = scan.addPage([595, 842]); // A4
 scanPage.drawImage(embedded, { x: 40, y: 500, width: 515, height: 215 });
 await write("scan.pdf", Buffer.from(await scan.save()));
+
+/*
+ * 데이터 쿼리 픽스처.
+ *
+ * 열마다 **타입이 다르다** — 정수·문자열·소수·불리언·날짜. DuckDB 가 CSV 를 훑어
+ * 타입을 알아맞히는지, Arrow 가 준 BigInt 를 우리가 화면에 제대로 옮기는지가 여기서 갈린다.
+ * 도시가 겹치게 둔 것은 GROUP BY 결과를 손으로 검산할 수 있게 하기 위해서다
+ * (Seoul 3건 합계 3600, Busan 2건 합계 900).
+ */
+const CSV_ROWS = [
+  ["id", "name", "city", "amount", "active", "at"],
+  [1, "Ada", "Seoul", 1200.5, true, "2024-01-02"],
+  [2, "Grace", "Busan", 300, false, "2024-01-03"],
+  [3, "Linus", "Seoul", 1800.25, true, "2024-02-11"],
+  [4, "Ada", "Daegu", 50.75, true, "2024-02-12"],
+  [5, "Alan", "Busan", 600, true, "2024-03-01"],
+  [6, "Grace", "Seoul", 599.25, false, "2024-03-02"],
+];
+await write("sample.csv", Buffer.from(CSV_ROWS.map((r) => r.join(",")).join("\n") + "\n", "utf8"));
+
+/*
+ * sample.parquet 은 여기서 만들지 않는다.
+ *
+ * Node 에는 Parquet 을 쓰는 도구가 없고, 그것 하나 때문에 의존성을 늘리고 싶지 않았다.
+ * 대신 **DuckDB 자신에게 쓰게 했다** — 브라우저에서 sample.csv 를 읽어
+ * `COPY t TO 'out.parquet'` 한 결과를 저장한 것이 tests/fixtures/sample.parquet 이다.
+ * 다시 만들어야 하면 그 일회용 스펙을 되살리면 된다(커밋 이력에 있다).
+ */

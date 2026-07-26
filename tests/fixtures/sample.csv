@@ -1,0 +1,7 @@
+id,name,city,amount,active,at
+1,Ada,Seoul,1200.5,true,2024-01-02
+2,Grace,Busan,300,false,2024-01-03
+3,Linus,Seoul,1800.25,true,2024-02-11
+4,Ada,Daegu,50.75,true,2024-02-12
+5,Alan,Busan,600,true,2024-03-01
+6,Grace,Seoul,599.25,false,2024-03-02

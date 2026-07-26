@@ -298,6 +298,59 @@ export const ptBR = {
       },
     },
 
+    "data-query": {
+      blurb: "Roda SQL sobre um CSV ou Parquet. O arquivo não sai do seu aparelho.",
+      metaTitle: "Consultas SQL em CSV e Parquet",
+      metaDescription:
+        "Abra um arquivo CSV ou Parquet e consulte com SQL. Com DuckDB dentro do navegador: sem envio, sem cadastro e sem limite de linhas.",
+      h1: "Consulta de CSV e Parquet (SQL)",
+      lead: "Abre um arquivo CSV ou Parquet e deixa você consultar com SQL de verdade. O DuckDB roda nesta aba, então o arquivo nunca é enviado.",
+      faq: [
+        {
+          q: "Para onde vão meus arquivos?",
+          a: "Para lugar nenhum. O DuckDB recebe apenas uma referência ao arquivo e lê direto do seu disco. Nada é enviado. O que é baixado é o próprio motor DuckDB, de uma CDN pública — esse tráfego vai no sentido contrário.",
+        },
+        {
+          q: "Por que ele baixa cerca de 6MB antes?",
+          a: "Porque o DuckDB é um banco de dados analítico de verdade compilado para WebAssembly. São 35MB descompactados e cerca de 6MB na rede. Buscamos no momento em que você aperta o botão e não antes, e o navegador guarda depois.",
+        },
+        {
+          q: "Qual o tamanho de arquivo que aguenta?",
+          a: "Maior do que você imagina, principalmente em Parquet. O arquivo não é carregado inteiro na memória — o DuckDB lê só as partes que a consulta precisa, então consultar duas colunas de um Parquet largo quase não lê nada. Um CSV precisa ser percorrido, então é mais lento.",
+        },
+        {
+          q: "Que SQL posso escrever?",
+          a: "O dialeto do DuckDB, bem próximo do PostgreSQL. Seu arquivo fica disponível como a tabela `data`, então `SELECT * FROM data LIMIT 50` é o ponto de partida. Joins, funções de janela, agregações e CTEs funcionam. Os erros voltam com as palavras do próprio DuckDB para você corrigir.",
+        },
+        {
+          q: "Ele mostra todas as linhas?",
+          a: "A tabela na tela para em 200 linhas para a página continuar utilizável, e avisa quando faz isso. A consulta em si não tem limite, e o CSV baixado contém todas as linhas exibidas.",
+        },
+      ],
+      ui: {
+        dropLabel: "Solte um CSV ou Parquet aqui",
+        dropHint: "CSV · TSV · Parquet · JSON — um por vez",
+        downloadNote: "Abrir o arquivo baixa o motor DuckDB, cerca de {size}.",
+        localNote: "O arquivo em si não é enviado — o DuckDB lê do seu disco.",
+        open: "Abrir e consultar",
+        opening: "Abrindo…",
+        rowCount: "{rows} linhas",
+        columnCount: "{columns} colunas",
+        schemaLabel: "Colunas",
+        sqlLabel: "SQL",
+        sqlHint: "Seu arquivo é a tabela `data`.",
+        run: "Executar",
+        running: "Executando…",
+        resultSummary: "{rows} linhas · {ms}ms",
+        showingFirst: "mostrando as primeiras {n}",
+        noRows: "Esta consulta não retornou linhas.",
+        downloadCsv: "Baixar CSV",
+        errEngine: "Não foi possível carregar o motor DuckDB",
+        errFormat: "Não dá para abrir este tipo de arquivo — CSV, TSV, Parquet ou JSON",
+        errRead: "Não foi possível ler o arquivo",
+      },
+    },
+
     ocr: {
       blurb: "Tira o texto de uma foto, captura de tela ou PDF digitalizado. Nada é enviado.",
       metaTitle: "Imagem e PDF para texto (OCR) no navegador",
