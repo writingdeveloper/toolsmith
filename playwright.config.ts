@@ -51,7 +51,7 @@ export default defineConfig({
      */
     {
       name: "chromium-webgpu",
-      testMatch: /(remove-bg|upscale|cutout)\.spec\.ts/,
+      testMatch: /(remove-bg|upscale|cutout|subtitles)\.spec\.ts/,
       use: { ...devices["Desktop Chrome"], channel: "chromium" },
     },
   ],

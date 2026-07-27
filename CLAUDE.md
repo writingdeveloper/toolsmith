@@ -82,13 +82,13 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 현재 상태 (2026-07-26)
 
-**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 17) = 108 페이지
-+ 루트 언어 선택. 전부 정적. Playwright **207종**(프로덕션 205 통과 / 2 스킵 / 0 실패,
-55초). 두 프로젝트로 돈다 — 기본 `chromium`(전부)과 `chromium-webgpu`(모델 도구 셋을
-GPU 경로로). dev 는 188 통과 / 19 스킵 / 0 실패(1.6분). **지연 로딩 판정만은 여전히
+**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 18) = 114 페이지
++ 루트 언어 선택. 전부 정적. Playwright **228종**(프로덕션 226 통과 / 2 스킵 / 0 실패,
+1분). 두 프로젝트로 돈다 — 기본 `chromium`(전부)과 `chromium-webgpu`(모델 도구 넷을
+GPU 경로로). dev 는 209 통과 / 19 스킵 / 0 실패(2분). **지연 로딩 판정만은 여전히
 프로덕션으로 한다**(Turbopack dev 가 동적 import 를 당겨오기 때문).
 
-### 배포된 도구 17개 (Tier 1 전부 + Tier 2 셋)
+### 배포된 도구 18개 (Tier 1 전부 + Tier 2 넷)
 
 | # | 도구 | 경로 | 핵심 |
 |---|---|---|---|
@@ -109,6 +109,7 @@ GPU 경로로). dev 는 188 통과 / 19 스킵 / 0 실패(1.6분). **지연 로�
 | 17 | 배경 제거 (Tier 2) | `/tools/remove-bg` | U²-Net(Apache-2.0). **ORT 를 의존성에 두지 않는다** |
 | 19 | 이미지 업스케일 (Tier 2) | `/tools/upscale` | Real-ESRGAN(BSD-3). **CPU 에서 도는 것을 골랐다** |
 | 18 | 클릭 컷아웃 (Tier 2) | `/tools/cutout` | SlimSAM(Apache-2.0). **인코더 한 번, 디코더 클릭마다** |
+| 15 | 자막 생성 (Tier 2) | `/tools/subtitles` | Whisper(Apache-2.0). **fp32 밖에 못 쓴다** |
 
 경로 앞에 `/{locale}` 이 붙는다(`/ko/tools/pdf-merge`).
 
@@ -140,6 +141,9 @@ GPU 경로로). dev 는 188 통과 / 19 스킵 / 0 실패(1.6분). **지연 로�
   npm 의존성으로 두지 않는 이유**가 적혀 있다(기본 export 가 wasm 을 base64 로 품은
   bundle 변형이라 import 하는 순간 20MB 가 Vercel 에서 나간다). 워커는 **모듈 워커**여야
   한다 — 고전 워커에서는 CDN 동적 import 가 불가능하다.
+- `lib/subtitles/subtitle-core.ts` — 자막. **정밀도를 낮춘 모델이 조용히 망가진다**는
+  실측이 여기 있다(fp16 base 가 "We are." 만 반복). 모델이 100MB 대가 되면
+  **"열어 보고 실패하면 폴백" 패턴을 쓰면 안 된다** — 실패 판정 전에 다 받는다.
 - `lib/segment/segment-core.ts` — 클릭 컷아웃. **인코더 6초 / 디코더 0.1초**로 나뉘어
   있어 클릭형 UI 가 성립한다. 워커가 임베딩을 들고 있는 이유. `serialize()` 로 모델
   호출을 한 줄에 세운다 — **같은 세션에 `run()` 을 겹쳐 걸면 WebGPU 에서 멈춘다.**

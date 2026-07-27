@@ -957,6 +957,78 @@ export const en = {
         errGeneric: "The cut-out could not be made",
       },
     },
+    subtitles: {
+      blurb: "Turn speech in a video into subtitles. The model runs on your device.",
+      metaTitle: "Subtitle Generator — in your browser",
+      metaDescription:
+        "Generate SRT and VTT subtitles from a video without uploading it. An Apache-2.0 Whisper model runs inside your browser in 99 languages. No sign-up.",
+      h1: "Generate subtitles from a video",
+      lead: "Listens to the speech in a video or audio file and writes timed subtitles you can download as SRT or VTT. The model is downloaded to your device and runs there — the file never leaves this tab.",
+      faq: [
+        {
+          q: "Where does my video go?",
+          a: "Nowhere. It is opened inside this browser tab and never uploaded. That matters more here than in most tools: a recording of a meeting or a lecture is exactly the kind of file you should not be handing to a stranger's server.",
+        },
+        {
+          q: "Why is the download so large?",
+          a: "Because only the full-precision model actually works. We tested the small ones: the 8-bit versions refuse to open at all, and the 16-bit ones are worse than useless — the compact model garbles sentences and the accurate one collapses into repeating the same two words. A model that fails loudly is fine; one that quietly produces plausible nonsense is not. So we ship full precision and tell you the size up front.",
+        },
+        {
+          q: "Which files can I use?",
+          a: "MP4, MOV, M4A and WAV. Those are the ones your browser can open on its own without us shipping another decoder. MP3 is not in the list — not because it is exotic, but because reading it would mean downloading more code, and we would rather leave it out than pretend.",
+        },
+        {
+          q: "The result keeps repeating the same words.",
+          a: "That is the model failing on noisy audio, and it is the honest limit of this tool. We measured it on a 1948 speech recording: the compact model produced nothing but one repeated syllable. On clean modern audio the same model was accurate — so it is the recording quality, not the language. If your source is quiet, echoey or has music over the speech, expect this.",
+        },
+        {
+          q: "Which model should I pick?",
+          a: "Start with the compact one. On a clean 16-second Korean clip it made two mistakes in about forty words; the accurate one made one. The accurate model is worth its extra size for a long recording you will publish, and not worth it for a rough transcript. Note that the accurate model also takes about twenty seconds to warm up on a graphics card before it starts.",
+        },
+        {
+          q: "What is the difference between SRT and VTT?",
+          a: "SRT is what most video editors and players expect. VTT is the web standard, used by the HTML video element. They carry the same thing here, so take whichever your next step wants. The plain text file has no timings at all — useful when you only want the words.",
+        },
+      ],
+      ui: {
+        dropLabel: "Drop a video or audio file here",
+        dropHint: "MP4 · MOV · M4A · WAV — up to {minutes} minutes",
+        modelLabel: "Model",
+        modelFast: "Compact — {size}, quicker",
+        modelAccurate: "Accurate — {size}, fewer mistakes",
+        languageLabel: "Spoken language",
+        languageAuto: "Detect automatically",
+        languageNames: {
+          en: "English",
+          ko: "Korean",
+          ja: "Japanese",
+          es: "Spanish",
+          de: "German",
+          pt: "Portuguese",
+        },
+        downloadNote: "Pressing the button downloads about {size} of runtime and model.",
+        cachedNote: "It is fetched once and kept by your browser — the next file starts straight away.",
+        noiseNote:
+          "On noisy or very old recordings the model can get stuck repeating the same words. Clean audio works much better.",
+        run: "Write the subtitles",
+        working: "Working…",
+        stageDecoding: "reading the audio…",
+        stageModel: "downloading the model {percent}%",
+        stageTranscribing: "listening…",
+        resultSummary: "{cues} lines · {length} of audio · took {seconds}s",
+        runtimeWebgpu: "ran on the GPU",
+        runtimeWasm: "ran on the CPU",
+        downloadSrt: "Download .srt",
+        downloadVtt: "Download .vtt",
+        downloadTxt: "Download plain text",
+        errEngine: "The runtime could not be loaded",
+        errModel: "The model could not be downloaded",
+        errNoAudio: "There is no sound in this file",
+        errUnsupportedInput: "This file could not be read — MP4, MOV, M4A or WAV",
+        errTooLong: "This is longer than {minutes} minutes",
+        errGeneric: "The subtitles could not be written",
+      },
+    },
   },
 };
 

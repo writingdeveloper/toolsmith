@@ -68,7 +68,7 @@ export const TOOLS: Tool[] = [
   { slug: "remove-bg", tier: 2, status: "live", needs: "all", family: "image" },
   { slug: "upscale", tier: 2, status: "live", needs: "all", family: "image" },
   { slug: "cutout", tier: 2, status: "live", needs: "all", family: "image" },
-  { slug: "subtitles", tier: 2, status: "planned", needs: "webgpu", family: "video" },
+  { slug: "subtitles", tier: 2, status: "live", needs: "all", family: "video" },
   { slug: "subtitle-translate", tier: 2, status: "planned", needs: "webgpu", family: "video" },
   { slug: "stems", tier: 2, status: "planned", needs: "webgpu", family: "video" },
 ];

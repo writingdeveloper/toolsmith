@@ -312,3 +312,16 @@ const SMALL = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="64">
   <circle cx="70" cy="32" r="18" fill="#c8102e"/>
 </svg>`;
 await write("small.png", await sharp(Buffer.from(SMALL)).png().toBuffer());
+
+/*
+ * speech.wav 는 여기서 만들지 않는다.
+ *
+ * 자막 스펙에는 **진짜 말소리**가 필요한데, 합성으로는 만들 수 없다. 대신 미국 정부
+ * 저작물(퍼블릭 도메인)인 1961년 케네디 취임 연설의 앞 6초를 16kHz 모노로 줄여 두었다.
+ * 출처는 transformers.js 문서가 예제로 쓰는 파일과 같다:
+ *   https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/jfk.wav
+ * 다시 만들어야 하면 그 파일을 받아 6초만 자르고 16kHz 모노로 내리면 된다(192KB).
+ *
+ * 잡음이 심한 녹음에서 모델이 무너지는 것은 스펙이 아니라 사람이 확인한다 —
+ * 그 실측은 docs/TOOLS.md 에 적혀 있다.
+ */
