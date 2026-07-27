@@ -22,7 +22,11 @@ export interface ExtractResult {
 }
 
 /** 44바이트 WAV 헤더 + 16비트 PCM. */
-function writeWav(channels: Float32Array[], sampleRate: number): Blob {
+/**
+ * 16비트 PCM WAV 로 쓴다. **스템 분리도 같은 함수를 쓴다** — 결과가 네 갈래로 늘어도
+ * 파일 형식이 어긋날 수 없다.
+ */
+export function writeWav(channels: Float32Array[], sampleRate: number): Blob {
   const channelCount = channels.length;
   const frameCount = channels[0]?.length ?? 0;
   const blockAlign = channelCount * 2;

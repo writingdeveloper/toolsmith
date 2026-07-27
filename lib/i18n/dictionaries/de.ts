@@ -1112,5 +1112,64 @@ export const de = {
         errGeneric: "Die Untertitel konnten nicht übersetzt werden",
       },
     },
+    stems: {
+      blurb: "Trennt einen Song in Schlagzeug, Bass, Gesang und den Rest — auf Ihrem Gerät.",
+      metaTitle: "Stem-Trennung — Gesang & Schlagzeug",
+      metaDescription:
+        "Trennen Sie einen Track in Schlagzeug, Bass, Gesang und weitere Spuren, ohne ihn hochzuladen. Ein MIT-lizenziertes Demucs-Modell läuft im Browser.",
+      h1: "Einen Song in Stems trennen",
+      lead: "Nimmt die ersten dreißig Sekunden einer Audio- oder Videodatei und trennt sie in vier Spuren, die Sie anhören und laden können. Das Modell wird auf Ihr Gerät geladen und läuft dort — die Datei verlässt diesen Tab nicht.",
+      faq: [
+        {
+          q: "Wohin geht mein Audio?",
+          a: "Nirgendwohin. Es wird in diesem Tab geöffnet und nie hochgeladen. Hier wiegt das besonders schwer: ein unveröffentlichter Mix ist genau die Art Datei, die man nicht dem Server eines Fremden geben sollte.",
+        },
+        {
+          q: "Warum nur 30 Sekunden?",
+          a: "Weil die Trennung auf dem Prozessor langsam ist. Wir haben es gemessen: 7,8 Sekunden Ton brauchen rund 15 Sekunden, also dauern 30 Sekunden etwa eine Minute und ein ganzer Song von drei Minuten sechs. Dieses Werkzeug ist eine Vorschau — genug, um zu hören, wie sauber die Trennung ausfällt, bevor Sie für den ganzen Track zu einem Desktop-Programm greifen.",
+        },
+        {
+          q: "Wie gut ist die Trennung?",
+          a: "Es ist Demucs v4, dasselbe Modell, das die meisten Desktop-Werkzeuge nutzen, in voller Genauigkeit. Wir haben es mit Zahlen geprüft statt nach Gehör: Wir haben eine Sprachaufnahme, einen 60-Hz-Sinus und eine Klickspur gemischt und dann gemessen, wie stark jede Ausgabespur zu welcher Zutat passt. Gesang traf die Sprache mit 0,999, Bass den Sinus mit 1,000, Schlagzeug die Klicks mit 0,985 — und jede Spur lag gegenüber den anderen nahe null.",
+        },
+        {
+          q: "Welche Dateien kann ich nehmen?",
+          a: "MP4, MOV, M4A und WAV. Das sind die, die Ihr Browser allein öffnen kann, ohne dass wir einen weiteren Decoder mitschicken. MP3 steht nicht auf der Liste — nicht weil es exotisch wäre, sondern weil das Lesen zusätzlichen Code bedeuten würde. Lieber lassen wir es weg, als so zu tun.",
+        },
+        {
+          q: "Warum ist der Download so groß?",
+          a: "Das Modell ist rund 300 MB groß und es ist das ganze Werkzeug. Es gibt keine kleinere Fassung von Demucs v4, die wir prüfen könnten, und eine quantisierte auszuliefern, die still schlechter wird, wäre schlimmer, als ehrlich über die Größe zu sein. Es wird einmal geladen und von Ihrem Browser behalten.",
+        },
+        {
+          q: "Warum nutzt es meine Grafikkarte nicht?",
+          a: "Weil wir nur den Prozessorpfad gemessen und geprüft haben. Andere Werkzeuge hier versuchen zuerst die Grafikkarte, aber ein ungeprüfter schneller Weg, der leicht falschen Klang erzeugt, wäre schwerer zu bemerken als ein langsamer. Wenn wir einen Grafikkartenweg messen, der dieselben Zahlen liefert, stellen wir um.",
+        },
+      ],
+      ui: {
+        dropLabel: "Audio- oder Videodatei hier ablegen",
+        dropHint: "MP4 · MOV · M4A · WAV — die ersten {seconds} Sekunden werden genutzt",
+        downloadNote: "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
+        cachedNote: "Es wird einmal geladen und von Ihrem Browser behalten — die nächste Datei startet sofort.",
+        slowNote:
+          "Die Trennung läuft auf dem Prozessor: etwa {minutes} Min. für {seconds} Sekunden Ton. Deshalb ist dies eine Vorschau.",
+        run: "In Stems trennen",
+        working: "Wird getrennt…",
+        stageDecoding: "Ton wird gelesen…",
+        stageModel: "Modell wird geladen {percent}%",
+        stageSeparating: "wird getrennt {percent}%",
+        resultSummary: "{length}s Ton · {seconds}s gebraucht",
+        stemNames: {
+          drums: "Schlagzeug",
+          bass: "Bass",
+          other: "Sonstiges",
+          vocals: "Gesang",
+        },
+        errEngine: "Die Laufzeit konnte nicht geladen werden",
+        errModel: "Das Modell konnte nicht geladen werden",
+        errNoAudio: "In dieser Datei ist kein Ton",
+        errUnsupportedInput: "Diese Datei konnte nicht gelesen werden — MP4, MOV, M4A oder WAV",
+        errGeneric: "Die Stems konnten nicht getrennt werden",
+      },
+    },
   },
 } satisfies Dictionary;

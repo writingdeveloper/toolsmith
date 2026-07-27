@@ -82,12 +82,12 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 현재 상태 (2026-07-26)
 
-**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 19) = 120 페이지
-+ 루트 언어 선택. 전부 정적. Playwright **249종**. 두 프로젝트로 돈다 — 기본
+**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 20) = 126 페이지
++ 루트 언어 선택. 전부 정적. Playwright **259종**. 두 프로젝트로 돈다 — 기본
 `chromium`(전부)과 `chromium-webgpu`(모델 도구 넷을 GPU 경로로). **지연 로딩 판정만은
 여전히 프로덕션으로 한다**(Turbopack dev 가 동적 import 를 당겨오기 때문).
 
-### 배포된 도구 19개 (Tier 1 전부 + Tier 2 다섯)
+### 배포된 도구 20개 (Tier 1 전부 + Tier 2 여섯)
 
 | # | 도구 | 경로 | 핵심 |
 |---|---|---|---|
@@ -110,6 +110,7 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 | 18 | 클릭 컷아웃 (Tier 2) | `/tools/cutout` | SlimSAM(Apache-2.0). **인코더 한 번, 디코더 클릭마다** |
 | 15 | 자막 생성 (Tier 2) | `/tools/subtitles` | Whisper(Apache-2.0). **fp32 밖에 못 쓴다** |
 | 16 | 자막 번역 (Tier 2) | `/tools/subtitle-translate` | m2m100(MIT). **3.7.6 에 묶여 있다.** 무너진 줄은 원문을 남긴다 |
+| 20 | 스템 분리 (Tier 2) | `/tools/stems` | Demucs v4(MIT). **내보내기도 골라야 했다** — STFT 가 그래프 안에 |
 
 경로 앞에 `/{locale}` 이 붙는다(`/ko/tools/pdf-merge`).
 
@@ -159,6 +160,10 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   여기에는 **실파일 QA 로 나온 것 넷**도 들어 있다 — 태그 걷어내기, UTF-8 아닌 파일,
   상한 1000→3000, 그리고 **짧은 감탄문에서의 붕괴**(생성 설정으로는 못 막아서
   알아보고 원문을 남긴다). 근거는 `docs/TOOLS.md` 의 "실제 자막 파일을 받아 보고서야".
+- `lib/stems/stems-core.ts` — 스템 분리. **"코드만 MIT" 를 세 번째로 만난 기록**이 여기
+  있다(Spleeter). open-unmix 는 **기본 모델이 비상업**이다. 그리고 모델을 고른 뒤에도
+  **ONNX 내보내기를 골라야 했다** — 어떤 것은 STFT 를 우리가 만들어 넣어야 해서 틀리면
+  소리가 그럴듯하게 틀린다. 분리 검증은 상관계수로 한다.
 - `lib/i18n/dictionaries/en.ts` — 사전의 **타입 원본**. 여기에 키를 더하면 나머지 5개가
   타입 에러로 드러난다.
 
@@ -281,7 +286,7 @@ PDF**(AES·LibreOffice 판 둘 다 네 도구가 정확히 거부). EXIF 회전�
 
 ## 다음 할 일
 
-1. **Tier 2 는 다섯 칸이 찼다.** 남은 것은 **#20 스템 분리**와 **#21 요약**뿐이다.
+1. **Tier 2 는 여섯 칸이 찼다.** 남은 것은 **#21 요약** 하나다.
    새 모델을 붙일 때 순서는 이제 넷이다 — **라이선스 → 크기 → 속도 → 품질**.
    자막 번역에서 하나 더 배웠다: **"이 모델은 안 된다" 는 판정을 런타임 버전과 짝지어
    적을 것.** 4.2.0 에서 죽은 것이 3.7.6 에서는 멀쩡히 돌았고, 그것 하나로 도구를 접을

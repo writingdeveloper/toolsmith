@@ -1112,5 +1112,64 @@ export const ptBR = {
         errGeneric: "Não foi possível traduzir as legendas",
       },
     },
+    stems: {
+      blurb: "Separa uma música em bateria, baixo, voz e todo o resto, no seu próprio aparelho.",
+      metaTitle: "Separador de faixas — voz e bateria",
+      metaDescription:
+        "Separe uma faixa em bateria, baixo, voz e outras trilhas sem enviá-la. Um modelo Demucs com licença MIT roda no seu navegador. Sem cadastro nem chave de API.",
+      h1: "Separar uma música em faixas",
+      lead: "Pega os primeiros trinta segundos de um arquivo de áudio ou vídeo e separa em quatro trilhas que você pode ouvir e baixar. O modelo é baixado para o seu dispositivo e roda ali — o arquivo não sai desta aba.",
+      faq: [
+        {
+          q: "Para onde vai o meu áudio?",
+          a: "Para lugar nenhum. Ele é aberto dentro desta aba e nunca é enviado. Aqui isso pesa ainda mais: uma mixagem inédita é exatamente o tipo de arquivo que não se deve entregar ao servidor de um desconhecido.",
+        },
+        {
+          q: "Por que só 30 segundos?",
+          a: "Porque a separação é lenta no processador. Nós medimos: 7,8 segundos de áudio levam cerca de 15 segundos para separar, então 30 segundos levam mais ou menos um minuto e uma música inteira de três minutos levaria seis. Esta ferramenta é uma prévia — o suficiente para ouvir quão limpa fica a separação antes de recorrer a um programa de computador para a faixa toda.",
+        },
+        {
+          q: "Qual a qualidade da separação?",
+          a: "É o Demucs v4, o mesmo modelo que a maioria dos programas de computador usa, em precisão total. Conferimos com números e não de ouvido: misturamos uma gravação de fala, uma senoide de 60 Hz e uma trilha de cliques, e medimos o quanto cada faixa de saída correspondia a cada ingrediente. A voz bateu com a fala em 0,999, o baixo com a senoide em 1,000, a bateria com os cliques em 0,985, e cada faixa ficou perto de zero em relação às outras.",
+        },
+        {
+          q: "Que arquivos posso usar?",
+          a: "MP4, MOV, M4A e WAV. São os que o seu navegador abre sozinho, sem precisarmos enviar outro decodificador. MP3 não está na lista — não por ser exótico, mas porque lê-lo exigiria baixar mais código, e preferimos deixar de fora a fingir que dá.",
+        },
+        {
+          q: "Por que o download é tão grande?",
+          a: "O modelo tem cerca de 300 MB e ele é a ferramenta inteira. Não existe uma versão menor do Demucs v4 que pudéssemos verificar, e enviar uma quantizada que piora em silêncio seria pior do que ser honesto sobre o tamanho. É baixado uma vez e o seu navegador guarda.",
+        },
+        {
+          q: "Por que não usa a minha placa de vídeo?",
+          a: "Porque só medimos e verificamos o caminho do processador. Outras ferramentas daqui tentam a placa de vídeo primeiro, mas um caminho rápido não verificado que produzisse um áudio sutilmente errado seria mais difícil de notar do que um lento. Se medirmos um caminho pela placa de vídeo com os mesmos números, mudaremos.",
+        },
+      ],
+      ui: {
+        dropLabel: "Solte um arquivo de áudio ou vídeo aqui",
+        dropHint: "MP4 · MOV · M4A · WAV — usamos os primeiros {seconds} segundos",
+        downloadNote: "Apertar o botão baixa cerca de {size} de motor e modelo.",
+        cachedNote: "É baixado uma vez e o seu navegador guarda — o próximo arquivo começa na hora.",
+        slowNote:
+          "A separação roda no processador: cerca de {minutes} min para {seconds} segundos de áudio. É por isso que isto é uma prévia.",
+        run: "Separar em faixas",
+        working: "Separando…",
+        stageDecoding: "lendo o áudio…",
+        stageModel: "baixando o modelo {percent}%",
+        stageSeparating: "separando {percent}%",
+        resultSummary: "{length}s de áudio · levou {seconds}s",
+        stemNames: {
+          drums: "Bateria",
+          bass: "Baixo",
+          other: "Outros",
+          vocals: "Voz",
+        },
+        errEngine: "Não foi possível carregar o motor",
+        errModel: "Não foi possível baixar o modelo",
+        errNoAudio: "Este arquivo não tem som",
+        errUnsupportedInput: "Não foi possível ler este arquivo — MP4, MOV, M4A ou WAV",
+        errGeneric: "Não foi possível separar as faixas",
+      },
+    },
   },
 } satisfies Dictionary;

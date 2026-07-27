@@ -72,7 +72,8 @@ export const TOOLS: Tool[] = [
   // 번역만은 **WebGPU 로 갈 수 없다** — 유일하게 도는 조합이 CPU 다.
   // 근거는 lib/translate/translate-core.ts 의 실측 5번.
   { slug: "subtitle-translate", tier: 2, status: "live", needs: "all", family: "video" },
-  { slug: "stems", tier: 2, status: "planned", needs: "webgpu", family: "video" },
+  // 스템 분리도 **CPU 로만 간다** — 실측하고 결과를 숫자로 확인한 것이 wasm 경로뿐이다.
+  { slug: "stems", tier: 2, status: "live", needs: "all", family: "video" },
 ];
 
 export const LIVE_TOOLS = TOOLS.filter((t) => t.status === "live");

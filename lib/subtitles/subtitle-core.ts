@@ -312,6 +312,24 @@ export function toMono16k(channels: Float32Array[], sampleRate: number): Float32
   return out;
 }
 
+/**
+ * 파일에서 소리를 꺼낸다. **스템 분리가 같은 함수를 쓴다** — 받는 형식 목록이 두 곳에서
+ * 어긋나지 않도록 여기 한 곳에 둔다. 표본율과 채널은 **원본 그대로** 돌려준다
+ * (자막은 16kHz 모노로 내리고, 스템 분리는 44.1kHz 스테레오가 필요하다).
+ */
+export async function decodeAudio(
+  bytes: Uint8Array,
+  onProgress?: (ratio: number) => void,
+): Promise<{ channels: Float32Array[]; sampleRate: number }> {
+  try {
+    return readWav(bytes) ?? (await decodeMp4(bytes, onProgress));
+  } catch (error) {
+    if (error instanceof SubtitleError) throw error;
+    if (error instanceof MediaError) throw new SubtitleError("UNSUPPORTED_INPUT");
+    throw new SubtitleError("UNSUPPORTED_INPUT");
+  }
+}
+
 /* ── 엔진 ───────────────────────────────────────────────────────── */
 
 /* transformers.js 는 npm 의존성이 아니라 CDN 에서 온다 — 타입도 우리가 쓰는 만큼만 적는다. */

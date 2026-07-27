@@ -1115,6 +1115,65 @@ export const en = {
         errGeneric: "The subtitles could not be translated",
       },
     },
+    stems: {
+      blurb: "Split a song into drums, bass, vocals and everything else — on your own machine.",
+      metaTitle: "Stem Splitter — vocals & drums in your browser",
+      metaDescription:
+        "Split a track into drums, bass, vocals and other stems without uploading it. An MIT-licensed Demucs model runs in your browser. No sign-up, no API key.",
+      h1: "Split a song into stems",
+      lead: "Takes the first half-minute of an audio or video file and separates it into four tracks you can play and download. The model is downloaded to your device and runs there — the file never leaves this tab.",
+      faq: [
+        {
+          q: "Where does my audio go?",
+          a: "Nowhere. It is opened inside this browser tab and never uploaded. That matters here: an unreleased mix is exactly the kind of file you should not be handing to a stranger's server.",
+        },
+        {
+          q: "Why only 30 seconds?",
+          a: "Because separation is slow on a processor. We measured it: 7.8 seconds of audio takes about 15 seconds to separate, so 30 seconds takes roughly a minute and a full three-minute song would take six. This tool is a preview — enough to hear how clean the split is before you commit to a desktop tool for the whole track.",
+        },
+        {
+          q: "How good is the separation?",
+          a: "This is Demucs v4, the same model most desktop stem tools use, at full precision. We checked it with numbers rather than by ear: we mixed a speech recording, a 60 Hz sine and a click track together, then measured how closely each output stem matched each ingredient. Vocals matched the speech at 0.999, bass matched the sine at 1.000, drums matched the clicks at 0.985, and every stem was near zero against the others.",
+        },
+        {
+          q: "Which files can I use?",
+          a: "MP4, MOV, M4A and WAV. Those are the ones your browser can open on its own without us shipping another decoder. MP3 is not in the list — not because it is exotic, but because reading it would mean downloading more code, and we would rather leave it out than pretend.",
+        },
+        {
+          q: "Why is the download so large?",
+          a: "The model is about 300 MB and it is the whole tool. There is no smaller build of Demucs v4 that we could verify, and shipping a quantised one that quietly degrades would be worse than being honest about the size. It is fetched once and your browser keeps it.",
+        },
+        {
+          q: "Why does it not use my graphics card?",
+          a: "Because we only measured and verified the processor path. Other tools here try the graphics card first, but an unverified fast path that produces subtly wrong audio would be harder to notice than a slow one. If we measure a graphics-card path that gives the same numbers, we will switch.",
+        },
+      ],
+      ui: {
+        dropLabel: "Drop an audio or video file here",
+        dropHint: "MP4 · MOV · M4A · WAV — the first {seconds} seconds are used",
+        downloadNote: "Pressing the button downloads about {size} of runtime and model.",
+        cachedNote: "It is fetched once and kept by your browser — the next file starts straight away.",
+        slowNote:
+          "Separation runs on the processor: about {minutes} min for {seconds} seconds of audio. That is why this is a preview.",
+        run: "Split into stems",
+        working: "Separating…",
+        stageDecoding: "reading the audio…",
+        stageModel: "downloading the model {percent}%",
+        stageSeparating: "separating {percent}%",
+        resultSummary: "{length}s of audio · took {seconds}s",
+        stemNames: {
+          drums: "Drums",
+          bass: "Bass",
+          other: "Other",
+          vocals: "Vocals",
+        },
+        errEngine: "The runtime could not be loaded",
+        errModel: "The model could not be downloaded",
+        errNoAudio: "There is no sound in this file",
+        errUnsupportedInput: "This file could not be read — MP4, MOV, M4A or WAV",
+        errGeneric: "The stems could not be separated",
+      },
+    },
   },
 };
 
