@@ -115,7 +115,8 @@ test("품질을 낮출수록 더 작아진다", async ({ page }) => {
 
 test("짜낼 사진이 없으면 줄었다고 말하지 않는다", async ({ page }) => {
   await open(page, PAGES5, 5);
-  await compress(page);
+  await page.getByRole("button", { name: "압축하기" }).click();
+  await expect(page.locator("[data-not-compressed]")).toBeVisible({ timeout: 120_000 });
 
   /*
    * 글자뿐인 PDF 다. 다시 저장하는 것만으로 몇 % 줄어들 수는 있지만 그건 우리가
@@ -159,4 +160,25 @@ test("콘솔 에러 없이 동작한다", async ({ page }) => {
   await compress(page);
 
   expect(errors).toEqual([]);
+});
+
+/**
+ * **줄이지 못했으면 결과를 주지 않는다** (2026-07-26, 실물 문서 QA 로 발견).
+ *
+ * 실제 PDF 의 사진은 JPEG 이 아닌 경우가 많다 — 받아 본 실파일 넷 중 셋이 그랬다.
+ * 그런 파일은 손댈 것이 없는데도 결과를 내주고 있었고, pdf-lib 이 다시 쓰면서
+ * **오히려 커졌다**(117쪽 논문 5.1MB → +17KB). 그걸 "…-압축.pdf" 로 받아 원본을
+ * 덮어쓰면 사용자는 손해만 본다.
+ *
+ * `alpha.pdf` 는 그림이 PNG(FlateDecode)뿐이라 같은 상황을 재현한다.
+ */
+test("줄일 것이 없으면 내려받기를 주지 않고 이유를 말한다", async ({ page }) => {
+  const ALPHA = path.join(FIXTURES, "alpha.pdf");
+  await page.locator('input[type="file"]').setInputFiles(ALPHA);
+  await page.getByRole("button", { name: /줄이기|압축/ }).first().click();
+
+  await expect(page.locator("[data-not-compressed]")).toBeVisible({ timeout: 120_000 });
+  await expect(page.locator("[data-not-compressed]")).toContainText("사진이 없습니다");
+  // 원본보다 큰 파일을 "압축본" 이라고 내주지 않는다
+  await expect(page.locator("a[download]")).toHaveCount(0);
 });

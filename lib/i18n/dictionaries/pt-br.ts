@@ -296,6 +296,7 @@ export const ptBR = {
         working: "Comprimindo…",
         outputName: "{stem}-comprimido.pdf",
         rewroteImages: "Recomprimimos {n} de {total} fotos",
+        keepOriginal: "Fique com o arquivo que você já tem — este não ficaria menor.",
         noImages: "Este PDF não tem fotos para recomprimir.",
         alreadySmall: "As fotos já estavam bem comprimidas — não deu para diminuir mais.",
       },

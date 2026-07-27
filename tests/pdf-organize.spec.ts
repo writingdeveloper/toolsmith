@@ -3,6 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { isAnalytics } from "./net";
 import { PDFDocument } from "pdf-lib";
 import { downloadResult, pagesOf } from "./pdf-helpers";
+import { OffscreenCanvasFactory, PDFJS_OPTIONS } from "../lib/pdf/pdfjs-options";
 
 const FIXTURES = path.join(__dirname, "fixtures");
 // 5쪽: 201x401(P1) … 205x405(P5)
@@ -10,6 +11,8 @@ const PAGES5 = path.join(FIXTURES, "pages5.pdf");
 // 1쪽에 /Rotate 90 이 박혀 있다
 const TILTED = path.join(FIXTURES, "tilted.pdf");
 const ENCRYPTED = path.join(FIXTURES, "encrypted.pdf");
+/** 투명도가 있는 큰 비트맵이 든 1쪽. pdf.js 가 **속으로 임시 캔버스를 쓰는** 경로다. */
+const ALPHA = path.join(FIXTURES, "alpha.pdf");
 
 async function open(page: Page, file: string, pageCount: number) {
   await page.locator('input[type="file"]').setInputFiles(file);
@@ -184,4 +187,45 @@ test("PDF 를 넣기 전에는 pdf.js 를 내려받지 않는다 (프로덕션)"
   await open(page, PAGES5, 5);
 
   expect(afterFile).toBeGreaterThan(300_000);
+});
+
+/*
+ * ── 워커에서 pdf.js 를 쓰기 위한 설정 (2026-07-26, 실물 문서 QA 로 추가) ──────
+ *
+ * 이 넷 중 하나라도 빠지면 **오류 없이 그림만 틀리거나** PDF 가 통째로 안 열린다.
+ * 실측으로 하나씩 데였기 때문에 값을 코드에 못 박는다. 근거는 lib/pdf/pdfjs-options.ts.
+ */
+test("pdf.js 를 워커에서 쓰는 설정이 그대로 있다", () => {
+  expect(PDFJS_OPTIONS.disableFontFace).toBe(true); // 빠지면 CJK 가 빈 네모
+  expect(PDFJS_OPTIONS.wasmUrl).toMatch(/\/wasm\/$/); // 빠지면 JBIG2·JPEG2000 이 백지
+  expect(PDFJS_OPTIONS.useWorkerFetch).toBe(true); // 빠지면 document.baseURI 를 읽어 죽는다
+  expect(PDFJS_OPTIONS.CanvasFactory).toBe(OffscreenCanvasFactory); // 빠지면 사진 PDF 가 안 열린다
+});
+
+/**
+ * **비트맵이 든 PDF 가 실제로 그려지는가.**
+ *
+ * pdf.js 는 마스크를 합치느라 임시 캔버스를 더 만드는데, 기본 팩토리는
+ * `document.createElement` 를 부른다 — 워커에는 document 가 없다. 그 결과 사진이 든
+ * 실제 PDF 가 **열리지도 않았다.** 글자만 있는 픽스처로는 드러나지 않던 결함이다.
+ */
+test("투명도가 있는 그림이 든 PDF 도 실제로 그려진다", async ({ page }) => {
+  await open(page, ALPHA, 1);
+
+  const inkRatio = await page.evaluate(async () => {
+    const image = document.querySelector<HTMLImageElement>("li img")!;
+    const bitmap = await createImageBitmap(await (await fetch(image.src)).blob());
+    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(bitmap, 0, 0);
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let ink = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      if ((data[i] + data[i + 1] + data[i + 2]) / 3 < 200) ink += 1;
+    }
+    return ink / (data.length / 4);
+  });
+
+  // 백지가 아니어야 한다. 설정이 빠지면 아예 "PDF 로 읽을 수 없습니다" 가 뜬다.
+  expect(inkRatio).toBeGreaterThan(0.1);
 });

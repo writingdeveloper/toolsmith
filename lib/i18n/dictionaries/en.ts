@@ -299,6 +299,7 @@ export const en = {
         working: "Compressing…",
         outputName: "{stem}-compressed.pdf",
         rewroteImages: "Re-compressed {n} of {total} photos",
+        keepOriginal: "Keep the file you already have — this one would not be any smaller.",
         noImages: "This PDF has no photos to re-compress.",
         alreadySmall: "The photos were already well compressed — this could not be made smaller.",
       },

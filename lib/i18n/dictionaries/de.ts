@@ -296,6 +296,7 @@ export const de = {
         working: "Wird verkleinert…",
         outputName: "{stem}-verkleinert.pdf",
         rewroteImages: "{n} von {total} Fotos neu komprimiert",
+        keepOriginal: "Behalten Sie die Datei, die Sie schon haben — kleiner wird sie hier nicht.",
         noImages: "In diesem PDF gibt es keine Fotos zum Neukomprimieren.",
         alreadySmall: "Die Fotos waren bereits gut komprimiert — kleiner ging es nicht.",
       },

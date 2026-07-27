@@ -430,3 +430,39 @@ const LEGACY_KO_BASE64 =
   "tM+02S4NCg0KMw0KMDA6MDA6MDYsMDAwIC0tPiAwMDowMDowOCwwMDANCsO5wrC0wiDAzLDNwMwgv9Yg" +
   "vu63wb/usKHA1LTPtNkuDQo=";
 await write("legacy-euckr.srt", Buffer.from(LEGACY_KO_BASE64, "base64"));
+
+/*
+ * ── 비트맵이 든 PDF (2026-07-26, 실물 문서 QA 로 추가) ─────────────────────
+ *
+ * pdf.js 는 이미지를 풀고 마스크를 합칠 때 **속으로 임시 캔버스를 더 만든다.**
+ * 기본 팩토리는 `document.createElement("canvas")` 를 부르는데 워커에는 document 가
+ * 없다. 그 결과 사진이 든 실제 PDF 가 통째로 열리지 않았다.
+ *
+ * 위 `photo.pdf` 는 작아서 그 경로를 타지 않았다 — 그래서 스펙이 전부 통과하는 채로
+ * 결함이 살아 있었다. 여기서는 **투명도(SMask)가 있는 큰 그림**을 넣는다. SMask 를
+ * 합치려면 pdf.js 가 임시 캔버스를 반드시 쓴다.
+ */
+const alphaPng = await sharp({
+  create: { width: 1400, height: 900, channels: 4, background: { r: 20, g: 40, b: 90, alpha: 0.65 } },
+})
+  .composite([
+    {
+      input: await sharp({
+        create: { width: 500, height: 400, channels: 4, background: { r: 240, g: 60, b: 40, alpha: 1 } },
+      })
+        .png()
+        .toBuffer(),
+      top: 200,
+      left: 300,
+    },
+  ])
+  .png()
+  .toBuffer();
+
+const alphaDoc = await PDFDocument.create();
+{
+  const image = await alphaDoc.embedPng(alphaPng);
+  const page = alphaDoc.addPage([595, 842]);
+  page.drawImage(image, { x: 30, y: 300, width: 535, height: 344 });
+}
+await write("alpha.pdf", Buffer.from(await alphaDoc.save()));

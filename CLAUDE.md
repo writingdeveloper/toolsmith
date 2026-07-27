@@ -83,7 +83,7 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 ## 현재 상태 (2026-07-26)
 
 **라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 19) = 120 페이지
-+ 루트 언어 선택. 전부 정적. Playwright **246종**. 두 프로젝트로 돈다 — 기본
++ 루트 언어 선택. 전부 정적. Playwright **249종**. 두 프로젝트로 돈다 — 기본
 `chromium`(전부)과 `chromium-webgpu`(모델 도구 넷을 GPU 경로로). **지연 로딩 판정만은
 여전히 프로덕션으로 한다**(Turbopack dev 가 동적 import 를 당겨오기 때문).
 
@@ -116,9 +116,12 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 ### 공통 토대 (새 도구는 여기서 갈라진다)
 
 - `lib/pdf/document.ts` — PDF 열기·오류 번역. 병합·분할·회전·압축이 함께 쓴다.
-- `lib/pdf/pdfjs-options.ts` — pdf.js 를 **워커에서** 쓰기 위한 설정. `disableFontFace`
-  가 빠지면 CJK PDF 가 통째로 빈 네모로 그려진다(예외 없이, 그림만 틀린다). 근거와
-  실측은 `docs/TOOLS.md`.
+- `lib/pdf/pdfjs-options.ts` — pdf.js 를 **워커에서** 쓰기 위한 설정. **넷이 모두
+  있어야 한다.** `disableFontFace` 가 빠지면 CJK 가 빈 네모, `wasmUrl` 이 빠지면
+  JBIG2·JPEG2000 이 백지, `useWorkerFetch` 가 빠지면 `document.baseURI` 를 읽어 모든
+  PDF 가 죽고, `CanvasFactory` 가 빠지면 **사진이 든 PDF 가 아예 안 열린다.**
+  전부 예외 없이 그림만 틀리거나 통째로 실패한다. `tests/pdf-organize.spec.ts` 가
+  값을 못 박는다. 근거와 실측은 `docs/TOOLS.md`.
 - `lib/pdf/render-core.ts` — pdf.js 썸네일. **썸네일 전에 pdf-lib 으로 먼저 연다**
   (암호 판정이 정확해지고, 못 그릴 파일에 1.5MB 를 안 받는다).
 - `lib/video/mp4-source.ts` — MP4 demux. 영상·오디오 도구가 전부 이걸 쓴다.
@@ -264,13 +267,17 @@ upscale, cutout)을 GPU 경로로도 친다. 기본 프로젝트가 쓰는 **헤
 
 지금은 없다. `pnpm lint` 0건, `npx tsc --noEmit` 0건.
 
+**다만 2026-07-26 에 실물 파일로 쓸어 보고 7건이 나왔다** — 자막 번역 4, PDF 계열 3.
+전부 **스펙이 초록색인 채로** 살아 있었다. 픽스처는 우리가 만들기 때문에 우리가 상상한
+것만 검증한다. 새 도구를 붙이면 **실제 파일을 받아 한 번 몰아 볼 것.**
+
 ### 미검증
 
-- **HEIC 실파일.** sharp 로 HEIC 픽스처를 만들 수 없다. 실제 아이폰 사진으로 Chrome(libheif
-  경로)·Safari(네이티브 경로) 양쪽 수동 확인 필요.
 - **AVIF 인코딩.** 테스트 Chromium 이 미지원이라 목록에서 자동으로 빠진다.
-- **진짜 암호화 PDF.** `tests/fixtures/encrypted.pdf` 는 trailer 에 `/Encrypt` 만 주입한
-  합성 파일이다. 오류 분기는 그대로 타지만, 실제 RC4/AES 로 암호화된 PDF 는 미확인.
+- **Safari 의 네이티브 HEIC 경로.** Chrome(libheif)은 실물 파일로 확인했다.
+
+2026-07-26 에 실물 표본으로 둘을 닫았다 — **실물 HEIC**(정상 변환)와 **진짜 암호화
+PDF**(AES·LibreOffice 판 둘 다 네 도구가 정확히 거부). EXIF 회전도 실사진으로 확인했다.
 
 ## 다음 할 일
 

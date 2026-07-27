@@ -770,6 +770,60 @@ m2m100 도 opus-mt 도 똑같이 죽었기 때문에 **"이 계열은 브라우�
 고친 뒤 같은 실파일로 다시 돌려 **결과에 남은 붕괴 0칸**을 확인했다.
 같은 절차를 다시 하려면 `scripts/make-fixtures.mjs` 아래쪽에 어디서 무엇을 받았는지 적혀 있다.
 
+## 실물 문서로 쓸어 본 나머지 도구들 (2026-07-26)
+
+자막 번역에서 통했던 방법을 **이미 배포된 도구 전부에** 적용했다. 공개 표본을 실제로
+내려받아 몰아 봤다: 실물 HEIC 2개(nokiatech·libheif), 진짜 암호화 PDF 2세대
+(pikepdf·py-pdf 코퍼스), 서식·주석·북마크·CMYK·JBIG2·JPEG2000·CCITTFax 가 든 실 PDF 12개,
+EXIF 회전이 걸린 실사진 5장(`recurser/exif-orientation-examples`), 117쪽짜리 실제 논문.
+
+### 미검증이던 것 둘이 닫혔다
+
+- **실물 HEIC.** 정상 변환된다 — 1440×960, 1280×854 가 그대로 JPEG 으로 나왔다.
+- **진짜 암호화 PDF.** AES(PDF-1.7)와 LibreOffice 판 둘 다, 네 PDF 도구가 모두
+  "암호로 보호된 PDF 입니다" 로 정확히 거부한다. 합성 픽스처(트레일러에 `/Encrypt` 만
+  주입한 것)가 실제 동작을 제대로 예측하고 있었다.
+- **EXIF 회전도 정확하다.** 저장 픽셀이 돌아가 있는 사진(`Landscape_6`, `Portrait_8`)에서
+  결과가 올바른 표시 방향과 일치했다. *판정 기준을 재 보지 않고 적었다가 실측으로
+  바로잡았다* — "확인했다" 와 "재 봤다" 는 다르다.
+
+### 그리고 심각한 것 셋이 나왔다
+
+**1. 사진이 든 PDF 가 워커에서 아예 열리지 않았다.** pdf.js 는 마스크를 합치느라
+**속으로 임시 캔버스를 더 만드는데**, 기본 `DOMCanvasFactory` 가
+`globalThis.document.createElement` 를 부른다. 워커에는 document 가 없다 →
+`TypeError: Cannot read properties of undefined (reading 'createElement')` → 화면에는
+"PDF 로 읽을 수 없습니다" 만. 글자만 있는 PDF 는 멀쩡했고 **우리 픽스처가 대부분
+그랬기 때문에** 스펙이 전부 통과하는 채로 살아 있었다. OffscreenCanvas 판을 넣어 고쳤다.
+
+**2. JBIG2·JPEG2000 이 백지로 그려졌다.** pdf.js 5 부터 그 디코더들이 WebAssembly 로
+옮겨갔고, `wasmUrl` 을 알려 주지 않으면 **예외 없이 새하얗게** 그려진다. 하필 이 형식들이
+스캔 문서에서 가장 흔하다 — **OCR 이 겨냥한 바로 그 파일들**이 조용히 실패하고 있었다.
+실측: 진짜 스캔본에서 OCR **확신도 0% → 41%**.
+
+  - 라이선스도 확인했다. "JBIG2 = jbig2dec = AGPL" 이 흔한 짐작인데 **여기서는 아니다** —
+    pdf.js 의 JBIG2 는 PDFium(BSD-3) 기반에 Mozilla 가 Apache-2.0 으로 감쌌고,
+    OpenJPEG 은 BSD-2, qcms 는 MIT 다. 규칙 6 통과.
+  - `wasmUrl` 만 더하면 **모든 PDF 가 죽는다.** pdf.js 가 `useWorkerFetch` 를 스스로
+    정할 때 `document.baseURI` 를 읽는데, 그 판단식이
+    `… && cMapUrl && cMapPacked && standardFontDataUrl && wasmUrl && isValidFetchUrl(…, document.baseURI)`
+    라서 **그동안은 `wasmUrl` 이 없어 `&&` 가 그 앞에서 끊겨** 무사했던 것이다.
+    `useWorkerFetch: true` 로 못 박아야 한다. 기존 스펙 9건이 이 회귀를 잡아냈다.
+
+**3. PDF 압축이 원본보다 큰 파일을 내주고 있었다.** 실제 PDF 의 사진은 JPEG 이 아닌 경우가
+많다(받아 본 넷 중 셋). 손댈 것이 없는데도 결과를 내줬고 pdf-lib 이 다시 쓰면서 커졌다
+(117쪽 논문 5.1MB → **+17KB**). 화면 문구는 정직했지만("다시 압축할 사진이 없습니다")
+**행동이 그 말과 달랐다.** 줄이지 못하면 이제 내려받기를 주지 않는다.
+
+`tests/fixtures/alpha.pdf`(투명도 있는 큰 비트맵)가 1번과 3번을 재현한다 — 고친 것을
+빼면 "열지 못함", 넣으면 정상이다. 설정 넷은 `tests/pdf-organize.spec.ts` 가 못 박는다.
+
+### 이 사이클에서 배운 것
+
+**픽스처는 우리가 만든다. 그래서 우리가 상상한 것만 검증한다.** 두 번 연속으로
+같은 일이 벌어졌다 — 자막 번역에서 넷, 나머지 도구에서 셋. 둘 다 **실제 파일을 받아
+몰아 보기 전에는 스펙이 전부 초록색**이었다.
+
 ## 의존성 경고 (2026-07-26 분류)
 
 GitHub 에 처음 푸시하자 Dependabot 이 5건(high 4, moderate 1)을 띄웠다. **다섯 건 모두

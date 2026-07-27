@@ -296,6 +296,7 @@ export const ja = {
         working: "圧縮中…",
         outputName: "{stem}-圧縮.pdf",
         rewroteImages: "写真 {total}枚のうち {n}枚を再圧縮しました",
+        keepOriginal: "お手元の元ファイルをそのままお使いください — これ以上小さくなりません。",
         noImages: "この PDF には再圧縮できる写真がありません。",
         alreadySmall: "写真がすでに十分圧縮されていて、これ以上小さくできませんでした。",
       },

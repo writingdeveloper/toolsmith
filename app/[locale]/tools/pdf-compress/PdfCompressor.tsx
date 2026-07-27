@@ -253,19 +253,28 @@ export function PdfCompressor({ ui, common, errors }: { ui: Ui; common: Common; 
                 {compressed && <span className="text-ok">(-{saved}%)</span>}
               </p>
             </div>
-            <a
-              href={result.url}
-              download={result.name}
-              className="rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg"
-            >
-              {common.download}
-            </a>
+            {/*
+              **줄이지 못했으면 내려받게 하지 않는다.**
+              실측(2026-07-26, 실제 문서): 사진이 JPEG 이 아닌 PDF 는 손댈 것이 없는데도
+              결과 파일을 내주고 있었고, pdf-lib 이 다시 쓰면서 오히려 **커졌다**
+              (117쪽짜리 논문 5.1MB → +17KB). 그것을 "…-압축.pdf" 라는 이름으로 받아
+              원본을 덮어쓰면 사용자는 손해만 본다. FAQ 에 적어 둔 약속과도 어긋난다.
+            */}
+            {compressed && (
+              <a
+                href={result.url}
+                download={result.name}
+                className="rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-accent-fg"
+              >
+                {common.download}
+              </a>
+            )}
           </div>
 
           {/* 하지 않은 일을 한 것처럼 말하지 않는다 */}
           {!compressed && (
-            <p className="text-sm text-warn">
-              {result.images === 0 ? ui.noImages : ui.alreadySmall}
+            <p className="text-sm text-warn" data-not-compressed>
+              {result.images === 0 ? ui.noImages : ui.alreadySmall} {ui.keepOriginal}
             </p>
           )}
           {compressed && (

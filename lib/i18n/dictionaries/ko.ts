@@ -294,6 +294,7 @@ export const ko = {
         working: "압축 중…",
         outputName: "{stem}-압축.pdf",
         rewroteImages: "사진 {total}개 중 {n}개를 다시 압축했습니다",
+        keepOriginal: "갖고 계신 원본을 그대로 쓰세요 — 여기서 더 작아지지 않습니다.",
         noImages: "이 PDF 에는 다시 압축할 사진이 없습니다.",
         alreadySmall: "사진이 이미 잘 압축돼 있어 더 줄이지 못했습니다.",
       },
