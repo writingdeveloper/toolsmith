@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = 3111;
+export const PORT = 3111;
 
 /**
  * BASE_URL 을 주면 dev 서버를 띄우지 않고 그 주소를 그대로 친다.
@@ -23,6 +23,12 @@ export default defineConfig({
    * BASE_URL 로 배포본(정적 파일)을 칠 때는 이 제약이 필요 없다.
    */
   workers: BASE_URL ? undefined : 4,
+  /*
+   * 워커를 풀기 전에 dev 서버를 데운다. 냉컴파일 경합이 이 저장소에서 가장 자주
+   * 사람을 속인 실패다 — "코드가 깨졌다" 처럼 보이지만 부하 문제였다.
+   * 손으로 데우던 절차를 여기로 옮겼다. 근거는 tests/global-setup.ts.
+   */
+  globalSetup: "./tests/global-setup.ts",
   reporter: [["list"]],
   use: {
     baseURL: BASE_URL ?? `http://localhost:${PORT}`,
