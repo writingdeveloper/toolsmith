@@ -456,6 +456,7 @@ export const ptBR = {
         sizeMax: "Lado maior {px}px",
         formatLabel: "Saída",
         formatKeep: "Manter o formato original",
+        keptNote: "já está o menor possível — mantivemos o original",
         losslessNote: "PNG é sem perdas, então a qualidade não vai reduzi-lo. Diminua o tamanho ou mude a saída para WebP.",
         run: "Comprimir {n} arquivo(s)",
         working: "Comprimindo…",

@@ -454,6 +454,7 @@ export const ko = {
         sizeMax: "긴 변 {px}px",
         formatLabel: "출력",
         formatKeep: "원본 형식 유지",
+        keptNote: "이미 더 줄일 수 없습니다 — 원본을 그대로 둡니다",
         losslessNote: "PNG 는 무손실이라 품질을 내려도 줄지 않습니다. 크기를 줄이거나 출력을 WebP 로 바꾸세요.",
         run: "{n}장 압축하기",
         working: "압축 중…",

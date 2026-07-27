@@ -1,3 +1,4 @@
+import { statSync } from "node:fs";
 import path from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 
@@ -5,6 +6,8 @@ import { expect, test, type Page } from "@playwright/test";
 const PHOTO = path.join(__dirname, "fixtures", "photo.jpg");
 /** 무손실 PNG — 품질을 내려도 줄지 않는다. 그 사실을 말하는지가 이 도구의 정직함이다. */
 const PNG = path.join(__dirname, "fixtures", "alpha.png");
+/** 다시 인코딩하면 **오히려 커지는** PNG. 420KB 가 1.4MB 가 된다. */
+const DENSE = path.join(__dirname, "fixtures", "dense.png");
 
 async function run(page: Page, n = 1) {
   await page.getByRole("button", { name: `${n}장 압축하기` }).click();
@@ -107,4 +110,36 @@ test("압축 중 파일이 네트워크로 나가지 않는다", async ({ page }
   await page.locator('input[type="file"]').setInputFiles(PHOTO);
   await run(page);
   expect(outbound.filter((url) => !/google|doubleclick/.test(url))).toEqual([]);
+});
+
+/**
+ * 줄지 않으면 **원본을 그대로 둔다.**
+ *
+ * 실물 PNG 219KB 를 넣었더니 306KB 가 나왔다(2026-07-27). 화면에는 `+40%` 라고 정직하게
+ * 찍혔지만, "용량 줄이기" 도구가 커진 파일을 내려받게 주고 있었다. PDF 압축에서 이미
+ * 같은 판단을 했다 — 줄일 것이 없으면 원본이 답이다.
+ */
+test("압축했는데 커지면 원본을 그대로 내준다", async ({ page }) => {
+  const before = statSync(DENSE).size;
+  await page.locator('input[type="file"]').setInputFiles(DENSE);
+  await run(page);
+
+  // 화면이 그 사실을 말해야 한다 — 말없이 원본을 주면 도구가 아무 일도 안 한 줄 안다
+  await expect(page.locator("[data-kept]")).toBeVisible();
+
+  const result = await inspect(page);
+  // 내려받는 것이 원본과 **바이트가 같아야** 한다
+  expect(result.size).toBe(before);
+  // 이름도 원본 그대로다(확장자를 바꿔 붙이지 않는다)
+  expect(result.name).toBe("dense.png");
+});
+
+/** 형식을 바꿔 달라고 한 경우는 다르다 — 커지더라도 시킨 일을 한다. */
+test("형식을 골랐으면 커지더라도 그 형식으로 준다", async ({ page }) => {
+  await page.locator('input[type="file"]').setInputFiles(DENSE);
+  await page.getByLabel("출력").selectOption("image/png");
+  await run(page);
+  await expect(page.locator("[data-kept]")).toHaveCount(0);
+  const result = await inspect(page);
+  expect(result.size).toBeGreaterThan(statSync(DENSE).size);
 });

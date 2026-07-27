@@ -79,6 +79,67 @@ export class OcrError extends Error {
 /** 한 번에 읽는 장수 상한. 넘으면 시작하지 않고 그렇다고 말한다. */
 export const MAX_PAGES = 30;
 
+/**
+ * OCR 에 먹이기 전에 맞출 긴 변(px).
+ *
+ * tesseract 는 대략 300dpi 근처에서 가장 잘 읽는다. 여기서 더 키우면 정확도는 거의
+ * 안 오르는데 메모리와 시간만 늘어난다 — PDF 쪽은 처음부터 이 값으로 그려 왔다.
+ *
+ * **그림은 그러지 않고 있었고, 실제 스캔에서 통째로 무너졌다(2026-07-27).**
+ * 1919년 타자기 편지 스캔(4962×4192, 7.9MB)을 그대로 넣었더니 6,385자가 전부
+ * 쓰레기였다(`ATR ae, een PRL RON Ra oes ree Bee…`, 알아본 낱말 0/6). 같은 그림을
+ * 줄여서 넣으면 멀쩡히 읽힌다:
+ *
+ * | 긴 변 | 알아본 낱말 | 시간 |
+ * |---|---|---|
+ * | 4962(원본) | **0/6** | 11.3초 |
+ * | 3600 · 3000 · 2000 · 1600 · 1200 | 6/6 | 1.2~2.0초 |
+ * | 2400 | 5/6 | 1.7초 |
+ * | 1000 | 5/6 | 1.1초 |
+ *
+ * **다만 "크면 깨진다" 는 아니다.** 같은 4962×4192 를 깨끗한 합성 그림으로 만들어
+ * 넣으면 멀쩡히 읽힌다(합성본 6/6). 방아쇠는 픽셀 수가 아니라 **종이 결**이다 —
+ * 고해상도에서 종이의 결이 글자와 비슷한 크기의 고주파 잡음이 되고, 줄이면 평균이
+ * 되어 사라진다. 그래서 이 결함은 **합성 픽스처로 재현되지 않는다**; 다음 사람이
+ * 임계값을 찾으려 하지 않도록 적어 둔다.
+ *
+ * 줄이는 것은 어느 쪽이든 손해가 없다 — 정확도는 그대로이고 7배 빠르다.
+ */
+export const OCR_EDGE = 2000;
+
+/**
+ * 그림을 OCR 이 읽을 수 있는 크기로 맞춘다. 이미 작으면 그대로 돌려준다.
+ *
+ * **흰 바탕을 먼저 깔아야 한다.** JPEG 에는 투명도가 없어서, 투명한 PNG 스캔을
+ * 그냥 그리면 검은 바탕에 검은 글자가 된다 — PDF 쪽이 같은 이유로 흰 바탕을 깐다.
+ *
+ * window / document 를 참조하지 않는다.
+ */
+export async function normalizeForOcr(image: Blob): Promise<Blob> {
+  const bitmap = await createImageBitmap(image);
+  const longest = Math.max(bitmap.width, bitmap.height);
+  if (longest <= OCR_EDGE) {
+    bitmap.close();
+    return image;
+  }
+
+  const scale = OCR_EDGE / longest;
+  const canvas = new OffscreenCanvas(
+    Math.max(1, Math.round(bitmap.width * scale)),
+    Math.max(1, Math.round(bitmap.height * scale)),
+  );
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    bitmap.close();
+    return image;
+  }
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+  return canvas.convertToBlob({ type: "image/jpeg", quality: 0.9 });
+}
+
 /* tesseract.js 는 전역 네임스페이스로 타입을 내므로 우리가 쓰는 만큼만 좁혀 적는다. */
 interface TesseractLogger {
   status: string;

@@ -156,7 +156,14 @@ export function TextReader({
         // 잘렸다면 반드시 말한다 — 뒤가 없는 결과를 전부인 것처럼 주면 안 된다
         if (response.totalPages > images.length) truncatedFrom = response.totalPages;
       } else {
-        images = [file];
+        /*
+         * 그림도 그냥 넘기지 않는다. **실제 스캔에서 통째로 무너진다** — 4962×4192
+         * 타자기 편지가 6,385자 쓰레기로 나왔고, 2000px 로 줄이면 멀쩡히 읽힌다.
+         * 실측표는 `lib/ocr/ocr-core.ts` 의 `OCR_EDGE` 에 있다.
+         */
+        const response = await callWorker({ kind: "normalize", file });
+        if (response.kind !== "normalized") throw new Error("UNKNOWN");
+        images = [response.image];
       }
       setRasterizing(null);
 

@@ -456,6 +456,7 @@ export const de = {
         sizeMax: "Lange Kante {px}px",
         formatLabel: "Ausgabe",
         formatKeep: "Originalformat behalten",
+        keptNote: "schon so klein wie möglich — Original behalten",
         losslessNote: "PNG ist verlustfrei, der Qualitätsregler verkleinert es also nicht. Reduzieren Sie die Größe oder stellen Sie die Ausgabe auf WebP.",
         run: "{n} Datei(en) verkleinern",
         working: "Wird verkleinert…",

@@ -6,6 +6,7 @@
  * 파일이 들어오기 전에는 절대 받지 않는다.
  */
 
+import { OCR_EDGE } from "@/lib/ocr/ocr-core";
 import { guarded, PdfError } from "./document";
 import { PDFJS_OPTIONS } from "./pdfjs-options";
 
@@ -82,14 +83,17 @@ export async function renderThumbnails(bytes: Uint8Array): Promise<Thumbnail[]> 
 /**
  * OCR 로 넘기기 위해 페이지를 **크게** 그린다.
  *
- * 썸네일(260px)로는 글자를 읽을 수 없다. tesseract 는 대략 300dpi 근처에서 가장 잘
- * 읽으므로 긴 변을 2000px 로 잡는다 — A4 세로면 약 170dpi 이고, 여기서 더 키우면
- * 정확도는 거의 안 오르는데 메모리와 시간만 늘어난다(2000×1500×4 = 12MB/장).
+ * 썸네일(260px)로는 글자를 읽을 수 없다. 긴 변은 `OCR_EDGE` 에 맞춘다 — 그 숫자를
+ * 왜 그렇게 잡았는지는 `lib/ocr/ocr-core.ts` 에 실측과 함께 적혀 있다. A4 세로면
+ * 약 170dpi 이고, 여기서 더 키우면 정확도는 거의 안 오르는데 메모리와 시간만 늘어난다
+ * (2000×1500×4 = 12MB/장).
+ *
+ * **그림 경로와 같은 값을 쓴다.** 한동안 이 값이 여기에만 있었고, 그 사이 그림은
+ * 원본 그대로 OCR 에 들어가 실제 스캔에서 통째로 무너졌다(2026-07-27).
  *
  * PNG 가 아니라 JPEG 로 낸다. 글자만 있는 페이지도 2000px PNG 면 몇 MB 가 되는데,
  * 이 그림은 화면에 보여 줄 것이 아니라 곧바로 OCR 에 먹일 것이라 품질 0.9 로 충분하다.
  */
-const OCR_EDGE = 2000;
 
 export async function renderPagesForOcr(
   bytes: Uint8Array,

@@ -7,6 +7,8 @@ const TEXT_PNG = path.join(__dirname, "fixtures", "text.png");
 /** 같은 그림만 박힌 A4 한 장. 진짜 글자가 없어 복사할 수 없는 스캔본이다. */
 const SCAN_PDF = path.join(__dirname, "fixtures", "scan.pdf");
 const BROKEN = path.join(__dirname, "fixtures", "broken.pdf");
+/** 4962×4192. OCR 에 넘기기 전에 반드시 줄여야 하는 크기다. */
+const BIG_SCAN = path.join(__dirname, "fixtures", "big-scan.jpg");
 
 /*
  * 엔진 wasm 3.4MB + 언어 데이터를 남의 CDN 에서 받고 나서야 글자를 읽기 시작한다.
@@ -83,6 +85,27 @@ test("읽어 낸 글자를 .txt 로 그대로 내려받을 수 있다", async ({
  * 스캔본 PDF 는 페이지를 그림으로 먼저 그린 뒤 읽는다.
  * 이 픽스처에는 **진짜 글자가 없으므로**, 결과가 나왔다면 그림을 읽은 것이다.
  */
+/**
+ * 큰 그림은 **줄여서** OCR 에 넣는다.
+ *
+ * 실물 스캔(1919년 타자기 편지 4962×4192)을 원본 그대로 넣었더니 6,385자가 전부
+ * 쓰레기였고, 줄여 넣으면 멀쩡히 읽혔다(2026-07-27). 이 픽스처는 같은 크기지만
+ * 깨끗한 합성본이라 **그 결함 자체를 재현하지는 못한다** — 방아쇠가 픽셀 수가 아니라
+ * 종이 결이기 때문이다. 여기서 못 박는 것은 **줄여서 넣는 길이 글자를 망가뜨리지
+ * 않는다**는 것이다. 정규화를 잘못 건드리면 이 검사가 걸린다.
+ */
+test("아주 큰 그림도 줄여서 제대로 읽는다", async ({ page }) => {
+  test.setTimeout(OCR_TIMEOUT + 120_000);
+  await open(page, BIG_SCAN);
+  await useLanguage(page, "영어");
+  await read(page);
+  const text = await recognised(page);
+  expect(text).toContain("WAR DEPARTMENT");
+  expect(text).toContain("Centralia");
+  // 쓰레기가 나오면 길이부터 터진다 — 여섯 줄짜리 그림이 수천 자가 될 이유가 없다
+  expect(text.length).toBeLessThan(400);
+});
+
 test("스캔본 PDF 도 페이지를 그려서 읽는다", async ({ page }) => {
   await open(page, SCAN_PDF);
   // FAQ 본문에도 "30쪽까지" 가 있다 — 파일 정보 줄만 집는다

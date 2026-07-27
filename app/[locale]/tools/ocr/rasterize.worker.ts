@@ -6,21 +6,26 @@
  * 어느 쪽이든 메인 스레드 밖에서 돌므로 규칙 7 은 지켜진다.
  */
 
+import { normalizeForOcr } from "@/lib/ocr/ocr-core";
 import { inspectPdf } from "@/lib/pdf/document";
 import { renderPagesForOcr } from "@/lib/pdf/render-core";
 
-export type WorkerRequest = {
-  kind: "rasterize";
-  id: number;
-  file: File;
-  maxPages: number;
-};
+export type WorkerRequest =
+  | { kind: "rasterize"; id: number; file: File; maxPages: number }
+  /**
+   * 그림도 워커를 거친다. 큰 스캔은 줄여서 넣어야 읽히고(근거는 `OCR_EDGE`),
+   * 줄이는 일 자체가 메인 스레드에서 할 일이 아니다 — 규칙 7.
+   */
+  | { kind: "normalize"; id: number; file: File };
 
-export type WorkerRequestPayload = Omit<WorkerRequest, "id">;
+export type WorkerRequestPayload =
+  | { kind: "rasterize"; file: File; maxPages: number }
+  | { kind: "normalize"; file: File };
 
 export type WorkerResponse =
   | { kind: "progress"; id: number; done: number; total: number }
   | { kind: "rasterized"; id: number; images: Blob[]; totalPages: number }
+  | { kind: "normalized"; id: number; image: Blob }
   | { kind: "failed"; id: number; message: string };
 
 const ctx = self as unknown as {
@@ -31,6 +36,15 @@ const ctx = self as unknown as {
 ctx.onmessage = async (event) => {
   const request = event.data;
   try {
+    if (request.kind === "normalize") {
+      ctx.postMessage({
+        kind: "normalized",
+        id: request.id,
+        image: await normalizeForOcr(request.file),
+      });
+      return;
+    }
+
     const bytes = new Uint8Array(await request.file.arrayBuffer());
     // 그리기 전에 pdf-lib 으로 먼저 연다 — 암호 판정이 정확해지고,
     // 못 그릴 파일에 pdf.js 를 받지 않는다.

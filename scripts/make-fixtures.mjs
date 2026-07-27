@@ -534,3 +534,68 @@ await write("article.html", Buffer.from(ARTICLE_HTML, "utf8"));
  * 윈도우 메모장이 한때 이렇게 저장했으므로 실제로 만나는 파일이다.
  */
 await write("article-utf16.txt", Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from(ARTICLE, "utf16le")]));
+
+/*
+ * ── OCR 이 줄여서 읽어야 하는 큰 그림 (2026-07-27) ───────────────────
+ *
+ * 실물 스캔(4962×4192)이 원본 크기에서 통째로 무너졌다. 여기 만드는 것은 **같은
+ * 크기의 합성본**이라 그 결함을 재현하지는 못한다 — 방아쇠는 픽셀 수가 아니라 종이
+ * 결이기 때문이다(근거는 lib/ocr/ocr-core.ts). 그래도 이 픽스처는 **줄여서 넣는 길이
+ * 글자를 망가뜨리지 않는다**는 것을 못 박는다. 정규화를 잘못 건드리면 여기서 걸린다.
+ */
+{
+  const W = 4962;
+  const H = 4192;
+  const lines = [
+    "WAR DEPARTMENT",
+    "OFFICE OF THE SURGEON GENERAL",
+    "March 24, 1919",
+    "Dr. Esther E. Leonard",
+    "909 South Walnut Street",
+    "Centralia, Illinois",
+  ];
+  const svg =
+    `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">` +
+    `<rect width="100%" height="100%" fill="#e8dcb8"/>` +
+    lines
+      .map(
+        (t, i) =>
+          `<text x="600" y="${800 + i * 420}" font-family="Courier New, monospace" ` +
+          `font-size="170" fill="#1a1a1a">${t}</text>`,
+      )
+      .join("") +
+    `</svg>`;
+  await write("big-scan.jpg", await sharp(Buffer.from(svg)).jpeg({ quality: 88 }).toBuffer());
+}
+
+/*
+ * ── 다시 인코딩하면 오히려 커지는 PNG (2026-07-27, 실물 쓸이로 추가) ──────
+ *
+ * 실물 PNG 219KB 를 압축 도구에 넣었더니 **306KB** 가 나왔다. "용량 줄이기" 가 커진
+ * 파일을 내려받게 주고 있었다. 캔버스의 PNG 인코더는 sharp/optipng 만큼 조이지 못하고,
+ * 사진 같은 잡음이 든 PNG 에서는 특히 그렇다 — 이 픽스처는 420KB 가 1.4MB 가 된다.
+ *
+ * 팔레트로 줄일 수 없도록 화소마다 잡음을 섞는다. 씨앗을 고정해 매번 같은 파일이 나온다.
+ */
+{
+  const W = 900;
+  const H = 700;
+  const raw = Buffer.alloc(W * H * 4);
+  let seed = 12345;
+  const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+  for (let y = 0; y < H; y += 1) {
+    for (let x = 0; x < W; x += 1) {
+      const i = (y * W + x) * 4;
+      raw[i] = Math.min(255, (x / W) * 200 + rnd() * 55);
+      raw[i + 1] = Math.min(255, (y / H) * 200 + rnd() * 55);
+      raw[i + 2] = Math.min(255, ((x + y) % 256) * 0.7 + rnd() * 55);
+      raw[i + 3] = 200 + Math.floor(rnd() * 55);
+    }
+  }
+  await write(
+    "dense.png",
+    await sharp(raw, { raw: { width: W, height: H, channels: 4 } })
+      .png({ compressionLevel: 9, effort: 10 })
+      .toBuffer(),
+  );
+}

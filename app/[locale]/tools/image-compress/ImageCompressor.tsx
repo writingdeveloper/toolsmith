@@ -26,7 +26,29 @@ interface Item {
   file: File;
   status: "queued" | "working" | "done" | "error";
   result?: { url: string; size: number; width: number; height: number; name: string };
+  /** 다시 눌러 봐야 더 줄지 않아 **원본을 그대로 둔** 파일인가. */
+  kept?: boolean;
   error?: string;
+}
+
+/**
+ * 이 결과를 내주는 대신 원본을 그대로 둘 것인가.
+ *
+ * **실물 PNG 에서 나왔다(2026-07-27).** 투명도가 있는 실제 PNG 219KB 를 넣었더니
+ * 219KB → **306KB** 가 나왔다. 화면에는 `+40%` 라고 정직하게 찍혔지만, "용량 줄이기"
+ * 도구가 커진 파일을 내려받게 주고 있었다. PDF 압축에서 이미 같은 판단을 했다 —
+ * **줄일 것이 없으면 원본이 답이다.**
+ *
+ * 형식을 바꾸거나 크기를 줄여 달라고 한 경우는 해당하지 않는다. 그때 커지는 것은
+ * 사용자가 시킨 일의 결과이므로 숫자로만 알려 주고 결과를 그대로 준다.
+ */
+function shouldKeepOriginal(
+  original: File,
+  produced: Blob,
+  format: OutputFormat | null,
+  maxEdge: number,
+): boolean {
+  return format === null && maxEdge === 0 && produced.size >= original.size;
 }
 
 /** 이 파일이 품질 조절로 실제로 줄어드는가. PNG 는 무손실이라 줄지 않는다. */
@@ -144,7 +166,9 @@ export function ImageCompressor({ ui, common }: { ui: Ui; common: Common }) {
         });
         if (response.kind !== "compressed") throw new Error("UNKNOWN");
         succeeded += 1;
-        const url = URL.createObjectURL(response.blob);
+        const kept = shouldKeepOriginal(target.file, response.blob, format, maxEdge);
+        // 줄지 않았으면 원본을 그대로 내준다 — 커진 파일을 "압축본" 이라고 주지 않는다
+        const url = URL.createObjectURL(kept ? target.file : response.blob);
         setItems((prev) =>
           prev.map((item) => {
             if (item.id !== target.id) return item;
@@ -152,12 +176,15 @@ export function ImageCompressor({ ui, common }: { ui: Ui; common: Common }) {
             return {
               ...item,
               status: "done",
+              kept,
               result: {
                 url,
-                size: response.blob.size,
+                size: kept ? target.file.size : response.blob.size,
                 width: response.width,
                 height: response.height,
-                name: replaceExtension(target.file.name, FORMAT_EXTENSION[chosen]),
+                name: kept
+                  ? target.file.name
+                  : replaceExtension(target.file.name, FORMAT_EXTENSION[chosen]),
               },
             };
           }),
@@ -323,7 +350,14 @@ export function ImageCompressor({ ui, common }: { ui: Ui; common: Common }) {
                   <p className="truncate text-sm font-medium">{item.file.name}</p>
                   <p className="text-xs text-muted tabular-nums">
                     {formatBytes(item.file.size)}
-                    {item.result && (
+                    {/* 줄일 것이 없었던 파일은 그렇다고 말한다 — 0% 라고만 적으면 고장난 줄 안다 */}
+                    {item.kept && (
+                      <span className="text-warn" data-kept>
+                        {" · "}
+                        {ui.keptNote}
+                      </span>
+                    )}
+                    {item.result && !item.kept && (
                       <>
                         {" → "}
                         <span className="text-fg">{formatBytes(item.result.size)}</span>{" "}

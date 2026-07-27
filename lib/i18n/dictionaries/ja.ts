@@ -456,6 +456,7 @@ export const ja = {
         sizeMax: "長辺 {px}px",
         formatLabel: "出力",
         formatKeep: "元の形式のまま",
+        keptNote: "これ以上小さくできません — 元のファイルのままにします",
         losslessNote: "PNG は可逆なので品質を下げても小さくなりません。サイズを縮めるか、出力を WebP に変えてください。",
         run: "{n} 枚を圧縮",
         working: "圧縮中…",

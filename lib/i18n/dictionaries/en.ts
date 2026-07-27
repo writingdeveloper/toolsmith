@@ -459,6 +459,7 @@ export const en = {
         sizeMax: "Long edge {px}px",
         formatLabel: "Output",
         formatKeep: "Keep original format",
+        keptNote: "already as small as we can make it — original kept",
         losslessNote: "PNG is lossless, so the quality slider will not shrink it. Reduce the size, or switch the output to WebP.",
         run: "Compress {n} file(s)",
         working: "Compressing…",
