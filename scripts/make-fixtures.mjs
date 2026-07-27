@@ -294,3 +294,21 @@ const SUBJECT = `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480
   <circle cx="320" cy="140" r="72" fill="#1d2b3a"/>
 </svg>`;
 await write("subject.png", await sharp(Buffer.from(SUBJECT)).png().toBuffer());
+
+/*
+ * 업스케일 픽스처.
+ *
+ * **작아야 한다.** 이 도구는 원본 화소당 비용이 붙으므로 큰 픽스처를 쓰면 스펙 하나가
+ * 분 단위가 된다(실측: CPU 512×512 에 16.5초). 96×64 면 조각 하나로 끝나고 1초 안에
+ * 돈다 — 배관과 크기 계산을 확인하는 데는 그것으로 충분하다.
+ *
+ * 무늬는 **가장자리가 뚜렷한 것**으로 둔다. 업스케일이 실제로 일어났는지는 크기만으로도
+ * 알 수 있지만, 결과가 온통 한 색이면 크기만 맞고 내용이 비었을 수 있다. 스펙은 결과
+ * 화소에서 밝은 곳과 어두운 곳이 **둘 다** 있는지를 본다.
+ */
+const SMALL = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="64">
+  <rect width="96" height="64" fill="#ffffff"/>
+  <rect x="8" y="8" width="36" height="48" fill="#101820"/>
+  <circle cx="70" cy="32" r="18" fill="#c8102e"/>
+</svg>`;
+await write("small.png", await sharp(Buffer.from(SMALL)).png().toBuffer());

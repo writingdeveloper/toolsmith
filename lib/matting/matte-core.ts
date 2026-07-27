@@ -21,8 +21,15 @@
  * window / document 를 참조하지 않는다 (워커에서 돈다).
  */
 
-/** 잰 것은 브라우저가 실제로 받은 전송량이다(brotli). 화면에 그대로 적는다. */
-export const ENGINE_BYTES = 5_176_105;
+import {
+  createSession,
+  fetchModel,
+  loadOrt,
+  type OnnxRuntimeKind,
+  type OrtSession,
+} from "@/lib/onnx/runtime";
+
+export { ENGINE_BYTES } from "@/lib/onnx/runtime";
 
 export type MatteModel = "fast" | "fine";
 
@@ -41,9 +48,6 @@ const MODEL_URL: Record<MatteModel, string> = {
   fast: "https://huggingface.co/Heliosoph/u2net-onnx/resolve/main/u2netp.onnx",
   fine: "https://huggingface.co/Heliosoph/u2net-onnx/resolve/main/u2net.onnx",
 };
-
-const ORT_VERSION = "1.27.0";
-const ORT_DIST = `https://cdn.jsdelivr.net/npm/onnxruntime-web@${ORT_VERSION}/dist/`;
 
 /** U²-Net 이 보는 크기. 모델이 고정으로 갖고 있는 값이라 바꿀 수 없다. */
 export const MODEL_EDGE = 320;
@@ -76,54 +80,7 @@ export class MatteError extends Error {
   }
 }
 
-/* ── onnxruntime-web 타입 ─────────────────────────────────────────────
- * npm 의존성이 아니라 CDN 에서 오므로 타입도 없다. tesseract.js 때와 같이
- * **우리가 쓰는 만큼만** 좁혀 적는다. */
-
-interface OrtTensor {
-  data: Float32Array;
-  dims: readonly number[];
-}
-
-interface OrtSession {
-  inputNames: readonly string[];
-  outputNames: readonly string[];
-  run(feeds: Record<string, OrtTensor>): Promise<Record<string, OrtTensor>>;
-}
-
-interface OrtModule {
-  env: { wasm: { wasmPaths: string; numThreads: number; proxy: boolean } };
-  Tensor: new (type: "float32", data: Float32Array, dims: number[]) => OrtTensor;
-  InferenceSession: {
-    create(model: ArrayBuffer, options?: Record<string, unknown>): Promise<OrtSession>;
-  };
-}
-
-let ortPromise: Promise<OrtModule> | null = null;
-
-async function loadOrt(): Promise<OrtModule> {
-  if (!ortPromise) {
-    ortPromise = (async () => {
-      // URL 을 변수로 둔다 — 상수 문자열이면 번들러가 이걸 우리 번들로 끌어온다.
-      const url = `${ORT_DIST}ort.webgpu.min.mjs`;
-      const loaded = (await import(/* webpackIgnore: true */ /* @vite-ignore */ url)) as {
-        default?: OrtModule;
-      } & OrtModule;
-      const ort = loaded.default ?? loaded;
-      ort.env.wasm.wasmPaths = ORT_DIST;
-      // 규칙 4: COOP/COEP 를 켜지 않으므로 SharedArrayBuffer 가 없다
-      ort.env.wasm.numThreads = 1;
-      ort.env.wasm.proxy = false;
-      return ort;
-    })().catch((error) => {
-      ortPromise = null;
-      throw error;
-    });
-  }
-  return ortPromise;
-}
-
-export type MatteRuntime = "webgpu" | "wasm";
+export type MatteRuntime = OnnxRuntimeKind;
 
 /**
  * 세션은 모델마다 하나만 만든다 — 두 번째 사진이 즉시 시작하는 이유다.
@@ -135,32 +92,6 @@ export type MatteRuntime = "webgpu" | "wasm";
  */
 const sessions = new Map<MatteModel, Promise<{ session: OrtSession; runtime: MatteRuntime }>>();
 
-async function fetchModel(model: MatteModel, onProgress?: (ratio: number) => void) {
-  const response = await fetch(MODEL_URL[model]);
-  if (!response.ok || !response.body) throw new MatteError("MODEL_FAILED");
-
-  // Content-Length 를 못 받는 경우가 있어 실측 크기를 분모로 쓴다.
-  const total = Number(response.headers.get("content-length")) || MODEL_BYTES[model];
-  const reader = response.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let received = 0;
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    chunks.push(value);
-    received += value.byteLength;
-    onProgress?.(Math.min(1, received / total));
-  }
-
-  const bytes = new Uint8Array(received);
-  let offset = 0;
-  for (const chunk of chunks) {
-    bytes.set(chunk, offset);
-    offset += chunk.byteLength;
-  }
-  return bytes.buffer;
-}
-
 async function openSession(
   model: MatteModel,
   onProgress?: (progress: MatteProgress) => void,
@@ -169,35 +100,27 @@ async function openSession(
   if (existing) return existing;
 
   const created = (async () => {
-    let ort: OrtModule;
     try {
       onProgress?.({ stage: "engine", ratio: 0 });
-      ort = await loadOrt();
+      await loadOrt();
       onProgress?.({ stage: "engine", ratio: 1 });
     } catch {
       throw new MatteError("ENGINE_FAILED");
     }
 
-    const buffer = await fetchModel(model, (ratio) => onProgress?.({ stage: "model", ratio }));
-
-    // WebGPU 로 먼저 시도하고, 안 되면 wasm 으로 내려간다. 어느 쪽으로 갔는지는
-    // 숨기지 않는다 — 3단 폴백의 두 번째 칸이고, 속도가 눈에 띄게 다르다.
+    let buffer: ArrayBuffer;
     try {
-      const session = await ort.InferenceSession.create(buffer, {
-        executionProviders: ["webgpu"],
-        graphOptimizationLevel: "all",
-      });
-      return { session, runtime: "webgpu" as const };
+      buffer = await fetchModel(MODEL_URL[model], MODEL_BYTES[model], (ratio) =>
+        onProgress?.({ stage: "model", ratio }),
+      );
     } catch {
-      try {
-        const session = await ort.InferenceSession.create(buffer, {
-          executionProviders: ["wasm"],
-          graphOptimizationLevel: "all",
-        });
-        return { session, runtime: "wasm" as const };
-      } catch {
-        throw new MatteError("MODEL_FAILED");
-      }
+      throw new MatteError("MODEL_FAILED");
+    }
+
+    try {
+      return await createSession(buffer);
+    } catch {
+      throw new MatteError("MODEL_FAILED");
     }
   })().catch((error) => {
     sessions.delete(model);

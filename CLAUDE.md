@@ -82,12 +82,13 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 현재 상태 (2026-07-26)
 
-**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 15) = 96 페이지
-+ 루트 언어 선택. 전부 정적. Playwright **164종**(프로덕션 162 통과 / 2 스킵 / 0 실패,
-28초). dev 는 144 통과 / 19 스킵 — 스킵은 헤드리스가 못 하는 코덱 분기다.
-판정은 프로덕션 수치로 한다.
+**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 16) = 102 페이지
++ 루트 언어 선택. 전부 정적. Playwright **174종**(프로덕션 172 통과 / 2 스킵 / 0 실패,
+30초). **판정은 프로덕션 수치로만 한다** — dev 전체 스위트는 `next dev` 한 대에 4 워커가
+붙는 구조라 냉컴파일 경합으로 자주 흔들린다. 도구별 스펙은 dev 에서 단독으로 돌려 보고,
+합격 판정은 배포본에 친다.
 
-### 배포된 도구 15개 (Tier 1 전부 + Tier 2 첫 칸)
+### 배포된 도구 16개 (Tier 1 전부 + Tier 2 둘)
 
 | # | 도구 | 경로 | 핵심 |
 |---|---|---|---|
@@ -106,6 +107,7 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 | 7 | 영상 → GIF | `/tools/video-to-gif` | gifenc. **fps 는 1/100초 격자에만 앉는다** |
 | 6 | 영상 자르기 | `/tools/video-trim` | 코덱을 안 쓴다. **키프레임에서만 잘린다는 것을 미리 말한다** |
 | 17 | 배경 제거 (Tier 2) | `/tools/remove-bg` | U²-Net(Apache-2.0). **ORT 를 의존성에 두지 않는다** |
+| 19 | 이미지 업스케일 (Tier 2) | `/tools/upscale` | Real-ESRGAN(BSD-3). **CPU 에서 도는 것을 골랐다** |
 
 경로 앞에 `/{locale}` 이 붙는다(`/ko/tools/pdf-merge`).
 
@@ -133,10 +135,12 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   `useEffect` 안에서 `setSupported(...)` 를 부르지 말 것 — 서버에는 `Worker` 도
   `OffscreenCanvas` 도 없어 렌더 중에 물을 수도 없다. `useSyncExternalStore` 가
   서버엔 `null`, 클라이언트엔 실제 값을 준다.
-- `lib/matting/matte-core.ts` — Tier 2 의 토대. **onnxruntime-web 을 npm 의존성으로 두지
-  않는 이유**가 여기 적혀 있다(기본 export 가 wasm 을 base64 로 품은 bundle 변형이라
-  import 하는 순간 20MB 가 Vercel 에서 나간다). 모델을 쓰는 다음 도구도 이 방식을 따른다.
-  워커는 **모듈 워커**여야 한다 — 고전 워커에서는 CDN 동적 import 가 불가능하다.
+- `lib/onnx/runtime.ts` — 모델을 쓰는 모든 도구가 여기서 갈라진다. **onnxruntime-web 을
+  npm 의존성으로 두지 않는 이유**가 적혀 있다(기본 export 가 wasm 을 base64 로 품은
+  bundle 변형이라 import 하는 순간 20MB 가 Vercel 에서 나간다). 워커는 **모듈 워커**여야
+  한다 — 고전 워커에서는 CDN 동적 import 가 불가능하다.
+- `lib/upscale/upscale-core.ts` — 조각내기. **덧대어 넣고 알맹이만 오려 붙이므로 이음매가
+  없다.** 모델을 라이선스만 보고 고르면 안 된다는 근거(Swin2SR 대비 60배)도 여기 있다.
 - `lib/i18n/dictionaries/en.ts` — 사전의 **타입 원본**. 여기에 키를 더하면 나머지 5개가
   타입 에러로 드러난다.
 

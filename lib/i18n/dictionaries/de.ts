@@ -826,5 +826,72 @@ export const de = {
         errGeneric: "Der Hintergrund konnte nicht entfernt werden",
       },
     },
+    upscale: {
+      blurb: "Vergrößert ein kleines Bild, ohne dass es weich wird. Läuft auf Ihrem Gerät.",
+      metaTitle: "Bild vergrößern 4× — im Browser",
+      metaDescription:
+        "Vergrößern Sie ein Foto 2× oder 4×, ohne es hochzuladen. Ein Real-ESRGAN-Modell unter BSD-Lizenz läuft im Browser und hält die Kanten scharf. Ohne Anmeldung.",
+      h1: "Bild vergrößern",
+      lead: "Macht ein kleines Bild größer und zeichnet die Details nach, statt sie nur zu dehnen. Das Modell wird auf Ihr Gerät geladen und läuft dort — das Bild verlässt diesen Tab nicht.",
+      faq: [
+        {
+          q: "Wohin geht mein Bild?",
+          a: "Nirgendwohin. Es wird in diesem Tab geöffnet und nie hochgeladen. Der Verkehr läuft in die andere Richtung: Das Modell kommt einmal zu Ihnen, danach behält Ihr Browser es.",
+        },
+        {
+          q: "Was ist der Unterschied zum bloßen Skalieren?",
+          a: "Skalieren verteilt die Pixel, die schon da sind — eine Vergrößerung auf 4× wird also viermal weicher. Hier läuft ein Netz, das mit Millionen Vorher-Nachher-Paaren trainiert wurde und plausible Kanten und Textur erfindet. Das ist eine gute Vermutung, keine zurückgeholte Wahrheit: Ein Kennzeichen, das nie in der Datei war, kann es nicht lesen.",
+        },
+        {
+          q: "Warum gibt es eine Größengrenze?",
+          a: "Weil 4× sechzehnmal so viele Pixel bedeutet. Aus einem Megapixel werden sechzehn, allein das sind 64MB Bild im Speicher, und die Rechenarbeit wächst mit. Lieber stoppen wir bei einem Megapixel Eingabe, als Ihren Tab minutenlang einzufrieren und am Ende nichts zu liefern.",
+        },
+        {
+          q: "Warum ist es auf meinem Rechner langsam?",
+          a: "Weil Ihr Browser kein WebGPU hat und auf die CPU zurückfällt. Dieser Weg läuft vollständig durch — nur eben viel langsamer, grob eine Minute je Megapixel. Wir sagen vor dem Klick, welcher Weg es wird, und schreiben neben das Ergebnis, welcher tatsächlich gelaufen ist.",
+        },
+        {
+          q: "Wie funktioniert 2×, wenn das Modell 4× kann?",
+          a: "Wir rechnen 4× und halbieren das Ergebnis. Das wird besser als eine direkte Verdopplung: Die vom Modell erfundenen Details ordnen sich beim Verkleinern. Es dauert genauso lange wie 4×, weil dieselbe Arbeit vorausgeht.",
+        },
+        {
+          q: "Warum wirkt mein Foto wächsern?",
+          a: "Weil dieses Modell darauf trainiert wurde, beschädigte Bilder zu reparieren: Es entfernt, was es als Rauschen liest — und Filmkorn wie feine Stoffstruktur liest es als Rauschen. Bei einem komprimierten Webbild oder einem Screenshot ist genau das erwünscht: Die Blöcke verschwinden, die Kanten kommen zurück. Bei einem körnigen Filmscan kann die Oberfläche zu Plastik werden. Wir haben beides gegen eine einfache Skalierung gemessen: Bei einem JPEG in Qualität 35 gewinnt das Modell deutlich, bei einem Filmscan von 1896 hielt die einfache Skalierung mehr Stoff fest.",
+        },
+        {
+          q: "Welches Modell ist das?",
+          a: "realesr-general-x4v3 aus Real-ESRGAN, unter der BSD-3-Clause-Lizenz. Wir haben es den schärferen Transformer-Modellen wegen der Geschwindigkeit vorgezogen: Auf der CPU ist es rund sechzigmal schneller, und dieser Unterschied entscheidet, ob das Werkzeug ohne Grafikkarte brauchbar ist oder nicht.",
+        },
+      ],
+      ui: {
+        dropLabel: "Bild hier ablegen",
+        dropHint: "PNG · JPG · WebP — bis {max} Megapixel",
+        scaleLabel: "Vergrößern um",
+        scaleOption: "{n}×",
+        formatLabel: "Speichern als",
+        downloadNote: "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
+        cachedNote: "Es wird einmal geladen und von Ihrem Browser behalten — das nächste Bild startet sofort.",
+        gpuNotice: "Ihr Browser hat WebGPU, das läuft also auf der Grafikkarte.",
+        cpuNotice: "Ihr Browser hat kein WebGPU, das läuft also auf der CPU — deutlich langsamer.",
+        cpuNoticeWithEstimate:
+          "Ihr Browser hat kein WebGPU, das läuft also auf der CPU — rechnen Sie mit etwa {seconds} Sekunden.",
+        preview: "{from} → {to}",
+        tooLargeNotice: "{from} liegt über der Grenze von {max} Megapixel. Verkleinern Sie es zuerst oder nehmen Sie ein kleineres Bild.",
+        run: "Vergrößern",
+        working: "Wird bearbeitet…",
+        stageEngine: "Laufzeit wird geladen…",
+        stageModel: "Modell wird geladen {percent}%",
+        stageUpscaling: "Stück {tile} von {tiles}",
+        resultAlt: "Das vergrößerte Bild",
+        runtimeWebgpu: "auf der GPU gerechnet",
+        runtimeWasm: "auf der CPU gerechnet",
+        tookSeconds: "{seconds}s",
+        errEngine: "Die Laufzeit konnte nicht geladen werden",
+        errModel: "Das Modell konnte nicht geladen werden",
+        errUnsupportedInput: "Dieses Bild konnte nicht gelesen werden",
+        errTooLarge: "Dieses Bild liegt über der Grenze von {max} Megapixel",
+        errGeneric: "Das Bild konnte nicht vergrößert werden",
+      },
+    },
   },
 } satisfies Dictionary;

@@ -826,5 +826,72 @@ export const es = {
         errGeneric: "No se pudo quitar el fondo",
       },
     },
+    upscale: {
+      blurb: "Amplía una imagen pequeña sin que se vuelva borrosa. Corre en tu dispositivo.",
+      metaTitle: "Ampliar imagen 4× — en tu navegador",
+      metaDescription:
+        "Amplía una foto 2× o 4× sin subirla. Un modelo Real-ESRGAN con licencia BSD corre en tu navegador y mantiene los bordes nítidos. Sin registro.",
+      h1: "Ampliar una imagen",
+      lead: "Agranda una imagen pequeña y reconstruye el detalle en vez de solo estirarla. El modelo se descarga a tu dispositivo y se ejecuta allí: la imagen no sale de esta pestaña.",
+      faq: [
+        {
+          q: "¿A dónde va mi imagen?",
+          a: "A ninguna parte. Se abre dentro de esta pestaña y nunca se sube. El tráfico va en sentido contrario: el modelo baja hasta ti una vez y tu navegador lo conserva.",
+        },
+        {
+          q: "¿En qué se diferencia de cambiar el tamaño?",
+          a: "Cambiar el tamaño reparte los píxeles que ya tienes, así que una ampliación de 4× queda cuatro veces más borrosa. Esto ejecuta una red entrenada con millones de pares antes-y-después, así que inventa bordes y textura verosímiles. Es una buena conjetura, no una verdad recuperada: no puede leer una matrícula que nunca estuvo en el archivo.",
+        },
+        {
+          q: "¿Por qué hay un límite de tamaño?",
+          a: "Porque 4× significa dieciséis veces más píxeles. Una foto de un megapíxel sale con dieciséis, que ya son 64MB de imagen en memoria, y el trabajo crece igual. Preferimos parar en un megapíxel de entrada antes que congelar tu pestaña varios minutos y no darte nada.",
+        },
+        {
+          q: "¿Por qué va lento en mi equipo?",
+          a: "Porque tu navegador no tiene WebGPU y cae a la CPU. Ese camino funciona hasta el final, solo que mucho más despacio: alrededor de un minuto por megapíxel. Te decimos cuál te toca antes de pulsar, y escribimos cuál se usó realmente junto al resultado.",
+        },
+        {
+          q: "Si el modelo es 4×, ¿cómo funciona el 2×?",
+          a: "Ejecutamos el modelo de 4× y luego reducimos el resultado a la mitad. Sale mejor que ampliar por dos directamente: el detalle que inventa el modelo se ordena al encoger. Tarda lo mismo que 4× porque el trabajo previo es el mismo.",
+        },
+        {
+          q: "¿Por qué la foto queda como de cera?",
+          a: "Porque este modelo se entrenó para reparar imágenes dañadas, así que elimina lo que interpreta como ruido — y el grano de película y la textura fina de la tela se leen como ruido. En una imagen web comprimida o una captura de pantalla eso es justo lo que quieres: desaparecen los bloques y vuelven los bordes. En un escaneo de película con grano puede aplanar la superficie hasta dejarla plástica. Medimos ambos casos contra un cambio de tamaño normal: en un JPEG guardado a calidad 35 el modelo gana con claridad; en un escaneo de 1896 el cambio de tamaño conservó más tela.",
+        },
+        {
+          q: "¿Qué modelo es?",
+          a: "realesr-general-x4v3, de Real-ESRGAN, con licencia BSD 3-Clause. Lo elegimos frente a los modelos transformer más nítidos por velocidad: es unas sesenta veces más rápido en CPU, y esa diferencia separa una herramienta que funciona sin tarjeta gráfica de una que no.",
+        },
+      ],
+      ui: {
+        dropLabel: "Suelta una imagen aquí",
+        dropHint: "PNG · JPG · WebP — hasta {max} megapíxel",
+        scaleLabel: "Ampliar",
+        scaleOption: "{n}×",
+        formatLabel: "Guardar como",
+        downloadNote: "Al pulsar el botón se descargan unos {size} de motor y modelo.",
+        cachedNote: "Se descarga una vez y tu navegador lo conserva: la siguiente imagen empieza de inmediato.",
+        gpuNotice: "Tu navegador tiene WebGPU, así que esto corre en la tarjeta gráfica.",
+        cpuNotice: "Tu navegador no tiene WebGPU, así que esto corre en la CPU — bastante más lento.",
+        cpuNoticeWithEstimate:
+          "Tu navegador no tiene WebGPU, así que esto corre en la CPU — cuenta con unos {seconds} segundos.",
+        preview: "{from} → {to}",
+        tooLargeNotice: "{from} supera el límite de {max} megapíxel. Redúcela primero o usa una imagen más pequeña.",
+        run: "Ampliar",
+        working: "Procesando…",
+        stageEngine: "cargando el motor…",
+        stageModel: "descargando el modelo {percent}%",
+        stageUpscaling: "pieza {tile} de {tiles}",
+        resultAlt: "La imagen ampliada",
+        runtimeWebgpu: "procesado en la GPU",
+        runtimeWasm: "procesado en la CPU",
+        tookSeconds: "{seconds}s",
+        errEngine: "No se pudo cargar el motor",
+        errModel: "No se pudo descargar el modelo",
+        errUnsupportedInput: "No se pudo leer esta imagen",
+        errTooLarge: "Esta imagen supera el límite de {max} megapíxel",
+        errGeneric: "No se pudo ampliar la imagen",
+      },
+    },
   },
 } satisfies Dictionary;

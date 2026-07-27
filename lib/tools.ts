@@ -66,10 +66,10 @@ export const TOOLS: Tool[] = [
   // 없으면 wasm 으로 내려가 **끝까지 돈다**(느릴 뿐이다). 할 수 있는 것을 못 한다고
   // 적는 것도 규칙 3 위반이다 — 어느 쪽으로 돌았는지는 결과 옆에 그대로 적는다.
   { slug: "remove-bg", tier: 2, status: "live", needs: "all", family: "image" },
+  { slug: "upscale", tier: 2, status: "live", needs: "all", family: "image" },
   { slug: "subtitles", tier: 2, status: "planned", needs: "webgpu", family: "video" },
   { slug: "subtitle-translate", tier: 2, status: "planned", needs: "webgpu", family: "video" },
   { slug: "cutout", tier: 2, status: "planned", needs: "webgpu", family: "image" },
-  { slug: "upscale", tier: 2, status: "planned", needs: "webgpu", family: "image" },
   { slug: "stems", tier: 2, status: "planned", needs: "webgpu", family: "video" },
 ];
 

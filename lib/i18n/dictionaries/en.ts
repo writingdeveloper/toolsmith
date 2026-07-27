@@ -829,6 +829,73 @@ export const en = {
         errGeneric: "The background could not be removed",
       },
     },
+    upscale: {
+      blurb: "Enlarge a small image without it going soft. Runs on your device.",
+      metaTitle: "Image Upscaler 4× — in your browser",
+      metaDescription:
+        "Enlarge a photo 2× or 4× without uploading it. A BSD-licensed Real-ESRGAN model runs inside your browser and keeps the edges sharp. No sign-up.",
+      h1: "Upscale an image",
+      lead: "Makes a small picture bigger and rebuilds the detail instead of just stretching it. The model is downloaded to your device and runs there — the picture never leaves this tab.",
+      faq: [
+        {
+          q: "Where does my picture go?",
+          a: "Nowhere. It is opened inside this browser tab and never uploaded. Traffic goes the other way: the model comes down to you, once, and your browser keeps it.",
+        },
+        {
+          q: "How is this different from just resizing?",
+          a: "Resizing spreads the pixels you already have, so a 4× enlargement is four times blurrier. This runs a network that was trained on millions of before-and-after pairs, so it invents plausible edges and texture. It is a good guess, not recovered truth — it cannot read a licence plate that was never in the file.",
+        },
+        {
+          q: "Why is there a size limit?",
+          a: "Because 4× means sixteen times the pixels. A one-megapixel photo comes out at sixteen megapixels, which is already 64MB of raw image in memory, and the work grows with it. We stop at one megapixel of input rather than freeze your tab for several minutes and hand you nothing.",
+        },
+        {
+          q: "Why is it slow on my machine?",
+          a: "Because your browser has no WebGPU, so it falls back to the CPU. That path works all the way through — it is just much slower, roughly a minute per megapixel. We say which one you are on before you press, and print which one actually ran underneath the result.",
+        },
+        {
+          q: "How does 2× work if the model is 4×?",
+          a: "We run the 4× model and then halve the result. That comes out better than enlarging by two directly: the detail the model invents gets tidied up as it shrinks. It costs the same time as 4× because the same work happens first.",
+        },
+        {
+          q: "Why does my photo look waxy?",
+          a: "Because this model was trained to repair damaged images, so it removes whatever it reads as noise — and film grain and fine fabric texture read as noise. On a compressed web image or a screenshot that is exactly what you want: the blocking disappears and the edges come back. On a grainy film scan it can flatten the surface into something plastic. We measured both against a plain resize: on a JPEG saved at quality 35 the model wins clearly; on a 1896 film scan the plain resize kept more of the cloth.",
+        },
+        {
+          q: "Which model is this?",
+          a: "realesr-general-x4v3 from Real-ESRGAN, under the BSD 3-Clause licence. We picked it over the sharper transformer models on speed: it is about sixty times faster on a CPU, which is the difference between a tool that works without a graphics card and one that does not.",
+        },
+      ],
+      ui: {
+        dropLabel: "Drop an image here",
+        dropHint: "PNG · JPG · WebP — up to {max} megapixel",
+        scaleLabel: "Enlarge by",
+        scaleOption: "{n}×",
+        formatLabel: "Save as",
+        downloadNote: "Pressing the button downloads about {size} of runtime and model.",
+        cachedNote: "It is fetched once and kept by your browser — the next picture starts straight away.",
+        gpuNotice: "Your browser has WebGPU, so this runs on the graphics card.",
+        cpuNotice: "Your browser has no WebGPU, so this runs on the CPU — considerably slower.",
+        cpuNoticeWithEstimate:
+          "Your browser has no WebGPU, so this runs on the CPU — expect roughly {seconds} seconds.",
+        preview: "{from} → {to}",
+        tooLargeNotice: "{from} is over the {max} megapixel limit. Shrink it first, or use a smaller picture.",
+        run: "Upscale",
+        working: "Working…",
+        stageEngine: "loading the runtime…",
+        stageModel: "downloading the model {percent}%",
+        stageUpscaling: "piece {tile} of {tiles}",
+        resultAlt: "The upscaled image",
+        runtimeWebgpu: "ran on the GPU",
+        runtimeWasm: "ran on the CPU",
+        tookSeconds: "{seconds}s",
+        errEngine: "The runtime could not be loaded",
+        errModel: "The model could not be downloaded",
+        errUnsupportedInput: "This image could not be read",
+        errTooLarge: "This picture is over the {max} megapixel limit",
+        errGeneric: "The image could not be upscaled",
+      },
+    },
   },
 };
 
