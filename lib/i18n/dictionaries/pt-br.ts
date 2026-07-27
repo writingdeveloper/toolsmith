@@ -822,6 +822,7 @@ export const ptBR = {
         resultAlt: "A foto com o fundo removido",
         runtimeWebgpu: "processado na GPU",
         runtimeWasm: "processado na CPU",
+        unsureNote: "O modelo não teve certeza: boa parte do que ele manteve está apenas semitransparente, então o recorte vai parecer um fantasma. Experimente a ferramenta de recorte por clique, que deixa você apontar o objeto que quer.",
         nothingFound: "O modelo não encontrou um objeto claro aqui, então quase tudo foi recortado. Um fundo mais simples ajuda.",
         errEngine: "Não foi possível carregar o motor",
         errModel: "Não foi possível baixar o modelo",

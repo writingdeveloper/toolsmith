@@ -825,6 +825,7 @@ export const en = {
         resultAlt: "The photo with its background removed",
         runtimeWebgpu: "ran on the GPU",
         runtimeWasm: "ran on the CPU",
+        unsureNote: "The model was not sure here: much of what it kept is only half-transparent, so the cut-out will look like a ghost. Try the click-to-cut-out tool, which lets you point at the object you want.",
         nothingFound: "The model found no clear subject here, so almost everything was cut away. A plainer background helps.",
         errEngine: "The runtime could not be loaded",
         errModel: "The model could not be downloaded",

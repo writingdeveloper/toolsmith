@@ -5,6 +5,10 @@ import { isAnalytics } from "./net";
 
 /** 밝은 배경 한가운데 어두운 덩어리. 모서리는 배경, 가운데는 피사체다. */
 const SUBJECT = path.join(__dirname, "fixtures", "subject.png");
+/** 같은 도형 48개. 고를 것이 없어 단호한 화소가 거의 안 남는다. */
+const CROWD = path.join(__dirname, "fixtures", "crowd.png");
+/** 1914년 백과사전 비둘기 도판(퍼블릭 도메인). 14마리라 모델이 결정을 못 내린다. */
+const PLATE = path.join(__dirname, "fixtures", "plate.jpg");
 
 /** 무거운 자산이 어디서 오는가. 규칙 5 를 스펙이 직접 본다. */
 const MODEL_HOST = /huggingface\.co|hf\.co|cdn-lfs/;
@@ -146,5 +150,44 @@ test.describe("브라우저", () => {
     await page.locator('input[type="file"]').setInputFiles(SUBJECT);
     await run(page);
     expect(outbound.filter((url) => !isAnalytics(url))).toEqual([]);
+  });
+});
+
+/**
+ * 결과가 못 미더울 때 **말해야 한다.**
+ *
+ * 이 검사들이 없어서 경고가 어긋난 채로 남아 있었다(2026-07-27). 예전 판정은
+ * `alpha > 127` 인 화소를 셌는데, 모델이 확신하지 못하면 마스크 전체가 어중간하게
+ * 깔리면서 그 값들이 127 을 넘어 **"많이 남았다" 로 잡혔다.** 실사진 여덟 장 중 셋이
+ * 눈으로 보면 명백한 실패였는데 경고가 한 번도 뜨지 않았다.
+ */
+test.describe("못 미더운 결과를 말한다", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/ko/tools/remove-bg");
+  });
+
+  test("고를 것이 없으면 못 찾았다고 말한다", async ({ page }) => {
+    await page.locator('input[type="file"]').setInputFiles(CROWD);
+    await run(page);
+    await expect(page.locator("[data-empty]")).toBeVisible();
+  });
+
+  /**
+   * 이쪽은 **더 위험한 실패**다. 결과가 그럴듯해 보이는데 남은 것이 반투명한 유령이다.
+   * 합성 그림으로는 재현되지 않아 실물 도판을 픽스처로 둔다 — 근거는 make-fixtures.
+   */
+  test("찾긴 했는데 확신하지 못하면 그렇다고 말한다", async ({ page }) => {
+    await page.locator('input[type="file"]').setInputFiles(PLATE);
+    await run(page);
+    await expect(page.locator("[data-unsure]")).toBeVisible();
+    // "아무것도 못 찾음" 과는 다른 상황이다 — 둘이 함께 뜨면 안 된다
+    await expect(page.locator("[data-empty]")).toHaveCount(0);
+  });
+
+  test("제대로 잘린 그림에는 아무 경고도 띄우지 않는다", async ({ page }) => {
+    await page.locator('input[type="file"]').setInputFiles(SUBJECT);
+    await run(page);
+    await expect(page.locator("[data-empty]")).toHaveCount(0);
+    await expect(page.locator("[data-unsure]")).toHaveCount(0);
   });
 });

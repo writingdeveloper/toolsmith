@@ -197,8 +197,10 @@ export interface MatteResult {
   height: number;
   /** 실제로 돌아간 실행기. 화면에 적는다. */
   runtime: MatteRuntime;
-  /** 전경으로 판정된 화소의 비율(0~1). 0 에 가까우면 아무것도 못 찾았다는 뜻이다. */
+  /** **단호하게** 전경으로 판정된 화소의 비율(0~1). 0 에 가까우면 못 찾았다는 뜻이다. */
   coverage: number;
+  /** 단호한 화소 ÷ 어중간한 화소. 낮으면 모델이 결정을 못 내린 것이다. */
+  commitment: number;
 }
 
 export async function removeBackground(
@@ -256,10 +258,23 @@ export async function removeBackground(
     const pixels = image.data;
 
     const fill = options.background === "transparent" ? null : BACKGROUND_RGB[options.background];
+    /*
+     * 마스크가 **얼마나 단호한지**를 함께 센다.
+     *
+     * 예전에는 `alpha > 127` 하나만 셌다. 그런데 모델이 확신하지 못하면 마스크 전체가
+     * 어중간한 값으로 깔리는데, 그 값들이 대부분 127 을 넘어서 **"많이 남았다" 로
+     * 잡혔다.** 그래서 "아무것도 못 찾았다" 경고가 실제로는 한 번도 뜨지 않았다
+     * (2026-07-27, 실사진 여덟 장으로 확인 — 아마존 항공사진은 단호한 픽셀이 0.0% 인데도
+     * 조용히 통과했다).
+     *
+     * 이제 단호한 것(`> 240`)과 어중간한 것(`16..240`)을 따로 센다.
+     */
     let opaque = 0;
+    let middle = 0;
     for (let i = 0; i < mask.length; i += 4) {
       const alpha = mask[i];
-      if (alpha > 127) opaque += 1;
+      if (alpha > 240) opaque += 1;
+      else if (alpha >= 16) middle += 1;
       if (fill) {
         // 배경색 위에 올린다. 알파를 남기면 JPEG 로 저장할 때 검게 변한다.
         const ratio = alpha / 255;
@@ -285,6 +300,26 @@ export async function removeBackground(
       height,
       runtime,
       coverage: opaque / (width * height),
+      /**
+       * 단호한 픽셀 대 어중간한 픽셀. **모델이 결정을 내렸는가**를 나타낸다.
+       *
+       * 실사진 여덟 장 실측(2026-07-27):
+       *
+       * | 사진 | 단호 | 비율 | 눈으로 본 결과 |
+       * |---|---|---|---|
+       * | 흰 바탕 신발 | 29.5% | 9.48 | 좋음 |
+       * | 개 | 34.5% | 6.10 | 좋음 |
+       * | 인물 | 35.6% | 3.17 | 좋음 |
+       * | 커피잔 | 10.3% | 0.65 | 좋음 |
+       * | 후지산 | 3.9% | 0.40 | 좋음 |
+       * | 비둘기 도감 14마리 | 1.2% | 0.08 | **유령처럼 반투명** |
+       * | 타임스스퀘어 | 0.3% | 0.02 | **반투명 얼룩** |
+       * | 아마존 항공사진 | 0.0% | 0.00 | **아무것도 없음** |
+       *
+       * 좋은 것의 최저가 0.40, 나쁜 것의 최고가 0.08 이다. 여덟 장으로 정한 값이라
+       * **양쪽 여유가 2배뿐**이다 — 표본이 늘면 다시 재서 조정할 것.
+       */
+      commitment: opaque / Math.max(middle, 1),
     };
   } finally {
     bitmap.close();

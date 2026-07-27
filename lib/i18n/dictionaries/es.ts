@@ -822,6 +822,7 @@ export const es = {
         resultAlt: "La foto con el fondo quitado",
         runtimeWebgpu: "procesado en la GPU",
         runtimeWasm: "procesado en la CPU",
+        unsureNote: "El modelo no lo tuvo claro: buena parte de lo que conservó es solo semitransparente, así que el recorte parecerá un fantasma. Prueba la herramienta de recorte por clic, que te deja señalar el objeto que quieres.",
         nothingFound: "El modelo no encontró un sujeto claro aquí, así que se recortó casi todo. Un fondo más sencillo ayuda.",
         errEngine: "No se pudo cargar el motor",
         errModel: "No se pudo descargar el modelo",

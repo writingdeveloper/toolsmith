@@ -822,6 +822,7 @@ export const ko = {
         resultAlt: "배경을 지운 사진",
         runtimeWebgpu: "GPU 로 처리",
         runtimeWasm: "CPU 로 처리",
+        unsureNote: "모델이 확신하지 못했습니다. 남긴 것의 상당 부분이 반투명이라 결과가 유령처럼 보입니다. 원하는 물체를 직접 눌러 고르는 클릭 컷아웃 도구를 써 보세요.",
         nothingFound: "이 사진에서는 뚜렷한 피사체를 찾지 못해 거의 전부가 잘려 나갔습니다. 배경이 단순할수록 잘 됩니다.",
         errEngine: "실행기를 불러오지 못했습니다",
         errModel: "모델을 받지 못했습니다",

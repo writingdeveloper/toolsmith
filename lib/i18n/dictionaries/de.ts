@@ -822,6 +822,7 @@ export const de = {
         resultAlt: "Das Foto ohne Hintergrund",
         runtimeWebgpu: "auf der GPU gerechnet",
         runtimeWasm: "auf der CPU gerechnet",
+        unsureNote: "Das Modell war sich nicht sicher: Vieles vom Behaltenen ist nur halbtransparent, der Freisteller wirkt daher wie ein Geist. Versuchen Sie das Klick-Freistellen, bei dem Sie auf das gewünschte Objekt zeigen.",
         nothingFound: "Hier hat das Modell kein klares Motiv gefunden, deshalb wurde fast alles weggeschnitten. Ein schlichterer Hintergrund hilft.",
         errEngine: "Die Laufzeit konnte nicht geladen werden",
         errModel: "Das Modell konnte nicht geladen werden",

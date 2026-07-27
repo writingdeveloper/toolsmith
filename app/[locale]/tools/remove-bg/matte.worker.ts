@@ -26,6 +26,7 @@ export type WorkerResponse =
       height: number;
       runtime: "webgpu" | "wasm";
       coverage: number;
+      commitment: number;
     }
   | { kind: "failed"; id: number; message: string };
 
@@ -48,6 +49,7 @@ ctx.onmessage = async (event) => {
       height: result.height,
       runtime: result.runtime,
       coverage: result.coverage,
+      commitment: result.commitment,
     });
   } catch (error) {
     ctx.postMessage({

@@ -599,3 +599,40 @@ await write("article-utf16.txt", Buffer.concat([Buffer.from([0xff, 0xfe]), Buffe
       .toBuffer(),
   );
 }
+
+/*
+ * ── 배경 제거가 확신하지 못하는 그림 (2026-07-27) ────────────────────
+ *
+ * `crowd.png` 는 여기서 만든다. 같은 도형 48개가 격자로 놓여 있어 **고를 것이 없다** —
+ * 단호한 화소가 0.2% 로 떨어져 "아무것도 못 찾았다" 경고가 뜬다.
+ */
+{
+  const W = 640;
+  const H = 480;
+  const tiles = [];
+  for (let y = 0; y < 6; y += 1) {
+    for (let x = 0; x < 8; x += 1) {
+      tiles.push(`<circle cx="${40 + x * 80}" cy="${40 + y * 80}" r="26" fill="#3a2b1f"/>`);
+    }
+  }
+  const svg =
+    `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">` +
+    `<rect width="100%" height="100%" fill="#cbbfae"/>${tiles.join("")}</svg>`;
+  await write("crowd.png", await sharp(Buffer.from(svg)).png().toBuffer());
+}
+
+/*
+ * plate.jpg 는 여기서 만들지 않는다.
+ *
+ * **합성으로는 만들 수 없다.** 모델이 "확신하지 못하는" 상태는 가장자리가 흐릿한
+ * 실사진에서만 나온다 — 도형을 아무리 여러 개 그려 넣어도 경계가 깨끗해서 알파가
+ * 0 아니면 255 로 갈린다(실측: 합성 덩어리 여섯 = 비율 6.74, 즉 아주 단호함).
+ *
+ * 그래서 실물을 쓴다. 1914년 The New Student's Reference Work 의 비둘기 도판으로,
+ * 미국에서 퍼블릭 도메인이고 위키미디어 커먼즈에 있다:
+ *   https://upload.wikimedia.org/wikipedia/commons/3/35/LA2-NSRW-3-0536_cropped.jpg
+ * 다시 만들어야 하면 그 파일을 받아 긴 변 500px, JPEG 품질 82 로 줄이면 된다(114KB).
+ *
+ * 비둘기 14마리가 고르게 놓여 있어 모델이 결정을 못 내리고 **반투명한 유령**을 낸다
+ * (단호 3.1% · 비율 0.13). 이 픽스처가 `data-unsure` 경고를 고정한다.
+ */

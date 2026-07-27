@@ -30,10 +30,27 @@ interface Result {
   name: string;
   runtime: "webgpu" | "wasm";
   coverage: number;
+  commitment: number;
 }
 
-/** 전경이 이보다 작으면 사실상 아무것도 못 찾은 것이다. */
-const EMPTY_COVERAGE = 0.002;
+/**
+ * 이보다 작으면 사실상 아무것도 못 찾은 것이다.
+ *
+ * **실사진 여덟 장으로 다시 잡았다(2026-07-27).** 예전 값(0.002)은 `alpha > 127` 을
+ * 세던 시절의 것이라 **한 번도 뜨지 않았다** — 모델이 확신하지 못하면 마스크 전체가
+ * 어중간하게 깔리는데 그 값들이 127 을 넘었기 때문이다. 아마존 항공사진은 단호한
+ * 화소가 0.0% 인데도 조용히 통과했다.
+ */
+const EMPTY_COVERAGE = 0.005;
+
+/**
+ * 모델이 **결정을 내렸는가**. 이보다 낮으면 남은 것이 대부분 반투명한 유령이다.
+ *
+ * 실측(자세한 표는 `lib/matting/matte-core.ts` 의 `commitment`):
+ * 좋은 결과의 최저가 0.40(후지산), 나쁜 결과의 최고가 0.08(비둘기 도감 14마리).
+ * 그 사이에 둔다 — **여유가 양쪽 2배뿐이므로** 표본이 늘면 다시 잴 것.
+ */
+const MIN_COMMITMENT = 0.2;
 
 export function BackgroundRemover({ ui, common }: { ui: Ui; common: Common }) {
   const [broken, setBroken] = useState(false);
@@ -138,6 +155,7 @@ export function BackgroundRemover({ ui, common }: { ui: Ui; common: Common }) {
         name: replaceExtension(file.name, "png"),
         runtime: response.runtime,
         coverage: response.coverage,
+        commitment: response.commitment,
       });
       trackToolCompleted("remove-bg");
     } catch (caught) {
@@ -280,6 +298,12 @@ export function BackgroundRemover({ ui, common }: { ui: Ui; common: Common }) {
           {result.coverage < EMPTY_COVERAGE && (
             <p className="text-sm text-warn" data-empty>
               {ui.nothingFound}
+            </p>
+          )}
+          {/* 찾긴 했는데 확신하지 못한 경우. 결과가 그럴듯해 보여서 더 위험하다. */}
+          {result.coverage >= EMPTY_COVERAGE && result.commitment < MIN_COMMITMENT && (
+            <p className="text-sm text-warn" data-unsure>
+              {ui.unsureNote}
             </p>
           )}
           <a
