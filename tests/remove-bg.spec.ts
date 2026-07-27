@@ -126,11 +126,14 @@ test.describe("브라우저", () => {
   });
 
   /** 어느 실행기로 돌았는지 숨기지 않는다 — 3단 폴백의 두 번째 칸을 눈으로 본다. */
-  test("GPU 로 돌았는지 CPU 로 돌았는지 결과 옆에 적는다", async ({ page }) => {
+  test("GPU 로 돌았는지 CPU 로 돌았는지 결과 옆에 적는다", async ({ page }, testInfo) => {
     test.setTimeout(240_000);
     await page.locator('input[type="file"]').setInputFiles(SUBJECT);
     await run(page);
-    await expect(page.locator("[data-summary]")).toContainText(/GPU 로 처리|CPU 로 처리/);
+    // WebGPU 프로젝트에서는 정확히 GPU 여야 한다 — 어댑터가 사라져도 조용히 통과하면 안 된다
+    await expect(page.locator("[data-summary]")).toContainText(
+      testInfo.project.name === "chromium-webgpu" ? "GPU 로 처리" : /GPU 로 처리|CPU 로 처리/,
+    );
   });
 
   test("사진이 네트워크로 나가지 않는다", async ({ page }) => {

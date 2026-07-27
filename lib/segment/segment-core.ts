@@ -170,6 +170,26 @@ interface Prepared {
 
 let prepared: Prepared | null = null;
 
+/**
+ * 모델 호출을 한 줄로 세운다.
+ *
+ * 이 도구는 **두 곳에서** 디코더를 부른다 — 클릭할 때(미리보기)와 오려 낼 때. 클릭 직후
+ * 바로 버튼을 누르면 둘이 겹치는데, 같은 세션에 `run()` 을 동시에 걸면 **WebGPU 에서
+ * 멈춘다**(2026-07-26 실측: 워커가 응답을 영영 안 했다). wasm 은 단일 스레드라 우연히
+ * 줄을 서서 여태 드러나지 않았다 — WebGPU 프로젝트를 붙이자마자 나왔다.
+ */
+let queue: Promise<unknown> = Promise.resolve();
+
+function serialize<T>(task: () => Promise<T>): Promise<T> {
+  const run = queue.then(task, task);
+  // 앞선 작업이 실패해도 줄은 계속 나아가야 한다
+  queue = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
+
 export interface PrepareResult {
   width: number;
   height: number;
@@ -218,9 +238,11 @@ export async function prepareImage(
   const ort = await loadOrt();
   let results: Record<string, OrtTensor>;
   try {
-    results = await encoder.run({
-      pixel_values: new ort.Tensor("float32", input, [1, 3, MODEL_EDGE, MODEL_EDGE]),
-    });
+    results = await serialize(() =>
+      encoder.run({
+        pixel_values: new ort.Tensor("float32", input, [1, 3, MODEL_EDGE, MODEL_EDGE]),
+      }),
+    );
   } catch {
     bitmap.close();
     throw new SegmentError("SEGMENT_FAILED");
@@ -261,7 +283,12 @@ export interface Mask {
  * SAM 은 후보를 **세 개** 낸다(부분 / 부분+ / 전체). 어느 것이 맞는지는 모델도 모르므로
  * 함께 나오는 iou 점수가 가장 높은 것을 고른다. 점을 더 찍을수록 후보들이 좁혀진다.
  */
-export async function segment(points: Point[]): Promise<Mask> {
+export function segment(points: Point[]): Promise<Mask> {
+  return serialize(() => decode(points));
+}
+
+/** 실제 디코더 실행. **줄을 서는 것은 부르는 쪽**이다 — 여기서 다시 서면 교착이 난다. */
+async function decode(points: Point[]): Promise<Mask> {
   if (!prepared) throw new SegmentError("SEGMENT_FAILED");
   if (points.length === 0) throw new SegmentError("SEGMENT_FAILED");
 
@@ -327,7 +354,7 @@ export interface CutoutResult {
 /** 고른 마스크를 원본 크기로 되돌려 오려 낸다. 내려받기를 누를 때만 부른다. */
 export async function cutout(points: Point[], background: CutoutBackground): Promise<CutoutResult> {
   if (!prepared) throw new SegmentError("SEGMENT_FAILED");
-  const mask = await segment(points);
+  const mask = await serialize(() => decode(points));
   const { bitmap } = prepared;
   const { width, height } = bitmap;
 

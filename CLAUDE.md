@@ -83,10 +83,10 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 ## 현재 상태 (2026-07-26)
 
 **라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 17) = 108 페이지
-+ 루트 언어 선택. 전부 정적. Playwright **183종**(프로덕션 181 통과 / 2 스킵 / 0 실패,
-55초). dev 도 164 통과 / 19 스킵 / 0 실패(1.5분) — `globalSetup` 워밍을 넣은 뒤로
-안정됐다. **지연 로딩 판정만은 여전히 프로덕션으로 한다**(Turbopack dev 가 동적
-import 를 당겨오기 때문).
++ 루트 언어 선택. 전부 정적. Playwright **207종**(프로덕션 205 통과 / 2 스킵 / 0 실패,
+55초). 두 프로젝트로 돈다 — 기본 `chromium`(전부)과 `chromium-webgpu`(모델 도구 셋을
+GPU 경로로). dev 는 188 통과 / 19 스킵 / 0 실패(1.6분). **지연 로딩 판정만은 여전히
+프로덕션으로 한다**(Turbopack dev 가 동적 import 를 당겨오기 때문).
 
 ### 배포된 도구 17개 (Tier 1 전부 + Tier 2 셋)
 
@@ -141,11 +141,23 @@ import 를 당겨오기 때문).
   bundle 변형이라 import 하는 순간 20MB 가 Vercel 에서 나간다). 워커는 **모듈 워커**여야
   한다 — 고전 워커에서는 CDN 동적 import 가 불가능하다.
 - `lib/segment/segment-core.ts` — 클릭 컷아웃. **인코더 6초 / 디코더 0.1초**로 나뉘어
-  있어 클릭형 UI 가 성립한다. 워커가 임베딩을 들고 있는 이유.
+  있어 클릭형 UI 가 성립한다. 워커가 임베딩을 들고 있는 이유. `serialize()` 로 모델
+  호출을 한 줄에 세운다 — **같은 세션에 `run()` 을 겹쳐 걸면 WebGPU 에서 멈춘다.**
 - `lib/upscale/upscale-core.ts` — 조각내기. **덧대어 넣고 알맹이만 오려 붙이므로 이음매가
   없다.** 모델을 라이선스만 보고 고르면 안 된다는 근거(Swin2SR 대비 60배)도 여기 있다.
 - `lib/i18n/dictionaries/en.ts` — 사전의 **타입 원본**. 여기에 키를 더하면 나머지 5개가
   타입 에러로 드러난다.
+
+### WebGPU 는 테스트된다 (2026-07-26)
+
+`playwright.config.ts` 의 **`chromium-webgpu` 프로젝트**가 모델 도구 셋(remove-bg,
+upscale, cutout)을 GPU 경로로도 친다. 기본 프로젝트가 쓰는 **헤드리스 셸** 빌드에만
+어댑터가 없고, `channel: "chromium"` 은 헤드리스에서도 준다. 거기서는 스펙이
+"GPU 로 처리" 를 **정확히** 요구한다.
+
+한동안 "테스트 브라우저에 WebGPU 가 없다" 고 적어 두었는데 **틀렸다** —
+`about:blank`(보안 컨텍스트 아님)에서 물어서 그랬다. 붙이자마자 실제 결함이
+하나 나왔다(컷아웃이 GPU 에서 멈춤). 근거와 속도 실측은 `docs/TOOLS.md`.
 
 ### SEO·분석 (전부 끝났고 검증됨)
 

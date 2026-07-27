@@ -34,7 +34,27 @@ export default defineConfig({
     baseURL: BASE_URL ?? `http://localhost:${PORT}`,
     trace: "retain-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    /*
+     * 모델 도구는 WebGPU 경로도 실제로 친다.
+     *
+     * 기본으로 쓰이는 Playwright 의 **헤드리스 셸** 빌드에는 GPU 어댑터가 없다
+     * (`requestAdapter()` 가 null). 그래서 기본 프로젝트는 언제나 wasm 폴백만
+     * 검증하게 된다 — 정작 대부분의 사용자가 타는 길은 그쪽이 아니다.
+     * `channel: "chromium"`(전체 빌드)은 헤드리스에서도 어댑터를 준다.
+     * 실측(2026-07-26, RTX 40 노트북): 업스케일 512×512 CPU 16.5초 → GPU 4.8초,
+     * SAM 인코더 CPU 6.0초 → GPU 2.3초.
+     *
+     * 이 프로젝트에서는 스펙이 "GPU 로 처리" 를 **정확히** 요구한다. 그래야
+     * 어댑터가 사라졌을 때 조용히 CPU 로 통과하지 않는다.
+     */
+    {
+      name: "chromium-webgpu",
+      testMatch: /(remove-bg|upscale|cutout)\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"], channel: "chromium" },
+    },
+  ],
   webServer: BASE_URL
     ? undefined
     : {

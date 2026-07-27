@@ -86,9 +86,11 @@ test.describe("브라우저", () => {
     await page.goto("/ko/tools/upscale");
   });
 
-  test("어느 실행기로 돌지 누르기 전에 말한다", async ({ page }) => {
-    // 테스트 Chromium 에는 WebGPU 가 없다 → CPU 경고가 떠야 한다.
-    await expect(page.locator("[data-cpu-warning]")).toBeVisible();
+  test("어느 실행기로 돌지 누르기 전에 말한다", async ({ page }, testInfo) => {
+    // 기본 프로젝트(헤드리스 셸)는 GPU 어댑터가 없어 CPU 경고가, WebGPU 프로젝트에서는
+    // GPU 안내가 떠야 한다. 어느 쪽이든 **누르기 전에** 말한다는 것이 요점이다.
+    const gpu = testInfo.project.name === "chromium-webgpu";
+    await expect(page.locator(gpu ? "[data-gpu-notice]" : "[data-cpu-warning]")).toBeVisible();
     await expect(page.locator("[data-notes]")).toContainText("9.6 MB");
   });
 
@@ -145,11 +147,13 @@ test.describe("브라우저", () => {
     await expect(page.getByRole("button", { name: "크게 키우기" })).toBeDisabled();
   });
 
-  test("어느 실행기로 돌았는지 결과 옆에 적는다", async ({ page }) => {
+  test("어느 실행기로 돌았는지 결과 옆에 적는다", async ({ page }, testInfo) => {
     test.setTimeout(300_000);
     await page.locator('input[type="file"]').setInputFiles(SMALL);
     await run(page);
-    await expect(page.locator("[data-summary]")).toContainText(/GPU 로 처리|CPU 로 처리/);
+    await expect(page.locator("[data-summary]")).toContainText(
+      testInfo.project.name === "chromium-webgpu" ? "GPU 로 처리" : /GPU 로 처리|CPU 로 처리/,
+    );
   });
 
   test("그림이 네트워크로 나가지 않는다", async ({ page }) => {

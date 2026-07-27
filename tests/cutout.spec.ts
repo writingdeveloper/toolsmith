@@ -140,10 +140,12 @@ test.describe("브라우저", () => {
     await expect(page.getByRole("button", { name: "오려 내기" })).toBeDisabled();
   });
 
-  test("어느 실행기로 돌았는지 화면에 적는다", async ({ page }) => {
+  test("어느 실행기로 돌았는지 화면에 적는다", async ({ page }, testInfo) => {
     test.setTimeout(300_000);
     await prepare(page);
-    await expect(page.locator("[data-hint]")).toContainText(/GPU 로 처리|CPU 로 처리/);
+    await expect(page.locator("[data-hint]")).toContainText(
+      testInfo.project.name === "chromium-webgpu" ? "GPU 로 처리" : /GPU 로 처리|CPU 로 처리/,
+    );
   });
 
   test("사진이 네트워크로 나가지 않는다", async ({ page }) => {
