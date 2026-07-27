@@ -82,13 +82,13 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 ## 현재 상태 (2026-07-26)
 
-**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 16) = 102 페이지
-+ 루트 언어 선택. 전부 정적. Playwright **174종**(프로덕션 172 통과 / 2 스킵 / 0 실패,
-30초). dev 도 `.next` 를 지운 상태에서 155 통과 / 19 스킵 / 0 실패(1.3분) — `globalSetup` 워밍을
-넣은 뒤로 안정됐다. **지연 로딩 판정만은 여전히 프로덕션으로 한다**(Turbopack dev 가
-동적 import 를 당겨오기 때문).
+**라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 17) = 108 페이지
++ 루트 언어 선택. 전부 정적. Playwright **183종**(프로덕션 181 통과 / 2 스킵 / 0 실패,
+55초). dev 도 164 통과 / 19 스킵 / 0 실패(1.5분) — `globalSetup` 워밍을 넣은 뒤로
+안정됐다. **지연 로딩 판정만은 여전히 프로덕션으로 한다**(Turbopack dev 가 동적
+import 를 당겨오기 때문).
 
-### 배포된 도구 16개 (Tier 1 전부 + Tier 2 둘)
+### 배포된 도구 17개 (Tier 1 전부 + Tier 2 셋)
 
 | # | 도구 | 경로 | 핵심 |
 |---|---|---|---|
@@ -108,6 +108,7 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 | 6 | 영상 자르기 | `/tools/video-trim` | 코덱을 안 쓴다. **키프레임에서만 잘린다는 것을 미리 말한다** |
 | 17 | 배경 제거 (Tier 2) | `/tools/remove-bg` | U²-Net(Apache-2.0). **ORT 를 의존성에 두지 않는다** |
 | 19 | 이미지 업스케일 (Tier 2) | `/tools/upscale` | Real-ESRGAN(BSD-3). **CPU 에서 도는 것을 골랐다** |
+| 18 | 클릭 컷아웃 (Tier 2) | `/tools/cutout` | SlimSAM(Apache-2.0). **인코더 한 번, 디코더 클릭마다** |
 
 경로 앞에 `/{locale}` 이 붙는다(`/ko/tools/pdf-merge`).
 
@@ -139,6 +140,8 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   npm 의존성으로 두지 않는 이유**가 적혀 있다(기본 export 가 wasm 을 base64 로 품은
   bundle 변형이라 import 하는 순간 20MB 가 Vercel 에서 나간다). 워커는 **모듈 워커**여야
   한다 — 고전 워커에서는 CDN 동적 import 가 불가능하다.
+- `lib/segment/segment-core.ts` — 클릭 컷아웃. **인코더 6초 / 디코더 0.1초**로 나뉘어
+  있어 클릭형 UI 가 성립한다. 워커가 임베딩을 들고 있는 이유.
 - `lib/upscale/upscale-core.ts` — 조각내기. **덧대어 넣고 알맹이만 오려 붙이므로 이음매가
   없다.** 모델을 라이선스만 보고 고르면 안 된다는 근거(Swin2SR 대비 60배)도 여기 있다.
 - `lib/i18n/dictionaries/en.ts` — 사전의 **타입 원본**. 여기에 키를 더하면 나머지 5개가
@@ -178,6 +181,12 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   실측: 워밍 11초, 전체 155 통과 / 19 스킵 / 0 실패, 1.3분.** 같은 조건에서 예전에는
   11.8분에 2 통과였다. 손으로 데우던 절차를 옮긴 것이다 — **사람이 기억해야 지켜지는
   규칙은 언젠가 안 지켜진다.**
+- **죽다 만 dev 서버를 `reuseExistingServer` 가 무는 경우는 워밍이 잡아 던진다
+  (2026-07-26).** 전 경로가 404 인 서버를 상대로 6.7분을 돌아 159건이 실패했는데
+  코드는 멀쩡했다. 잘못된 서버에서 얻은 실패는 정보가 아니라 잡음이다.
+- **한 스펙이 언어 × 페이지를 전부 순회하면 도구가 늘 때 기본 30초를 넘긴다.**
+  `tests/i18n.spec.ts` 는 페이지 수에 맞춰 제한을 계산한다 — 도구를 더할 때마다
+  사람이 숫자를 고치게 만들지 않는다.
 - 그래도 무너지면 판정 순서: (1) 단일 스펙이 통과하는가 → 통과하면 코드 문제가 아니다,
   (2) 3111 포트에 **LISTENING** 이 남아 있는가(TIME_WAIT 는 무관하다),
   (3) 통과 수가 `npx playwright test --list` 총계와 맞는가 — **돌지 않은 것은 실패로

@@ -28,15 +28,27 @@ export interface OrtTensor {
   dims: readonly number[];
 }
 
+/**
+ * 넣을 때만 쓰는 자리. SAM 의 클릭 라벨(더하기/빼기)이 int64 라서 필요하다 —
+ * float32 로 주면 `Unexpected input data type` 으로 거절당한다.
+ */
+export interface OrtIntTensor {
+  data: BigInt64Array;
+  dims: readonly number[];
+}
+
 export interface OrtSession {
   inputNames: readonly string[];
   outputNames: readonly string[];
-  run(feeds: Record<string, OrtTensor>): Promise<Record<string, OrtTensor>>;
+  run(feeds: Record<string, OrtTensor | OrtIntTensor>): Promise<Record<string, OrtTensor>>;
 }
 
 export interface OrtModule {
   env: { wasm: { wasmPaths: string; numThreads: number; proxy: boolean } };
-  Tensor: new (type: "float32", data: Float32Array, dims: number[]) => OrtTensor;
+  Tensor: {
+    new (type: "float32", data: Float32Array, dims: number[]): OrtTensor;
+    new (type: "int64", data: BigInt64Array, dims: number[]): OrtIntTensor;
+  };
   InferenceSession: {
     create(model: ArrayBuffer, options?: Record<string, unknown>): Promise<OrtSession>;
   };

@@ -59,8 +59,23 @@ export default async function globalSetup() {
 
   const seconds = ((Date.now() - started) / 1000).toFixed(1);
   console.log(`dev 서버 워밍: 라우트 ${paths.length}개 ${seconds}초`);
+
+  /*
+   * 전부 실패했다면 서버가 살아는 있는데 쓸 수 없는 상태다 — `reuseExistingServer` 가
+   * 죽다 만 dev 서버를 물었을 때 이렇게 된다(2026-07-26 실측: 전 경로 404, 그대로
+   * 진행해 6.7분 동안 159건이 빨갛게 실패했다. 코드는 멀쩡했다).
+   *
+   * **여기서 멈춘다.** 잘못된 서버를 상대로 얻은 159건의 실패는 정보가 아니라 잡음이고,
+   * 그것을 하나씩 들여다보는 시간이 훨씬 비싸다.
+   */
+  if (failed.length === paths.length) {
+    throw new Error(
+      `dev 서버가 모든 라우트에 응답하지 못했다(${failed[0]}). 3111 포트에 남아 있는 ` +
+        `프로세스를 죽이고 다시 돌릴 것 — 코드 문제가 아니라 서버 문제다.`,
+    );
+  }
   if (failed.length > 0) {
-    // 여기서 던지지 않는다 — 스펙이 같은 페이지를 다시 쳐서 제대로 된 오류를 낼 것이다.
+    // 일부만이면 스펙이 같은 페이지를 다시 쳐서 제대로 된 오류를 낼 것이다.
     console.log(`  데우지 못한 경로: ${failed.join(", ")}`);
   }
 }

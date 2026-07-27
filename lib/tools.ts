@@ -67,9 +67,9 @@ export const TOOLS: Tool[] = [
   // 적는 것도 규칙 3 위반이다 — 어느 쪽으로 돌았는지는 결과 옆에 그대로 적는다.
   { slug: "remove-bg", tier: 2, status: "live", needs: "all", family: "image" },
   { slug: "upscale", tier: 2, status: "live", needs: "all", family: "image" },
+  { slug: "cutout", tier: 2, status: "live", needs: "all", family: "image" },
   { slug: "subtitles", tier: 2, status: "planned", needs: "webgpu", family: "video" },
   { slug: "subtitle-translate", tier: 2, status: "planned", needs: "webgpu", family: "video" },
-  { slug: "cutout", tier: 2, status: "planned", needs: "webgpu", family: "image" },
   { slug: "stems", tier: 2, status: "planned", needs: "webgpu", family: "video" },
 ];
 

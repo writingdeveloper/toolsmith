@@ -6,6 +6,13 @@ import { LIVE_TOOLS } from "../lib/tools";
 const PATHS = ["", ...LIVE_TOOLS.map((tool) => `/tools/${tool.slug}`)];
 
 test("모든 언어 × 모든 도구 페이지가 열리고 lang 속성이 맞다", async ({ page }) => {
+  /*
+   * 이 하나가 언어 × 페이지를 전부 순회한다 — 도구가 늘 때마다 하는 일이 6개씩 는다.
+   * 기본 30초는 도구 17개(108 페이지)에서 넘쳤다. 페이지 수에 맞춰 늘린다 —
+   * 도구를 더할 때마다 사람이 이 숫자를 고치게 만들지 않는다.
+   */
+  test.setTimeout(LOCALES.length * PATHS.length * 1_000 + 30_000);
+
   for (const locale of LOCALES) {
     for (const path of PATHS) {
       const response = await page.goto(`/${locale}${path}`);
