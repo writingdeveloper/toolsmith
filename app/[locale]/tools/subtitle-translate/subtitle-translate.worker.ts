@@ -16,7 +16,15 @@ export type WorkerRequestPayload = { kind: "translate"; cues: Cue[]; options: Tr
 
 export type WorkerResponse =
   | { kind: "progress"; id: number; progress: TranslateProgress }
-  | { kind: "done"; id: number; cues: Cue[]; seconds: number; calls: number; stopped: boolean }
+  | {
+      kind: "done";
+      id: number;
+      cues: Cue[];
+      seconds: number;
+      calls: number;
+      failed: number;
+      stopped: boolean;
+    }
   | { kind: "failed"; id: number; message: string };
 
 const ctx = self as unknown as {

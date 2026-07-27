@@ -1088,6 +1088,8 @@ export const ptBR = {
         cachedNote: "É baixado uma vez e o seu navegador guarda — o próximo arquivo começa na hora.",
         qualityNote:
           "Frases comuns saem bem; expressões idiomáticas, muitas vezes não. Leia antes de publicar.",
+        encodingNote: "Este arquivo não é UTF-8, então foi lido como {encoding}. Confira o texto abaixo.",
+        strippedNote: "Etiquetas de formatação foram removidas de {lines} linhas — elas não voltam.",
         loadedSummary: "{lines} linhas · cerca de {estimate}",
         unitMinutes: "{value} min",
         unitSeconds: "{value} s",
@@ -1099,6 +1101,7 @@ export const ptBR = {
         stageTranslating: "traduzindo {done} / {total}",
         resultSummary: "{lines} linhas · {calls} traduzidas · levou {seconds}s",
         stoppedNote: "parado antes do fim — o resto está inalterado",
+        failedNote: "{lines} linhas voltaram quebradas, então o texto original foi mantido.",
         downloadSrt: "Baixar .srt",
         downloadVtt: "Baixar .vtt",
         errEngine: "Não foi possível carregar o motor",

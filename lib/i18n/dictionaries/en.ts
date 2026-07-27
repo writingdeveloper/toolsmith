@@ -1091,6 +1091,8 @@ export const en = {
         cachedNote: "It is fetched once and kept by your browser — the next file starts straight away.",
         qualityNote:
           "Plain sentences come out well; idioms often do not. Read it through before you publish it.",
+        encodingNote: "This file is not UTF-8, so it was read as {encoding}. Check the text below.",
+        strippedNote: "Formatting tags were removed from {lines} lines — they are not put back.",
         loadedSummary: "{lines} lines · about {estimate}",
         unitMinutes: "{value} min",
         unitSeconds: "{value} sec",
@@ -1102,6 +1104,7 @@ export const en = {
         stageTranslating: "translating {done} / {total}",
         resultSummary: "{lines} lines · {calls} translated · took {seconds}s",
         stoppedNote: "stopped early — the rest are unchanged",
+        failedNote: "{lines} lines came back broken, so the original text was kept.",
         downloadSrt: "Download .srt",
         downloadVtt: "Download .vtt",
         errEngine: "The runtime could not be loaded",

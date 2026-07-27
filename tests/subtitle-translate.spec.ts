@@ -1,11 +1,34 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { expect, test, type Page } from "@playwright/test";
-import { estimateSeconds, parseSubtitles } from "../lib/translate/translate-core";
+import {
+  MAX_LINES,
+  estimateSeconds,
+  isCollapsed,
+  parseSubtitles,
+  readSubtitles,
+  tokenBudget,
+} from "../lib/translate/translate-core";
 import { isAnalytics } from "./net";
 
+const fixture = (name: string) => path.join(__dirname, "fixtures", name);
+
 /** 6줄짜리 SRT. 끝의 두 줄은 같은 글이다 — 같은 글을 한 번만 부르는지 여기서 본다. */
-const SAMPLE = path.join(__dirname, "fixtures", "sample.srt");
+const SAMPLE = fixture("sample.srt");
+/*
+ * 아래 셋은 **실제 자막 파일을 받아 보고** 만든 것이다(2026-07-26). 무엇을 봤는지는
+ * `scripts/make-fixtures.mjs` 에 적혀 있다 — 표시가 섞인 칸, UTF-8 이 아닌 파일,
+ * 그리고 1332칸짜리 진짜 영화.
+ */
+const MARKUP = fixture("markup.vtt");
+const LEGACY_1252 = fixture("legacy-1252.srt");
+const LEGACY_EUCKR = fixture("legacy-euckr.srt");
+
+/** 파일 바이트를 브라우저가 주는 것과 같은 모양으로 만든다. */
+function bytesOf(file: string): ArrayBuffer {
+  const buffer = readFileSync(file);
+  return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+}
 
 const MODEL_HOST = /huggingface\.co|hf\.co|cdn-lfs/;
 const ENGINE_HOST = /cdn\.jsdelivr\.net\/npm\/@huggingface\/transformers/;
@@ -44,6 +67,86 @@ test("시간 칸이 없는 자막도 읽는다", () => {
   expect(parseSubtitles("그냥 글입니다.\n두 번째 줄.\n")).toEqual([]);
 });
 
+/*
+ * 아래 셋은 **합성 픽스처가 못 잡아낸 것들**이다. 손으로 쓴 6줄짜리 SRT 로는 세상의
+ * 자막이 어떻게 생겼는지 알 수 없었고, 공개 자막 11개를 받아 물려 보고서야 드러났다.
+ */
+
+test("본문에 섞인 표시를 걷어낸다", () => {
+  // 실파일에서 본 것: <i> <b> <br> <v 화자> {\an8} <타임스탬프>
+  const { cues, stripped, encoding } = readSubtitles(bytesOf(MARKUP), "en");
+  expect(encoding).toBe("utf-8");
+  expect(cues.map((cue) => cue.text)).toEqual([
+    "You… I mean, we.",
+    // <br> 은 줄바꿈이므로 공백이 되어야 한다 — 지우면 "–Why?–Now!" 가 된다
+    "–Why? –Now!",
+    "Pulp, Emo!",
+    "Everything is safe.",
+  ]);
+  expect(stripped).toBe(4);
+  // 표시밖에 없던 칸(`<i></i>`)은 번역할 것이 없으므로 남지 않는다
+  expect(cues).toHaveLength(4);
+
+  // 진짜 글까지 먹으면 안 된다 — 부등호는 태그가 아니다
+  expect(parseSubtitles("1\n00:00:01,000 --> 00:00:02,000\na < b 이고 c > d\n")[0].text).toBe(
+    "a < b 이고 c > d",
+  );
+});
+
+test("UTF-8 이 아닌 파일을 조용히 깨뜨리지 않는다", () => {
+  // 실측: pysrt 테스트 코퍼스의 실제 영화 자막이 windows-1252 다
+  const fr = readSubtitles(bytesOf(LEGACY_1252), "en");
+  expect(fr.encoding).toBe("windows-1252");
+  expect(fr.cues[1].text).toBe("Un café, s'il vous plaît.");
+
+  // 한국어 자막은 CP949 인 경우가 아주 많다
+  const ko = readSubtitles(bytesOf(LEGACY_EUCKR), "ko");
+  expect(ko.encoding).toBe("euc-kr");
+  expect(ko.cues[0].text).toBe("안녕하세요, 여러분.");
+
+  // 원문 언어를 잘못 고르면 글자가 깨진다. **그래서 화면이 인코딩과 첫 줄을 보여 준다** —
+  // 우리가 맞힐 수 없는 것을 맞힌 척하지 않는다.
+  const wrong = readSubtitles(bytesOf(LEGACY_EUCKR), "en");
+  expect(wrong.encoding).toBe("windows-1252");
+  expect(wrong.cues[0].text).not.toBe("안녕하세요, 여러분.");
+
+  // UTF-8 파일은 건드리지 않는다
+  expect(readSubtitles(bytesOf(SAMPLE), "ko").encoding).toBe("utf-8");
+});
+
+test("무너진 결과를 알아본다", () => {
+  // 실측에서 나온 것 — "No! Emo! It's a trap!" 이 이렇게 나왔다
+  expect(isCollapsed("ᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏᄏ")).toBe(true);
+  // 공백만 110자 나오는 경우도 있었다
+  expect(isCollapsed("          ")).toBe(true);
+  expect(isCollapsed("")).toBe(true);
+  // 길이는 긴데 서로 다른 글자가 거의 없다
+  expect(isCollapsed("가 나 가 나 가 나 가 나 가 나 가 나 가")).toBe(true);
+
+  // 멀쩡한 줄을 무너졌다고 하면 안 된다
+  expect(isCollapsed("모든 것이 안전합니다... 완벽하게 안전합니다.")).toBe(false);
+  expect(isCollapsed("나를 따르라!")).toBe(false);
+  expect(isCollapsed("...")).toBe(false);
+  // 반복이 좀 있어도 사람이 읽을 수 있으면 살린다
+  expect(isCollapsed("똑같은, 똑같은, 똑같은, 똑같은...")).toBe(false);
+});
+
+test("줄 길이를 원문에 맞춰 묶는다", () => {
+  /*
+   * 묶지 않으면 무너진 줄 하나가 21.9초를 먹는다(실측). 묶으면 2.4초다.
+   * 멀쩡한 줄은 이 상한에 닿지 않으므로 결과가 달라지지 않는다.
+   */
+  expect(tokenBudget("Follow me!")).toBe(24);
+  expect(tokenBudget("No! Emo! It’s a trap!")).toBe(37);
+  // 아주 긴 줄이라도 상한을 넘지 않는다
+  expect(tokenBudget("word ".repeat(200))).toBe(256);
+});
+
+test("상한은 실제 장편 영화보다 위에 있다", () => {
+  // 실측한 진짜 영화 자막이 1332칸이었다. 상한이 그 아래면 영화를 거부하는 도구가 된다.
+  expect(MAX_LINES).toBeGreaterThan(1_332);
+});
+
 test("걸릴 시간은 같은 글을 빼고 센다", () => {
   const cues = parseSubtitles(readFileSync(SAMPLE, "utf8"));
   expect(cues).toHaveLength(6);
@@ -67,6 +170,36 @@ test.describe("브라우저", () => {
     await expect(page.locator("[data-loaded]")).toContainText("6줄");
     // 5줄 × 1.5초 = 7.5초 → "8초"
     await expect(page.locator("[data-loaded]")).toContainText("8초");
+  });
+
+  test("표시를 걷어냈으면 걷어냈다고 말한다", async ({ page }) => {
+    await page.locator('input[type="file"]').setInputFiles(MARKUP);
+    await expect(page.locator("[data-loaded]")).toContainText("4줄");
+    await expect(page.locator("[data-stripped]")).toContainText("4줄");
+  });
+
+  /**
+   * 인코딩은 **원문 언어를 바꾸면 다시 판정한다.** 화면이 첫 줄을 보여 주므로
+   * 사람이 눈으로 맞출 수 있다 — 이 검사는 그 왕복이 실제로 도는지를 본다.
+   */
+  test("UTF-8 이 아닌 파일은 무엇으로 읽었는지 말하고 첫 줄을 보여 준다", async ({ page }) => {
+    await page.locator('input[type="file"]').setInputFiles(LEGACY_EUCKR);
+
+    // 기본 원문 언어가 영어라 처음에는 잘못 읽힌다 — 그 사실을 숨기지 않는다
+    await expect(page.locator("[data-encoding]")).toContainText("WINDOWS-1252");
+    await expect(page.locator("[data-preview]")).not.toHaveText("안녕하세요, 여러분.");
+
+    // 원문 언어를 한국어로 고치면 그 자리에서 다시 읽는다
+    await page.getByLabel("원문 언어").selectOption("ko");
+    await expect(page.locator("[data-encoding]")).toContainText("EUC-KR");
+    await expect(page.locator("[data-preview]")).toHaveText("안녕하세요, 여러분.");
+  });
+
+  test("UTF-8 파일에는 인코딩 안내를 띄우지 않는다", async ({ page }) => {
+    await page.locator('input[type="file"]').setInputFiles(SAMPLE);
+    await expect(page.locator("[data-loaded]")).toBeVisible();
+    await expect(page.locator("[data-encoding]")).toHaveCount(0);
+    await expect(page.locator("[data-stripped]")).toHaveCount(0);
   });
 
   /** 규칙 2 — 누르기 전에는 엔진도 모델도 받지 않는다. */

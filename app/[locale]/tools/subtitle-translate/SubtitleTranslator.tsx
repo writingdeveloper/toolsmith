@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FileDrop } from "@/components/FileDrop";
 import { trackToolCompleted } from "@/lib/analytics";
 import { hasWorkers } from "@/lib/capabilities";
@@ -14,7 +14,7 @@ import {
   MODEL_BYTES,
   TRANSLATE_LANGUAGES,
   estimateSeconds,
-  parseSubtitles,
+  readSubtitles,
   type TranslateLanguage,
   type TranslateProgress,
 } from "@/lib/translate/translate-core";
@@ -28,15 +28,20 @@ import type {
 type Ui = Dictionary["tools"]["subtitle-translate"]["ui"];
 type Common = Dictionary["common"];
 
+/**
+ * 파일은 **바이트로** 들고 있는다. 원문 언어를 바꾸면 옛 인코딩 판정이 달라지므로
+ * 그때 다시 읽어야 한다 — 글자로 한 번 읽어 버리면 되돌릴 수 없다.
+ */
 interface Loaded {
   name: string;
-  cues: Cue[];
+  bytes: ArrayBuffer;
 }
 
 interface Result {
   cues: Cue[];
   seconds: number;
   calls: number;
+  failed: number;
   stopped: boolean;
   /** 내려받기 링크. **렌더 중에 만들지 않는다** — 그러면 다시 그릴 때마다 새 URL 이 샌다. */
   srt: string;
@@ -149,30 +154,29 @@ export function SubtitleTranslator({
     async (files: File[]) => {
       if (files.length === 0) return;
       setProgress(null);
+      setError(null);
       revoke();
       setResult(null);
-
       const file = files[0];
-      const cues = parseSubtitles(await file.text());
-      if (cues.length === 0) {
-        setError(ui.errUnreadable);
-        setLoaded(null);
-        return;
-      }
-      setError(null);
-      setLoaded({ name: file.name, cues });
+      setLoaded({ name: file.name, bytes: await file.arrayBuffer() });
     },
-    [revoke, ui],
+    [revoke],
+  );
+
+  /** 원문 언어가 바뀌면 다시 읽는다 — 옛 인코딩 판정이 그것에 달려 있다. */
+  const parsed = useMemo(
+    () => (loaded ? readSubtitles(loaded.bytes, from) : null),
+    [loaded, from],
   );
 
   const run = useCallback(async () => {
-    if (!loaded) return;
+    if (!parsed || parsed.cues.length === 0) return;
     setBusy(true);
     setError(null);
     try {
       const response = await callWorker({
         kind: "translate",
-        cues: loaded.cues,
+        cues: parsed.cues,
         options: { from, to },
       });
       if (response.kind !== "done") throw new Error("UNKNOWN");
@@ -181,6 +185,7 @@ export function SubtitleTranslator({
         cues: response.cues,
         seconds: response.seconds,
         calls: response.calls,
+        failed: response.failed,
         stopped: response.stopped,
         srt: textUrl(toSrt(response.cues)),
         vtt: textUrl(toVtt(response.cues)),
@@ -203,7 +208,7 @@ export function SubtitleTranslator({
       setBusy(false);
       setProgress(null);
     }
-  }, [callWorker, from, loaded, revoke, to, ui]);
+  }, [callWorker, from, parsed, revoke, to, ui]);
 
   const stop = useCallback(() => {
     workerRef.current?.postMessage({ kind: "stop" } as WorkerRequest);
@@ -225,7 +230,8 @@ export function SubtitleTranslator({
     : null;
 
   const stem = loaded ? fileStem(loaded.name) : "subtitles";
-  const tooLong = loaded !== null && loaded.cues.length > MAX_LINES;
+  const tooLong = parsed !== null && parsed.cues.length > MAX_LINES;
+  const unreadable = parsed !== null && parsed.cues.length === 0;
 
   return (
     <div className="space-y-6">
@@ -282,14 +288,36 @@ export function SubtitleTranslator({
         </p>
       </div>
 
-      {loaded && (
+      {unreadable && <p className="text-sm text-err">{ui.errUnreadable}</p>}
+
+      {parsed && parsed.cues.length > 0 && (
         <div className="space-y-3">
           <p className="text-sm text-muted tabular-nums" data-loaded>
             {fill(ui.loadedSummary, {
-              lines: loaded.cues.length,
-              estimate: duration(estimateSeconds(loaded.cues), ui),
+              lines: parsed.cues.length,
+              estimate: duration(estimateSeconds(parsed.cues), ui),
             })}
           </p>
+          {/*
+            파일을 그대로 두지 않은 것은 반드시 말한다. 그리고 **확인할 것을 보여 준다** —
+            "글자가 맞는지 확인하세요" 라고만 하고 글자를 안 보여 주면 확인할 방법이 없다.
+            원문 언어를 바꾸면 이 줄이 바로 다시 그려지므로 눈으로 맞출 수 있다.
+          */}
+          {parsed.encoding !== "utf-8" && (
+            <div className="space-y-1">
+              <p className="text-sm text-warn" data-encoding>
+                {fill(ui.encodingNote, { encoding: parsed.encoding.toUpperCase() })}
+              </p>
+              <p className="truncate rounded-lg border border-border bg-panel px-3 py-2 text-sm">
+                <span data-preview>{parsed.cues[0].text}</span>
+              </p>
+            </div>
+          )}
+          {parsed.stripped > 0 && (
+            <p className="text-sm text-warn" data-stripped>
+              {fill(ui.strippedNote, { lines: parsed.stripped })}
+            </p>
+          )}
           {tooLong && (
             <p className="text-sm text-err">{fill(ui.errTooManyLines, { lines: MAX_LINES })}</p>
           )}
@@ -312,7 +340,7 @@ export function SubtitleTranslator({
                 {ui.stop}
               </button>
             )}
-            <span className="min-w-0 truncate text-sm text-muted">{loaded.name}</span>
+            <span className="min-w-0 truncate text-sm text-muted">{loaded?.name}</span>
           </div>
           {from === to && <p className="text-sm text-muted">{ui.sameLanguage}</p>}
         </div>
@@ -331,6 +359,13 @@ export function SubtitleTranslator({
             })}
             {result.stopped ? ` · ${ui.stoppedNote}` : ""}
           </p>
+
+          {/* 못 한 줄을 숨기지 않는다 — 원문이 남아 있는 이유를 말해 준다 */}
+          {result.failed > 0 && (
+            <p className="text-sm text-warn" data-failed>
+              {fill(ui.failedNote, { lines: result.failed })}
+            </p>
+          )}
 
           <ul className="max-h-80 space-y-2 overflow-y-auto text-sm" data-cues>
             {result.cues.map((cue, index) => (

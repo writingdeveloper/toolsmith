@@ -90,10 +90,45 @@ export function isTranslateLanguage(value: string): value is TranslateLanguage {
 }
 
 /**
- * 한 번에 받는 줄 수 상한. 줄당 1.5초이므로 1000줄이면 25분이다 —
- * 그보다 길면 시작하지 않고 그렇다고 말한다.
+ * 한 번에 받는 줄 수 상한.
+ *
+ * **처음에 1000으로 두었다가 실파일을 보고 올렸다(2026-07-26).** 실제 장편 영화 자막은
+ * 1332칸이었다 — 1000이면 진짜 영화를 거부한다. 상한은 터무니없는 입력을 막는 것이지
+ * 정상적인 쓰임을 막는 것이 아니다. 얼마나 걸릴지는 **누르기 전에 숫자로 말하고**
+ * 도중에 멈출 수 있으므로, 판단은 쓰는 사람이 한다.
  */
-export const MAX_LINES = 1_000;
+export const MAX_LINES = 3_000;
+
+/**
+ * UTF-8 이 아닌 자막 파일을 읽을 때 쓸 인코딩.
+ *
+ * **실제로 흔하다.** pysrt 의 테스트 코퍼스에 들어 있는 실파일 하나가 windows-1252 이고
+ * (`É` = 0xC9 에서 UTF-8 디코딩이 깨진다), 한국어 자막은 CP949 인 경우가 아주 많다.
+ * 그냥 UTF-8 로 읽으면 **조용히 깨진 글자**가 나온다 — 이 저장소가 가장 싫어하는 실패다.
+ *
+ * 어느 인코딩으로 읽을지는 **사용자가 고른 원문 언어**로 정한다. 추측하지 않고 이미
+ * 물어본 것을 쓴다. 언어를 바꾸면 파일을 다시 읽는다.
+ */
+const LEGACY_ENCODING: Record<TranslateLanguage, string> = {
+  en: "windows-1252",
+  ko: "euc-kr",
+  ja: "shift_jis",
+  zh: "gb18030",
+  es: "windows-1252",
+  de: "windows-1252",
+  fr: "windows-1252",
+  pt: "windows-1252",
+  it: "windows-1252",
+  ru: "windows-1251",
+  ar: "windows-1256",
+  hi: "utf-8",
+  id: "windows-1252",
+  vi: "windows-1258",
+  th: "windows-874",
+  tr: "windows-1254",
+  pl: "windows-1250",
+  nl: "windows-1252",
+};
 
 export type TranslateStage = "model" | "translating";
 
@@ -142,6 +177,40 @@ function parseStamp(text: string): number | null {
 }
 
 /**
+ * 자막 본문에 섞여 있는 **표시**를 걷어낸다.
+ *
+ * **실파일을 보고 알았다(2026-07-26).** Elephants Dream 의 영어 SRT 는 85칸 중 9칸에
+ * `<i>`, `<br>` 이 들어 있고, Sintel 의 VTT 에는 화자 표시 `<v Test>` 가 있다.
+ * 걷어내지 않으면 **태그가 그대로 번역기로 들어가** 결과가 망가진다.
+ *
+ * 되살리지는 않는다. 번역하면 낱말 순서가 바뀌므로 `<i>` 를 원래 자리에 다시 놓는 것은
+ * 불가능하고, 되는 척하는 것이 지우는 것보다 나쁘다. **대신 몇 칸을 건드렸는지 말한다.**
+ *
+ * 아는 태그만 지운다 — `<[^>]+>` 로 뭉뚱그리면 "a < b" 같은 진짜 글까지 먹는다.
+ */
+const TAG = /<\/?(?:i|b|u|s|v|c|ruby|rt|rp|lang|font)(?:\s[^>]*)?>|<\d{1,2}:\d{2}:\d{2}[.,]\d{1,3}>/gi;
+const LINE_BREAK = /<br\s*\/?>/gi;
+/** ASS·SSA 의 오버라이드 블록. `{\an8}` 처럼 위치를 지정한다. */
+const OVERRIDE = /\{\\[^}]*\}/g;
+
+function stripMarkup(text: string): string {
+  return text
+    .replace(LINE_BREAK, " ")
+    .replace(TAG, "")
+    .replace(OVERRIDE, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export interface ParsedSubtitles {
+  cues: Cue[];
+  /** 표시를 걷어낸 칸 수. 0이 아니면 화면에 그렇다고 적는다. */
+  stripped: number;
+  /** 실제로 읽는 데 쓴 인코딩. UTF-8 이 아니면 화면에 그렇다고 적는다. */
+  encoding: string;
+}
+
+/**
  * SRT 와 VTT 를 같은 함수로 읽는다 — 둘의 차이는 밀리초 구분자와 머리글뿐이고,
  * 우리가 필요한 것은 `시간 --> 시간` 줄과 그 아래 글이다.
  *
@@ -169,6 +238,35 @@ export function parseSubtitles(source: string): Cue[] {
   }
 
   return cues;
+}
+
+/**
+ * 파일 바이트에서 자막 칸을 얻는다. **글자를 어떻게 읽을지부터 정해야 한다.**
+ *
+ * UTF-8 로 엄격하게 읽어 보고, 깨지면 고른 원문 언어에 맞는 옛 인코딩으로 읽는다.
+ * 관대하게(`fatal: false`) 읽으면 깨진 글자가 조용히 섞여 들어오므로 그렇게 하지 않는다.
+ */
+export function readSubtitles(bytes: ArrayBuffer, language: TranslateLanguage): ParsedSubtitles {
+  let source: string;
+  let encoding = "utf-8";
+  try {
+    source = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch {
+    encoding = LEGACY_ENCODING[language];
+    source = new TextDecoder(encoding).decode(bytes);
+  }
+
+  let stripped = 0;
+  const cues: Cue[] = [];
+  for (const cue of parseSubtitles(source)) {
+    const text = stripMarkup(cue.text);
+    // 표시만 있던 칸은 번역할 것이 없다 — 세지도 않는다(남지 않는 줄을 세면 숫자가 안 맞는다)
+    if (text.length === 0) continue;
+    if (text !== cue.text) stripped += 1;
+    cues.push({ ...cue, text });
+  }
+
+  return { cues, stripped, encoding };
 }
 
 /** 남은 시간을 미리 말한다. 실제로 번역할 줄(같은 글은 한 번)만 센다. */
@@ -266,6 +364,39 @@ export interface TranslateResult {
   seconds: number;
   /** 실제로 모델을 부른 횟수. 같은 글은 한 번만 부른다. */
   calls: number;
+  /** 결과가 무너져 원문을 그대로 둔 줄 수. 0이 아니면 화면에 그렇게 적는다. */
+  failed: number;
+}
+
+/**
+ * 모델이 무너졌는가.
+ *
+ * **실파일에서 나왔다(2026-07-26).** Elephants Dream 자막 85칸을 번역했더니
+ * `No! Emo! It's a trap!` 이 `ᄏᄏᄏᄏ…` 250자로 나왔다. 짧은 감탄문에서 잘 생긴다.
+ *
+ * **생성 설정으로는 못 막는다.** `no_repeat_ngram_size: 3` 과 `repetition_penalty: 1.2` 를
+ * 둘 다 재 봤는데 붕괴는 그대로면서 멀쩡하던 줄이 나빠졌다("똑같은" → "똑 같은, 딱 같은").
+ * 그래서 **막는 대신 알아보고 버린다.** 못 한 줄은 원문을 남긴다 — 한국어 자막에 영어가
+ * 한 줄 남아 있으면 사람이 바로 알아보지만, `ᄏᄏᄏ` 는 알아볼 수 없다.
+ */
+export function isCollapsed(text: string): boolean {
+  const trimmed = text.trim();
+  if (trimmed.length === 0) return true;
+  // 같은 글자가 여덟 번 넘게 잇달아 나온다
+  if (/(.)\1{7,}/u.test(trimmed)) return true;
+  // 길이는 긴데 서로 다른 글자가 셋뿐이다
+  return trimmed.length >= 24 && new Set(trimmed.replace(/\s+/g, "")).size <= 3;
+}
+
+/**
+ * 이 줄에 허락할 최대 길이.
+ *
+ * 자막 한 줄의 번역이 원문의 몇 배가 될 이유가 없다. 묶어 두면 **무너졌을 때 피해가
+ * 짧아진다** — 실측에서 같은 줄이 21.9초에서 2.4초로 줄었고, 멀쩡한 줄은 하나도
+ * 달라지지 않았다.
+ */
+export function tokenBudget(text: string): number {
+  return Math.min(256, Math.max(24, text.split(/\s+/).length * 5 + 12));
 }
 
 export async function translateCues(
@@ -282,6 +413,7 @@ export async function translateCues(
   const texts = uniqueTexts(cues);
   const done = new Map<string, string>();
   const started = Date.now();
+  let failed = 0;
 
   onProgress?.({ stage: "translating", ratio: 0, done: 0, total: texts.length });
 
@@ -290,14 +422,20 @@ export async function translateCues(
     try {
       /*
        * 한 줄씩 부른다. 묶어서 넘기면 오히려 느리다(20줄 기준 30.2초 vs 49.1초).
-       * `max_new_tokens` 가 없으면 모델이 같은 낱말을 끝없이 이어 붙이는 일이 있다.
        */
       const output = await translate(text, {
         src_lang: options.from,
         tgt_lang: options.to,
-        max_new_tokens: 256,
+        max_new_tokens: tokenBudget(text),
       });
-      done.set(text, output[0]?.translation_text?.trim() || text);
+      const translated = output[0]?.translation_text ?? "";
+      if (isCollapsed(translated)) {
+        // 무너진 결과는 내보내지 않는다. 원문을 남기면 사람이 바로 알아본다.
+        done.set(text, text);
+        failed += 1;
+      } else {
+        done.set(text, translated.trim());
+      }
     } catch {
       throw new TranslateError("TRANSLATE_FAILED");
     }
@@ -314,5 +452,6 @@ export async function translateCues(
     cues: cues.map((cue) => ({ ...cue, text: done.get(cue.text) ?? cue.text })),
     seconds: (Date.now() - started) / 1000,
     calls: done.size,
+    failed,
   };
 }

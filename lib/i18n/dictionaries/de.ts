@@ -1088,6 +1088,8 @@ export const de = {
         cachedNote: "Es wird einmal geladen und von Ihrem Browser behalten — die nächste Datei startet sofort.",
         qualityNote:
           "Schlichte Sätze gelingen, Redewendungen oft nicht. Lesen Sie es durch, bevor Sie es veröffentlichen.",
+        encodingNote: "Diese Datei ist nicht UTF-8 und wurde als {encoding} gelesen. Prüfen Sie den Text unten.",
+        strippedNote: "Aus {lines} Zeilen wurden Formatierungs-Tags entfernt — sie kommen nicht zurück.",
         loadedSummary: "{lines} Zeilen · etwa {estimate}",
         unitMinutes: "{value} Min.",
         unitSeconds: "{value} Sek.",
@@ -1099,6 +1101,7 @@ export const de = {
         stageTranslating: "übersetzt {done} / {total}",
         resultSummary: "{lines} Zeilen · {calls} übersetzt · {seconds}s gebraucht",
         stoppedNote: "vorzeitig angehalten — der Rest ist unverändert",
+        failedNote: "{lines} Zeilen kamen kaputt zurück, deshalb blieb der Originaltext stehen.",
         downloadSrt: ".srt herunterladen",
         downloadVtt: ".vtt herunterladen",
         errEngine: "Die Laufzeit konnte nicht geladen werden",

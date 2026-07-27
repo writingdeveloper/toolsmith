@@ -361,3 +361,72 @@ Thank you.
 Thank you.
 `;
 await write("sample.srt", Buffer.from(SAMPLE_SRT, "utf8"));
+
+/*
+ * ── 실제 자막 파일에서 발견한 것들 (2026-07-26) ────────────────────────────
+ *
+ * 위 sample.srt 는 우리가 손으로 쓴 것이라 **세상의 자막이 실제로 어떻게 생겼는지**
+ * 아무것도 검증하지 못했다. 공개 라이선스 자막 11개를 받아 파서에 물려 보고 세 가지가
+ * 나왔다. 아래 픽스처는 그 세 가지를 **그대로 재현**한다.
+ *
+ * 표본은 저장소에 넣지 않는다(제3자 자막의 라이선스가 제각각이다). 대신 어디서 무엇을
+ * 봤는지 적어 둔다:
+ *   - Elephants Dream(2006) 영어 SRT, Wikimedia Commons TimedText — 85칸 중 **9칸**에
+ *     `<i>` 와 `<br>` 이 들어 있었다.
+ *   - Sintel VTT, MDN 예제 — 화자 표시 `<v Test>[Test]</v>`.
+ *   - pysrt 테스트 코퍼스의 `windows-1252.srt` — 실제 영화 자막이고 **UTF-8 로 디코딩되지
+ *     않는다**(`É` = 0xC9). 같은 영화의 UTF-8 판은 **1332칸**이었다 — 우리가 처음 둔
+ *     상한 1000줄로는 진짜 영화를 거부하게 된다는 뜻이다.
+ */
+
+/** 실파일에서 본 표시를 전부 담았다. 이것들이 번역기로 넘어가면 결과가 망가진다. */
+const MARKUP_VTT = `WEBVTT
+
+NOTE 이 덩어리는 자막이 아니다 — 통째로 버려져야 한다
+
+intro
+00:00:01.000 --> 00:00:03.500 align:start position:10%
+<v Proog>You… I mean, <i>we</i>.</v>
+
+2
+00:00:03.500 --> 00:00:06.000
+–Why?<br>–Now!
+
+3
+00:00:06.000 --> 00:00:08.000
+{\\an8}<b>Pulp</b>, Emo!
+
+4
+00:00:08.000 --> 00:00:10.000
+<00:00:08.500>Everything is safe.
+
+5
+00:00:10.000 --> 00:00:12.000
+<i></i>
+`;
+await write("markup.vtt", Buffer.from(MARKUP_VTT, "utf8"));
+
+/*
+ * UTF-8 이 아닌 파일. windows-1252 는 `É`(U+00C9)를 0xC9 한 바이트로 적는데, 그 바이트는
+ * UTF-8 에서 올 수 없는 자리라 엄격 디코딩이 실패한다 — 실파일이 깨지는 지점 그대로다.
+ * 줄 끝도 실파일처럼 CRLF 로 둔다.
+ */
+const LEGACY_SRT =
+  "1\r\n00:00:01,000 --> 00:00:04,000\r\nCE FILM RELATE DES ÉVÉNEMENTS\r\nQUI ONT EXISTÉ.\r\n\r\n" +
+  "2\r\n00:00:04,000 --> 00:00:07,000\r\nUn café, s'il vous plaît.\r\n";
+// latin1 로 쓰면 windows-1252 와 같은 바이트가 나온다(이 글자 범위에서는 둘이 일치한다)
+await write("legacy-1252.srt", Buffer.from(LEGACY_SRT, "latin1"));
+
+/*
+ * 한국어 자막은 CP949 인 경우가 아주 많다. Node 에는 CP949 인코더가 없어 바이트를 그대로
+ * 적어 둔다. 담긴 글은 이것이다:
+ *   1  안녕하세요, 여러분.
+ *   2  오늘은 세 가지를 말씀드리겠습니다.
+ *   3  첫째는 이것이 왜 어려운가입니다.
+ */
+const LEGACY_KO_BASE64 =
+  "MQ0KMDA6MDA6MDEsMDAwIC0tPiAwMDowMDowMyw1MDANCr7Is+fHz7y8v+QsIL+pt6+60C4NCg0KMg0K" +
+  "MDA6MDA6MDMsNTAwIC0tPiAwMDowMDowNiwwMDANCr/AtMPAuiC8vCCwocH2uKYguLu+uLXluK6w2r3A" +
+  "tM+02S4NCg0KMw0KMDA6MDA6MDYsMDAwIC0tPiAwMDowMDowOCwwMDANCsO5wrC0wiDAzLDNwMwgv9Yg" +
+  "vu63wb/usKHA1LTPtNkuDQo=";
+await write("legacy-euckr.srt", Buffer.from(LEGACY_KO_BASE64, "base64"));

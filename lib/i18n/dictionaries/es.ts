@@ -1088,6 +1088,8 @@ export const es = {
         cachedNote: "Se descarga una vez y tu navegador lo guarda — el siguiente archivo empieza al momento.",
         qualityNote:
           "Las frases corrientes salen bien; los modismos, a menudo no. Léelo antes de publicarlo.",
+        encodingNote: "Este archivo no es UTF-8, así que se leyó como {encoding}. Comprueba el texto de abajo.",
+        strippedNote: "Se quitaron etiquetas de formato de {lines} líneas — no se vuelven a poner.",
         loadedSummary: "{lines} líneas · unos {estimate}",
         unitMinutes: "{value} min",
         unitSeconds: "{value} s",
@@ -1099,6 +1101,7 @@ export const es = {
         stageTranslating: "traduciendo {done} / {total}",
         resultSummary: "{lines} líneas · {calls} traducidas · tardó {seconds}s",
         stoppedNote: "detenido antes de tiempo — el resto sigue igual",
+        failedNote: "{lines} líneas salieron rotas, así que se dejó el texto original.",
         downloadSrt: "Descargar .srt",
         downloadVtt: "Descargar .vtt",
         errEngine: "No se pudo cargar el motor",

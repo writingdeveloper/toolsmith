@@ -83,10 +83,9 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 ## 현재 상태 (2026-07-26)
 
 **라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 19) = 120 페이지
-+ 루트 언어 선택. 전부 정적. Playwright **238종**(프로덕션 236 통과 / 2 스킵 / 0 실패,
-1.1분). 두 프로젝트로 돈다 — 기본 `chromium`(전부)과 `chromium-webgpu`(모델 도구 넷을
-GPU 경로로). dev 는 219 통과 / 19 스킵 / 0 실패(2.2분). **지연 로딩 판정만은 여전히
-프로덕션으로 한다**(Turbopack dev 가 동적 import 를 당겨오기 때문).
++ 루트 언어 선택. 전부 정적. Playwright **246종**. 두 프로젝트로 돈다 — 기본
+`chromium`(전부)과 `chromium-webgpu`(모델 도구 넷을 GPU 경로로). **지연 로딩 판정만은
+여전히 프로덕션으로 한다**(Turbopack dev 가 동적 import 를 당겨오기 때문).
 
 ### 배포된 도구 19개 (Tier 1 전부 + Tier 2 다섯)
 
@@ -110,7 +109,7 @@ GPU 경로로). dev 는 219 통과 / 19 스킵 / 0 실패(2.2분). **지연 로�
 | 19 | 이미지 업스케일 (Tier 2) | `/tools/upscale` | Real-ESRGAN(BSD-3). **CPU 에서 도는 것을 골랐다** |
 | 18 | 클릭 컷아웃 (Tier 2) | `/tools/cutout` | SlimSAM(Apache-2.0). **인코더 한 번, 디코더 클릭마다** |
 | 15 | 자막 생성 (Tier 2) | `/tools/subtitles` | Whisper(Apache-2.0). **fp32 밖에 못 쓴다** |
-| 16 | 자막 번역 (Tier 2) | `/tools/subtitle-translate` | m2m100(MIT). **transformers.js 3.7.6 에 묶여 있다** |
+| 16 | 자막 번역 (Tier 2) | `/tools/subtitle-translate` | m2m100(MIT). **3.7.6 에 묶여 있다.** 무너진 줄은 원문을 남긴다 |
 
 경로 앞에 `/{locale}` 이 붙는다(`/ko/tools/pdf-merge`).
 
@@ -154,6 +153,9 @@ GPU 경로로). dev 는 219 통과 / 19 스킵 / 0 실패(2.2분). **지연 로�
   (셋이 라이선스·크기에서 떨어졌다). 가장 중요한 것은 **버전이 모델 판정을 뒤집는다**는
   것 — transformers.js 4.2.0 에서는 q8 이 세션부터 실패하고 3.7.6 에서는 멀쩡히 돈다.
   **자막 생성과 버전을 통일하지 말 것.** 스펙이 `"3.7.6"` 문자열을 못 박는다.
+  여기에는 **실파일 QA 로 나온 것 넷**도 들어 있다 — 태그 걷어내기, UTF-8 아닌 파일,
+  상한 1000→3000, 그리고 **짧은 감탄문에서의 붕괴**(생성 설정으로는 못 막아서
+  알아보고 원문을 남긴다). 근거는 `docs/TOOLS.md` 의 "실제 자막 파일을 받아 보고서야".
 - `lib/i18n/dictionaries/en.ts` — 사전의 **타입 원본**. 여기에 키를 더하면 나머지 5개가
   타입 에러로 드러난다.
 
