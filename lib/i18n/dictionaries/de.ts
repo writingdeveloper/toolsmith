@@ -77,6 +77,7 @@ export const de = {
     cutout: "Freistellen per Klick",
     upscale: "Bild hochskalieren",
     stems: "Spuren trennen",
+    summarize: "Zusammenfassung",
   },
 
   tools: {
@@ -1169,6 +1170,74 @@ export const de = {
         errNoAudio: "In dieser Datei ist kein Ton",
         errUnsupportedInput: "Diese Datei konnte nicht gelesen werden — MP4, MOV, M4A oder WAV",
         errGeneric: "Die Stems konnten nicht getrennt werden",
+      },
+    },
+    summarize: {
+      blurb: "Kürzt ein langes Dokument auf ein paar Sätze — ohne dass es den Tab verlässt.",
+      metaTitle: "Text zusammenfassen — ohne Upload",
+      metaDescription:
+        "Fassen Sie ein PDF, eine Textdatei oder eingefügten Text zusammen, ohne ihn hochzuladen. Ein kleines KI-Modell läuft in Ihrem Browser-Tab.",
+      h1: "Ein Dokument zusammenfassen",
+      lead: "Fügen Sie Text ein oder legen Sie eine Datei ab, und Sie bekommen ein paar Sätze zurück. Das Modell wird auf Ihr Gerät geladen und läuft dort — das Dokument verlässt diesen Tab nicht.",
+      faq: [
+        {
+          q: "Wohin geht mein Dokument?",
+          a: "Nirgendwohin. Es wird in diesem Tab gelesen und nie hochgeladen. Genau darum geht es hier: Die Dokumente, die man am liebsten zusammenfassen lassen möchte — Verträge, Arztbriefe, unveröffentlichte Entwürfe — sind genau die, die man nicht in den Server eines Fremden einfügen sollte.",
+        },
+        {
+          q: "Warum braucht ausgerechnet dieses Werkzeug eine Grafikkarte?",
+          a: "Weil es ohne sie keinen funktionierenden Weg gibt. Der ONNX-Build des Modells nutzt eine Operation, für die die Prozessor-Laufzeit keine Implementierung hat — die Sitzung öffnet dort nicht einmal. Wir haben das nächstbeste Modell gemessen, das auf dem Prozessor läuft: 0,9 Token pro Sekunde, also fast vier Minuten für ein kurzes Dokument. Lieber sagen wir Nein, als so etwas auszuliefern.",
+        },
+        {
+          q: "Wie gut ist die Zusammenfassung?",
+          a: "Gut im Aufbau des Dokuments, unzuverlässig im Detail. Es ist ein Modell mit 350 Millionen Parametern: klein genug, um es in einem Tab zu laden und laufen zu lassen, und klein genug, um Fakten zu verwechseln. In unseren Messungen löste es NADPH einmal zu einem chemischen Namen auf, den es nicht gibt. Nehmen Sie die Zusammenfassung als Landkarte des Dokuments, nicht als Ersatz fürs Lesen.",
+        },
+        {
+          q: "Welche Dateien kann ich nehmen?",
+          a: "Reinen Text, Markdown, HTML und PDF. Ein PDF funktioniert nur mit echter Textebene — eine eingescannte Seite ist ein Bild von Wörtern, daraus lässt sich nichts herausholen. Wenn kein Text gefunden wird, schicken Sie die Datei zuerst durch das Werkzeug Bild zu Text und fügen Sie das Ergebnis hier ein.",
+        },
+        {
+          q: "Kann es in eine andere Sprache zusammenfassen?",
+          a: "Nein, und das haben wir vor der Entscheidung geprüft. Die Zusammenfassung kommt immer in der Sprache zurück, in der das Dokument geschrieben ist. Soll das Modell ins Koreanische wechseln, bricht es mit erfundenen Wörtern zusammen; in die Gegenrichtung ignoriert es die Anweisung. Eine Sprachauswahl anzubieten, die bei zwei unserer sechs Sprachen versagt, wäre schlechter, als keine anzubieten.",
+        },
+        {
+          q: "Warum gibt es eine Ober- und eine Untergrenze?",
+          a: "Ein Token entspricht im Englischen etwa einem kurzen Wort und im Koreanischen oder Japanischen etwa einer Silbe — deshalb zählt dieselbe Seite je nach Sprache sehr unterschiedlich. Unter rund 200 Token hört das Modell auf zusammenzufassen und fängt an zu erfinden: Bei einem leeren Feld lieferte es überzeugt die Zusammenfassung einer Gesundheitskampagne, die es nicht gab. Über 16.000 geht der Grafikspeicher aus. Beide Grenzen sind gemessen, und wir lehnen lieber ab, als stillschweigend nur den ersten Teil zusammenzufassen.",
+        },
+        {
+          q: "Welches Modell ist das, und welche Lizenz hat es?",
+          a: "LFM2.5-350M von Liquid AI, nach ONNX konvertiert. Wir haben es gewählt, nachdem wir vier Kandidaten an denselben echten Dokumenten gemessen hatten — es war das einzige, das wirklich zusammenfasste, statt den Ausgangstext zurückzugeben. Die Lizenz ist die LFM Open License v1.0: kein Copyleft, aber die kommerzielle Nutzung ist daran geknüpft, dass die Organisation unter 10 Millionen Dollar Jahresumsatz bleibt. Diese Seite ist von dieser Grenze weit entfernt, und wir schreiben das lieber hier hin, als es zu verschweigen. Die Gewichte holt Ihr Browser direkt von Hugging Face; wir hosten sie nie und geben sie nicht weiter.",
+        },
+      ],
+      ui: {
+        dropLabel: "Dokument hier ablegen",
+        dropHint: "TXT · MD · HTML · PDF — oder den Text unten einfügen",
+        textLabel: "Dokument",
+        textPlaceholder: "Fügen Sie den Text ein, der zusammengefasst werden soll…",
+        downloadNote: "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
+        cachedNote: "Es wird einmal geladen und von Ihrem Browser behalten — das nächste Dokument startet sofort.",
+        qualityNote:
+          "Das Modell ist klein: Es trifft den Kern und kann Details verfehlen. Prüfen Sie alles Wichtige am Dokument selbst nach.",
+        loadedSummary: "Rund {tokens} Token · etwa {seconds}s, sobald das Modell bereit ist",
+        tooShortNote:
+          "Das ist kürzer als {minimum} Token. Darunter fasst das Modell nicht mehr zusammen, sondern erfindet Inhalte.",
+        run: "Zusammenfassen",
+        working: "Wird zusammengefasst…",
+        stageModel: "Modell wird geladen {percent}%",
+        stageSummarizing: "wird zusammengefasst…",
+        resultSummary: "{tokens} Token · {seconds}s gebraucht",
+        copy: "Kopieren",
+        copied: "Kopiert",
+        noWebgpuHint:
+          "Dieses Werkzeug braucht WebGPU, das Ihr Browser nicht anbietet. Chrome und Edge haben es auf dem Desktop seit 2023, Safari seit 26. Alle anderen Werkzeuge hier laufen ohne.",
+        errNoWebgpu: "Dieses Werkzeug braucht WebGPU",
+        errEngine: "Die Laufzeit konnte nicht geladen werden",
+        errModel: "Das Modell konnte nicht geladen werden",
+        errUnsupportedInput: "Diese Datei konnte nicht gelesen werden — TXT, MD, HTML oder PDF",
+        errNoText: "In dieser Datei wurde kein Text gefunden — ein eingescanntes PDF braucht zuerst das Werkzeug Bild zu Text",
+        errTooShort: "Zu kurz zum Zusammenfassen: {tokens} Token, nötig sind mindestens {minimum}",
+        errTooLong: "Zu lang: {tokens} Token, die Grenze liegt bei {maximum}",
+        errGeneric: "Das Dokument konnte nicht zusammengefasst werden",
       },
     },
   },

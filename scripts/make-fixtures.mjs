@@ -466,3 +466,71 @@ const alphaDoc = await PDFDocument.create();
   page.drawImage(image, { x: 30, y: 300, width: 535, height: 344 });
 }
 await write("alpha.pdf", Buffer.from(await alphaDoc.save()));
+
+/*
+ * ── 요약할 실문서 (2026-07-27) ────────────────────────────────────────
+ *
+ * 아서 코난 도일 「보헤미아 왕국 스캔들」의 첫 두 문단이다. 1892년 발표작이라
+ * **퍼블릭 도메인**이고, 구텐베르크 프로젝트(#1661)에서 받아 문단만 남겼다.
+ *
+ * 우리가 지어낸 문장을 쓰지 않는 이유는 이번에 실측으로 확인했다 — 후보 모델 둘이
+ * **위키백과 같은 설명문은 요약해 놓고 서사문은 그대로 베꼈다.** 픽스처가 설명문뿐이면
+ * 그 결함이 초록불 뒤에 숨는다.
+ */
+const ARTICLE =
+  "To Sherlock Holmes she is always the woman. I have seldom heard him mention her under any other name. In his eyes she eclipses and predominates the whole of her sex. It was not that he felt any emotion akin to love for Irene Adler. All emotions, and that one particularly, were abhorrent to his cold, precise but admirably balanced mind. He was, I take it, the most perfect reasoning and observing machine that the world has seen, but as a lover he would have placed himself in a false position. He never spoke of the softer passions, save with a gibe and a sneer. They were admirable things for the observer\u2014excellent for drawing the veil from men\u2019s motives and actions. But for the trained reasoner to admit such intrusions into his own delicate and finely adjusted temperament was to introduce a distracting factor which might throw a doubt upon all his mental results. Grit in a sensitive instrument, or a crack in one of his own high-power lenses, would not be more disturbing than a strong emotion in a nature such as his. And yet there was but one woman to him, and that woman was the late Irene Adler, of dubious and questionable memory. I had seen little of Holmes lately. My marriage had drifted us away from each other.";
+await write("article.txt", Buffer.from(ARTICLE, "utf8"));
+
+/*
+ * 같은 글을 실제 웹페이지처럼 감싼다. **버릴 것이 들어 있어야 의미가 있다** —
+ * 스크립트, 내비게이션, 실체 참조, 문단을 나누는 태그가 전부 여기 있다.
+ */
+const ARTICLE_HTML = [
+  "<!doctype html><html><head><title>A Scandal in Bohemia</title>",
+  "<script>window.ads = 1;</script><style>body{color:red}</style></head><body>",
+  "<nav><a href=\"/\">Home</a> &middot; <a href=\"/about\">About</a></nav>",
+  "<h1>A Scandal in Bohemia</h1>",
+  ARTICLE.split(". ").slice(0, 6).join(". ") + ".",
+  "<p>" + ARTICLE.split(". ").slice(6).join(". ") + "</p>",
+  "<p>Irene Adler &amp; the King &mdash; &#39;the woman&#39;.</p>",
+  "<footer>&copy; nobody</footer></body></html>",
+].join("");
+await write("article.html", Buffer.from(ARTICLE_HTML, "utf8"));
+
+/* 글자층이 **있는** PDF. scan.pdf(그림뿐)와 짝을 이룬다. */
+{
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const words = ARTICLE.split(" ");
+  let line = "";
+  const lines = [];
+  for (const word of words) {
+    const next = line ? line + " " + word : word;
+    if (font.widthOfTextAtSize(next, 11) > 495) {
+      lines.push(line);
+      line = word;
+    } else line = next;
+  }
+  lines.push(line);
+  let page = doc.addPage([595, 842]);
+  let y = 790;
+  for (const one of lines) {
+    if (y < 50) {
+      page = doc.addPage([595, 842]);
+      y = 790;
+    }
+    page.drawText(one, { x: 50, y, size: 11, font, color: rgb(0.1, 0.1, 0.1) });
+    y -= 16;
+  }
+  await write("article.pdf", Buffer.from(await doc.save()));
+}
+
+/*
+ * ── UTF-16 로 저장된 텍스트 (2026-07-27, 실물 쓸이로 추가) ───────────────
+ *
+ * **UTF-8 로 엄격하게 읽어도 실패하지 않는다.** UTF-16LE 는 ASCII 사이에 NUL 이 낀
+ * 모양인데 NUL 은 유효한 UTF-8 이라 디코딩이 성공해 버리고, 글자마다 빈칸이 낀
+ * 쓰레기가 조용히 통과했다. 실패하지 않는 실패라 픽스처로 못 박아 둔다.
+ * 윈도우 메모장이 한때 이렇게 저장했으므로 실제로 만나는 파일이다.
+ */
+await write("article-utf16.txt", Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from(ARTICLE, "utf16le")]));

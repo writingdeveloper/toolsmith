@@ -48,10 +48,15 @@ export default defineConfig({
      *
      * 이 프로젝트에서는 스펙이 "GPU 로 처리" 를 **정확히** 요구한다. 그래야
      * 어댑터가 사라졌을 때 조용히 CPU 로 통과하지 않는다.
+     *
+     * **요약(summarize)만은 두 프로젝트가 서로 다른 것을 지킨다.** 이 도구는 CPU 로
+     * 내려갈 곳이 없으므로(근거는 lib/summarize/summarize-core.ts 실측 6번), 기본
+     * 프로젝트는 **"WebGPU 가 필요하다" 는 안내가 제대로 나오는지**를 검증하고,
+     * 이 프로젝트가 실제 요약을 검증한다. 어느 쪽도 비어 있지 않다.
      */
     {
       name: "chromium-webgpu",
-      testMatch: /(remove-bg|upscale|cutout|subtitles)\.spec\.ts/,
+      testMatch: /(remove-bg|upscale|cutout|subtitles|summarize)\.spec\.ts/,
       use: { ...devices["Desktop Chrome"], channel: "chromium" },
     },
   ],

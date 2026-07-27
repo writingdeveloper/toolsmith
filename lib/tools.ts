@@ -29,7 +29,8 @@ export type ToolSlug =
   | "remove-bg"
   | "cutout"
   | "upscale"
-  | "stems";
+  | "stems"
+  | "summarize";
 
 /** 무엇을 다루는 도구인가. 관련 도구를 고르는 데만 쓴다. */
 export type Family = "image" | "video" | "pdf" | "data";
@@ -74,6 +75,11 @@ export const TOOLS: Tool[] = [
   { slug: "subtitle-translate", tier: 2, status: "live", needs: "all", family: "video" },
   // 스템 분리도 **CPU 로만 간다** — 실측하고 결과를 숫자로 확인한 것이 wasm 경로뿐이다.
   { slug: "stems", tier: 2, status: "live", needs: "all", family: "video" },
+  //
+  // **`needs: "webgpu"` 를 쓰는 첫 도구다.** 앞의 여섯은 GPU 가 없으면 CPU 로 내려가
+  // 느릴 뿐 끝까지 돌았지만, 이것은 내려갈 곳이 없다 — 내보내기가 쓰는 연산이
+  // wasm EP 에 아예 없다. 근거는 lib/summarize/summarize-core.ts 의 실측 6번.
+  { slug: "summarize", tier: 2, status: "live", needs: "webgpu", family: "pdf" },
 ];
 
 export const LIVE_TOOLS = TOOLS.filter((t) => t.status === "live");

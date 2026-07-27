@@ -77,6 +77,7 @@ export const es = {
     cutout: "Recorte con un clic",
     upscale: "Ampliar imagen",
     stems: "Separar pistas",
+    summarize: "Resumen de documentos",
   },
 
   tools: {
@@ -1169,6 +1170,74 @@ export const es = {
         errNoAudio: "Este archivo no tiene sonido",
         errUnsupportedInput: "No se pudo leer este archivo — MP4, MOV, M4A o WAV",
         errGeneric: "No se pudieron separar las pistas",
+      },
+    },
+    summarize: {
+      blurb: "Reduce un documento largo a unas pocas frases, sin que salga de tu pestaña.",
+      metaTitle: "Resumir documentos — sin subirlos",
+      metaDescription:
+        "Resume un PDF, un archivo de texto o un texto pegado sin subirlo. Un modelo de IA pequeño se ejecuta en tu navegador. Sin registro ni clave de API.",
+      h1: "Resumir un documento",
+      lead: "Pega un texto o suelta un archivo y recibirás unas pocas frases. El modelo se descarga a tu dispositivo y se ejecuta ahí — el documento nunca sale de esta pestaña.",
+      faq: [
+        {
+          q: "¿A dónde va mi documento?",
+          a: "A ningún sitio. Se lee dentro de esta pestaña y nunca se sube. Aquí eso es lo esencial: los documentos que más se quieren resumir — contratos, informes médicos, borradores inéditos — son justo los que no deberías pegar en el servidor de otra persona.",
+        },
+        {
+          q: "¿Por qué esta herramienta necesita tarjeta gráfica?",
+          a: "Porque sin ella no hay ningún camino que funcione. La versión ONNX del modelo usa una operación para la que el entorno del procesador no tiene implementación, así que la sesión ni siquiera se abre. Medimos el modelo más parecido que sí funciona en el procesador: 0,9 tokens por segundo, casi cuatro minutos para un documento corto. Preferimos decir que no antes que entregar eso.",
+        },
+        {
+          q: "¿Qué tal es el resumen?",
+          a: "Capta bien la forma del documento y es poco fiable en los detalles. Es un modelo de 350 millones de parámetros: lo bastante pequeño para descargarlo y ejecutarlo en una pestaña, y lo bastante pequeño para equivocarse en los hechos. En nuestras medidas llegó a desarrollar NADPH con un nombre químico que no existe. Toma el resumen como un mapa del documento, no como un sustituto de leerlo.",
+        },
+        {
+          q: "¿Qué archivos puedo usar?",
+          a: "Texto plano, Markdown, HTML y PDF. Un PDF solo sirve si tiene una capa real de texto: una página escaneada es una fotografía de palabras y no se puede extraer nada de ella. Si aparece que no se encontró texto, pasa antes el archivo por la herramienta de imagen a texto y pega aquí el resultado.",
+        },
+        {
+          q: "¿Puede resumir a otro idioma?",
+          a: "No, y lo probamos antes de decidirlo. El resumen siempre vuelve en el idioma en que está escrito el documento. Si se le pide pasar al coreano se derrumba inventando palabras, y en sentido contrario ignora la instrucción. Ofrecer un selector de idioma que falla en dos de nuestros seis idiomas sería peor que no ofrecerlo.",
+        },
+        {
+          q: "¿Por qué hay un límite superior e inferior?",
+          a: "Un token equivale más o menos a una palabra corta en inglés y a una sílaba en coreano o japonés, por eso una misma página se cuenta de forma muy distinta según el idioma. Por debajo de unos 200 tokens el modelo deja de resumir y empieza a inventar: ante una caja vacía produjo con toda confianza el resumen de una campaña de salud pública que no existía. Por encima de 16.000 se queda sin memoria gráfica. Ambos límites están medidos, y preferimos rechazar antes que resumir en silencio solo la primera parte.",
+        },
+        {
+          q: "¿Qué modelo es y cuál es su licencia?",
+          a: "LFM2.5-350M de Liquid AI, convertido a ONNX. Lo elegimos tras medir cuatro candidatos con los mismos documentos reales, y fue el único que resumía de verdad en lugar de devolver el texto original. Su licencia es la LFM Open License v1.0: no es copyleft, pero el uso comercial está condicionado a que la organización se mantenga por debajo de los 10 millones de dólares de ingresos anuales. Este sitio está muy lejos de esa línea, y preferimos escribirlo aquí antes que ocultarlo. Los pesos los descarga tu navegador directamente de Hugging Face; nosotros nunca los alojamos ni los redistribuimos.",
+        },
+      ],
+      ui: {
+        dropLabel: "Suelta aquí un documento",
+        dropHint: "TXT · MD · HTML · PDF — o pega el texto abajo",
+        textLabel: "Documento",
+        textPlaceholder: "Pega el texto que quieres resumir…",
+        downloadNote: "Pulsar el botón descarga unos {size} de motor y modelo.",
+        cachedNote: "Se descarga una vez y tu navegador lo guarda — el siguiente documento empieza al momento.",
+        qualityNote:
+          "El modelo es pequeño: acierta en lo esencial y puede fallar en los detalles. Comprueba en el documento todo lo que importe.",
+        loadedSummary: "Unos {tokens} tokens · alrededor de {seconds}s con el modelo listo",
+        tooShortNote:
+          "Esto es más corto que {minimum} tokens. Por debajo de ahí el modelo deja de resumir y empieza a inventar.",
+        run: "Resumir",
+        working: "Resumiendo…",
+        stageModel: "descargando el modelo {percent}%",
+        stageSummarizing: "resumiendo…",
+        resultSummary: "{tokens} tokens de entrada · tardó {seconds}s",
+        copy: "Copiar",
+        copied: "Copiado",
+        noWebgpuHint:
+          "Esta herramienta necesita WebGPU y tu navegador no lo ofrece. Chrome y Edge lo tienen desde 2023 en escritorio; Safari desde la 26. Todas las demás herramientas de aquí funcionan sin él.",
+        errNoWebgpu: "Esta herramienta necesita WebGPU",
+        errEngine: "No se pudo cargar el motor",
+        errModel: "No se pudo descargar el modelo",
+        errUnsupportedInput: "No se pudo leer este archivo — TXT, MD, HTML o PDF",
+        errNoText: "No se encontró texto en este archivo — un PDF escaneado necesita antes la herramienta de imagen a texto",
+        errTooShort: "Demasiado corto para resumir: {tokens} tokens, y hacen falta al menos {minimum}",
+        errTooLong: "Demasiado largo: {tokens} tokens, y el límite es {maximum}",
+        errGeneric: "No se pudo resumir el documento",
       },
     },
   },

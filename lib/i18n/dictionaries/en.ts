@@ -80,6 +80,7 @@ export const en = {
     cutout: "Click-to-cut-out",
     upscale: "Image upscaler",
     stems: "Stem separator",
+    summarize: "Document summarizer",
   },
 
   tools: {
@@ -1172,6 +1173,74 @@ export const en = {
         errNoAudio: "There is no sound in this file",
         errUnsupportedInput: "This file could not be read — MP4, MOV, M4A or WAV",
         errGeneric: "The stems could not be separated",
+      },
+    },
+    summarize: {
+      blurb: "Boil a long document down to a few sentences, without it ever leaving your tab.",
+      metaTitle: "Document Summarizer — no upload",
+      metaDescription:
+        "Summarize a PDF, a text file or pasted text without uploading it. A small AI model runs inside your browser tab. No sign-up, no API key.",
+      h1: "Summarize a document",
+      lead: "Paste text or drop a file and get a few sentences back. The model is downloaded to your device and runs there — the document never leaves this tab.",
+      faq: [
+        {
+          q: "Where does my document go?",
+          a: "Nowhere. It is read inside this browser tab and never uploaded. That is the whole point here: the documents people most want summarized — contracts, medical letters, unpublished drafts — are exactly the ones you should not paste into someone else's server.",
+        },
+        {
+          q: "Why does this one need a graphics card?",
+          a: "Because there is no working path without one. The model's ONNX build uses an operation the processor runtime has no implementation for, so the session will not even open there. We measured the nearest model that does run on a processor: 0.9 tokens a second, which is nearly four minutes for one short document. We would rather say no than ship that.",
+        },
+        {
+          q: "How good is the summary?",
+          a: "Good at the shape of a document, unreliable on details. It is a 350-million-parameter model — small enough to fetch and run in a tab, small enough to get facts wrong. In our measurements it once expanded NADPH into a chemical name that does not exist. Treat the summary as a map of the document, not as a replacement for reading it.",
+        },
+        {
+          q: "Which files can I use?",
+          a: "Plain text, Markdown, HTML and PDF. A PDF only works if it has a real text layer — a scanned page is a picture of words, and nothing can be extracted from it. If you get \"no text found\", run the file through the image-to-text tool first and paste the result here.",
+        },
+        {
+          q: "Can it summarize into a different language?",
+          a: "No, and we tested that before deciding. The summary always comes back in the language the document is written in. Asked to cross into Korean the model breaks down into invented words, and asked to go the other way it ignores the instruction. Offering a language picker that fails for two of our six languages would be worse than not offering one.",
+        },
+        {
+          q: "Why is there an upper and lower limit?",
+          a: "A token is roughly a short word in English and roughly a syllable in Korean or Japanese, which is why the same page counts very differently across languages. Below about 200 tokens the model stops summarizing and starts inventing — given an empty box it confidently produced a summary of a public-health campaign that did not exist. Above 16,000 it runs out of graphics memory. Both limits are measured, and we refuse rather than quietly summarizing only the first part.",
+        },
+        {
+          q: "Which model is this, and what is its licence?",
+          a: "LFM2.5-350M from Liquid AI, converted to ONNX. We picked it after measuring four candidates on the same real documents, and it was the only one that actually summarized rather than handing the source text back. Its licence is the LFM Open License v1.0 — not copyleft, but commercial use is conditioned on the organisation staying under $10M in annual revenue. This site is nowhere near that line, and we would rather write that down here than hide it. The weights are fetched by your browser straight from Hugging Face; we never host or redistribute them.",
+        },
+      ],
+      ui: {
+        dropLabel: "Drop a document here",
+        dropHint: "TXT · MD · HTML · PDF — or paste the text below",
+        textLabel: "Document",
+        textPlaceholder: "Paste the text you want summarized…",
+        downloadNote: "Pressing the button downloads about {size} of runtime and model.",
+        cachedNote: "It is fetched once and kept by your browser — the next document starts straight away.",
+        qualityNote:
+          "The model is small: it gets the gist right and can get details wrong. Check anything that matters against the document.",
+        loadedSummary: "About {tokens} tokens · roughly {seconds}s once the model is ready",
+        tooShortNote:
+          "This is shorter than {minimum} tokens. Below that the model starts inventing content instead of summarizing.",
+        run: "Summarize",
+        working: "Summarizing…",
+        stageModel: "downloading the model {percent}%",
+        stageSummarizing: "summarizing…",
+        resultSummary: "{tokens} tokens in · took {seconds}s",
+        copy: "Copy",
+        copied: "Copied",
+        noWebgpuHint:
+          "This tool needs WebGPU, which your browser does not offer. Chrome and Edge have had it since 2023 on desktop; Safari since 26. Every other tool here works without it.",
+        errNoWebgpu: "This tool needs WebGPU",
+        errEngine: "The runtime could not be loaded",
+        errModel: "The model could not be downloaded",
+        errUnsupportedInput: "This file could not be read — TXT, MD, HTML or PDF",
+        errNoText: "No text could be found in this file — a scanned PDF needs the image-to-text tool first",
+        errTooShort: "Too short to summarize: {tokens} tokens, and at least {minimum} are needed",
+        errTooLong: "Too long: {tokens} tokens, and the limit is {maximum}",
+        errGeneric: "The document could not be summarized",
       },
     },
   },
