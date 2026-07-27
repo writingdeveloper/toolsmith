@@ -69,7 +69,9 @@ export const TOOLS: Tool[] = [
   { slug: "upscale", tier: 2, status: "live", needs: "all", family: "image" },
   { slug: "cutout", tier: 2, status: "live", needs: "all", family: "image" },
   { slug: "subtitles", tier: 2, status: "live", needs: "all", family: "video" },
-  { slug: "subtitle-translate", tier: 2, status: "planned", needs: "webgpu", family: "video" },
+  // 번역만은 **WebGPU 로 갈 수 없다** — 유일하게 도는 조합이 CPU 다.
+  // 근거는 lib/translate/translate-core.ts 의 실측 5번.
+  { slug: "subtitle-translate", tier: 2, status: "live", needs: "all", family: "video" },
   { slug: "stems", tier: 2, status: "planned", needs: "webgpu", family: "video" },
 ];
 

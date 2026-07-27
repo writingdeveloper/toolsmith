@@ -1,0 +1,23 @@
+1
+00:00:01,000 --> 00:00:03,500
+Good morning everyone, and thank you for coming.
+
+2
+00:00:03,500 --> 00:00:06,000
+Today I want to talk about three things.
+
+3
+00:00:06,000 --> 00:00:09,250
+The first is why this problem is harder than it looks.
+
+4
+01:02,000 --> 01:04,500
+We could have caught this in the first week.
+
+5
+00:01:04,500 --> 00:01:07,000
+Thank you.
+
+6
+00:01:07,000 --> 00:01:09,000
+Thank you.

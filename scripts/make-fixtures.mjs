@@ -325,3 +325,39 @@ await write("small.png", await sharp(Buffer.from(SMALL)).png().toBuffer());
  * 잡음이 심한 녹음에서 모델이 무너지는 것은 스펙이 아니라 사람이 확인한다 —
  * 그 실측은 docs/TOOLS.md 에 적혀 있다.
  */
+
+/*
+ * 자막 번역 픽스처.
+ *
+ * **짧아야 한다.** 번역은 줄당 1.5초이므로(실측) 줄 수가 그대로 스펙 시간이 된다.
+ * 6줄이면 10초 안쪽이고, 배관을 확인하는 데는 그것으로 충분하다.
+ *
+ * 마지막 두 줄은 **같은 글**이다 — 같은 글을 한 번만 번역하는지(`calls` 가 줄 수보다
+ * 작은지) 스펙이 여기서 본다. 시간 칸이 없는 `MM:SS,mmm` 도 실제 파일에 흔하므로
+ * 한 줄 섞어 둔다.
+ */
+const SAMPLE_SRT = `1
+00:00:01,000 --> 00:00:03,500
+Good morning everyone, and thank you for coming.
+
+2
+00:00:03,500 --> 00:00:06,000
+Today I want to talk about three things.
+
+3
+00:00:06,000 --> 00:00:09,250
+The first is why this problem is harder than it looks.
+
+4
+01:02,000 --> 01:04,500
+We could have caught this in the first week.
+
+5
+00:01:04,500 --> 00:01:07,000
+Thank you.
+
+6
+00:01:07,000 --> 00:01:09,000
+Thank you.
+`;
+await write("sample.srt", Buffer.from(SAMPLE_SRT, "utf8"));
