@@ -216,6 +216,16 @@ CPU 로 내려갈 곳이 없는 유일한 도구라, 기본 프로젝트가 "Web
 ### SEO·분석 (전부 끝났고 검증됨)
 
 - 색인 열림. `*.vercel.app` 은 `next.config.ts` 가 `X-Robots-Tag: noindex` 로 막는다.
+- **루트 `/` 는 자기가 정본이다 (2026-07-28).** 예전에 `/en` 을 가리키다가 바깥 검사
+  도구에서 "교차검증 불일치" 로 잡혔다 — canonical 은 "이것은 저것의 중복본" 이라는
+  뜻인데 언어 선택 화면과 영어 홈은 내용이 다르다. canonical · og:url · 사이트맵
+  **셋이 같은 주소**를 말한다. `tests/cross-check.spec.ts` 가 고정한다.
+- **x-default 는 층위에 따라 갈린다.** 홈은 `/`(언어 선택 화면이 실재한다), 도구는
+  `/en/tools/…`. 판단은 `alternatesFor` 한 곳뿐이고 `<head>` 와 사이트맵이 그걸 함께 쓴다.
+- **404 는 6개 언어로 말한다.** `app/global-not-found.tsx` — `app/layout.tsx` 를 못
+  만들어서 평범한 `not-found.tsx` 는 놓을 자리가 없다. **개발 서버로 판정하지 말 것**
+  (`next dev` 가 자기 오류 화면으로 가로챈다). `robots: noindex` 는 **적지 말 것** —
+  Next 가 이미 붙여서 두 개가 나간다.
 - Search Console: **서브도메인마다 별도 속성**(`sc-domain:toolsmith.…`). 사이트맵 Success.
 - JSON-LD: WebApplication + FAQPage + BreadcrumbList. 리치 결과 테스트 유효 2개.
   `aggregateRating` 없음은 **의도** — 받은 적 없는 평점을 지어내지 않는다.

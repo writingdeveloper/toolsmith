@@ -33,7 +33,19 @@ export function alternatesFor(locale: Locale, path = "") {
   const languages: Record<string, string> = {};
   // 키는 표준 표기(pt-BR), 값의 경로는 소문자 세그먼트(/pt-br)
   for (const other of LOCALES) languages[HTML_LANG[other]] = absolute(pathFor(other, path));
-  languages["x-default"] = absolute(pathFor(DEFAULT_LOCALE, path));
+  /*
+   * **홈 층위의 x-default 는 `/` 다 (2026-07-28).**
+   *
+   * x-default 는 "어느 언어도 안 맞는 방문자를 어디로 보낼까" 이고, 그 자리에 놓기
+   * 가장 좋은 것은 **언어 선택 화면**이다. 우리에게는 그것이 실재한다(`/`).
+   *
+   * 도구 페이지에는 그런 화면이 없다 — "PDF 병합" 을 찾아온 사람을 언어 목록으로
+   * 보내면 하던 일에서 밀려난다. 그쪽은 기본 언어판을 가리킨다.
+   *
+   * **이 판단은 여기 한 곳에만 있다.** `<head>` 와 sitemap 이 같은 함수를 부르므로
+   * 둘이 어긋날 수 없다 — 어긋나면 구글이 어느 쪽을 믿을지 모른다.
+   */
+  languages["x-default"] = path === "" ? absolute("/") : absolute(pathFor(DEFAULT_LOCALE, path));
   return { canonical: absolute(pathFor(locale, path)), languages };
 }
 
@@ -66,8 +78,14 @@ export function socialFor(
   title: string,
   description: string,
   path = "",
+  /**
+   * 주소를 직접 지정한다. 언어 선택 화면(`/`)만 이것을 쓴다 — 그 페이지에는 언어
+   * 접두사가 없어서 `pathFor` 로는 자기 주소를 만들 수 없다. **`og:url` 이 실제
+   * 주소와 다르면 교차검증 도구가 바로 불일치로 잡는다**(2026-07-28 실측).
+   */
+  urlOverride?: string,
 ): Pick<Metadata, "openGraph" | "twitter"> {
-  const url = absolute(pathFor(locale, path));
+  const url = urlOverride ?? absolute(pathFor(locale, path));
   const image = absolute(OG_IMAGE);
   return {
     openGraph: {

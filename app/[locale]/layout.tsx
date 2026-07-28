@@ -48,16 +48,25 @@ export default async function LocaleLayout({
     <html lang={HTML_LANG[typed]} className="h-full">
       <body className="flex min-h-full flex-col">
         <header className="border-b border-border">
-          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-5 py-4">
-            <Link href={`/${typed}`} className="text-lg font-semibold tracking-tight">
-              toolsmith
-            </Link>
-            <div className="flex items-center gap-3">
-              <span className="hidden rounded-full border border-border px-3 py-1 text-xs text-muted sm:inline">
-                {dict.site.tagline}
-              </span>
-              <LocaleSwitcher current={typed} />
+          <div className="mx-auto max-w-5xl px-5 py-4">
+            <div className="flex items-center justify-between gap-3">
+              <Link href={`/${typed}`} className="text-lg font-semibold tracking-tight">
+                toolsmith
+              </Link>
+              <div className="flex items-center gap-3">
+                <span className="hidden rounded-full border border-border px-3 py-1 text-xs text-muted sm:inline">
+                  {dict.site.tagline}
+                </span>
+                <LocaleSwitcher current={typed} />
+              </div>
             </div>
+            {/*
+              **좁은 화면에서는 아래 줄에 그대로 보여 준다 (2026-07-28).**
+              예전에는 `sm:` 아래에서 통째로 숨겼는데, "업로드 없음" 은 이 사이트가 내건
+              **유일한 차별점**이다. 그것을 가장 흔한 기기에서만 안 보여 주고 있었다.
+              한 줄이 더 생기지만 첫 화면에서 밀려나는 것은 없다.
+            */}
+            <p className="mt-3 text-center text-xs text-muted sm:hidden">{dict.site.tagline}</p>
           </div>
         </header>
 

@@ -56,6 +56,10 @@ browser. There is no upload step and no account.
   before you press the button.
 - OCR reads the first 30 pages of a PDF and says so both before and after.
 - Summarizing requires WebGPU; the tool says so instead of producing a worse result.
+- A result can be handed straight to the next tool ("keep going with this result"). The
+  file moves through the browser's own storage, so it still never touches a server: trim a
+  video then compress it, transcribe then translate, read text from a scan then summarize
+  it — without downloading and re-picking the file in between.
 
 ## Tools
 

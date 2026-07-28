@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/JsonLd";
+import { ToolFinder } from "@/components/ToolFinder";
 import { getDictionary } from "@/lib/i18n";
 import { isLocale } from "@/lib/i18n/config";
 import { siteJsonLd } from "@/lib/schema";
-import { LIVE_TOOLS, UPCOMING_TOOLS, type Family } from "@/lib/tools";
+import { ACCEPT, LIVE_TOOLS, UPCOMING_TOOLS, type Family } from "@/lib/tools";
 
 /** 화면에 놓이는 순서. 검색 수요가 큰 것부터다. */
 const FAMILY_ORDER: Family[] = ["image", "pdf", "video", "data"];
@@ -37,34 +37,31 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         */}
       <section className="space-y-8">
         <h2 className="sr-only">{dict.home.availableHeading}</h2>
-        {FAMILY_ORDER.map((family) => {
-          const tools = LIVE_TOOLS.filter((tool) => tool.family === family);
-          if (tools.length === 0) return null;
-          return (
-            <div key={family} className="space-y-4">
-              <h3 className="text-sm font-medium tracking-wide text-muted uppercase">
-                {dict.home[FAMILY_HEADING[family]]}
-              </h3>
-              <ul className="grid gap-4 sm:grid-cols-2">
-                {tools.map((tool) => (
-                  <li key={tool.slug}>
-                    <Link
-                      href={`/${locale}/tools/${tool.slug}`}
-                      className="block h-full rounded-xl border border-border bg-panel p-5 transition-colors hover:border-accent"
-                    >
-                      <p className="font-medium">{dict.toolNames[tool.slug]}</p>
-                      <p className="mt-1 text-sm text-muted">
-                        {tool.slug in dict.tools
-                          ? dict.tools[tool.slug as keyof typeof dict.tools].blurb
-                          : null}
-                      </p>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
+        <ToolFinder
+          label={dict.home.searchLabel}
+          placeholder={dict.home.searchPlaceholder}
+          empty={dict.home.searchEmpty}
+          groups={FAMILY_ORDER.flatMap((family) => {
+            const tools = LIVE_TOOLS.filter((tool) => tool.family === family);
+            if (tools.length === 0) return [];
+            return [
+              {
+                key: family,
+                heading: dict.home[FAMILY_HEADING[family]],
+                tools: tools.map((tool) => ({
+                  slug: tool.slug,
+                  href: `/${locale}/tools/${tool.slug}`,
+                  name: dict.toolNames[tool.slug],
+                  blurb:
+                    tool.slug in dict.tools
+                      ? dict.tools[tool.slug as keyof typeof dict.tools].blurb
+                      : "",
+                  accepts: ACCEPT[tool.slug],
+                })),
+              },
+            ];
+          })}
+        />
       </section>
 
       <section className="space-y-4">

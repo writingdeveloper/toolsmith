@@ -12,11 +12,19 @@ export const metadata: Metadata = {
   title: dict.site.title,
   description: dict.site.description,
   alternates: {
-    // 루트는 언어를 고르지 않은 방문자용이라 스스로를 canonical 로 삼지 않는다.
-    canonical: absolute(`/${DEFAULT_LOCALE}`),
+    /*
+     * **자기 자신을 가리킨다 (2026-07-28).**
+     *
+     * 예전에는 canonical 이 `/en` 이었다 — "루트는 언어를 안 고른 방문자용이니
+     * 스스로를 정본으로 삼지 않는다" 는 생각이었는데, **그건 틀린 신호였다.**
+     * canonical 은 "이 URL 은 저 URL 의 중복본이다" 라는 뜻이고, 이 화면은 `/en`
+     * (도구 목록)과 **내용이 다르다**. 교차검증 도구가 이것을 불일치로 잡았고,
+     * 구글에게도 "도메인 루트는 무시하라" 고 말하는 셈이었다.
+     */
+    canonical: absolute("/"),
     languages: alternatesFor(DEFAULT_LOCALE).languages,
   },
-  ...socialFor(DEFAULT_LOCALE, dict.site.title, dict.site.description),
+  ...socialFor(DEFAULT_LOCALE, dict.site.title, dict.site.description, "", absolute("/")),
 };
 
 /**
