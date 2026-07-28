@@ -87,6 +87,16 @@ export default async function LocaleLayout({
         <footer className="border-t border-border">
           <div className="mx-auto max-w-5xl space-y-3 px-5 py-6 text-sm text-muted">
             <p>{dict.site.footerNote}</p>
+            {/*
+              **Lab 으로 가는 길은 푸터 하나다.** 도구 페이지에서 링크하지 않는 것이
+              이 층의 규칙이지만(874MB 를 도구 쓰러 온 사람에게 권하지 않는다),
+              닿을 수 없으면 크롤러도 못 찾는다 — 백링크가 목적인 층에서 그건 자해다.
+            */}
+            <p>
+              <Link href={`/${typed}/lab`} className="hover:text-accent">
+                {dict.lab.h1}
+              </Link>
+            </p>
             {/* 크롤러가 언어판을 실제 링크로도 발견하게 한다 */}
             <ul className="flex flex-wrap gap-x-4 gap-y-1">
               {LOCALES.map((other) => (

@@ -5,6 +5,8 @@ import { getDictionary } from "../lib/i18n";
 import { LIVE_TOOLS } from "../lib/tools";
 
 const PATHS = [
+  "/lab",
+  "/lab/pii",
   "",
   ...LIVE_TOOLS.map((tool) => `/tools/${tool.slug}`),
   "/guides",

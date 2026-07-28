@@ -1,7 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
-import { GUIDE_LIST } from "../lib/guides";
 import { HTML_LANG, LOCALES } from "../lib/i18n/config";
-import { LIVE_TOOLS } from "../lib/tools";
+import { SITEMAP_PATHS_PER_LOCALE } from "../lib/site";
 
 /*
  * 바깥 SEO 검사 도구가 하는 **교차검증**을 우리도 한다.
@@ -140,10 +139,8 @@ test("사이트맵이 실제 페이지의 canonical 과 한 글자도 다르지 
   const xml = await (await request.get("/sitemap.xml")).text();
   const urls = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(([, url]) => url);
 
-  // 루트 + 언어 × (홈 + 도구 + 글 목록 + 글)
-  expect(urls).toHaveLength(
-    1 + LOCALES.length * (1 + LIVE_TOOLS.length + 1 + GUIDE_LIST.length),
-  );
+  // 루트 한 장 + 언어 × (홈 + 도구 + 글 목록 + 글 + Lab 목록 + Lab 도구)
+  expect(urls).toHaveLength(1 + LOCALES.length * SITEMAP_PATHS_PER_LOCALE);
 
   // 도메인 루트가 빠져 있으면 검사 도구가 가장 먼저 보는 페이지가 목록에 없는 셈이다
   expect(urls.some((url) => new URL(url).pathname === "/")).toBe(true);

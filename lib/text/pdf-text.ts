@@ -1,7 +1,7 @@
 /**
  * PDF 에서 글자층만 꺼낸다.
  *
- * **`summarize-core.ts` 에서 갈라 둔 이유가 있다.** 여기에는 `import.meta.url` 이 있고,
+ * **`document-text.ts` 에서 갈라 둔 이유가 있다.** 여기에는 `import.meta.url` 이 있고,
  * 그 한 줄 때문에 이 파일은 Playwright 의 Node 쪽에서 import 할 수 없다(`Cannot use
  * 'import.meta' outside a module`). 요약 코어는 순수 계산 부분을 스펙이 직접 부를 수
  * 있어야 하므로, 그것을 막는 것을 이쪽으로 내보냈다. `lib/pdf/pdfjs-options.ts` 와

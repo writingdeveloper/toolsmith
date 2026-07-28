@@ -1,3 +1,6 @@
+import { GUIDE_LIST } from "@/lib/guides";
+import { LAB_LIST } from "@/lib/lab";
+import { LIVE_TOOLS } from "@/lib/tools";
 import { DEFAULT_LOCALE, HTML_LANG, LOCALES, type Locale } from "@/lib/i18n/config";
 import type { Metadata } from "next";
 
@@ -61,7 +64,17 @@ const OG_LOCALE: Record<Locale, string> = {
   "pt-br": "pt_BR",
 };
 
-/** 공유 카드에 쓰는 그림. 6개 언어가 같은 것을 쓰므로 **글이 들어 있지 않다.** */
+/**
+ * 사이트맵에 실리는 **언어별** 경로 수 — 홈 + 도구 + 글 목록 + 글 + Lab 목록 + Lab 도구.
+ *
+ * 실제 경로 목록은 `app/sitemap.ts` 가 만든다. 여기 있는 것은 그 개수뿐이고,
+ * **스펙 둘이 각자 세고 있던 것**을 2026-07-28 에 여기로 모았다 — Lab 을 더했을 때
+ * 한쪽만 고쳐져 배포본에서 걸렸다.
+ */
+export const SITEMAP_PATHS_PER_LOCALE =
+  1 + LIVE_TOOLS.length + 1 + GUIDE_LIST.length + 1 + LAB_LIST.length;
+
+/** 공유 카드에 쓰는 기본 그림. 6개 언어가 같은 것을 쓰므로 **글이 들어 있지 않다.** */
 export const OG_IMAGE = "/og.png";
 export const OG_IMAGE_SIZE = { width: 1200, height: 630 };
 

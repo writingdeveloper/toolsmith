@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { GUIDE_LIST } from "@/lib/guides";
 import { LOCALES } from "@/lib/i18n/config";
 import { alternatesFor, SITE_URL } from "@/lib/site";
+import { LAB_LIST } from "@/lib/lab";
 import { LIVE_TOOLS } from "@/lib/tools";
 
 /**
@@ -29,6 +30,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
     })),
     { path: "/guides", priority: 0.6, lastModified: now },
+  /*
+   * Lab 은 색인된다. 이 층의 목적이 백링크라서다 — 숨기면 존재 이유가 사라진다.
+   * 우선순위를 도구보다 낮게 두는 것은 실용성이 아니라 화제성으로 오는 자리이기 때문이다.
+   */
+  { path: "/lab", priority: 0.5, lastModified: now },
+  ...LAB_LIST.map((entry) => ({
+    path: `/lab/${entry.slug}`,
+    priority: 0.5,
+    lastModified: now,
+  })),
     ...GUIDE_LIST.map((guide) => ({
       path: `/guides/${guide.slug}`,
       priority: 0.7,
