@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { fileStem, formatBytes } from "@/lib/format";
 import { fill } from "@/lib/i18n/config";
@@ -57,12 +60,14 @@ export function TextReader({
   common,
   errors,
   defaultLanguage,
+  chain,
 }: {
   ui: Ui;
   common: Common;
   errors: PdfErrors;
   /** 보고 있는 언어판에 맞는 기본값. 한국어 페이지에 온 사람은 한국어 문서를 읽을 가능성이 높다. */
   defaultLanguage: OcrLanguage;
+  chain: ChainCopy;
 }) {
   const [broken, setBroken] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -211,7 +216,7 @@ export function TextReader({
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="image/*,application/pdf,.pdf"
+        accept={ACCEPT["ocr"]}
         multiple={false}
         onFiles={accept}
         label={ui.dropLabel}
@@ -332,6 +337,14 @@ export function TextReader({
             className="h-80 w-full resize-y rounded-lg border border-border bg-bg p-3 font-mono text-sm"
           />
         </div>
+      )}
+
+      {result && result.text.length > 0 && (
+        <SendTo
+          chain={chain}
+          from="ocr"
+          files={[{ url: result.url, name: `${fileStem(file?.name ?? "text")}.txt` }]}
+        />
       )}
     </div>
   );

@@ -30,6 +30,7 @@ export const ptBR = {
   common: {
     breadcrumbLabel: "Trilha de navegação",
     relatedHeading: "Outras ferramentas",
+    sendToHeading: "Continuar com este resultado:",
     chooseFile: "Escolher arquivos",
     download: "Baixar",
     clear: "Limpar",

@@ -30,6 +30,7 @@ export const ja = {
   common: {
     breadcrumbLabel: "パンくずリスト",
     relatedHeading: "ほかの道具",
+    sendToHeading: "この結果を次の道具へ:",
     chooseFile: "ファイルを選択",
     download: "ダウンロード",
     clear: "クリア",

@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { canRunImageTools } from "@/lib/capabilities";
 import { formatBytes, replaceExtension, savingsPercent } from "@/lib/format";
@@ -57,7 +60,7 @@ function shrinksWithQuality(file: File): boolean {
   return format !== null && format !== "image/png";
 }
 
-export function ImageCompressor({ ui, common }: { ui: Ui; common: Common }) {
+export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: Ui; common: Common }) {
   const [broken, setBroken] = useState(false);
   const capable = useCapability(canRunImageTools);
   const supported = capable === null ? null : capable && !broken;
@@ -237,7 +240,7 @@ export function ImageCompressor({ ui, common }: { ui: Ui; common: Common }) {
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="image/*,.heic,.heif"
+        accept={ACCEPT["image-compress"]}
         onFiles={addFiles}
         label={ui.dropLabel}
         hint={ui.dropHint}
@@ -392,6 +395,14 @@ export function ImageCompressor({ ui, common }: { ui: Ui; common: Common }) {
           </ul>
         </>
       )}
+
+      <SendTo
+        chain={chain}
+        from="image-compress"
+        files={items.flatMap((item) =>
+          item.result ? [{ url: item.result.url, name: item.result.name }] : [],
+        )}
+      />
     </div>
   );
 }

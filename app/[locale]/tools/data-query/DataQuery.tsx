@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
 import { FileDrop } from "@/components/FileDrop";
 import { trackToolCompleted } from "@/lib/analytics";
 import {
@@ -115,7 +116,7 @@ export function DataQuery({ ui, common }: { ui: Ui; common: Common }) {
   return (
     <div className="space-y-6">
       <FileDrop
-        accept=".csv,.tsv,.txt,.parquet,.json,.jsonl,.ndjson"
+        accept={ACCEPT["data-query"]}
         multiple={false}
         onFiles={accept}
         label={ui.dropLabel}

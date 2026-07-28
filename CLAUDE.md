@@ -115,6 +115,10 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 
 경로 앞에 `/{locale}` 이 붙는다(`/ko/tools/pdf-merge`).
 
+**결과는 다음 도구로 그대로 넘어간다 (2026-07-28).** 결과 옆의 "이어서 하기" 를 누르면
+파일이 대상 도구에 이미 올라간 채로 열린다 — 내려받기·다시 고르기 두 걸음이 사라진다.
+16개 도구가 보내고 21개가 받는다.
+
 ### 공통 토대 (새 도구는 여기서 갈라진다)
 
 - `lib/pdf/document.ts` — PDF 열기·오류 번역. 병합·분할·회전·압축이 함께 쓴다.
@@ -185,6 +189,14 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 - `lib/image/animation.ts` — **움직이는 그림인지 판단하는 유일한 곳.** GIF·APNG·WebP 의
   근거가 서로 다르고(디스크립터 개수 / `acTL` / `VP8X` 비트), GIF 만 파일을 훑는다.
   **서브블록 구조를 건너뛰지 않으면 픽셀 안의 우연한 0x2C 를 프레임으로 잘못 센다.**
+- `lib/handoff.ts` — **도구에서 도구로 결과를 넘기는 유일한 곳.** Blob 은 IndexedDB 로
+  건너간다(브라우저를 안 떠난다). **한 번 꺼내면 지운다** — 사용자가 떠났다고 믿는
+  파일이 되돌아오면 안 된다. `claimHandoff` 가 있는 이유는 **React 가 개발 모드에서
+  효과를 두 번 돌려 넘긴 파일이 조용히 사라졌기 때문**이다(화면에 오류가 안 뜬다).
+  받는 쪽은 `components/FileDrop.tsx` **한 곳뿐이다** — 스물한 도구가 전부 그것을 쓴다.
+- `lib/tools.ts` 의 `ACCEPT`·`CHAINS` — 도구가 받는 형식과 이어지는 작업 순서.
+  `relatedTools`(옆에 있는 도구, 크롤 경로용)와 **다른 것이다.** 보낼 곳은 만들어진
+  파일이 대상의 `ACCEPT` 에 걸릴 때만 보인다 — WebM·ZIP 은 저절로 빠진다.
 - `lib/i18n/dictionaries/en.ts` — 사전의 **타입 원본**. 여기에 키를 더하면 나머지 5개가
   타입 에러로 드러난다.
 

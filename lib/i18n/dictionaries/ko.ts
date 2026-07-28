@@ -29,6 +29,7 @@ export const ko = {
   common: {
     breadcrumbLabel: "위치",
     relatedHeading: "다른 도구",
+    sendToHeading: "이 결과로 이어서 하기:",
     chooseFile: "파일 선택",
     download: "다운로드",
     clear: "비우기",

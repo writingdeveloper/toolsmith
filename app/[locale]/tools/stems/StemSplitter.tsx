@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
 import { FileDrop } from "@/components/FileDrop";
 import { trackToolCompleted } from "@/lib/analytics";
 import { hasWorkers } from "@/lib/capabilities";
@@ -171,7 +172,7 @@ export function StemSplitter({ ui, common }: { ui: Ui; common: Common }) {
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="video/mp4,video/quicktime,audio/mp4,audio/x-m4a,audio/wav,audio/mpeg,.mp3"
+        accept={ACCEPT["stems"]}
         onFiles={addFiles}
         label={ui.dropLabel}
         hint={fill(ui.dropHint, { seconds: MAX_SECONDS })}

@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { fileStem, formatBytes, savingsPercent } from "@/lib/format";
 import { fill } from "@/lib/i18n/config";
@@ -52,7 +55,7 @@ function isAlreadyMp4(name: string): boolean {
   return /\.(mp4|m4v)$/i.test(name);
 }
 
-export function VideoConverter({ ui, common, errors }: { ui: Ui; common: Common; errors: Errors }) {
+export function VideoConverter({ chain, ui, common, errors }: { chain: ChainCopy; ui: Ui; common: Common; errors: Errors }) {
   const [broken, setBroken] = useState(false);
   const [webmOk, setWebmOk] = useState<boolean | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -199,7 +202,7 @@ export function VideoConverter({ ui, common, errors }: { ui: Ui; common: Common;
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="video/mp4,video/quicktime,.mp4,.mov,.m4v"
+        accept={ACCEPT["video-convert"]}
         multiple={false}
         onFiles={accept}
         label={ui.dropLabel}
@@ -352,6 +355,10 @@ export function VideoConverter({ ui, common, errors }: { ui: Ui; common: Common;
             {probe?.hasAudio && (result.keptAudio ? ` ${ui.audioKept}` : ` ${ui.audioDropped}`)}
           </p>
         </div>
+      )}
+
+      {result && (
+        <SendTo chain={chain} from="video-convert" files={[{ url: result.url, name: result.name }]} />
       )}
     </div>
   );

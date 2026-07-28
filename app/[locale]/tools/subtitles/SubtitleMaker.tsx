@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { hasWorkers } from "@/lib/capabilities";
 import { fileStem, formatBytes } from "@/lib/format";
@@ -53,10 +56,12 @@ export function SubtitleMaker({
   ui,
   common,
   defaultLanguage,
+  chain,
 }: {
   ui: Ui;
   common: Common;
   defaultLanguage: SubtitleLanguage;
+  chain: ChainCopy;
 }) {
   const [broken, setBroken] = useState(false);
   const capable = useCapability(hasWorkers);
@@ -210,7 +215,7 @@ export function SubtitleMaker({
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="video/mp4,video/quicktime,audio/mp4,audio/x-m4a,audio/wav,audio/mpeg,.mp3"
+        accept={ACCEPT["subtitles"]}
         onFiles={addFiles}
         label={ui.dropLabel}
         hint={fill(ui.dropHint, { minutes: MAX_SECONDS / 60 })}
@@ -344,6 +349,10 @@ export function SubtitleMaker({
             </a>
           </div>
         </div>
+      )}
+
+      {result && (
+        <SendTo chain={chain} from="subtitles" files={[{ url: result.srt, name: `${stem}.srt` }]} />
       )}
     </div>
   );

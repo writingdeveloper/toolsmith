@@ -30,6 +30,7 @@ export const de = {
   common: {
     breadcrumbLabel: "Brotkrümelnavigation",
     relatedHeading: "Weitere Werkzeuge",
+    sendToHeading: "Mit diesem Ergebnis weitermachen:",
     chooseFile: "Dateien wählen",
     download: "Herunterladen",
     clear: "Leeren",

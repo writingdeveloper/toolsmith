@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { canRunImageTools } from "@/lib/capabilities";
 import { formatBytes, replaceExtension } from "@/lib/format";
@@ -38,7 +41,7 @@ interface Result {
 
 const EMPTY_COVERAGE = 0.0005;
 
-export function Cutter({ ui, common }: { ui: Ui; common: Common }) {
+export function Cutter({ chain, ui, common }: { chain: ChainCopy; ui: Ui; common: Common }) {
   const [broken, setBroken] = useState(false);
   const capable = useCapability(canRunImageTools);
   const supported = capable === null ? null : capable && !broken;
@@ -302,7 +305,7 @@ export function Cutter({ ui, common }: { ui: Ui; common: Common }) {
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="image/*"
+        accept={ACCEPT["cutout"]}
         onFiles={addFiles}
         label={ui.dropLabel}
         hint={ui.dropHint}
@@ -438,6 +441,10 @@ export function Cutter({ ui, common }: { ui: Ui; common: Common }) {
             {common.download}
           </a>
         </div>
+      )}
+
+      {result && (
+        <SendTo chain={chain} from="cutout" files={[{ url: result.url, name: result.name }]} />
       )}
     </div>
   );

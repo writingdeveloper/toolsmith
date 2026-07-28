@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { fileStem, formatBytes } from "@/lib/format";
 import { fill } from "@/lib/i18n/config";
@@ -52,7 +55,7 @@ function describeError(errors: Errors, message: string): string {
 
 const seconds = (value: number) => Math.round(value * 10) / 10;
 
-export function VideoTrimmer({ ui, common, errors }: { ui: Ui; common: Common; errors: Errors }) {
+export function VideoTrimmer({ chain, ui, common, errors }: { chain: ChainCopy; ui: Ui; common: Common; errors: Errors }) {
   const [broken, setBroken] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [sourceUrl, setSourceUrl] = useState<string | null>(null);
@@ -210,7 +213,7 @@ export function VideoTrimmer({ ui, common, errors }: { ui: Ui; common: Common; e
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="video/mp4,video/quicktime,.mp4,.mov,.m4v"
+        accept={ACCEPT["video-trim"]}
         multiple={false}
         onFiles={accept}
         label={ui.dropLabel}
@@ -357,6 +360,10 @@ export function VideoTrimmer({ ui, common, errors }: { ui: Ui; common: Common; e
             {result.keptAudio && ` ${ui.audioKept}`}
           </p>
         </div>
+      )}
+
+      {result && (
+        <SendTo chain={chain} from="video-trim" files={[{ url: result.url, name: result.name }]} />
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
 import { FileDrop } from "@/components/FileDrop";
 import { trackToolCompleted } from "@/lib/analytics";
 import { fileStem, formatBytes } from "@/lib/format";
@@ -198,7 +199,7 @@ export function GifMaker({ ui, common, errors }: { ui: Ui; common: Common; error
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="video/mp4,video/quicktime,.mp4,.mov,.m4v"
+        accept={ACCEPT["video-to-gif"]}
         multiple={false}
         onFiles={accept}
         label={ui.dropLabel}

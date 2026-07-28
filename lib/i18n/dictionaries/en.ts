@@ -32,6 +32,7 @@ export const en = {
   common: {
     breadcrumbLabel: "Breadcrumb",
     relatedHeading: "Other tools",
+    sendToHeading: "Keep going with this result:",
     chooseFile: "Choose files",
     download: "Download",
     clear: "Clear",

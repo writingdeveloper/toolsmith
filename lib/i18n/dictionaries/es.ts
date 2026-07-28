@@ -30,6 +30,7 @@ export const es = {
   common: {
     breadcrumbLabel: "Ruta de navegación",
     relatedHeading: "Otras herramientas",
+    sendToHeading: "Continuar con este resultado:",
     chooseFile: "Elegir archivos",
     download: "Descargar",
     clear: "Vaciar",

@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { canRunPdfTools } from "@/lib/capabilities";
 import { useCapability } from "@/lib/use-capability";
@@ -50,7 +53,7 @@ function describeError(errors: Errors, message: string): string {
   }
 }
 
-export function PdfOrganizer({ ui, common, errors }: { ui: Ui; common: Common; errors: Errors }) {
+export function PdfOrganizer({ chain, ui, common, errors }: { chain: ChainCopy; ui: Ui; common: Common; errors: Errors }) {
   /** 워커를 못 만든 경우. 능력 판정(capable)과 원인이 달라 따로 둔다. */
   const [broken, setBroken] = useState(false);
   const capable = useCapability(canRunPdfTools);
@@ -223,7 +226,7 @@ export function PdfOrganizer({ ui, common, errors }: { ui: Ui; common: Common; e
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="application/pdf,.pdf"
+        accept={ACCEPT["pdf-organize"]}
         multiple={false}
         onFiles={accept}
         label={ui.dropLabel}
@@ -359,6 +362,10 @@ export function PdfOrganizer({ ui, common, errors }: { ui: Ui; common: Common; e
             {common.download}
           </a>
         </div>
+      )}
+
+      {result && (
+        <SendTo chain={chain} from="pdf-organize" files={[{ url: result.url, name: result.name }]} />
       )}
     </div>
   );

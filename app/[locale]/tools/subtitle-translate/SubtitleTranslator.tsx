@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
 import { FileDrop } from "@/components/FileDrop";
 import { trackToolCompleted } from "@/lib/analytics";
 import { hasWorkers } from "@/lib/capabilities";
@@ -236,7 +237,7 @@ export function SubtitleTranslator({
   return (
     <div className="space-y-6">
       <FileDrop
-        accept=".srt,.vtt,text/vtt,application/x-subrip"
+        accept={ACCEPT["subtitle-translate"]}
         onFiles={addFiles}
         label={ui.dropLabel}
         hint={ui.dropHint}

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { RelatedTools } from "@/components/RelatedTools";
+import { chainCopy } from "@/lib/chain";
 import { getDictionary } from "@/lib/i18n";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import type { OcrLanguage } from "@/lib/ocr/ocr-core";
@@ -64,7 +65,7 @@ export default async function OcrPage({ params }: { params: Promise<{ locale: st
         common={dict.common}
         errors={dict.pdfErrors}
         defaultLanguage={DEFAULT_LANGUAGE[locale]}
-      />
+      chain={chainCopy(locale, dict)} />
 
       <section data-faq className="space-y-4 border-t border-border pt-8 text-sm text-muted">
         {tool.faq.map((entry) => (

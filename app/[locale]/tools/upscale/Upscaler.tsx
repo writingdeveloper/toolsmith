@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { canRunImageTools, hasWebGPU } from "@/lib/capabilities";
 import { formatBytes, replaceExtension } from "@/lib/format";
@@ -33,7 +36,7 @@ interface Result {
   seconds: number;
 }
 
-export function Upscaler({ ui, common }: { ui: Ui; common: Common }) {
+export function Upscaler({ chain, ui, common }: { chain: ChainCopy; ui: Ui; common: Common }) {
   const [broken, setBroken] = useState(false);
   const capable = useCapability(canRunImageTools);
   const supported = capable === null ? null : capable && !broken;
@@ -215,7 +218,7 @@ export function Upscaler({ ui, common }: { ui: Ui; common: Common }) {
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="image/*"
+        accept={ACCEPT["upscale"]}
         onFiles={addFiles}
         label={ui.dropLabel}
         hint={fill(ui.dropHint, { max: (MAX_PIXELS / 1_000_000).toFixed(0) })}
@@ -318,6 +321,10 @@ export function Upscaler({ ui, common }: { ui: Ui; common: Common }) {
             {common.download}
           </a>
         </div>
+      )}
+
+      {result && (
+        <SendTo chain={chain} from="upscale" files={[{ url: result.url, name: result.name }]} />
       )}
     </div>
   );

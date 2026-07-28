@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { canRunImageTools } from "@/lib/capabilities";
 import { formatBytes, replaceExtension } from "@/lib/format";
@@ -59,7 +62,7 @@ const EMPTY_COVERAGE = 0.005;
  */
 const MIN_COMMITMENT = 0.28;
 
-export function BackgroundRemover({ ui, common }: { ui: Ui; common: Common }) {
+export function BackgroundRemover({ chain, ui, common }: { chain: ChainCopy; ui: Ui; common: Common }) {
   const [broken, setBroken] = useState(false);
   const capable = useCapability(canRunImageTools);
   const supported = capable === null ? null : capable && !broken;
@@ -202,7 +205,7 @@ export function BackgroundRemover({ ui, common }: { ui: Ui; common: Common }) {
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="image/*"
+        accept={ACCEPT["remove-bg"]}
         onFiles={addFiles}
         label={ui.dropLabel}
         hint={ui.dropHint}
@@ -321,6 +324,10 @@ export function BackgroundRemover({ ui, common }: { ui: Ui; common: Common }) {
             {common.download}
           </a>
         </div>
+      )}
+
+      {result && (
+        <SendTo chain={chain} from="remove-bg" files={[{ url: result.url, name: result.name }]} />
       )}
     </div>
   );

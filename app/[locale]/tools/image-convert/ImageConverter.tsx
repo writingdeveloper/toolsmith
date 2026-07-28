@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { canRunImageTools } from "@/lib/capabilities";
 import { useCapability } from "@/lib/use-capability";
@@ -36,7 +39,7 @@ function describeError(ui: Ui, message: string): string {
   return message === "UNSUPPORTED_INPUT" ? ui.errUnsupportedInput : ui.errGeneric;
 }
 
-export function ImageConverter({ ui, common }: { ui: Ui; common: Common }) {
+export function ImageConverter({ chain, ui, common }: { chain: ChainCopy; ui: Ui; common: Common }) {
   /** 워커를 못 만들었거나 형식 조사가 실패한 경우. 능력 판정과 원인이 다르다. */
   const [broken, setBroken] = useState(false);
   const capable = useCapability(canRunImageTools);
@@ -229,7 +232,7 @@ export function ImageConverter({ ui, common }: { ui: Ui; common: Common }) {
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="image/*,.heic,.heif"
+        accept={ACCEPT["image-convert"]}
         onFiles={addFiles}
         label={ui.dropLabel}
         hint={ui.dropHint}
@@ -368,6 +371,14 @@ export function ImageConverter({ ui, common }: { ui: Ui; common: Common }) {
           </ul>
         </>
       )}
+
+      <SendTo
+        chain={chain}
+        from="image-convert"
+        files={items.flatMap((item) =>
+          item.result ? [{ url: item.result.url, name: item.result.name }] : [],
+        )}
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
 import { FileDrop } from "@/components/FileDrop";
 import { trackToolCompleted } from "@/lib/analytics";
 import { hasWebGPU, hasWorkers } from "@/lib/capabilities";
@@ -8,7 +9,6 @@ import { formatBytes } from "@/lib/format";
 import { fill } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries/en";
 import {
-  ACCEPTED_EXTENSIONS,
   ENGINE_BYTES,
   MAX_TOKENS,
   MIN_TOKENS,
@@ -219,7 +219,7 @@ export function Summarizer({ ui, common }: { ui: Ui; common: Common }) {
   return (
     <div className="space-y-6">
       <FileDrop
-        accept={ACCEPTED_EXTENSIONS.join(",")}
+        accept={ACCEPT["summarize"]}
         onFiles={addFiles}
         label={ui.dropLabel}
         hint={ui.dropHint}

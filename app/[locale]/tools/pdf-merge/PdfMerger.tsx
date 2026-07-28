@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { canRunPdfTools } from "@/lib/capabilities";
 import { useCapability } from "@/lib/use-capability";
@@ -45,7 +48,7 @@ function describeError(errors: Errors, message: string): string {
   }
 }
 
-export function PdfMerger({ ui, common, errors }: { ui: Ui; common: Common; errors: Errors }) {
+export function PdfMerger({ chain, ui, common, errors }: { chain: ChainCopy; ui: Ui; common: Common; errors: Errors }) {
   /** 워커를 못 만든 경우. 능력 판정(capable)과 원인이 달라 따로 둔다. */
   const [broken, setBroken] = useState(false);
   const capable = useCapability(canRunPdfTools);
@@ -222,7 +225,7 @@ export function PdfMerger({ ui, common, errors }: { ui: Ui; common: Common; erro
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="application/pdf,.pdf"
+        accept={ACCEPT["pdf-merge"]}
         onFiles={addFiles}
         label={ui.dropLabel}
         hint={ui.dropHint}
@@ -332,6 +335,10 @@ export function PdfMerger({ ui, common, errors }: { ui: Ui; common: Common; erro
             {common.download}
           </a>
         </div>
+      )}
+
+      {result && (
+        <SendTo chain={chain} from="pdf-merge" files={[{ url: result.url, name: OUTPUT_NAME }]} />
       )}
     </div>
   );

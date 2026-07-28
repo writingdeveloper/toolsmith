@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { fileStem, formatBytes, savingsPercent } from "@/lib/format";
 import { fill } from "@/lib/i18n/config";
@@ -57,7 +60,7 @@ function describeError(errors: Errors, message: string): string {
   }
 }
 
-export function VideoCompressor({ ui, common, errors }: { ui: Ui; common: Common; errors: Errors }) {
+export function VideoCompressor({ chain, ui, common, errors }: { chain: ChainCopy; ui: Ui; common: Common; errors: Errors }) {
   const [supported, setSupported] = useState<boolean | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [info, setInfo] = useState<Info | null>(null);
@@ -199,7 +202,7 @@ export function VideoCompressor({ ui, common, errors }: { ui: Ui; common: Common
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="video/mp4,video/quicktime,.mp4,.mov,.m4v"
+        accept={ACCEPT["video-compress"]}
         multiple={false}
         onFiles={accept}
         label={ui.dropLabel}
@@ -298,6 +301,10 @@ export function VideoCompressor({ ui, common, errors }: { ui: Ui; common: Common
           {!shrank && <p className="text-sm text-warn">{ui.didNotShrink}</p>}
           {result.keptAudio && <p className="text-sm text-muted">{ui.audioKept}</p>}
         </div>
+      )}
+
+      {result && (
+        <SendTo chain={chain} from="video-compress" files={[{ url: result.url, name: result.name }]} />
       )}
     </div>
   );

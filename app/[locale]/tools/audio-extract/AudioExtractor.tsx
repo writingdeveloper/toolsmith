@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCEPT } from "@/lib/tools";
+import { SendTo } from "@/components/SendTo";
 import { FileDrop } from "@/components/FileDrop";
+import type { ChainCopy } from "@/lib/chain";
 import { trackToolCompleted } from "@/lib/analytics";
 import { fileStem, formatBytes } from "@/lib/format";
 import { fill } from "@/lib/i18n/config";
@@ -44,7 +47,7 @@ function describeError(errors: Errors, message: string): string {
   }
 }
 
-export function AudioExtractor({ ui, common, errors }: { ui: Ui; common: Common; errors: Errors }) {
+export function AudioExtractor({ chain, ui, common, errors }: { chain: ChainCopy; ui: Ui; common: Common; errors: Errors }) {
   const [supported, setSupported] = useState<boolean | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [info, setInfo] = useState<Info | null>(null);
@@ -178,7 +181,7 @@ export function AudioExtractor({ ui, common, errors }: { ui: Ui; common: Common;
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="video/mp4,video/quicktime,audio/mp4,.mp4,.mov,.m4v,.m4a"
+        accept={ACCEPT["audio-extract"]}
         multiple={false}
         onFiles={accept}
         label={ui.dropLabel}
@@ -275,6 +278,10 @@ export function AudioExtractor({ ui, common, errors }: { ui: Ui; common: Common;
             {common.download}
           </a>
         </div>
+      )}
+
+      {result && (
+        <SendTo chain={chain} from="audio-extract" files={[{ url: result.url, name: result.name }]} />
       )}
     </div>
   );

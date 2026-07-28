@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { RelatedTools } from "@/components/RelatedTools";
+import { chainCopy } from "@/lib/chain";
 import { getDictionary } from "@/lib/i18n";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { toolJsonLd } from "@/lib/schema";
@@ -58,7 +59,7 @@ export default async function SubtitlesPage({ params }: { params: Promise<{ loca
         <p className="max-w-2xl text-muted">{tool.lead}</p>
       </header>
 
-      <SubtitleMaker ui={tool.ui} common={dict.common} defaultLanguage={DEFAULT_LANGUAGE[locale]} />
+      <SubtitleMaker ui={tool.ui} common={dict.common} defaultLanguage={DEFAULT_LANGUAGE[locale]} chain={chainCopy(locale, dict)} />
 
       <section data-faq className="space-y-4 border-t border-border pt-8 text-sm text-muted">
         {tool.faq.map((entry) => (
