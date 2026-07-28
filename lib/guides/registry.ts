@@ -21,6 +21,10 @@ export const GUIDE_SLUGS = [
   "image-formats",
   "why-pdf-is-large",
   "mov-vs-mp4",
+  "how-background-removal-works",
+  "does-upscaling-add-detail",
+  "srt-vs-vtt",
+  "what-are-stems",
 ] as const;
 
 export type GuideSlug = (typeof GUIDE_SLUGS)[number];
@@ -68,6 +72,40 @@ export const GUIDES: Record<GuideSlug, GuideMeta> = {
     published: "2026-07-28",
     updated: "2026-07-28",
     tools: ["video-convert", "video-compress", "video-trim", "video-to-gif"],
+  },
+
+  /*
+   * 두 번째 묶음(2026-07-28). **Tier 2 도구를 다룬 글이 하나도 없었다** — 이 사이트에서
+   * 가장 차별화된 도구들인데 첫 넷이 전부 Tier 1(이미지·PDF·영상 형식) 이었다.
+   *
+   * 이쪽 글은 성격이 조금 다르다. 형식 글은 "무엇이 다른가" 에 답하면 끝나지만,
+   * 모델 도구는 **무엇을 못 하는가**가 본론이다 — 되살리는 것이 아니라 지어내는 것,
+   * 하나를 찾는 모델이라 군중에서는 못 찾는 것, 섞인 소리를 되꺼내는 것이 복구가 아니라
+   * 추정인 것. 규칙 3 이 글에서 가장 크게 걸리는 자리다.
+   */
+  "how-background-removal-works": {
+    slug: "how-background-removal-works",
+    published: "2026-07-28",
+    updated: "2026-07-28",
+    tools: ["remove-bg", "cutout", "image-convert"],
+  },
+  "does-upscaling-add-detail": {
+    slug: "does-upscaling-add-detail",
+    published: "2026-07-28",
+    updated: "2026-07-28",
+    tools: ["upscale", "image-resize", "image-compress"],
+  },
+  "srt-vs-vtt": {
+    slug: "srt-vs-vtt",
+    published: "2026-07-28",
+    updated: "2026-07-28",
+    tools: ["subtitles", "subtitle-translate"],
+  },
+  "what-are-stems": {
+    slug: "what-are-stems",
+    published: "2026-07-28",
+    updated: "2026-07-28",
+    tools: ["stems", "audio-extract"],
   },
 };
 

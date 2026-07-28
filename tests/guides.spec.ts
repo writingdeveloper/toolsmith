@@ -50,6 +50,12 @@ for (const guide of GUIDE_LIST) {
  * 남은 별표를 못 본다.
  */
 test("강조가 별표가 아니라 굵은 글씨로 나온다", async ({ page }) => {
+  /*
+   * 언어 × 글 을 전부 도는 검사는 **글이 늘 때마다 기본 30초를 넘긴다.** 사람이 숫자를
+   * 고치게 만들지 않도록 장수에 맞춰 계산한다 — `tests/i18n.spec.ts` 와 같은 이유다.
+   */
+  test.setTimeout(20_000 + LOCALES.length * GUIDE_LIST.length * 3_000);
+
   for (const locale of LOCALES) {
     for (const guide of GUIDE_LIST) {
       await page.goto(`/${locale}/guides/${guide.slug}`);
@@ -70,6 +76,16 @@ test("도구 페이지가 그 도구를 다룬 글을 가리킨다", async ({ pa
   expect(guideLinks).toContain("/ko/guides/image-formats");
   // 이미지 도구 페이지에 PDF 글이 붙으면 안 된다
   expect(guideLinks).not.toContain("/ko/guides/why-pdf-is-large");
+
+  /*
+   * **Tier 2 쪽도 본다.** 첫 넷은 전부 Tier 1(형식) 글이라 `guidesForTool` 이 모델
+   * 도구에서도 도는지를 아무도 확인하지 않고 있었다. 한 갈래만 보는 검사는 다른
+   * 갈래가 조용히 비어도 초록색으로 남는다.
+   */
+  await page.goto("/ko/tools/remove-bg");
+  const modelLinks = await links(page, "/ko/guides/");
+  expect(modelLinks).toContain("/ko/guides/how-background-removal-works");
+  expect(modelLinks).not.toContain("/ko/guides/srt-vs-vtt");
 });
 
 test("홈에서 글로 가는 길이 있다", async ({ page }) => {
@@ -146,6 +162,42 @@ test("언어를 바꿔도 보고 있던 글에 그대로 남는다", async ({ pa
 test("없는 글은 404 다", async ({ page }) => {
   const response = await page.goto("/ko/guides/nope");
   expect(response?.status()).toBe(404);
+});
+
+/**
+ * **강조를 쓸 수 있는 자리는 본문과 목록뿐이다.**
+ *
+ * `RichText` 는 `body` 와 `list` 에만 걸려 있다. 나머지 자리에 `**` 를 적으면 두 가지가
+ * 한꺼번에 일어난다 — 화면에 별표가 그대로 찍히고, **FAQ 답변은 그 문자열이 그대로
+ * `FAQPage` 의 `acceptedAnswer` 로 나가서** 구조화 데이터에도 별표가 실린다.
+ * 2026-07-28 두 번째 묶음을 쓰다가 다섯 언어에서 한꺼번에 저질렀다.
+ *
+ * 화면 쪽은 위의 별표 검사가 이미 잡지만 이 검사가 따로 있는 이유는, 저쪽은 브라우저를
+ * 띄워야 하고 **JSON-LD 로 새어 나가는 것은 보지 않기 때문이다.**
+ */
+test("강조 표시는 본문과 목록에만 쓴다", () => {
+  const stray: string[] = [];
+  for (const locale of LOCALES) {
+    const copy = getGuideCopy(locale);
+    for (const guide of GUIDE_LIST) {
+      const article = copy.articles[guide.slug];
+      const plain: [string, string][] = [
+        ["metaTitle", article.metaTitle],
+        ["metaDescription", article.metaDescription],
+        ["h1", article.h1],
+        ["lead", article.lead],
+        ...article.sections.map((s): [string, string] => ["h2", s.h2]),
+        ...article.faq.flatMap((e): [string, string][] => [
+          ["faq.q", e.q],
+          ["faq.a", e.a],
+        ]),
+      ];
+      for (const [field, text] of plain) {
+        if (text.includes("**")) stray.push(`${locale}/${guide.slug} ${field}`);
+      }
+    }
+  }
+  expect(stray.join(", ")).toBe("");
 });
 
 /**

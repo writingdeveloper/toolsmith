@@ -4,7 +4,7 @@ export const es = {
   hub: {
     metaTitle: "Guías — formatos de archivo sin rodeos",
     metaDescription:
-      "Por qué HEIC no abre, qué formato de imagen elegir, por qué tu PDF pesa tanto, MOV frente a MP4. Respuestas cortas sacadas de archivos que medimos.",
+      "Por qué HEIC no abre, qué formato de imagen elegir, por qué tu PDF pesa tanto, qué no puede hacer la IA. Respuestas sacadas de archivos que medimos.",
     h1: "Guías",
     lead: "Las preguntas que vienen antes de la herramienta. Cada respuesta sale de archivos que abrimos y medimos, no de una hoja de especificaciones.",
     breadcrumb: "Guías",
@@ -272,6 +272,268 @@ export const es = {
         {
           q: "¿Cuál me conviene conservar, MOV o MP4?",
           a: "MP4, salvo que te quedes dentro de las herramientas de edición de Apple. Todo acepta MP4; MOV lo rechazan por la extensión con la frecuencia suficiente para molestar.",
+        },
+      ],
+    },
+
+    "how-background-removal-works": {
+      metaTitle: "Cómo funciona quitar el fondo de verdad",
+      metaDescription:
+        "Un modelo adivina qué parte de cada píxel es el sujeto; no recorta nada. Eso explica el pelo difuso y las fotos con las que sencillamente no puede.",
+      h1: "Cómo funciona quitar el fondo de verdad — y cuándo falla",
+      lead: "No se está recortando nada. Un modelo adivina, píxel a píxel, cuánto de cada uno pertenece al sujeto. Sabiendo eso, todos los resultados raros que has visto tienen explicación.",
+      sections: [
+        {
+          h2: "Lo que sale es una máscara, no un recorte",
+          body: [
+            "El modelo mira tu foto y devuelve una imagen en blanco y negro con su misma forma: blanca donde está seguro de que ese píxel es el sujeto, negra donde está seguro de que es fondo, y de mil grises donde duda. Esa imagen se convierte directamente en el canal de transparencia del resultado.",
+            "Así que no hay contorno, no hay trazado y no se ha calcado nada. Lo que vuelve es **confianza**, dibujada como transparencia. El pelo, el pelaje, el movimiento borroso, el cristal y las sombras caen en mitad de ese rango, y esa suavidad del borde no es que el modelo sea malo: es que está siendo honesto.",
+          ],
+        },
+        {
+          h2: "El modelo busca una sola cosa evidente",
+          body: [
+            "U²-Net, que es lo que corre aquí, es una red de detección de objetos salientes. La entrenaron para responder a una única pregunta: en esta imagen, ¿qué destaca? Un sujeto sobre un fondo razonablemente sencillo es exactamente su terreno.",
+            "Si le das una imagen sin una respuesta única, no se niega: extiende una máscara débil e insegura por encima de todo. Pasamos veinticuatro fotografías y leímos los valores de alfa. Las diez que no tenían un sujeto claro volvieron como manchas translúcidas o como nada: una toma aérea de bosque produjo un **0.0%** de píxeles seguros y aun así «funcionó» formalmente.",
+            "Ese fallo es silencioso, y por eso ahora la herramienta mide la máscara y te lo dice en lugar de entregarte un PNG vacío.",
+          ],
+          list: [
+            "Funciona: una persona, un producto sobre una mesa, una mascota, un zapato, una bicicleta, una montaña contra el cielo.",
+            "No funciona: multitudes, tráfico, un campo de tulipanes, una estantería, un arrecife, un bosque visto desde arriba.",
+            "A medias: un grupo de objetos parecidos — puede que salgan algunos, y medio transparentes.",
+          ],
+        },
+        {
+          h2: "Por qué se ablandan los bordes y por qué empeora en fotos grandes",
+          body: [
+            "El modelo ve tu imagen a 320×320 píxeles sea cual sea su tamaño real, y la máscara vuelve también a 320×320. Para aplicarla hay que estirarla hasta las dimensiones originales. En una foto de 4000 píxeles, un píxel de máscara cubre más de una decena de píxeles reales, y eso se nota en el contorno.",
+            "Elegir una foto mejor no lo arregla: es la forma del método. Si vas a usar el resultado en pequeño, dará igual; si lo vas a usar en grande, no.",
+            "También hay un canje directo entre descarga y calidad. El modelo rápido pesa 4,4 MB y el preciso 168 MB: cuarenta veces más, y con resultados visiblemente distintos sobre la misma foto. El pequeño suele dejar un fantasma tenue del fondo; el grande separa limpiamente el pelo y los objetos pequeños.",
+          ],
+        },
+        {
+          h2: "Cuándo el modelo no debería ser quien elige",
+          body: [
+            "Si la foto tiene varios objetos, o lo que quieres no es el protagonista del encuadre, subir la calidad del modelo no sirve de nada: nunca le preguntaron a cuál te referías.",
+            "Para eso hay otra herramienta. El recorte por clic pasa un codificador pesado sobre la imagen una sola vez y luego responde a cada clic casi al instante. Medimos 6,0 segundos de codificador y 0,10 segundos por clic en CPU, y por eso puede ser una interfaz de pulsar y ver en lugar de esperar y ver. Un punto suele coger parte de un objeto; el segundo punto le dice qué más forma parte de él.",
+          ],
+        },
+        {
+          h2: "Guárdalo en PNG o la transparencia desaparece",
+          body: [
+            "JPG no tiene canal de transparencia. Si guardas un recorte como JPG, la zona transparente no sigue siéndolo: vuelve en blanco o en negro, y mucha gente se lleva la sorpresa después. PNG y WebP sí llevan alfa; usa uno de los dos.",
+            "Una cosa más conviene decirla en voz alta: las fotos que la gente pasa por un quitafondos suelen ser de personas. Esto corre dentro de la pestaña del navegador, así que la imagen no se envía a ninguna parte — pero el modelo sí hay que descargarlo antes de empezar, y te decimos su tamaño antes de que te comprometas.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "¿Por qué dice que no encontró ningún sujeto?",
+          a: "Porque la máscara salió débil por todas partes en vez de fuerte en algún sitio. Contamos por separado los píxeles claramente de primer plano y los dudosos; si casi no hay seguros, o los dudosos los superan de largo, la respuesta honesta es que esa foto no tiene un sujeto único que encontrar.",
+        },
+        {
+          q: "¿Puedo conseguir un borde limpio en el pelo?",
+          a: "En parte. El modelo preciso es mucho mejor con el pelo. Pero la máscara se calcula a 320×320 y se amplía, así que en una foto de alta resolución hay un límite a lo fino que puede ser ese borde: nunca igualará a una máscara hecha a mano.",
+        },
+        {
+          q: "Ha quitado el objeto equivocado. ¿Puedo elegir?",
+          a: "Con el quitafondos no: el modelo escoge lo que destaca y no tiene forma de saber qué querías. Usa el recorte por clic, donde señalas el objeto que quieres y añades puntos para incluir o excluir partes.",
+        },
+      ],
+    },
+
+    "does-upscaling-add-detail": {
+      metaTitle: "¿La IA añade detalle real al ampliar?",
+      metaDescription:
+        "No: se lo inventa de forma verosímil. Por eso gana con imágenes comprimidas y empeora una fotografía limpia. Lo medimos en los dos sentidos.",
+      h1: "¿La IA añade detalle real al ampliar una imagen?",
+      lead: "La respuesta corta es que no. La larga es más útil: se inventa detalle que parece correcto, y que eso ayude depende por completo de qué le pasaba a tu imagen.",
+      sections: [
+        {
+          h2: "Lo que hace el modelo en realidad",
+          body: [
+            "Una ampliación normal promedia los píxeles vecinos. No puede inventar nada, así que el resultado es una versión más grande y más blanda de lo que tenías, nunca más nítida.",
+            "Un modelo de ampliación hace otra cosa. Lo entrenaron con millones de pares de imágenes — una grande y su gemela encogida — hasta que aprendió qué aspecto suele tener una pestaña, un muro de ladrillo o un tejido cuando se reduce. Dada una imagen pequeña, escribe una grande **verosímil**.",
+            "La palabra que trabaja ahí es «verosímil». El detalle que añade no está recuperado: la información se tiró cuando la imagen se hizo pequeña y ya no está. Lo que vuelve es una conjetura segura de sí misma que se parece a lo que probablemente había.",
+          ],
+        },
+        {
+          h2: "Lo medimos perdiendo contra un redimensionado normal",
+          body: [
+            "Cogimos una fotografía de dominio público de 1896, la redujimos a 240 píxeles y la ampliamos cuatro veces con el modelo y con un remuestreo normal de buena calidad.",
+            "El modelo perdió. A un tejido de cuadros de la imagen se le borró la trama por completo — el modelo leyó ese patrón fino y regular como ruido y lo alisó — y la cara quedó como de cera. La ampliación normal era más borrosa y más fiel.",
+          ],
+        },
+        {
+          h2: "Y después lo medimos ganando con claridad",
+          body: [
+            "Guardamos la misma fotografía como JPEG de calidad 35 — más o menos el estado de muchísimas imágenes que circulan por internet — y repetimos la comparación. Esta vez el modelo ganó de largo: los bloques de compresión desaparecieron y los bordes volvieron.",
+            "El motivo es que esta clase de modelo está hecha para **reparar daño**, no para agrandar. Elimina lo que lee como ruido. El bloqueo por compresión es ruido, así que se va y la imagen mejora. El grano de película y los tejidos finos también se leen como ruido, así que también se van y la imagen empeora.",
+            "De ahí sale una regla utilizable. Si el problema de tu imagen es que la han comprimido, capturado o vuelto a guardar hasta matarla, el modelo ayuda. Si el problema es solo que es pequeña pero por lo demás está limpia, la ampliación normal puede ser el resultado más honesto.",
+          ],
+        },
+        {
+          h2: "El muro del tamaño no es arbitrario",
+          body: [
+            "Cuatro veces el ancho son dieciséis veces los píxeles. Un megapíxel de entrada sale convertido en dieciséis, y cada uno de ellos lo produce una red neuronal en vez de copiarse.",
+            "Por eso hay un límite de entrada y por eso desactivamos el botón y explicamos el motivo en lugar de dejarte probar. Congelar la pestaña varios minutos para no dar nada es el peor resultado posible, y es lo que pasa si no se pone el límite.",
+            "El ×2 se hace produciendo el ×4 y reduciéndolo a la mitad, no pidiendo ×2 directamente. El detalle inventado se ordena al encogerse, así que el resultado es mejor. Tarda lo mismo, porque la parte cara ya ha ocurrido igualmente.",
+          ],
+        },
+        {
+          h2: "El modelo más nítido no es el modelo correcto",
+          body: [
+            "Comparamos dos candidatos con licencia aceptable. El basado en transformadores es visiblemente más nítido y tardó 9,7 segundos con una imagen de 128×128. El convolucional compacto tardó 16,5 segundos con una de 512×512, dieciséis veces más píxeles. Por píxel, la diferencia es de unas **sesenta veces**.",
+            "Y una tarjeta gráfica no rescata al lento. Aquí medimos WebGPU unas **3,4 veces** más rápido que la CPU, no las veinte o cincuenta que espera la gente, porque compilar sombreadores y mover datos a la tarjeta cuesta tiempo real. Tres veces se agradece, pero un modelo inservible en CPU suele seguir siendo inservible en GPU.",
+            "Así que el modelo más nítido es el que nadie esperaría, y el que va montado es el que termina. Es el mismo criterio con el que se ha elegido cada modelo de este sitio.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "¿Puede leer una matrícula, como en la tele?",
+          a: "No, y es lo más importante que hay que entender. Si los caracteres ya no están, el modelo producirá algo nítido, seguro y falso. Genera lo que encaja de forma verosímil, que es justo lo contrario de lo que necesitas cuando algo tiene que ser cierto.",
+        },
+        {
+          q: "¿Por qué queda con aspecto de cera o de plástico?",
+          a: "Porque tu original estaba limpio. El modelo quita lo que lee como ruido, y el grano de película, la textura de la piel y los tejidos finos se leen así. Si el origen no tiene daño de compresión que reparar, un redimensionado normal suele ser mejor opción.",
+        },
+        {
+          q: "¿Qué tamaño de imagen puedo ampliar?",
+          a: "Alrededor de un megapíxel de entrada, porque el ×4 lo convierte en dieciséis de salida. Con entradas mayores tardaría minutos y podría agotar la memoria de la pestaña, así que la herramienta lo rechaza antes en vez de fallar a mitad.",
+        },
+      ],
+    },
+
+    "srt-vs-vtt": {
+      metaTitle: "SRT o VTT: qué archivo de subtítulos",
+      metaDescription:
+        "Los separa una línea de cabecera y un signo de puntuación. Aquí tienes cuál quiere cada reproductor y dónde se equivocan los subtítulos automáticos.",
+      h1: "SRT o VTT — ¿qué archivo de subtítulos necesitas?",
+      lead: "Ábrelos en un editor de texto y te costará distinguirlos. Las diferencias son mínimas, pero una de ellas decide si una página web llegará siquiera a mostrar tus subtítulos.",
+      sections: [
+        {
+          h2: "Los dos son texto plano con marcas de tiempo",
+          body: [
+            "Un archivo SRT es una lista numerada de bloques. Cada bloque tiene un índice, una hora de inicio y fin del estilo `00:00:01,000 --> 00:00:04,000`, y las líneas que hay que mostrar. Ese es el formato entero. Su sencillez explica que aparezca en todas partes: reproductores, televisores, programas de edición, plataformas de vídeo.",
+            "VTT es la misma idea reescrita para la web. Se estandarizó para que los navegadores pudieran mostrar subtítulos directamente en un elemento de vídeo HTML, y añade sitio para cosas que en SRT no lo tenían.",
+          ],
+        },
+        {
+          h2: "Las diferencias, todas",
+          body: ["No son muchas y todas son mecánicas:"],
+          list: [
+            "Un archivo VTT tiene que empezar por la línea `WEBVTT`. Si falta, el navegador rechaza el archivo entero: es el motivo más común de que los subtítulos no aparezcan sin decir nada.",
+            "Las fracciones de segundo se separan con coma en SRT y con punto en VTT.",
+            "SRT exige los números de bloque. VTT los trata como etiquetas opcionales.",
+            "VTT puede llevar posición, alineación, estilo e identificación de quien habla. SRT no tiene noción de nada de eso.",
+            "El elemento `<track>` del vídeo HTML5 solo acepta VTT. No cargará un SRT.",
+          ],
+        },
+        {
+          h2: "Entonces, ¿cuál quieres?",
+          body: [
+            "Si el vídeo se reproduce en una página web que controlas, VTT: no hay elección. Para todo lo demás, SRT es el archivo seguro — reproductores de escritorio, móviles, televisores, programas de edición y todas las plataformas grandes lo aceptan, y varios de ellos no aceptan VTT.",
+            "Como la conversión es mecánica, no merece la pena agonizar. Nuestra herramienta de subtítulos escribe los dos archivos a partir de la misma transcripción, así que llévate el que pida el destino.",
+          ],
+        },
+        {
+          h2: "Cómo se generan los subtítulos automáticos y cómo fallan",
+          body: [
+            "Los subtítulos generados salen de un modelo de reconocimiento de voz. El audio se decodifica, se remuestrea a 16 kHz y se le pasa al modelo, que devuelve texto junto con el momento de inicio y fin de cada segmento. Aquí eso ocurre dentro de la pestaña, lo que significa que primero hay que descargar el modelo — 151 MB o 291 MB según el que elijas — así que la herramienta dice la cifra **antes** de empezar, no después.",
+            "El modo de fallo que conviene conocer es que un audio malo no da un texto algo peor: da un bucle. Le dimos una grabación de un discurso de 1948 y devolvió la misma sílaba una y otra vez. Una grabación moderna limpia en el mismo idioma dio unas cuarenta palabras con dos errores. Era calidad de grabación, no dificultad del idioma; y como es el fallo con el que más gente se topará, está como aviso permanente en la página y no escondido en unas preguntas frecuentes.",
+            "Pero el error que más caro sale es el **selector de idioma**. Apunta un modelo de reconocimiento al idioma equivocado y no se detendrá: producirá disparates fluidos y seguros de sí mismos — medimos una grabación en inglés transcrita como ciento veinte líneas de galimatías en coreano. Si la transcripción parece texto plausible que no tiene nada que ver con el audio, empieza por ahí.",
+          ],
+        },
+        {
+          h2: "Traducirlos es otro trabajo distinto",
+          body: [
+            "La traducción usa otro modelo más: uno multilingüe de 418 millones de parámetros que maneja cien idiomas en cualquier dirección. Es lo bastante pequeño para correr en una pestaña, y ese tamaño marca la calidad.",
+            "La descripción honesta: de veinte líneas, unas quince salen bien y cinco quedan torpes pero se entienden. Las frases normales van bien. Donde resbala es en los modismos — «let's wrap this up» («vamos a ir terminando») salió con el sentido de «vamos a empezar» tanto en español como en alemán, y eso no es un error pequeño.",
+            "Las exclamaciones muy cortas son el único caso en el que no resbala sino que se derrumba y repite. En vez de entregar eso, la herramienta detecta el derrumbe y **deja la línea original sin traducir**, para que veas qué líneas necesitan una persona.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "¿Puedo renombrar un .srt a .vtt y ya está?",
+          a: "No. Le faltará la línea de cabecera `WEBVTT` y sus marcas de tiempo usan comas donde VTT espera puntos. El navegador lo rechazará sin más. La conversión es sencilla, pero no es un cambio de nombre.",
+        },
+        {
+          q: "¿Los subtítulos quedan incrustados en el vídeo?",
+          a: "No: el archivo de subtítulos va al lado del vídeo y lo dibuja el reproductor. Es la mejor disposición — quien mira puede quitarlos, tú puedes corregir una errata sin recodificar, y el mismo vídeo puede llevar varios idiomas.",
+        },
+        {
+          q: "El texto es fluido pero no tiene nada que ver con el audio.",
+          a: "El idioma está mal puesto. Un modelo de voz al que se le pide el idioma equivocado no falla: produce con total seguridad un texto bien formado en ese idioma. Ajusta el idioma hablado y vuelve a ejecutarlo.",
+        },
+      ],
+    },
+
+    "what-are-stems": {
+      metaTitle: "Qué son los stems y se puede desmezclar",
+      metaDescription:
+        "Los stems son las partes separadas de una mezcla. Sacarlas de una canción terminada es una estimación, no una recuperación: medimos cuánto acierta.",
+      h1: "Qué son los stems — ¿y de verdad se puede desmezclar una canción?",
+      lead: "En un estudio, los stems existen antes que la mezcla. Sacarlos de un archivo que ya está mezclado es una operación completamente distinta, y conviene saber qué te están entregando en realidad.",
+      sections: [
+        {
+          h2: "Stems, en sentido propio",
+          body: [
+            "Un stem es una submezcla agrupada que se guarda aparte del resto: toda la batería en uno, toda la voz en otro, y así. Existen para que un ingeniero de masterización, un remezclador o un técnico de directo pueda trabajar sobre una parte sin tocar las demás.",
+            "Los stems de verdad son sencillamente archivos que alguien conservó. Si los tienes, no hay nada que estimar: nunca llegaron a combinarse.",
+          ],
+        },
+        {
+          h2: "La separación no es lo mismo",
+          body: [
+            "Cuando un tema está mezclado, todas las partes se han sumado en dos canales de audio. Esa suma no es reversible: las partes individuales ya no existen en ninguna parte del archivo.",
+            "Así que un modelo de separación no las recupera. Estima: dada esta mezcla, ¿cómo sonaba probablemente cada parte por su cuenta? Ha escuchado suficiente música como para acertar mucho, pero sigue siendo una conjetura.",
+            "De ahí el carácter tan concreto de los resultados. Cada parte suele convencer por sí sola, con un rastro tenue de las demás todavía audible, y los pasajes densos adquieren una cualidad algo acuosa y emborronada. No son fallos que haya que arreglar: es a lo que suena una estimación.",
+          ],
+        },
+        {
+          h2: "Qué te devuelve",
+          body: [
+            "Cuatro pistas: voz, batería, bajo y todo lo demás. Esa última no es un descuido del modelo: es la categoría de guitarras, teclados, cuerdas, sintetizadores y cualquier cosa que no sea una de las otras tres. Si tu canción se sostiene sobre un piano, el piano está en «otros».",
+            "Todos los stems tienen la duración del original y encajan exactamente con él, así que puedes cargarlos en cualquier editor y quedarán sincronizados.",
+          ],
+        },
+        {
+          h2: "¿Cómo de bien funciona? Lo medimos",
+          body: [
+            "«Se ejecutó y salieron cuatro archivos» no demuestra absolutamente nada: cuatro archivos de papilla verosímil se verían igual. Así que construimos una mezcla cuyos ingredientes conocíamos con exactitud: una grabación de voz, una onda sinusoidal de 60 Hz haciendo de bajo y ráfagas cortas de ruido haciendo de batería. Después correlacionamos cada stem de salida con cada ingrediente conocido.",
+            "Cada stem coincidió con su propio ingrediente casi exactamente en 1,0 y con los demás casi exactamente en 0. El stem de batería contenía las ráfagas de ruido y prácticamente nada más; el de bajo contenía la sinusoide y prácticamente nada más.",
+            "Esa prueba demuestra que la separación es real y está bien conectada. **No demuestra que cualquier canción vaya a separarse limpiamente**: la música real es mucho más difícil que una mezcla sintética, y una producción muy densa o muy comprimida lo es todavía más.",
+          ],
+        },
+        {
+          h2: "Es lento, y eso es un hecho sobre el método",
+          body: [
+            "La separación pasa la forma de onda entera por una red neuronal. Medimos 7,8 segundos de audio tardando 15,1 segundos en procesarse, aproximadamente el doble del tiempo real. Una canción completa, por tanto, pasa de seis minutos.",
+            "Por eso la herramienta trabaja sobre una vista previa de 30 segundos y **te dice la cifra antes de que pulses nada**, en lugar de arrancar un trabajo de seis minutos en una pestaña y confiar en que te quedes.",
+          ],
+        },
+        {
+          h2: "Separar algo no te da derecho a usarlo",
+          body: [
+            "Sacar la voz de un disco comercial no cambia de quién es esa grabación. Practicar sobre un instrumental, estudiar un arreglo o hacer algo para ti es una situación; publicar o distribuir el resultado es otra distinta, y la separación no influye en eso.",
+            "Nada de lo que cargues aquí sale de tu equipo, pero eso es una afirmación **sobre privacidad, no sobre licencias**.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "¿Puedo hacer un karaoke de una canción?",
+          a: "Sí: coge todos los stems menos la voz y vuelve a mezclarlos. Espera un rastro tenue de voz en las partes densas; el modelo estima, y donde la voz se solapa con instrumentos fuertes no puede separarlas del todo.",
+        },
+        {
+          q: "¿Sonarán los stems tan bien como el original?",
+          a: "Sumados de nuevo, quedan muy cerca. Escuchados por separado con auriculares se oyen artefactos, sobre todo una cualidad algo acuosa y restos de las otras partes. Cada stem es una reconstrucción, no una extracción.",
+        },
+        {
+          q: "¿Por qué solo 30 segundos?",
+          a: "Porque el proceso corre a aproximadamente el doble del tiempo real en un navegador, así que una canción entera pasaría de seis minutos con la pestaña abierta. La vista previa te deja oír si la separación es lo bastante buena para tu tema antes de comprometerte.",
         },
       ],
     },

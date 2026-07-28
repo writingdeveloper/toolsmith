@@ -11,7 +11,7 @@ export const en = {
   hub: {
     metaTitle: "Guides — file formats, explained plainly",
     metaDescription:
-      "Why HEIC won't open, which image format to pick, why your PDF is huge, MOV versus MP4. Short answers from files we actually measured.",
+      "Why HEIC won't open, which image format to pick, why your PDF is huge, what AI upscaling can't do. Short answers from files we actually measured.",
     h1: "Guides",
     lead: "The questions that come before the tool. Every answer here comes from files we opened and measured, not from a spec sheet.",
     breadcrumb: "Guides",
@@ -281,6 +281,268 @@ export const en = {
         {
           q: "Which should I keep, MOV or MP4?",
           a: "MP4, unless you are staying inside Apple's editing tools. Everything accepts MP4; MOV gets refused by extension often enough to be a nuisance.",
+        },
+      ],
+    },
+
+    "how-background-removal-works": {
+      metaTitle: "How Background Removal Actually Works",
+      metaDescription:
+        "A model guesses how much of each pixel is the subject — nothing is traced or cut. That explains the soft hair, and the photos it cannot handle at all.",
+      h1: "How background removal actually works — and when it fails",
+      lead: "Nothing is being cut out. A model is guessing, pixel by pixel, how much of each one belongs to the subject. Once you know that, every strange result you have seen makes sense.",
+      sections: [
+        {
+          h2: "It produces a mask, not a cut-out",
+          body: [
+            "The model looks at your photo and outputs a greyscale image the same shape as it: white where it is confident that pixel is the subject, black where it is confident it is background, and every grey in between where it is unsure. That greyscale image becomes the transparency channel of the result.",
+            "So there is no outline, no path, and nothing is being traced. What you get back is confidence, rendered as transparency. Hair, fur, motion blur, glass and shadows land in the middle of that range — and the softness you see at those edges is the model being honest rather than the model being bad.",
+          ],
+        },
+        {
+          h2: "The model is hunting for one obvious thing",
+          body: [
+            "U²-Net, which is what runs here, is a salient object detection network. It was trained to answer one question: in this picture, what stands out? A single subject against a reasonably plain background is exactly what it is for.",
+            "Give it a picture with no single answer and it does not refuse — it spreads a weak, uncertain mask across everything. We ran twenty-four photographs through it and read the alpha values. The ten with no single subject came back as translucent smears or as nothing at all: an aerial shot of forest produced **0.0%** confident pixels while still technically 'succeeding'.",
+            "That failure is quiet, which is why the tool now measures the mask and tells you rather than handing you an empty PNG.",
+          ],
+          list: [
+            "Works: one person, a product on a table, a pet, a shoe, a bicycle, a mountain against sky.",
+            "Does not work: crowds, traffic, a field of tulips, a bookshelf, a coral reef, forest from above.",
+            "In between: a group of similar objects — you may get some of them, half-transparent.",
+          ],
+        },
+        {
+          h2: "Why edges soften, and why big photos look worse",
+          body: [
+            "The model sees your image at 320×320 pixels no matter what size it really is, and the mask comes back at 320×320 too. To apply it, that mask has to be stretched back up to the original dimensions. On a 4000-pixel photo, one mask pixel is covering roughly a dozen real ones, and you can see it along the outline.",
+            "Nothing about picking a better photo fixes that — it is the shape of the method. If you plan to use the result small, it will not matter. If you plan to use it large, it will.",
+            "There is also a straight quality-for-download trade. The fast model is 4.4 MB and the precise one is 168 MB: forty times apart, and visibly different on the same photograph. The small one tends to leave a faint ghost of the background; the large one separates hair and small props cleanly.",
+          ],
+        },
+        {
+          h2: "When the model should not be the one choosing",
+          body: [
+            "If the photo has several objects, or the thing you want is not the star of the frame, no amount of model quality helps — it was never asked which one you meant.",
+            "That is a different tool. Click-based cutout runs a heavy encoder over the picture once, then answers each click almost instantly. We measured 6.0 seconds for the encoder and 0.10 seconds per click on CPU, which is the whole reason it can be a click-and-see interface rather than a wait-and-see one. One point usually gets part of an object; a second point tells it what else belongs.",
+          ],
+        },
+        {
+          h2: "Save it as PNG, or the transparency disappears",
+          body: [
+            "JPG has no transparency channel at all. Save a cut-out as JPG and the transparent region does not stay transparent — it comes back as white or black, and people are frequently surprised by this after the fact. PNG and WebP both carry alpha; use one of those.",
+            "One more thing worth saying out loud: the photographs people run through background removal are usually of people. This runs inside the browser tab, so the picture is never sent anywhere — but the model has to be downloaded before it can start, and we tell you the size before you commit to it.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Why did it say it couldn't find a subject?",
+          a: "Because the mask came back weak everywhere rather than strong somewhere. We count confidently-foreground pixels and uncertain ones separately; if there are almost no confident pixels, or they are heavily outnumbered by uncertain ones, the honest answer is that the photo has no single subject to find.",
+        },
+        {
+          q: "Can I get a clean edge around hair?",
+          a: "Partly. The precise model is much better at hair than the fast one. But the mask is computed at 320×320 and enlarged, so on a high-resolution photo there is a limit to how fine that edge can be — it will never match a mask cut by hand.",
+        },
+        {
+          q: "It removed the wrong object. Can I choose?",
+          a: "Not with background removal — the model picks what stands out and has no way to know what you wanted. Use the click cutout tool instead: you point at the object you want, and add points to include or exclude parts.",
+        },
+      ],
+    },
+
+    "does-upscaling-add-detail": {
+      metaTitle: "Does AI Upscaling Add Real Detail?",
+      metaDescription:
+        "No — it invents plausible detail. That makes it excellent on compressed images and actively worse on a clean photograph. We measured it both ways.",
+      h1: "Does AI upscaling add real detail?",
+      lead: "The short answer is no. The longer answer is more useful: it invents detail that looks right, and whether that helps depends entirely on what was wrong with your image in the first place.",
+      sections: [
+        {
+          h2: "What the model is actually doing",
+          body: [
+            "Ordinary enlargement averages neighbouring pixels. It cannot invent anything, so the result is a larger, softer version of what you had — never sharper.",
+            "An upscaling model does something different. It was trained on millions of pairs of images, each a large one and its shrunken twin, until it learned what a shrunken eyelash, brick wall or fabric weave tends to look like. Given a small image, it writes back a plausible large one.",
+            "The word doing the work there is **plausible**. The detail it adds is not recovered — the information was thrown away when the image was made small, and it is gone. What comes back is a confident guess that resembles the sort of thing that was probably there.",
+          ],
+        },
+        {
+          h2: "We measured it losing to plain resizing",
+          body: [
+            "We took a public-domain photograph from 1896, shrank it to 240 pixels, then enlarged it four times both with the model and with ordinary high-quality resampling.",
+            "The model lost. A checked fabric in the picture had its weave erased completely — the model read that fine, regular texture as noise and smoothed it away — and the face came out looking like wax. The plain enlargement was blurrier and more faithful.",
+          ],
+        },
+        {
+          h2: "And then measured it winning clearly",
+          body: [
+            "We saved the same photograph as a quality-35 JPEG first, which is roughly the state of a great many images that have been passed around the internet, and ran the comparison again. This time the model won by a wide margin: the blocky compression artefacts vanished and the edges came back.",
+            "The reason is that this class of model is built to repair damage, not to magnify. It removes what it reads as noise. Compression blocking is noise, so it goes and the picture improves. Film grain and fine fabric are also read as noise, so they go too and the picture gets worse.",
+            "That gives you a usable rule. If the problem with your image is that it has been compressed, screenshotted, or re-saved to death, the model will help. If the problem is only that it is small but otherwise clean, plain enlargement may be the more honest result.",
+          ],
+        },
+        {
+          h2: "The size wall is not arbitrary",
+          body: [
+            "Four times the width is sixteen times the pixels. A one-megapixel input becomes a sixteen-megapixel output, and every one of those pixels is produced by a neural network rather than copied.",
+            "That is why there is a limit on input size, and why we disable the button and explain it rather than letting you try. Freezing the browser tab for several minutes and then producing nothing is the worst possible outcome, and it is what happens if the limit is not enforced.",
+            "The 2× option is made by producing the 4× result and halving it, rather than by asking for 2× directly. Invented detail tidies up when it is shrunk, so the result is better. It takes the same time, because the expensive part happened either way.",
+          ],
+        },
+        {
+          h2: "The sharpest model is not the right model",
+          body: [
+            "We compared two candidates with acceptable licences. The transformer-based one is visibly sharper, and it took 9.7 seconds on a 128×128 image. The compact convolutional one took 16.5 seconds on a 512×512 image — sixteen times the pixels. Per pixel, that is roughly a sixtyfold difference.",
+            "A graphics card does not rescue the slow one. We measured WebGPU at about 3.4× faster than CPU here, not the twenty or fifty times people expect, because shader compilation and moving data to the card cost real time. Three times faster is worth having, but a model that is unusable on a CPU is generally still unusable on a GPU.",
+            "So the sharper model is the one nobody would wait for, and the one that ships is the one that finishes. This is the same judgement made for every model on this site.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Can it read a licence plate, like on TV?",
+          a: "No — and this is the most important thing to understand about it. If the characters are gone, the model will produce something sharp, confident and wrong. It generates what plausibly fits, which is exactly the wrong tool for anything you need to be true.",
+        },
+        {
+          q: "Why does the result look like wax or plastic?",
+          a: "Because your original was clean. The model strips what it reads as noise, and film grain, skin texture and fine fabric all get read that way. If the source has no compression damage to repair, ordinary resizing is often the better choice.",
+        },
+        {
+          q: "How large an image can I upscale?",
+          a: "About one megapixel going in, because 4× turns that into sixteen megapixels coming out. Larger inputs would take minutes and could exhaust the tab's memory, so the tool refuses up front instead of failing halfway.",
+        },
+      ],
+    },
+
+    "srt-vs-vtt": {
+      metaTitle: "SRT vs VTT: Which Subtitle File?",
+      metaDescription:
+        "The two files are a header line and a punctuation mark apart. Here is which one each player wants — and where automatically generated subtitles go wrong.",
+      h1: "SRT vs VTT — which subtitle file do you need?",
+      lead: "Open both in a text editor and you will struggle to tell them apart. The differences are tiny, but one of them decides whether a web page will play your subtitles at all.",
+      sections: [
+        {
+          h2: "Both are plain text with timestamps",
+          body: [
+            "An SRT file is a numbered list of blocks. Each block has an index, a start and end time like `00:00:01,000 --> 00:00:04,000`, and the lines of text to show. That is the entire format. Its simplicity is why it turns up everywhere — media players, TVs, editing software, video platforms.",
+            "VTT is the same idea rewritten for the web. It was standardised so browsers could display subtitles natively on an HTML video element, and it adds room for things SRT never had a place for.",
+          ],
+        },
+        {
+          h2: "The differences, in full",
+          body: ["There are not many, and they are all mechanical:"],
+          list: [
+            "A VTT file must begin with the line `WEBVTT`. If that line is missing the browser rejects the whole file — this is the single most common reason subtitles silently fail to appear.",
+            "Fractions of a second are separated by a comma in SRT and a full stop in VTT.",
+            "SRT requires the block numbers. VTT treats them as optional labels.",
+            "VTT can carry position, alignment, styling and speaker identification. SRT has no notion of any of that.",
+            "The HTML5 video `<track>` element accepts VTT only. It will not load an SRT.",
+          ],
+        },
+        {
+          h2: "So which one do you want",
+          body: [
+            "If the video is playing on a web page you control, VTT — you have no choice. For everything else, SRT is the safer file: desktop players, phones, TVs, editing software and every major video platform accept it, and several of them do not accept VTT.",
+            "Because the conversion is mechanical, it is not worth agonising over. Our subtitle tool writes both files from the same transcript, so you can take whichever the destination wants.",
+          ],
+        },
+        {
+          h2: "How automatic subtitles are produced — and how they fail",
+          body: [
+            "Generated subtitles come from a speech recognition model. The audio is decoded, resampled to 16 kHz, and passed to the model, which returns text along with the time each segment started and ended. Here that happens inside the browser tab, which means the model has to be downloaded first — 151 MB or 291 MB depending on which you pick — so the tool states the number before you start rather than after.",
+            "The failure mode worth knowing is that poor audio does not produce slightly worse text; it produces a loop. We fed it a 1948 speech recording and it returned the same syllable over and over. A clean modern recording in the same language got roughly forty words with two mistakes. That was recording quality, not language difficulty — and because it is the failure people will hit most often, it is a permanent warning on the page rather than a note in an FAQ.",
+            "The most expensive mistake, though, is the language selector. Point a recognition model at the wrong language and it does not stop; it produces fluent, confident nonsense — we measured an English recording transcribed as a hundred and twenty lines of Korean gibberish. If the transcript reads like plausible text that has nothing to do with the audio, check that first.",
+          ],
+        },
+        {
+          h2: "Translating subtitles is a separate job",
+          body: [
+            "Translation runs a different model again — a 418-million-parameter multilingual one that handles a hundred languages in any direction. It is small enough to run in a tab, and that size sets the quality.",
+            "The honest description: of twenty lines, about fifteen come out well and five are awkward but understandable. Ordinary sentences are fine. Idioms are where it slips — \"let's wrap this up\" came back meaning roughly \"let's get started\" in both Spanish and German, which is not a small error.",
+            "Very short exclamations are the one case where it does not merely slip but collapses into repetition. Rather than ship that, the tool detects the collapse and leaves the original line untranslated, so you can see which lines need a human.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Can I just rename a .srt file to .vtt?",
+          a: "No. It will be missing the `WEBVTT` header line, and its timestamps use commas where VTT expects full stops. A browser will reject it outright. The conversion is simple, but it is not a rename.",
+        },
+        {
+          q: "Are the subtitles burned into the video?",
+          a: "No — a subtitle file sits alongside the video, and the player draws it. That is the better arrangement: viewers can turn it off, you can fix a typo without re-encoding, and the same video can carry several languages.",
+        },
+        {
+          q: "The transcript is fluent but completely unrelated to the audio.",
+          a: "The language is set wrong. A speech model asked for the wrong language will not fail — it will confidently produce well-formed text in that language. Set the spoken language and run it again.",
+        },
+      ],
+    },
+
+    "what-are-stems": {
+      metaTitle: "What Are Stems? Unmixing a Song",
+      metaDescription:
+        "Stems are the separate parts of a mix. Pulling them back out of a finished song is a guess rather than a recovery — here is how good that guess really is.",
+      h1: "What are stems — and can you really unmix a finished song?",
+      lead: "In a studio, stems exist before the mix does. Getting them out of a file that has already been mixed is a completely different operation, and it is worth knowing what you are actually being handed.",
+      sections: [
+        {
+          h2: "Stems, properly speaking",
+          body: [
+            "A stem is a grouped submix kept separate from the rest: all the drums on one, all the vocals on another, and so on. They exist so that a mastering engineer, a remixer or a live sound engineer can work on one part without touching the others.",
+            "Real stems are simply files somebody kept. If you have them, nothing needs to be estimated — they were never combined in the first place.",
+          ],
+        },
+        {
+          h2: "Separation is not the same thing",
+          body: [
+            "Once a track is mixed, every part has been summed into two channels of audio. That addition is not reversible; the individual parts no longer exist anywhere in the file.",
+            "So a separation model does not recover them. It estimates: given this mixture, what did each part most likely sound like on its own? It has heard enough music to be very good at that guess, but a guess is what it is.",
+            "This is why the results have a particular character. The parts are usually convincing on their own, with a faint trace of the others still audible, and dense passages can take on a slightly watery, smeared quality. Those are not bugs to be fixed — they are what estimation sounds like.",
+          ],
+        },
+        {
+          h2: "What you get back",
+          body: [
+            "Four tracks: vocals, drums, bass, and everything else. That last one is not a mistake in the model — it is the category for guitars, keys, strings, synths and anything that is not one of the other three. If your song is built on a piano, the piano is in \"other\".",
+            "Every stem is the full length of the original and lines up with it exactly, so you can load them into any editor and they will sit in sync.",
+          ],
+        },
+        {
+          h2: "How well does it work? We measured it",
+          body: [
+            "\"It ran and produced four files\" proves nothing at all — four files of plausible-sounding mush would look identical. So we built a mixture whose ingredients we knew exactly: a speech recording, a 60 Hz sine wave standing in for bass, and short noise bursts standing in for drums. Then we correlated each output stem against each known ingredient.",
+            "Each stem matched its own ingredient at almost exactly 1.0 and the others at almost exactly 0. The drum stem contained the noise bursts and essentially nothing else; the bass stem contained the sine wave and essentially nothing else.",
+            "That test proves the separation is real and correctly wired. It does not prove any given song will come apart cleanly — real music is much harder than a synthetic mixture, and a heavily layered or heavily compressed master is harder still.",
+          ],
+        },
+        {
+          h2: "It is slow, and that is a fact about the method",
+          body: [
+            "Separation runs the whole waveform through a neural network. We measured 7.8 seconds of audio taking 15.1 seconds to process — roughly twice real time. A full song therefore takes more than six minutes.",
+            "That is why the tool works on a 30-second preview and tells you the number before you press anything, rather than starting a six-minute job in a browser tab and hoping you stay.",
+          ],
+        },
+        {
+          h2: "Separating something does not give you the right to use it",
+          body: [
+            "Pulling a vocal out of a commercial record does not change who owns the recording. Practising over an instrumental, studying an arrangement or making something for yourself is one situation; publishing or distributing the result is a different one, and separation does not affect that at all.",
+            "Nothing you load here leaves your machine — but that is a statement about privacy, not about licensing.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Can I make a karaoke track from a song?",
+          a: "Yes — take every stem except the vocals and mix them back together. Expect a faint vocal residue in dense sections; the model is estimating, and where the voice overlaps loud instruments it cannot fully separate the two.",
+        },
+        {
+          q: "Will the stems sound as good as the original?",
+          a: "Summed back together they are very close to it. Listened to individually on headphones, artefacts are audible — mostly a slight watery quality and traces of the other parts. Each stem is a reconstruction, not an extraction.",
+        },
+        {
+          q: "Why only 30 seconds?",
+          a: "Because processing runs at about twice real time in a browser, so a whole song would take over six minutes with the tab open. The preview lets you hear whether the separation is good enough for your track before committing to that.",
         },
       ],
     },
