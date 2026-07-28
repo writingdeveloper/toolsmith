@@ -6,7 +6,7 @@ import { getDictionary } from "@/lib/i18n";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import type { OcrLanguage } from "@/lib/ocr/ocr-core";
 import { toolJsonLd } from "@/lib/schema";
-import { alternatesFor } from "@/lib/site";
+import { alternatesFor, socialFor } from "@/lib/site";
 import { TextReader } from "./TextReader";
 
 const PATH = "/tools/ocr";
@@ -37,6 +37,7 @@ export async function generateMetadata({
     title: tool.metaTitle,
     description: tool.metaDescription,
     alternates: alternatesFor(locale, PATH),
+    ...socialFor(locale, tool.metaTitle, tool.metaDescription, PATH),
   };
 }
 

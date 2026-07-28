@@ -1,4 +1,5 @@
 import { DEFAULT_LOCALE, HTML_LANG, LOCALES, type Locale } from "@/lib/i18n/config";
+import type { Metadata } from "next";
 
 /**
  * 본 도메인이 붙기 전까지는 비어 있다. 비어 있으면 robots 가 전면 차단하고
@@ -34,4 +35,56 @@ export function alternatesFor(locale: Locale, path = "") {
   for (const other of LOCALES) languages[HTML_LANG[other]] = absolute(pathFor(other, path));
   languages["x-default"] = absolute(pathFor(DEFAULT_LOCALE, path));
   return { canonical: absolute(pathFor(locale, path)), languages };
+}
+
+/**
+ * OG 는 언어를 `xx_XX` 로 적는다. hreflang 표기(`pt-BR`)와 형태가 달라서 따로 둔다.
+ */
+const OG_LOCALE: Record<Locale, string> = {
+  en: "en_US",
+  ko: "ko_KR",
+  ja: "ja_JP",
+  es: "es_ES",
+  de: "de_DE",
+  "pt-br": "pt_BR",
+};
+
+/** 공유 카드에 쓰는 그림. 6개 언어가 같은 것을 쓰므로 **글이 들어 있지 않다.** */
+export const OG_IMAGE = "/og.png";
+export const OG_IMAGE_SIZE = { width: 1200, height: 630 };
+
+/**
+ * 공유 카드(Open Graph · X) 메타.
+ *
+ * **Next 는 `title`/`description` 을 og 로 자동 복사하지 않는다.** 레이아웃에 한 번
+ * 적어 두어도 페이지가 제목을 바꾸면 og 제목은 레이아웃의 옛 값으로 남는다 — 그래서
+ * 페이지마다 자기 제목으로 이 함수를 부른다. 대신 부르는 자리가 21곳이 되므로
+ * **문자열은 전부 여기 한 곳에만 있다.**
+ */
+export function socialFor(
+  locale: Locale,
+  title: string,
+  description: string,
+  path = "",
+): Pick<Metadata, "openGraph" | "twitter"> {
+  const url = absolute(pathFor(locale, path));
+  const image = absolute(OG_IMAGE);
+  return {
+    openGraph: {
+      type: "website",
+      siteName: "toolsmith",
+      title,
+      description,
+      url,
+      locale: OG_LOCALE[locale],
+      alternateLocale: LOCALES.filter((other) => other !== locale).map((other) => OG_LOCALE[other]),
+      images: [{ url: image, ...OG_IMAGE_SIZE, alt: "toolsmith" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
 }

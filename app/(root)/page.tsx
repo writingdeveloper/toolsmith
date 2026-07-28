@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getDictionary } from "@/lib/i18n";
 import { DEFAULT_LOCALE, HTML_LANG, LOCALE_NAME, LOCALES } from "@/lib/i18n/config";
-import { absolute, alternatesFor } from "@/lib/site";
+import { absolute, alternatesFor, socialFor } from "@/lib/site";
 
 const dict = getDictionary(DEFAULT_LOCALE);
 
@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     canonical: absolute(`/${DEFAULT_LOCALE}`),
     languages: alternatesFor(DEFAULT_LOCALE).languages,
   },
+  ...socialFor(DEFAULT_LOCALE, dict.site.title, dict.site.description),
 };
 
 /**

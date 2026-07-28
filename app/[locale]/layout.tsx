@@ -6,7 +6,7 @@ import { Analytics } from "@/components/Analytics";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { getDictionary } from "@/lib/i18n";
 import { HTML_LANG, isLocale, LOCALE_NAME, LOCALES, type Locale } from "@/lib/i18n/config";
-import { alternatesFor, GA_ID, SITE_URL } from "@/lib/site";
+import { alternatesFor, GA_ID, SITE_URL, socialFor } from "@/lib/site";
 
 /** 6개 언어를 빌드 시점에 전부 찍어낸다. 런타임 서버 연산은 없다. */
 export function generateStaticParams() {
@@ -27,6 +27,11 @@ export async function generateMetadata({
     title: { default: dict.site.title, template: dict.site.titleTemplate },
     description: dict.site.description,
     alternates: alternatesFor(locale),
+    /*
+     * 각 언어의 홈이 이것을 그대로 물려받는다. 도구 페이지는 자기 제목으로 다시
+     * 부르므로 여기 값이 남지 않는다 — Next 는 og 를 통째로 갈아끼운다.
+     */
+    ...socialFor(locale, dict.site.title, dict.site.description),
   };
 }
 

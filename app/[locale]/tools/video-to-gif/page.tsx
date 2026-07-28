@@ -5,7 +5,7 @@ import { RelatedTools } from "@/components/RelatedTools";
 import { getDictionary } from "@/lib/i18n";
 import { isLocale } from "@/lib/i18n/config";
 import { toolJsonLd } from "@/lib/schema";
-import { alternatesFor } from "@/lib/site";
+import { alternatesFor, socialFor } from "@/lib/site";
 import { GifMaker } from "./GifMaker";
 
 const PATH = "/tools/video-to-gif";
@@ -22,6 +22,7 @@ export async function generateMetadata({
     title: tool.metaTitle,
     description: tool.metaDescription,
     alternates: alternatesFor(locale, PATH),
+    ...socialFor(locale, tool.metaTitle, tool.metaDescription, PATH),
   };
 }
 
