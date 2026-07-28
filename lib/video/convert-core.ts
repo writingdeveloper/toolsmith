@@ -24,6 +24,7 @@ import {
   type VideoTrack,
 } from "./mp4-source";
 import { remuxMp4 } from "./trim-core";
+import { displaySize, drawRotated } from "./rotation";
 
 export type ConvertTarget = "mp4" | "webm";
 export type Quality = "high" | "balanced" | "small";
@@ -74,10 +75,12 @@ export function probeSource({ video, audio }: Mp4Source): ConvertProbe {
   if (!video || video.samples.length === 0) throw new MediaError("NO_VIDEO_TRACK");
 
   const durationSec = video.duration / MICROS;
+  // UI 가 그리는 숫자다 — 저장 크기가 아니라 재생기가 보여 주는 크기여야 한다
+  const shown = displaySize(video, video.rotation);
 
   return {
-    width: video.width,
-    height: video.height,
+    width: shown.width,
+    height: shown.height,
     durationSec,
     frameRate: durationSec > 0 ? video.samples.length / durationSec : 0,
     videoCodec: video.codec,
@@ -219,7 +222,13 @@ async function toWebm(
 ): Promise<ConvertResult> {
   const durationSec = video.duration / MICROS;
   const frameRate = durationSec > 0 ? video.samples.length / durationSec : 30;
-  const target = evenFit(video.width, video.height, options.maxEdge);
+  /*
+   * **WebM 은 회전을 담지 못한다.** Matroska 에 자리가 아예 없는 것은 아니지만
+   * (`ProjectionPoseRoll`) `webm-muxer` 에 그 옵션이 없고 재생기 지원도 고르지 않다.
+   * 그래서 여기서는 픽셀을 실제로 돌려 굽는다 — MP4 갈래와 방법이 갈리는 지점이다.
+   */
+  const stored = evenFit(video.width, video.height, options.maxEdge);
+  const target = displaySize(stored, video.rotation);
   const bitrate = targetBitrate(target.width, target.height, frameRate, options.quality);
   const picked = await pickWebmCodec(target.width, target.height, bitrate);
 
@@ -281,10 +290,12 @@ async function toWebm(
   });
   encoder.configure({ codec: picked.codec, width: target.width, height: target.height, bitrate });
 
-  const resizing = target.width !== video.width || target.height !== video.height;
-  const canvas = resizing ? new OffscreenCanvas(target.width, target.height) : null;
+  // 회전이 있으면 크기가 그대로여도 캔버스를 거쳐야 한다 — 돌릴 곳이 거기뿐이다
+  const redrawing =
+    video.rotation !== 0 || stored.width !== video.width || stored.height !== video.height;
+  const canvas = redrawing ? new OffscreenCanvas(target.width, target.height) : null;
   const ctx = canvas?.getContext("2d") ?? null;
-  if (resizing && !ctx) throw new MediaError("ENCODE_FAILED");
+  if (redrawing && !ctx) throw new MediaError("ENCODE_FAILED");
 
   const base = opus ? 0.2 : 0;
   const span = 1 - base;
@@ -294,7 +305,7 @@ async function toWebm(
     output: (frame) => {
       try {
         if (ctx && canvas) {
-          ctx.drawImage(frame, 0, 0, target.width, target.height);
+          drawRotated(ctx, frame, video.rotation, target.width, target.height);
           const resized = new VideoFrame(canvas, {
             timestamp: frame.timestamp,
             duration: frame.duration ?? undefined,
@@ -390,13 +401,15 @@ export async function convertVideo(
     onProgress,
   );
 
+  const shown = displaySize(video, video.rotation);
+
   return {
     blob: remuxed.blob,
     target: "mp4",
     before: remuxed.before,
     after: remuxed.after,
-    width: video.width,
-    height: video.height,
+    width: shown.width,
+    height: shown.height,
     durationSec: remuxed.endSec - remuxed.startSec,
     reencoded: false,
     keptAudio: remuxed.keptAudio,

@@ -116,7 +116,12 @@ export async function remuxMp4(
   const { Muxer, ArrayBufferTarget } = await import("mp4-muxer");
   const muxer = new Muxer({
     target: new ArrayBufferTarget(),
-    video: { codec, width: video.width, height: video.height },
+    /*
+     * **회전을 그대로 다시 적는다.** 여기서는 샘플을 옮기기만 하므로 픽셀을 돌릴
+     * 방법이 없다 — 원본이 세로였다는 사실은 이 한 줄로만 살아남는다. 빠뜨리면
+     * 휴대폰 세로 영상이 옆으로 누워서 나간다(2026-07-27 실측). `lib/video/rotation.ts`.
+     */
+    video: { codec, width: video.width, height: video.height, rotation: video.rotation },
     ...(keepAudio && audio && audioCodec
       ? {
           audio: {

@@ -11,6 +11,7 @@
 
 import { MediaError, readMp4 } from "./mp4-source";
 import { MAX_GIF_FRAMES, gifTiming } from "./gif-timing";
+import { displaySize, drawRotated } from "./rotation";
 
 export interface GifOptions {
   /** 요청 fps. 실제 값은 gifTiming() 이 1/100초에 맞춰 반올림한 값이다. */
@@ -53,7 +54,11 @@ export async function videoToGif(
   const { video } = await readMp4(bytes);
   if (!video || video.samples.length === 0) throw new MediaError("NO_VIDEO_TRACK");
 
-  const target = fit(video.width, video.height, options.maxEdge);
+  /*
+   * **GIF 에는 회전이라는 개념이 없다.** 그러니 여기서는 픽셀을 실제로 돌려 굽는다.
+   * 목표 크기도 회전 뒤 기준이어야 한다 — 세로 영상이 가로 GIF 로 나가면 안 된다.
+   */
+  const target = displaySize(fit(video.width, video.height, options.maxEdge), video.rotation);
   const timing = gifTiming(options.fps);
   const stepMicros = 1_000_000 / timing.fps;
 
@@ -73,7 +78,7 @@ export async function videoToGif(
   let encodeError: unknown = null;
 
   const take = (frame: VideoFrame) => {
-    ctx.drawImage(frame, 0, 0, target.width, target.height);
+    drawRotated(ctx, frame, video.rotation, target.width, target.height);
     const { data } = ctx.getImageData(0, 0, target.width, target.height);
     // 프레임마다 색표를 새로 뽑는다 — 장면이 바뀌어도 색이 무너지지 않는다
     const palette = quantize(data, 256, { format: "rgb565" });

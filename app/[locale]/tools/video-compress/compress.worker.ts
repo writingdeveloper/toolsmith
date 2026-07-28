@@ -1,5 +1,6 @@
 import { compressVideo, type CompressOptions, type CompressResult } from "@/lib/video/compress-core";
 import { readMp4 } from "@/lib/video/mp4-source";
+import { displaySize } from "@/lib/video/rotation";
 
 export type WorkerRequest =
   | { kind: "inspect"; id: number; file: File }
@@ -48,8 +49,8 @@ ctx.onmessage = async (event) => {
       ctx.postMessage({
         kind: "inspected",
         id: request.id,
-        width: video.width,
-        height: video.height,
+        // **보이는 크기**를 준다. 저장 크기를 그대로 주면 세로 영상에 가로를 말한다.
+        ...displaySize(video, video.rotation),
         durationSec: video.duration / 1_000_000,
         hasAudio: Boolean(audio),
       });

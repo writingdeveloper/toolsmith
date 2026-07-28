@@ -11,6 +11,7 @@
  */
 
 import { MediaError, readMp4, type AudioTrack, type VideoTrack } from "./mp4-source";
+import { displaySize } from "./rotation";
 
 export interface CompressOptions {
   /** 긴 변 상한(px). 0 이면 원본 해상도 유지 */
@@ -70,7 +71,17 @@ export async function compressVideo(
   const { Muxer, ArrayBufferTarget } = await import("mp4-muxer");
   const muxer = new Muxer({
     target: new ArrayBufferTarget(),
-    video: { codec: "avc", width: target.width, height: target.height },
+    /*
+     * 픽셀은 저장 방향 그대로 두고 **회전만 다시 적는다.** MP4 로 나가므로 상자가
+     * 회전을 담을 수 있고, 그러면 굳이 프레임을 돌려 굽지 않아도 된다.
+     * `evenFit` 은 긴 변만 보는데 90도 회전은 긴 변을 바꾸지 않으므로 계산도 그대로다.
+     */
+    video: {
+      codec: "avc",
+      width: target.width,
+      height: target.height,
+      rotation: video.rotation,
+    },
     ...(audio
       ? {
           audio: {
@@ -193,12 +204,15 @@ export async function compressVideo(
   muxer.finalize();
   const buffer = (muxer.target as { buffer: ArrayBuffer }).buffer;
 
+  // 화면에 적는 값은 **보이는 크기**다. 저장 크기를 적으면 세로 영상에 가로를 말하게 된다.
+  const shown = displaySize(target, video.rotation);
+
   return {
     blob: new Blob([buffer], { type: "video/mp4" }),
     before: bytes.byteLength,
     after: buffer.byteLength,
-    width: target.width,
-    height: target.height,
+    width: shown.width,
+    height: shown.height,
     durationSec: video.duration / 1_000_000,
     keptAudio: Boolean(audio),
   };

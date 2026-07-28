@@ -650,6 +650,23 @@ await write("article-utf16.txt", Buffer.concat([Buffer.from([0xff, 0xfe]), Buffe
  */
 
 /*
+ * rot0/rot90/rot180/rot270.mp4 도 여기서 만들지 않는다.
+ *
+ * **회전 행렬을 지닌 진짜 파일이어야 한다.** 우리가 직접 tkhd 바이트를 써 넣어
+ * 만들 수도 있지만, 그러면 "우리가 상상한 회전" 만 검증하게 된다 — 실제 인코더가
+ * 어디에 무엇을 적는지(행렬의 tx/ty, tkhd 의 폭·높이를 함께 바꾸는지 마는지)는
+ * 도구마다 다르다.
+ *
+ * Chromium 미디어 테스트 자산을 그대로 쓴다(BSD-3):
+ *   https://raw.githubusercontent.com/chromium/chromium/main/media/test/data/bear_rotate_{0,90,180,270}.mp4
+ *
+ * 넷은 **같은 1280×720 가로 픽셀에 회전 플래그만 다르게 붙인 것**이다
+ * (90·180·270 은 바이트 수까지 63,080 으로 같다). 그래서 방향만 따로 떼어 볼 수
+ * 있고, 검사의 기준도 "넷이 서로 같다" 가 아니라 **"각 결과가 자기 원본과 같다"** 다.
+ * `tests/video-rotation.spec.ts` 가 이것을 고정한다.
+ */
+
+/*
  * speech.mp3 도 여기서 만들지 않는다.
  *
  * **말소리가 든 진짜 MP3 여야 한다.** music.mp3(연주곡)로는 "말이 실제로 적히는가" 를

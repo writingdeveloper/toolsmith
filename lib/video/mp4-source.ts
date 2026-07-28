@@ -7,6 +7,8 @@
  * window / document 를 참조하지 않는다 (워커에서 돈다).
  */
 
+import { readRotation, type Rotation } from "./rotation";
+
 export type MediaErrorCode =
   | "UNSUPPORTED_CONTAINER"
   | "NO_VIDEO_TRACK"
@@ -46,8 +48,14 @@ export interface Sample {
 
 export interface VideoTrack {
   codec: string;
+  /**
+   * **저장 크기다. 보이는 크기가 아니다.** 세로로 찍은 영상도 여기서는 가로로 나온다 —
+   * 방향은 `rotation` 에 따로 있다. 화면에 적을 값은 `displaySize()` 로 옮겨서 쓴다.
+   */
   width: number;
   height: number;
+  /** `tkhd` 행렬이 지시하는 시계방향 회전. 자세한 것은 `lib/video/rotation.ts`. */
+  rotation: Rotation;
   /** 마이크로초 */
   duration: number;
   frameCount: number;
@@ -88,6 +96,8 @@ interface Mp4BoxTrack {
   nb_samples: number;
   video?: { width: number; height: number };
   audio?: { sample_rate: number; channel_count: number };
+  /** `tkhd` 의 3×3 행렬. mp4box 가 이미 파싱해 두었는데 우리가 안 읽고 있었다. */
+  matrix?: ArrayLike<number>;
 }
 interface Mp4BoxInfo {
   videoTracks: Mp4BoxTrack[];
@@ -272,6 +282,7 @@ export async function readMp4(
           codec: videoInfo.codec,
           width: videoInfo.video?.width ?? 0,
           height: videoInfo.video?.height ?? 0,
+          rotation: readRotation(videoInfo.matrix),
           // 샘플에서 잰 길이를 쓴다 — 트랙 헤더의 값은 재정렬 지연만큼 부풀어 있다
           duration: measured || (videoInfo.duration / videoInfo.timescale) * MICROS,
           frameCount: videoInfo.nb_samples,
