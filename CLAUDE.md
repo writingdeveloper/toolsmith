@@ -309,7 +309,12 @@ CPU 로 내려갈 곳이 없는 유일한 도구라, 기본 프로젝트가 "Web
 
 ### 알려진 결함 (다음에 손볼 것)
 
-지금은 없다. `pnpm lint` 0건, `npx tsc --noEmit` 0건.
+코드에는 없다. `pnpm lint` 0건, `npx tsc --noEmit` 0건.
+
+열어 둔 것 하나: **Dependabot #5 `brace-expansion` (high)**. devDependency 이고
+브라우저로 안 나가며, 고칠 버전(5.0.8)을 밀어 넣으면 그것을 요구하는
+`minimatch@3.1.5` 가 깨진다. eslint 트리가 minimatch@3 에서 벗어나면 사라진다.
+근거는 `docs/TOOLS.md`.
 
 **실물 파일 쓸이에서 지금까지 18건이 나왔다** — 자막 번역 4, PDF 계열 3(2026-07-26),
 요약 3, OCR 1 · 이미지 압축 1 · 배경 제거 1 · **영상 회전 4**(2026-07-27),
