@@ -46,11 +46,18 @@ const EMPTY_COVERAGE = 0.005;
 /**
  * 모델이 **결정을 내렸는가**. 이보다 낮으면 남은 것이 대부분 반투명한 유령이다.
  *
- * 실측(자세한 표는 `lib/matting/matte-core.ts` 의 `commitment`):
- * 좋은 결과의 최저가 0.40(후지산), 나쁜 결과의 최고가 0.08(비둘기 도감 14마리).
- * 그 사이에 둔다 — **여유가 양쪽 2배뿐이므로** 표본이 늘면 다시 잴 것.
+ * **실사진 24장으로 다시 잡았다(2026-07-27).** 여덟 장으로 정했던 0.2 는 방향은
+ * 맞았지만 나쁜 쪽에 너무 붙어 있었다 — 교통정체 사진이 0.198 로 **여유 1%** 였다.
+ *
+ * | | 값 | 0.2 까지 | 0.28 까지 |
+ * |---|---|---|---|
+ * | 좋은 것 최저(후지산) | 0.395 | 1.98배 | **1.41배** |
+ * | 나쁜 것 최고(교통정체) | 0.198 | **1.01배** | **1.41배** |
+ *
+ * 기하 중간으로 옮겨 양쪽을 같게 했다. 24장 전부의 판정은 그대로다.
+ * 표가 필요하면 `lib/matting/matte-core.ts` 의 `commitment` 에 있다.
  */
-const MIN_COMMITMENT = 0.2;
+const MIN_COMMITMENT = 0.28;
 
 export function BackgroundRemover({ ui, common }: { ui: Ui; common: Common }) {
   const [broken, setBroken] = useState(false);
