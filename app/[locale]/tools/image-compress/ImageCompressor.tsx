@@ -17,7 +17,11 @@ import {
   type OutputFormat,
 } from "@/lib/image/convert-core";
 import { useCapability } from "@/lib/use-capability";
-import type { WorkerRequest, WorkerRequestPayload, WorkerResponse } from "./compress.worker";
+import type {
+  WorkerRequest,
+  WorkerRequestPayload,
+  WorkerResponse,
+} from "./compress.worker";
 
 type Ui = Dictionary["tools"]["image-compress"]["ui"];
 type Common = Dictionary["common"];
@@ -28,7 +32,13 @@ interface Item {
   id: number;
   file: File;
   status: "queued" | "working" | "done" | "error";
-  result?: { url: string; size: number; width: number; height: number; name: string };
+  result?: {
+    url: string;
+    size: number;
+    width: number;
+    height: number;
+    name: string;
+  };
   /** 다시 눌러 봐야 더 줄지 않아 **원본을 그대로 둔** 파일인가. */
   kept?: boolean;
   error?: string;
@@ -60,7 +70,15 @@ function shrinksWithQuality(file: File): boolean {
   return format !== null && format !== "image/png";
 }
 
-export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: Ui; common: Common }) {
+export function ImageCompressor({
+  chain,
+  ui,
+  common,
+}: {
+  chain: ChainCopy;
+  ui: Ui;
+  common: Common;
+}) {
   const [broken, setBroken] = useState(false);
   const capable = useCapability(canRunImageTools);
   const supported = capable === null ? null : capable && !broken;
@@ -74,7 +92,10 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
 
   const workerRef = useRef<Worker | null>(null);
   const pendingRef = useRef(
-    new Map<number, { resolve: (v: WorkerResponse) => void; reject: (e: Error) => void }>(),
+    new Map<
+      number,
+      { resolve: (v: WorkerResponse) => void; reject: (e: Error) => void }
+    >(),
   );
   const rpcId = useRef(0);
   const itemId = useRef(0);
@@ -83,15 +104,18 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
     itemsRef.current = items;
   }, [items]);
 
-  const callWorker = useCallback((request: WorkerRequestPayload): Promise<WorkerResponse> => {
-    const worker = workerRef.current;
-    if (!worker) return Promise.reject(new Error("NO_WORKER"));
-    const id = ++rpcId.current;
-    return new Promise((resolve, reject) => {
-      pendingRef.current.set(id, { resolve, reject });
-      worker.postMessage({ ...request, id } as WorkerRequest);
-    });
-  }, []);
+  const callWorker = useCallback(
+    (request: WorkerRequestPayload): Promise<WorkerResponse> => {
+      const worker = workerRef.current;
+      if (!worker) return Promise.reject(new Error("NO_WORKER"));
+      const id = ++rpcId.current;
+      return new Promise((resolve, reject) => {
+        pendingRef.current.set(id, { resolve, reject });
+        worker.postMessage({ ...request, id } as WorkerRequest);
+      });
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!capable) return;
@@ -137,7 +161,11 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
   const addFiles = useCallback((files: File[]) => {
     setItems((prev) => [
       ...prev,
-      ...files.map((file) => ({ id: ++itemId.current, file, status: "queued" as const })),
+      ...files.map((file) => ({
+        id: ++itemId.current,
+        file,
+        status: "queued" as const,
+      })),
     ]);
   }, []);
 
@@ -158,7 +186,9 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
       const chosen = format ?? sourceFormat(target.file) ?? "image/jpeg";
       setItems((prev) =>
         prev.map((item) =>
-          item.id === target.id ? { ...item, status: "working", error: undefined } : item,
+          item.id === target.id
+            ? { ...item, status: "working", error: undefined }
+            : item,
         ),
       );
       try {
@@ -169,7 +199,12 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
         });
         if (response.kind !== "compressed") throw new Error("UNKNOWN");
         succeeded += 1;
-        const kept = shouldKeepOriginal(target.file, response.blob, format, maxEdge);
+        const kept = shouldKeepOriginal(
+          target.file,
+          response.blob,
+          format,
+          maxEdge,
+        );
         // 줄지 않았으면 원본을 그대로 내준다 — 커진 파일을 "압축본" 이라고 주지 않는다
         const url = URL.createObjectURL(kept ? target.file : response.blob);
         setItems((prev) =>
@@ -187,7 +222,10 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
                 height: response.height,
                 name: kept
                   ? target.file.name
-                  : replaceExtension(target.file.name, FORMAT_EXTENSION[chosen]),
+                  : replaceExtension(
+                      target.file.name,
+                      FORMAT_EXTENSION[chosen],
+                    ),
               },
             };
           }),
@@ -200,7 +238,10 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
               ? {
                   ...item,
                   status: "error",
-                  error: message === "UNSUPPORTED_INPUT" ? ui.errUnsupportedInput : ui.errGeneric,
+                  error:
+                    message === "UNSUPPORTED_INPUT"
+                      ? ui.errUnsupportedInput
+                      : ui.errGeneric,
                 }
               : item,
           ),
@@ -226,7 +267,9 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
     return (
       <div className="rounded-xl border border-border bg-panel p-6">
         <p className="font-medium text-warn">{common.workerUnsupportedTitle}</p>
-        <p className="mt-2 text-sm text-muted">{common.workerUnsupportedHint}</p>
+        <p className="mt-2 text-sm text-muted">
+          {common.workerUnsupportedHint}
+        </p>
       </div>
     );
   }
@@ -235,7 +278,8 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
   const before = done.reduce((sum, item) => sum + item.file.size, 0);
   const after = done.reduce((sum, item) => sum + (item.result?.size ?? 0), 0);
   /** 품질을 낮춰도 줄지 않는 파일이 섞여 있는가 — 말해 주지 않으면 도구가 고장난 줄 안다. */
-  const lossless = items.some((item) => !shrinksWithQuality(item.file)) && format === null;
+  const lossless =
+    items.some((item) => !shrinksWithQuality(item.file)) && format === null;
 
   return (
     <div className="space-y-6">
@@ -287,7 +331,11 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
             value={format ?? ""}
             disabled={busy}
             onChange={(event) =>
-              setFormat(event.target.value === "" ? null : (event.target.value as OutputFormat))
+              setFormat(
+                event.target.value === ""
+                  ? null
+                  : (event.target.value as OutputFormat),
+              )
             }
             className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm"
           >
@@ -348,9 +396,14 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
 
           <ul className="divide-y divide-border rounded-xl border border-border">
             {items.map((item) => (
-              <li key={item.id} className="flex flex-wrap items-center gap-3 p-4">
+              <li
+                key={item.id}
+                className="flex flex-wrap items-center gap-3 p-4"
+              >
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{item.file.name}</p>
+                  <p className="truncate text-sm font-medium">
+                    {item.file.name}
+                  </p>
                   <p className="text-xs text-muted tabular-nums">
                     {formatBytes(item.file.size)}
                     {/* 줄일 것이 없었던 파일은 그렇다고 말한다 — 0% 라고만 적으면 고장난 줄 안다 */}
@@ -363,24 +416,37 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
                     {item.result && !item.kept && (
                       <>
                         {" → "}
-                        <span className="text-fg">{formatBytes(item.result.size)}</span>{" "}
+                        <span className="text-fg">
+                          {formatBytes(item.result.size)}
+                        </span>{" "}
                         <span
                           className={
-                            savingsPercent(item.file.size, item.result.size) >= 0
+                            savingsPercent(item.file.size, item.result.size) >=
+                            0
                               ? "text-ok"
                               : "text-warn"
                           }
                         >
-                          ({savingsPercent(item.file.size, item.result.size) >= 0 ? "-" : "+"}
-                          {Math.abs(savingsPercent(item.file.size, item.result.size))}%)
+                          (
+                          {savingsPercent(item.file.size, item.result.size) >= 0
+                            ? "-"
+                            : "+"}
+                          {Math.abs(
+                            savingsPercent(item.file.size, item.result.size),
+                          )}
+                          %)
                         </span>{" "}
                         · {item.result.width}×{item.result.height}
                       </>
                     )}
                   </p>
                 </div>
-                {item.status === "working" && <span className="text-sm text-muted">{ui.working}</span>}
-                {item.status === "error" && <span className="text-sm text-err">{item.error}</span>}
+                {item.status === "working" && (
+                  <span className="text-sm text-muted">{ui.working}</span>
+                )}
+                {item.status === "error" && (
+                  <span className="text-sm text-err">{item.error}</span>
+                )}
                 {item.status === "done" && item.result && (
                   <a
                     href={item.result.url}
@@ -400,7 +466,15 @@ export function ImageCompressor({ chain, ui, common }: { chain: ChainCopy; ui: U
         chain={chain}
         from="image-compress"
         files={items.flatMap((item) =>
-          item.result ? [{ url: item.result.url, name: item.result.name }] : [],
+          item.result
+            ? [
+                {
+                  url: item.result.url,
+                  name: item.result.name,
+                  pixels: item.result.width * item.result.height,
+                },
+              ]
+            : [],
         )}
       />
     </div>

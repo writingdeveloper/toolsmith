@@ -7,7 +7,8 @@ export const ko = {
     description:
       "파일이 기기를 떠나지 않습니다. 이미지·영상·PDF 변환을 전부 브라우저 안에서 처리합니다. 가입 없음, 업로드 없음.",
     tagline: "업로드 없음 · 전부 브라우저에서 처리",
-    footerNote: "선택한 파일은 서버로 전송되지 않습니다. 모든 처리는 이 브라우저 탭 안에서 끝납니다.",
+    footerNote:
+      "선택한 파일은 서버로 전송되지 않습니다. 모든 처리는 이 브라우저 탭 안에서 끝납니다.",
   },
 
   home: {
@@ -20,7 +21,8 @@ export const ko = {
     availableHeading: "사용 가능",
     searchLabel: "도구 찾기",
     searchPlaceholder: "검색 — HEIC, PDF, 자막…",
-    searchEmpty: "해당하는 도구가 없습니다. HEIC, MP4 처럼 파일 형식으로 찾아보세요.",
+    searchEmpty:
+      "해당하는 도구가 없습니다. HEIC, MP4 처럼 파일 형식으로 찾아보세요.",
     upcomingHeading: "준비 중",
   },
 
@@ -41,7 +43,8 @@ export const ko = {
     clear: "비우기",
     downloadAll: "전체 다운로드",
     workerUnsupportedTitle: "이 브라우저에서는 이 도구를 실행할 수 없습니다.",
-    workerUnsupportedHint: "Web Worker 를 지원하는 최신 Chrome, Edge, Firefox, Safari 에서 열어 주세요.",
+    workerUnsupportedHint:
+      "Web Worker 를 지원하는 최신 Chrome, Edge, Firefox, Safari 에서 열어 주세요.",
   },
 
   mediaErrors: {
@@ -92,7 +95,8 @@ export const ko = {
 
   tools: {
     "image-convert": {
-      blurb: "HEIC·PNG·JPG·WebP·AVIF 상호 변환, 품질 압축, 리사이즈. 여러 장 한 번에.",
+      blurb:
+        "HEIC·PNG·JPG·WebP·AVIF 상호 변환, 품질 압축, 리사이즈. 여러 장 한 번에.",
       metaTitle: "이미지 변환·압축 — HEIC, PNG, JPG, WebP, AVIF",
       metaDescription:
         "아이폰 HEIC 사진을 JPG로, PNG를 WebP로. 업로드 없이 브라우저에서 바로 변환하고 압축합니다. 가입 불필요, 파일 개수 제한 없음.",
@@ -113,12 +117,14 @@ export const ko = {
         },
       ],
       ui: {
-          animatedNote: "움직이는 그림입니다. 첫 프레임만 남고 움직임은 사라집니다.",
+        animatedNote:
+          "움직이는 그림입니다. 첫 프레임만 남고 움직임은 사라집니다.",
         unsupportedTitle: "이 브라우저에서는 이미지 변환을 실행할 수 없습니다.",
         unsupportedHint:
           "OffscreenCanvas 를 지원하는 최신 Chrome, Edge, Firefox, Safari 17 이상에서 열어 주세요.",
         dropLabel: "이미지를 여기에 놓으세요",
-        dropHint: "HEIC · PNG · JPG · WebP · AVIF · GIF · BMP — 여러 장 한 번에",
+        dropHint:
+          "HEIC · PNG · JPG · WebP · AVIF · GIF · BMP — 여러 장 한 번에",
         formatLabel: "출력 형식",
         qualityLabel: "품질 {value}",
         qualityLossless: "품질 (PNG는 무손실)",
@@ -134,7 +140,8 @@ export const ko = {
     },
 
     "pdf-merge": {
-      blurb: "여러 PDF를 원하는 순서로 하나로. 재렌더링 없이 원본 그대로 이어 붙입니다.",
+      blurb:
+        "여러 PDF를 원하는 순서로 하나로. 재렌더링 없이 원본 그대로 이어 붙입니다.",
       metaTitle: "PDF 병합 — 여러 PDF를 하나로 합치기",
       metaDescription:
         "여러 개의 PDF를 원하는 순서로 이어 붙입니다. 업로드 없이 브라우저에서 바로 처리하고, 가입도 워터마크도 파일 개수 제한도 없습니다.",
@@ -202,7 +209,8 @@ export const ko = {
       ],
       ui: {
         dropLabel: "PDF 를 여기에 놓으세요",
-        dropHint: "한 개씩 처리합니다 — 원하는 페이지만 뽑거나, 모든 페이지를 낱장으로 쪼갭니다",
+        dropHint:
+          "한 개씩 처리합니다 — 원하는 페이지만 뽑거나, 모든 페이지를 낱장으로 쪼갭니다",
         reading: "읽는 중…",
         pageCount: "{n}페이지",
         modeExtract: "페이지 범위 추출",
@@ -224,7 +232,8 @@ export const ko = {
     },
 
     "pdf-organize": {
-      blurb: "모든 페이지를 눈으로 보면서, 누운 쪽은 세우고 필요 없는 쪽은 뺍니다.",
+      blurb:
+        "모든 페이지를 눈으로 보면서, 누운 쪽은 세우고 필요 없는 쪽은 뺍니다.",
       metaTitle: "PDF 회전·페이지 삭제 — 브라우저에서 스캔본 정리",
       metaDescription:
         "누워서 스캔된 페이지를 세우고 필요 없는 페이지를 뺍니다. 모든 페이지를 썸네일로 보여 줍니다. 업로드 없이 브라우저에서 처리하고 가입도 필요 없습니다.",
@@ -270,7 +279,8 @@ export const ko = {
     },
 
     "pdf-compress": {
-      blurb: "PDF 안의 사진만 다시 압축합니다. 글자는 글자로 남습니다 — 통째로 굽지 않습니다.",
+      blurb:
+        "PDF 안의 사진만 다시 압축합니다. 글자는 글자로 남습니다 — 통째로 굽지 않습니다.",
       metaTitle: "PDF 압축 — 용량은 줄이고 글자는 그대로",
       metaDescription:
         "PDF 안에 박힌 사진을 다시 압축해 용량을 줄입니다. 글자는 선택·검색이 그대로 됩니다. 업로드 없이 브라우저에서 처리하고 가입도 필요 없습니다.",
@@ -308,14 +318,16 @@ export const ko = {
         working: "압축 중…",
         outputName: "{stem}-압축.pdf",
         rewroteImages: "사진 {total}개 중 {n}개를 다시 압축했습니다",
-        keepOriginal: "갖고 계신 원본을 그대로 쓰세요 — 여기서 더 작아지지 않습니다.",
+        keepOriginal:
+          "갖고 계신 원본을 그대로 쓰세요 — 여기서 더 작아지지 않습니다.",
         noImages: "이 PDF 에는 다시 압축할 사진이 없습니다.",
         alreadySmall: "사진이 이미 잘 압축돼 있어 더 줄이지 못했습니다.",
       },
     },
 
     "data-query": {
-      blurb: "CSV·Parquet 파일에 SQL 을 던집니다. 파일은 기기를 떠나지 않습니다.",
+      blurb:
+        "CSV·Parquet 파일에 SQL 을 던집니다. 파일은 기기를 떠나지 않습니다.",
       metaTitle: "CSV·Parquet SQL 쿼리 — 브라우저에서",
       metaDescription:
         "CSV 나 Parquet 파일을 열어 SQL 로 조회합니다. DuckDB 가 브라우저 안에서 돌기 때문에 업로드도 가입도 행 수 제한도 없습니다.",
@@ -347,7 +359,8 @@ export const ko = {
         dropLabel: "여기에 CSV 나 Parquet 파일을 놓으세요",
         dropHint: "CSV · TSV · Parquet · JSON — 한 번에 하나",
         downloadNote: "파일을 열면 DuckDB 엔진 약 {size} 를 받습니다.",
-        localNote: "파일 자체는 올라가지 않습니다 — DuckDB 가 디스크에서 직접 읽습니다.",
+        localNote:
+          "파일 자체는 올라가지 않습니다 — DuckDB 가 디스크에서 직접 읽습니다.",
         open: "열어서 조회",
         opening: "여는 중…",
         rowCount: "{rows}행",
@@ -368,7 +381,8 @@ export const ko = {
     },
 
     ocr: {
-      blurb: "사진·스크린샷·스캔한 PDF 에서 글자를 꺼냅니다. 업로드가 없습니다.",
+      blurb:
+        "사진·스크린샷·스캔한 PDF 에서 글자를 꺼냅니다. 업로드가 없습니다.",
       metaTitle: "이미지·PDF 에서 글자 추출 (OCR)",
       metaDescription:
         "사진이나 스크린샷, 스캔한 PDF 의 글자를 업로드 없이 읽어 냅니다. 7개 언어를 지원하고 전부 브라우저 안에서 끝나며 가입도 필요 없습니다.",
@@ -402,7 +416,8 @@ export const ko = {
         pdfLimit: "{max}쪽까지",
         languageLabel: "문서에 쓰인 언어",
         downloadNote: "버튼을 누르면 엔진과 언어 데이터 약 {size} 를 받습니다.",
-        cachedNote: "한 번만 받고 브라우저가 갖고 있습니다 — 다음 문서는 곧바로 시작합니다.",
+        cachedNote:
+          "한 번만 받고 브라우저가 갖고 있습니다 — 다음 문서는 곧바로 시작합니다.",
         run: "글자 읽기",
         working: "읽는 중…",
         stageEngine: "엔진 준비 {percent}%",
@@ -414,7 +429,8 @@ export const ko = {
         resultLabel: "인식된 글자",
         truncated: "이 문서는 {total}쪽인데 앞 {max}쪽만 읽었습니다.",
         nothingFound: "이 그림에서 글자를 찾지 못했습니다.",
-        lowConfidence: "확신도가 낮습니다 — 믿기 전에 원본과 맞춰 보세요.",
+        lowConfidence:
+          "확신도가 낮습니다 — 원본과 맞춰 보세요. 가장 흔한 원인은 위의 문서 언어가 실제와 다른 것입니다.",
         errEngine: "OCR 엔진을 불러오지 못했습니다",
         errTooManyPages: "한 번에 {max}쪽까지만 읽을 수 있습니다",
         languages: {
@@ -430,7 +446,8 @@ export const ko = {
     },
 
     "image-compress": {
-      blurb: "형식은 그대로 두고 사진 용량만 줄입니다. 파일마다 얼마나 줄었는지 보여 줍니다.",
+      blurb:
+        "형식은 그대로 두고 사진 용량만 줄입니다. 파일마다 얼마나 줄었는지 보여 줍니다.",
       metaTitle: "이미지 용량 줄이기 — JPG·PNG·WebP",
       metaDescription:
         "업로드 없이 브라우저에서 사진 용량을 줄입니다. 원본 형식을 그대로 유지하고 파일마다 절감량을 보여 줍니다. 가입도 개수 제한도 없습니다.",
@@ -468,7 +485,8 @@ export const ko = {
         formatLabel: "출력",
         formatKeep: "원본 형식 유지",
         keptNote: "이미 더 줄일 수 없습니다 — 원본을 그대로 둡니다",
-        losslessNote: "PNG 는 무손실이라 품질을 내려도 줄지 않습니다. 크기를 줄이거나 출력을 WebP 로 바꾸세요.",
+        losslessNote:
+          "PNG 는 무손실이라 품질을 내려도 줄지 않습니다. 크기를 줄이거나 출력을 WebP 로 바꾸세요.",
         run: "{n}장 압축하기",
         working: "압축 중…",
         total: "{n}장 · {before} → {after} ({percent}% 감소)",
@@ -478,7 +496,8 @@ export const ko = {
     },
 
     "image-resize": {
-      blurb: "원하는 너비로 줄이고 정사각형·4:5·16:9 로 잘라 냅니다. 업로드가 없습니다.",
+      blurb:
+        "원하는 너비로 줄이고 정사각형·4:5·16:9 로 잘라 냅니다. 업로드가 없습니다.",
       metaTitle: "이미지 크기 조절·자르기 — 1:1, 4:5",
       metaDescription:
         "사진을 원하는 너비로 줄이고 정사각형이나 4:5 로 잘라 냅니다. 업로드 없이 브라우저에서 처리하며 가입도 워터마크도 없습니다.",
@@ -525,7 +544,8 @@ export const ko = {
     },
 
     "video-convert": {
-      blurb: "MOV 를 재인코딩 없이 MP4 로, 또는 MP4 를 WebM 으로. 업로드가 없습니다.",
+      blurb:
+        "MOV 를 재인코딩 없이 MP4 로, 또는 MP4 를 WebM 으로. 업로드가 없습니다.",
       metaTitle: "MOV → MP4 · MP4 → WebM 변환",
       metaDescription:
         "MOV 를 재인코딩 없이 MP4 로 바꾸고, MP4 를 VP9·Opus WebM 으로 변환합니다. 브라우저 안에서 끝나 업로드도 가입도 용량 제한도 없습니다.",
@@ -562,11 +582,14 @@ export const ko = {
         targetLabel: "무엇으로 바꿀까요",
         targetMp4: "MP4",
         targetWebm: "WebM",
-        mp4Note: "코덱은 건드리지 않고 상자만 다시 씁니다. 잃는 것이 없고 몇 초면 끝납니다.",
-        webmNote: "H.264 는 WebM 에 들어갈 수 없어 화면은 VP9 로, 소리는 Opus 로 다시 인코딩합니다. 시간이 걸리고 화질이 조금 내려갑니다.",
+        mp4Note:
+          "코덱은 건드리지 않고 상자만 다시 씁니다. 잃는 것이 없고 몇 초면 끝납니다.",
+        webmNote:
+          "H.264 는 WebM 에 들어갈 수 없어 화면은 VP9 로, 소리는 Opus 로 다시 인코딩합니다. 시간이 걸리고 화질이 조금 내려갑니다.",
         alreadyMp4: "이미 MP4 입니다 — 변환해도 상자만 다시 쓰게 됩니다.",
         mp4Unavailable: "이 영상의 코덱은 MP4 로 그대로 옮길 수 없습니다.",
-        webmUnavailable: "이 브라우저는 WebM 을 인코딩하지 못합니다. MP4 는 됩니다.",
+        webmUnavailable:
+          "이 브라우저는 WebM 을 인코딩하지 못합니다. MP4 는 됩니다.",
         sizeLabel: "크기",
         sizeOriginal: "원본 크기 유지",
         sizeMax: "긴 변 {px}px",
@@ -588,7 +611,8 @@ export const ko = {
     },
 
     "video-compress": {
-      blurb: "MP4 를 브라우저 안에서 줄입니다. 30MB짜리 도구를 받지 않습니다 — 기기가 직접 합니다.",
+      blurb:
+        "MP4 를 브라우저 안에서 줄입니다. 30MB짜리 도구를 받지 않습니다 — 기기가 직접 합니다.",
       metaTitle: "영상 압축 — 브라우저에서 MP4 용량 줄이기",
       metaDescription:
         "업로드 없이 MP4 용량을 줄입니다. 브라우저에 내장된 영상 인코더로 기기에서 직접 처리하므로 설치할 것도, 서버로 나가는 파일도 없습니다.",
@@ -636,7 +660,8 @@ export const ko = {
     },
 
     "video-trim": {
-      blurb: "영상에서 필요한 구간만 잘라냅니다. 다시 인코딩하지 않으니 잃는 것이 없고 몇 초면 끝납니다.",
+      blurb:
+        "영상에서 필요한 구간만 잘라냅니다. 다시 인코딩하지 않으니 잃는 것이 없고 몇 초면 끝납니다.",
       metaTitle: "영상 자르기 — 브라우저에서 MP4 구간 추출",
       metaDescription:
         "업로드 없이 MP4·MOV 에서 원하는 구간만 잘라냅니다. 다시 인코딩하지 않으므로 화질이 그대로이고 몇 초 만에 끝납니다.",
@@ -673,7 +698,8 @@ export const ko = {
         startLabel: "시작 (초)",
         endLabel: "끝 (초)",
         grabHere: "재생 위치",
-        snapped: "{asked}초가 아니라 {actual}초에서 잘립니다 — 그 앞의 가장 가까운 키프레임입니다.",
+        snapped:
+          "{asked}초가 아니라 {actual}초에서 잘립니다 — 그 앞의 가장 가까운 키프레임입니다.",
         onKeyframe: "이 시작점은 키프레임에 정확히 맞습니다.",
         run: "잘라내기",
         working: "자르는 중…",
@@ -685,7 +711,8 @@ export const ko = {
     },
 
     "video-to-gif": {
-      blurb: "영상을 반복 재생되는 GIF 로 만듭니다. 업로드 없이 기기가 직접 처리합니다.",
+      blurb:
+        "영상을 반복 재생되는 GIF 로 만듭니다. 업로드 없이 기기가 직접 처리합니다.",
       metaTitle: "영상 GIF 변환 — 브라우저에서 MP4 를 GIF 로",
       metaDescription:
         "업로드 없이 MP4·MOV 를 반복 재생 GIF 로 만듭니다. 프레임 수와 크기를 고르고 저장하기 전에 결과를 바로 확인하세요. 전부 브라우저 안에서 끝납니다.",
@@ -742,7 +769,8 @@ export const ko = {
     },
 
     "audio-extract": {
-      blurb: "영상에서 소리만 꺼냅니다. 다시 인코딩하지 않으므로 잃는 것이 없습니다.",
+      blurb:
+        "영상에서 소리만 꺼냅니다. 다시 인코딩하지 않으므로 잃는 것이 없습니다.",
       metaTitle: "영상에서 오디오 추출 — MP4 를 M4A·WAV 로",
       metaDescription:
         "MP4·MOV 에서 소리만 꺼냅니다. 업로드 없이 브라우저에서 처리하고, M4A 는 원본 그대로 무손실, WAV 는 어디서나 열립니다.",
@@ -776,9 +804,11 @@ export const ko = {
         seconds: "초",
         channels: "{n}채널",
         formatM4a: "M4A — 원본 그대로",
-        formatM4aHint: "트랙을 손대지 않고 꺼냅니다. 작고, 영상 속 소리와 완전히 같습니다.",
+        formatM4aHint:
+          "트랙을 손대지 않고 꺼냅니다. 작고, 영상 속 소리와 완전히 같습니다.",
         formatWav: "WAV — 어디서나 열림",
-        formatWavHint: "편집 프로그램과 오래된 소프트웨어를 위한 무압축 PCM. 훨씬 큽니다.",
+        formatWavHint:
+          "편집 프로그램과 오래된 소프트웨어를 위한 무압축 PCM. 훨씬 큽니다.",
         run: "오디오 추출",
         working: "추출 중…",
         outputNameM4a: "{stem}.m4a",
@@ -826,7 +856,8 @@ export const ko = {
         backgroundWhite: "흰색",
         backgroundBlack: "검정",
         downloadNote: "버튼을 누르면 실행기와 모델을 약 {size} 받습니다.",
-        cachedNote: "한 번만 받고 브라우저가 갖고 있습니다 — 다음 사진은 바로 시작합니다.",
+        cachedNote:
+          "한 번만 받고 브라우저가 갖고 있습니다 — 다음 사진은 바로 시작합니다.",
         run: "배경 지우기",
         working: "처리 중…",
         stageEngine: "실행기를 받는 중…",
@@ -835,8 +866,10 @@ export const ko = {
         resultAlt: "배경을 지운 사진",
         runtimeWebgpu: "GPU 로 처리",
         runtimeWasm: "CPU 로 처리",
-        unsureNote: "모델이 확신하지 못했습니다. 남긴 것의 상당 부분이 반투명이라 결과가 유령처럼 보입니다. 원하는 물체를 직접 눌러 고르는 클릭 컷아웃 도구를 써 보세요.",
-        nothingFound: "이 사진에서는 뚜렷한 피사체를 찾지 못해 거의 전부가 잘려 나갔습니다. 배경이 단순할수록 잘 됩니다.",
+        unsureNote:
+          "모델이 확신하지 못했습니다. 남긴 것의 상당 부분이 반투명이라 결과가 유령처럼 보입니다. 원하는 물체를 직접 눌러 고르는 클릭 컷아웃 도구를 써 보세요.",
+        nothingFound:
+          "이 사진에서는 뚜렷한 피사체를 찾지 못해 거의 전부가 잘려 나갔습니다. 배경이 단순할수록 잘 됩니다.",
         errEngine: "실행기를 불러오지 못했습니다",
         errModel: "모델을 받지 못했습니다",
         errUnsupportedInput: "이 이미지를 읽지 못했습니다",
@@ -887,13 +920,16 @@ export const ko = {
         scaleOption: "{n}배",
         formatLabel: "저장 형식",
         downloadNote: "버튼을 누르면 실행기와 모델을 약 {size} 받습니다.",
-        cachedNote: "한 번만 받고 브라우저가 갖고 있습니다 — 다음 그림은 바로 시작합니다.",
+        cachedNote:
+          "한 번만 받고 브라우저가 갖고 있습니다 — 다음 그림은 바로 시작합니다.",
         gpuNotice: "이 브라우저에는 WebGPU 가 있어 그래픽카드로 처리합니다.",
-        cpuNotice: "이 브라우저에는 WebGPU 가 없어 CPU 로 처리합니다 — 상당히 느립니다.",
+        cpuNotice:
+          "이 브라우저에는 WebGPU 가 없어 CPU 로 처리합니다 — 상당히 느립니다.",
         cpuNoticeWithEstimate:
           "이 브라우저에는 WebGPU 가 없어 CPU 로 처리합니다 — 대략 {seconds}초 걸립니다.",
         preview: "{from} → {to}",
-        tooLargeNotice: "{from} 은 {max}메가픽셀 상한을 넘습니다. 먼저 줄이거나 더 작은 그림을 쓰세요.",
+        tooLargeNotice:
+          "{from} 은 {max}메가픽셀 상한을 넘습니다. 먼저 줄이거나 더 작은 그림을 쓰세요.",
         run: "크게 키우기",
         working: "처리 중…",
         stageEngine: "실행기를 받는 중…",
@@ -911,7 +947,8 @@ export const ko = {
       },
     },
     cutout: {
-      blurb: "사진에서 원하는 것을 눌러 그것만 오려 냅니다. 이 기기 안에서 돕니다.",
+      blurb:
+        "사진에서 원하는 것을 눌러 그것만 오려 냅니다. 이 기기 안에서 돕니다.",
       metaTitle: "클릭 컷아웃 — 브라우저 안에서",
       metaDescription:
         "사진 속 물건을 눌러 투명 PNG 로 오려 냅니다. Apache-2.0 SAM 모델이 브라우저 안에서 돌고 아무것도 올리지 않습니다. 가입 없이 바로.",
@@ -943,7 +980,8 @@ export const ko = {
         dropLabel: "사진을 여기에 놓으세요",
         dropHint: "PNG · JPG · WebP — 한 번에 한 장",
         downloadNote: "사진을 준비하면 실행기와 모델을 약 {size} 받습니다.",
-        cachedNote: "한 번만 받고 브라우저가 갖고 있습니다 — 다음 사진은 읽기만 하면 됩니다.",
+        cachedNote:
+          "한 번만 받고 브라우저가 갖고 있습니다 — 다음 사진은 읽기만 하면 됩니다.",
         prepare: "이 사진 준비하기",
         preparing: "준비하는 중…",
         stageEngine: "실행기를 받는 중…",
@@ -963,7 +1001,8 @@ export const ko = {
         resultAlt: "사진에서 오려 낸 물체",
         runtimeWebgpu: "GPU 로 처리",
         runtimeWasm: "CPU 로 처리",
-        nothingFound: "거의 아무것도 남지 않았습니다. 물체의 가운데 쪽을 눌러 보세요.",
+        nothingFound:
+          "거의 아무것도 남지 않았습니다. 물체의 가운데 쪽을 눌러 보세요.",
         errEngine: "실행기를 불러오지 못했습니다",
         errModel: "모델을 받지 못했습니다",
         errUnsupportedInput: "이 이미지를 읽지 못했습니다",
@@ -1021,7 +1060,8 @@ export const ko = {
           pt: "포르투갈어",
         },
         downloadNote: "버튼을 누르면 실행기와 모델을 약 {size} 받습니다.",
-        cachedNote: "한 번만 받고 브라우저가 갖고 있습니다 — 다음 파일은 바로 시작합니다.",
+        cachedNote:
+          "한 번만 받고 브라우저가 갖고 있습니다 — 다음 파일은 바로 시작합니다.",
         noiseNote:
           "잡음이 많거나 아주 오래된 녹음에서는 모델이 같은 말을 반복하며 멈출 수 있습니다. 깨끗한 소리일수록 잘 됩니다.",
         run: "자막 만들기",
@@ -1038,10 +1078,12 @@ export const ko = {
         errEngine: "실행기를 불러오지 못했습니다",
         errModel: "모델을 받지 못했습니다",
         errNoAudio: "이 파일에는 소리가 없습니다",
-        errUnsupportedInput: "이 파일을 읽지 못했습니다 — MP4 · MOV · M4A · WAV · MP3",
+        errUnsupportedInput:
+          "이 파일을 읽지 못했습니다 — MP4 · MOV · M4A · WAV · MP3",
         errTooLong: "{minutes}분보다 깁니다",
         stop: "멈추기",
-        stoppedNote: "도중에 멈췄습니다 — 자막은 멈춘 자리까지이고, 뒷부분의 소리는 들어 있지 않습니다.",
+        stoppedNote:
+          "도중에 멈췄습니다 — 자막은 멈춘 자리까지이고, 뒷부분의 소리는 들어 있지 않습니다.",
         errGeneric: "자막을 만들지 못했습니다",
       },
     },
@@ -1059,7 +1101,7 @@ export const ko = {
         },
         {
           q: "번역 품질은 어느 정도입니까?",
-          a: "따라 읽기에는 충분하고, 손대지 않고 내보내기에는 모자랍니다. 평범한 문장은 잘 나옵니다. 미끄러지는 곳은 관용구입니다 — \"let's wrap this up\"(이만 마무리하죠)이 스페인어와 독일어 양쪽에서 \"이제 시작하죠\" 쪽으로 나왔습니다. 관사나 복수를 가끔 틀리기도 합니다. 사람이 한 번 훑어야 하는 초벌로 보시면 맞습니다.",
+          a: '따라 읽기에는 충분하고, 손대지 않고 내보내기에는 모자랍니다. 평범한 문장은 잘 나옵니다. 미끄러지는 곳은 관용구입니다 — "let\'s wrap this up"(이만 마무리하죠)이 스페인어와 독일어 양쪽에서 "이제 시작하죠" 쪽으로 나왔습니다. 관사나 복수를 가끔 틀리기도 합니다. 사람이 한 번 훑어야 하는 초벌로 보시면 맞습니다.',
         },
         {
           q: "왜 더 큰 모델을 쓰지 않습니까?",
@@ -1104,10 +1146,14 @@ export const ko = {
           nl: "네덜란드어",
         },
         downloadNote: "버튼을 누르면 실행기와 모델 약 {size} 를 받습니다.",
-        cachedNote: "한 번만 받고 브라우저가 갖고 있습니다 — 다음 파일은 바로 시작합니다.",
-        qualityNote: "평범한 문장은 잘 나오지만 관용구는 자주 틀립니다. 내보내기 전에 한 번 읽어 보세요.",
-        encodingNote: "이 파일은 UTF-8 이 아니라 {encoding} 로 읽었습니다. 아래 글자가 맞는지 확인하세요.",
-        strippedNote: "{lines}줄에서 서식 태그를 걷어냈습니다 — 다시 넣지는 않습니다.",
+        cachedNote:
+          "한 번만 받고 브라우저가 갖고 있습니다 — 다음 파일은 바로 시작합니다.",
+        qualityNote:
+          "평범한 문장은 잘 나오지만 관용구는 자주 틀립니다. 내보내기 전에 한 번 읽어 보세요.",
+        encodingNote:
+          "이 파일은 UTF-8 이 아니라 {encoding} 로 읽었습니다. 아래 글자가 맞는지 확인하세요.",
+        strippedNote:
+          "{lines}줄에서 서식 태그를 걷어냈습니다 — 다시 넣지는 않습니다.",
         loadedSummary: "{lines}줄 · 약 {estimate}",
         unitMinutes: "{value}분",
         unitSeconds: "{value}초",
@@ -1130,7 +1176,8 @@ export const ko = {
       },
     },
     stems: {
-      blurb: "노래를 드럼·베이스·보컬·나머지로 가릅니다. 모델이 내 기기에서 돕니다.",
+      blurb:
+        "노래를 드럼·베이스·보컬·나머지로 가릅니다. 모델이 내 기기에서 돕니다.",
       metaTitle: "스템 분리 — 보컬·드럼 추출",
       metaDescription:
         "곡을 드럼·베이스·보컬 등으로 나눕니다. 업로드하지 않고 MIT 라이선스 Demucs 모델이 브라우저 안에서 돕니다. 가입도 API 키도 없습니다.",
@@ -1166,7 +1213,8 @@ export const ko = {
         dropLabel: "오디오나 영상 파일을 여기에 놓으세요",
         dropHint: "MP4 · MOV · M4A · WAV · MP3 — 앞 {seconds}초만 씁니다",
         downloadNote: "버튼을 누르면 실행기와 모델 약 {size} 를 받습니다.",
-        cachedNote: "한 번만 받고 브라우저가 갖고 있습니다 — 다음 파일은 바로 시작합니다.",
+        cachedNote:
+          "한 번만 받고 브라우저가 갖고 있습니다 — 다음 파일은 바로 시작합니다.",
         slowNote:
           "분리는 CPU 에서 돕니다 — {seconds}초 오디오에 약 {minutes}분. 이 도구가 미리듣기인 이유입니다.",
         run: "스템으로 나누기",
@@ -1184,7 +1232,8 @@ export const ko = {
         errEngine: "실행기를 불러오지 못했습니다",
         errModel: "모델을 받지 못했습니다",
         errNoAudio: "이 파일에는 소리가 없습니다",
-        errUnsupportedInput: "이 파일을 읽지 못했습니다 — MP4, MOV, M4A, WAV, MP3",
+        errUnsupportedInput:
+          "이 파일을 읽지 못했습니다 — MP4, MOV, M4A, WAV, MP3",
         errGeneric: "스템을 나누지 못했습니다",
       },
     },
@@ -1231,7 +1280,8 @@ export const ko = {
         textLabel: "문서",
         textPlaceholder: "요약할 글을 붙여 넣으세요…",
         downloadNote: "버튼을 누르면 런타임과 모델 약 {size} 를 받습니다.",
-        cachedNote: "한 번만 받고 브라우저가 갖고 있습니다 — 다음 문서는 바로 시작합니다.",
+        cachedNote:
+          "한 번만 받고 브라우저가 갖고 있습니다 — 다음 문서는 바로 시작합니다.",
         qualityNote:
           "모델이 작습니다. 큰 줄기는 맞히고 세부는 틀릴 수 있습니다. 중요한 것은 문서에서 직접 확인하십시오.",
         loadedSummary: "약 {tokens}토큰 · 모델이 준비된 뒤 {seconds}초쯤",
@@ -1250,8 +1300,10 @@ export const ko = {
         errEngine: "런타임을 불러오지 못했습니다",
         errModel: "모델을 받지 못했습니다",
         errUnsupportedInput: "이 파일은 읽지 못했습니다 — TXT, MD, HTML, PDF",
-        errNoText: "이 파일에서 글자를 찾지 못했습니다 — 스캔한 PDF 는 이미지·PDF → 텍스트 도구를 먼저 쓰세요",
-        errTooShort: "요약하기에 너무 짧습니다: {tokens}토큰, 최소 {minimum}토큰이 필요합니다",
+        errNoText:
+          "이 파일에서 글자를 찾지 못했습니다 — 스캔한 PDF 는 이미지·PDF → 텍스트 도구를 먼저 쓰세요",
+        errTooShort:
+          "요약하기에 너무 짧습니다: {tokens}토큰, 최소 {minimum}토큰이 필요합니다",
         errTooLong: "너무 깁니다: {tokens}토큰, 상한은 {maximum}토큰입니다",
         errGeneric: "문서를 요약하지 못했습니다",
       },

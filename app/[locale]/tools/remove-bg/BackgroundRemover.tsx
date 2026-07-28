@@ -327,7 +327,7 @@ export function BackgroundRemover({ chain, ui, common }: { chain: ChainCopy; ui:
       )}
 
       {result && (
-        <SendTo chain={chain} from="remove-bg" files={[{ url: result.url, name: result.name }]} />
+        <SendTo chain={chain} from="remove-bg" files={[{ url: result.url, name: result.name, pixels: result.width * result.height }]} />
       )}
     </div>
   );

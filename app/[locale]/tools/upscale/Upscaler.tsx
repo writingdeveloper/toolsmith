@@ -324,7 +324,7 @@ export function Upscaler({ chain, ui, common }: { chain: ChainCopy; ui: Ui; comm
       )}
 
       {result && (
-        <SendTo chain={chain} from="upscale" files={[{ url: result.url, name: result.name }]} />
+        <SendTo chain={chain} from="upscale" files={[{ url: result.url, name: result.name, pixels: result.width * result.height }]} />
       )}
     </div>
   );

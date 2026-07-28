@@ -133,6 +133,32 @@ test.describe("브라우저", () => {
   });
 
   /**
+   * **아무것도 안 고르면 무슨 일이 일어나는가.**
+   *
+   * 위의 검사들은 전부 "말하는 언어" 를 손으로 골랐다. 그래서 **기본값을 보는 검사가
+   * 하나도 없었고**, 실물 파일 쓸이에서 그 자리가 그대로 드러났다(2026-07-28):
+   * 한국어 페이지에서 영어 대화 녹음 4.7분을 넣으니 기본값이 `ko` 라서 **한국어 헛소리
+   * 120줄**이 나왔다. 경고는 없었다.
+   *
+   * 지금 기본값은 자동 감지다. 이 검사는 **아무것도 안 건드리고** 영어가 나오는지 본다 —
+   * 화면에만 있고 스펙이 안 보는 분기는 언젠가 조용히 죽는다.
+   */
+  test("언어를 안 고르면 스스로 알아맞힌다", async ({ page }) => {
+    test.setTimeout(600_000);
+    await expect(page.getByLabel("말하는 언어")).toHaveValue("auto");
+
+    await page.locator('input[type="file"]').setInputFiles(SPEECH);
+    await run(page);
+
+    const srt = await page.evaluate(async () => {
+      const anchor = document.querySelector<HTMLAnchorElement>('a[download$=".srt"]')!;
+      return (await (await fetch(anchor.href)).text()).toLowerCase();
+    });
+    // 손으로 영어를 고른 위 검사와 같은 문장이 나와야 한다
+    expect(srt).toContain("fellow americans");
+  });
+
+  /**
    * MP3 도 읽는다.
    *
    * **붙이자마자 한 번 놓쳤다(2026-07-27).** `decodeAudio()` 에 MP3 를 붙이고 화면에도

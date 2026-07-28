@@ -16,9 +16,17 @@ import {
   sourceFormat,
   type OutputFormat,
 } from "@/lib/image/convert-core";
-import { CROP_RATIOS, planResize, type CropRatio } from "@/lib/image/resize-core";
+import {
+  CROP_RATIOS,
+  planResize,
+  type CropRatio,
+} from "@/lib/image/resize-core";
 import { useCapability } from "@/lib/use-capability";
-import type { WorkerRequest, WorkerRequestPayload, WorkerResponse } from "./resize.worker";
+import type {
+  WorkerRequest,
+  WorkerRequestPayload,
+  WorkerResponse,
+} from "./resize.worker";
 
 type Ui = Dictionary["tools"]["image-resize"]["ui"];
 type Common = Dictionary["common"];
@@ -29,11 +37,25 @@ interface Item {
   /** 미리 잰 원본 크기. 누르기 전에 결과 크기를 말하려면 필요하다. */
   source?: { width: number; height: number };
   status: "queued" | "working" | "done" | "error";
-  result?: { url: string; size: number; width: number; height: number; name: string };
+  result?: {
+    url: string;
+    size: number;
+    width: number;
+    height: number;
+    name: string;
+  };
   error?: string;
 }
 
-export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; common: Common }) {
+export function ImageResizer({
+  chain,
+  ui,
+  common,
+}: {
+  chain: ChainCopy;
+  ui: Ui;
+  common: Common;
+}) {
   const [broken, setBroken] = useState(false);
   const capable = useCapability(canRunImageTools);
   const supported = capable === null ? null : capable && !broken;
@@ -47,7 +69,10 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
 
   const workerRef = useRef<Worker | null>(null);
   const pendingRef = useRef(
-    new Map<number, { resolve: (v: WorkerResponse) => void; reject: (e: Error) => void }>(),
+    new Map<
+      number,
+      { resolve: (v: WorkerResponse) => void; reject: (e: Error) => void }
+    >(),
   );
   const rpcId = useRef(0);
   const itemId = useRef(0);
@@ -56,15 +81,18 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
     itemsRef.current = items;
   }, [items]);
 
-  const callWorker = useCallback((request: WorkerRequestPayload): Promise<WorkerResponse> => {
-    const worker = workerRef.current;
-    if (!worker) return Promise.reject(new Error("NO_WORKER"));
-    const id = ++rpcId.current;
-    return new Promise((resolve, reject) => {
-      pendingRef.current.set(id, { resolve, reject });
-      worker.postMessage({ ...request, id } as WorkerRequest);
-    });
-  }, []);
+  const callWorker = useCallback(
+    (request: WorkerRequestPayload): Promise<WorkerResponse> => {
+      const worker = workerRef.current;
+      if (!worker) return Promise.reject(new Error("NO_WORKER"));
+      const id = ++rpcId.current;
+      return new Promise((resolve, reject) => {
+        pendingRef.current.set(id, { resolve, reject });
+        worker.postMessage({ ...request, id } as WorkerRequest);
+      });
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!capable) return;
@@ -88,7 +116,8 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
     };
     callWorker({ kind: "detect" })
       .then((response) => {
-        if (response.kind === "detect") setFormats(response.formats as OutputFormat[]);
+        if (response.kind === "detect")
+          setFormats(response.formats as OutputFormat[]);
       })
       .catch(() => setBroken(true));
     return () => {
@@ -107,7 +136,11 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
   }, []);
 
   const addFiles = useCallback(async (files: File[]) => {
-    const added = files.map((file) => ({ id: ++itemId.current, file, status: "queued" as const }));
+    const added = files.map((file) => ({
+      id: ++itemId.current,
+      file,
+      status: "queued" as const,
+    }));
     setItems((prev) => [...prev, ...added]);
 
     // 원본 크기를 미리 잰다 — 누르기 전에 "무엇이 나오는지" 를 말하기 위해서다.
@@ -116,7 +149,11 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
         const bitmap = await createImageBitmap(entry.file);
         const source = { width: bitmap.width, height: bitmap.height };
         bitmap.close();
-        setItems((prev) => prev.map((item) => (item.id === entry.id ? { ...item, source } : item)));
+        setItems((prev) =>
+          prev.map((item) =>
+            item.id === entry.id ? { ...item, source } : item,
+          ),
+        );
       } catch {
         // 못 읽는 형식(HEIC 등)은 누른 뒤 워커가 제대로 알려 준다
       }
@@ -139,7 +176,9 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
       const chosen = format ?? sourceFormat(target.file) ?? "image/jpeg";
       setItems((prev) =>
         prev.map((item) =>
-          item.id === target.id ? { ...item, status: "working", error: undefined } : item,
+          item.id === target.id
+            ? { ...item, status: "working", error: undefined }
+            : item,
         ),
       );
       try {
@@ -163,7 +202,10 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
                 size: response.blob.size,
                 width: response.width,
                 height: response.height,
-                name: replaceExtension(target.file.name, FORMAT_EXTENSION[chosen]),
+                name: replaceExtension(
+                  target.file.name,
+                  FORMAT_EXTENSION[chosen],
+                ),
               },
             };
           }),
@@ -176,7 +218,10 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
               ? {
                   ...item,
                   status: "error",
-                  error: message === "UNSUPPORTED_INPUT" ? ui.errUnsupportedInput : ui.errGeneric,
+                  error:
+                    message === "UNSUPPORTED_INPUT"
+                      ? ui.errUnsupportedInput
+                      : ui.errGeneric,
                 }
               : item,
           ),
@@ -202,7 +247,9 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
     return (
       <div className="rounded-xl border border-border bg-panel p-6">
         <p className="font-medium text-warn">{common.workerUnsupportedTitle}</p>
-        <p className="mt-2 text-sm text-muted">{common.workerUnsupportedHint}</p>
+        <p className="mt-2 text-sm text-muted">
+          {common.workerUnsupportedHint}
+        </p>
       </div>
     );
   }
@@ -210,7 +257,9 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
   const doneCount = items.filter((item) => item.status === "done").length;
   const first = items.find((item) => item.source);
   /** 첫 장으로 미리 보여 주는 결과 크기. 워커와 **같은 함수**로 계산한다. */
-  const preview = first?.source ? planResize(first.source.width, first.source.height, { width, crop }) : null;
+  const preview = first?.source
+    ? planResize(first.source.width, first.source.height, { width, crop })
+    : null;
 
   return (
     <div className="space-y-6">
@@ -276,7 +325,11 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
             value={format ?? ""}
             disabled={busy}
             onChange={(event) =>
-              setFormat(event.target.value === "" ? null : (event.target.value as OutputFormat))
+              setFormat(
+                event.target.value === ""
+                  ? null
+                  : (event.target.value as OutputFormat),
+              )
             }
             className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm"
           >
@@ -300,7 +353,9 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
             from: `${first.source.width}×${first.source.height}`,
             to: `${preview.width}×${preview.height}`,
           })}
-          {preview.width === preview.sw && width > preview.sw && ` · ${ui.noUpscale}`}
+          {preview.width === preview.sw &&
+            width > preview.sw &&
+            ` · ${ui.noUpscale}`}
         </p>
       )}
 
@@ -337,11 +392,17 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
 
           <ul className="divide-y divide-border rounded-xl border border-border">
             {items.map((item) => (
-              <li key={item.id} className="flex flex-wrap items-center gap-3 p-4">
+              <li
+                key={item.id}
+                className="flex flex-wrap items-center gap-3 p-4"
+              >
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{item.file.name}</p>
+                  <p className="truncate text-sm font-medium">
+                    {item.file.name}
+                  </p>
                   <p className="text-xs text-muted tabular-nums">
-                    {item.source && `${item.source.width}×${item.source.height} · `}
+                    {item.source &&
+                      `${item.source.width}×${item.source.height} · `}
                     {formatBytes(item.file.size)}
                     {item.result && (
                       <>
@@ -354,8 +415,12 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
                     )}
                   </p>
                 </div>
-                {item.status === "working" && <span className="text-sm text-muted">{ui.working}</span>}
-                {item.status === "error" && <span className="text-sm text-err">{item.error}</span>}
+                {item.status === "working" && (
+                  <span className="text-sm text-muted">{ui.working}</span>
+                )}
+                {item.status === "error" && (
+                  <span className="text-sm text-err">{item.error}</span>
+                )}
                 {item.status === "done" && item.result && (
                   <a
                     href={item.result.url}
@@ -375,7 +440,15 @@ export function ImageResizer({ chain, ui, common }: { chain: ChainCopy; ui: Ui; 
         chain={chain}
         from="image-resize"
         files={items.flatMap((item) =>
-          item.result ? [{ url: item.result.url, name: item.result.name }] : [],
+          item.result
+            ? [
+                {
+                  url: item.result.url,
+                  name: item.result.name,
+                  pixels: item.result.width * item.result.height,
+                },
+              ]
+            : [],
         )}
       />
     </div>

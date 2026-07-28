@@ -21,7 +21,8 @@ export const ja = {
     availableHeading: "利用できるツール",
     searchLabel: "道具をさがす",
     searchPlaceholder: "検索 — HEIC, PDF, 字幕…",
-    searchEmpty: "あてはまる道具がありません。HEIC や MP4 のように形式で探してみてください。",
+    searchEmpty:
+      "あてはまる道具がありません。HEIC や MP4 のように形式で探してみてください。",
     upcomingHeading: "準備中",
   },
 
@@ -35,7 +36,8 @@ export const ja = {
     relatedHeading: "ほかの道具",
     sendToHeading: "この結果を次の道具へ:",
     notFoundTitle: "このページはありません",
-    notFoundLead: "アドレスの入力が違うか、ページが移動された可能性があります。",
+    notFoundLead:
+      "アドレスの入力が違うか、ページが移動された可能性があります。",
     notFoundHome: "道具の一覧へ",
     chooseFile: "ファイルを選択",
     download: "ダウンロード",
@@ -115,7 +117,8 @@ export const ja = {
         },
       ],
       ui: {
-          animatedNote: "アニメーション画像です。最初のフレームだけが残り、動きは失われます。",
+        animatedNote:
+          "アニメーション画像です。最初のフレームだけが残り、動きは失われます。",
         unsupportedTitle: "このブラウザでは画像変換を実行できません。",
         unsupportedHint:
           "OffscreenCanvas に対応した最新の Chrome、Edge、Firefox、Safari 17 以降で開いてください。",
@@ -136,7 +139,8 @@ export const ja = {
     },
 
     "pdf-merge": {
-      blurb: "複数の PDF を好きな順番でひとつに。再レンダリングせず原本のまま繋ぎます。",
+      blurb:
+        "複数の PDF を好きな順番でひとつに。再レンダリングせず原本のまま繋ぎます。",
       metaTitle: "PDF 結合 — 複数の PDF をひとつにまとめる",
       metaDescription:
         "複数の PDF を好きな順番で繋ぎます。アップロードなしでブラウザ内で処理し、登録も透かしもファイル数制限もありません。",
@@ -178,7 +182,8 @@ export const ja = {
     },
 
     "pdf-split": {
-      blurb: "必要なページだけ取り出す、または全ページを1枚ずつに分けて ZIP で。",
+      blurb:
+        "必要なページだけ取り出す、または全ページを1枚ずつに分けて ZIP で。",
       metaTitle: "PDF 分割 — ページ抽出・1ページずつ分割",
       metaDescription:
         "PDF から必要なページだけ取り出したり、全ページを1枚ずつに分割します。アップロードなしでブラウザ内で処理し、登録も透かしもありません。",
@@ -204,7 +209,8 @@ export const ja = {
       ],
       ui: {
         dropLabel: "PDF をここにドロップ",
-        dropHint: "1つずつ処理します — 必要なページだけ取り出すか、全ページを1枚ずつに分けます",
+        dropHint:
+          "1つずつ処理します — 必要なページだけ取り出すか、全ページを1枚ずつに分けます",
         reading: "読み込み中…",
         pageCount: "{n}ページ",
         modeExtract: "ページ範囲を抽出",
@@ -226,7 +232,8 @@ export const ja = {
     },
 
     "pdf-organize": {
-      blurb: "全ページを目で見ながら、横になったページを起こし、要らないページを外します。",
+      blurb:
+        "全ページを目で見ながら、横になったページを起こし、要らないページを外します。",
       metaTitle: "PDF 回転・ページ削除 — ブラウザでスキャンを整える",
       metaDescription:
         "横向きにスキャンされたページを起こし、不要なページを外します。全ページをサムネイルで表示。アップロードなしでブラウザ内で処理し、登録も不要です。",
@@ -272,7 +279,8 @@ export const ja = {
     },
 
     "pdf-compress": {
-      blurb: "PDF の中の写真だけを再圧縮します。文字は文字のまま — 画像に焼き付けません。",
+      blurb:
+        "PDF の中の写真だけを再圧縮します。文字は文字のまま — 画像に焼き付けません。",
       metaTitle: "PDF 圧縮 — 容量は減らし、文字はそのまま",
       metaDescription:
         "PDF に埋め込まれた写真を再圧縮して容量を減らします。文字は選択も検索もそのまま。アップロードなしでブラウザ内で処理し、登録も不要です。",
@@ -310,14 +318,17 @@ export const ja = {
         working: "圧縮中…",
         outputName: "{stem}-圧縮.pdf",
         rewroteImages: "写真 {total}枚のうち {n}枚を再圧縮しました",
-        keepOriginal: "お手元の元ファイルをそのままお使いください — これ以上小さくなりません。",
+        keepOriginal:
+          "お手元の元ファイルをそのままお使いください — これ以上小さくなりません。",
         noImages: "この PDF には再圧縮できる写真がありません。",
-        alreadySmall: "写真がすでに十分圧縮されていて、これ以上小さくできませんでした。",
+        alreadySmall:
+          "写真がすでに十分圧縮されていて、これ以上小さくできませんでした。",
       },
     },
 
     "data-query": {
-      blurb: "CSV・Parquet ファイルに SQL を投げます。ファイルは端末を離れません。",
+      blurb:
+        "CSV・Parquet ファイルに SQL を投げます。ファイルは端末を離れません。",
       metaTitle: "CSV・Parquet SQL クエリ — ブラウザで",
       metaDescription:
         "CSV や Parquet を開いて SQL で照会します。DuckDB がブラウザ内で動くため、アップロードも登録も行数制限もありません。",
@@ -348,8 +359,10 @@ export const ja = {
       ui: {
         dropLabel: "ここに CSV か Parquet を置いてください",
         dropHint: "CSV · TSV · Parquet · JSON — 1 つずつ",
-        downloadNote: "ファイルを開くと DuckDB エンジン約 {size} を受信します。",
-        localNote: "ファイル自体はアップロードされません — DuckDB がディスクから直接読みます。",
+        downloadNote:
+          "ファイルを開くと DuckDB エンジン約 {size} を受信します。",
+        localNote:
+          "ファイル自体はアップロードされません — DuckDB がディスクから直接読みます。",
         open: "開いて照会",
         opening: "開いています…",
         rowCount: "{rows} 行",
@@ -370,7 +383,8 @@ export const ja = {
     },
 
     ocr: {
-      blurb: "写真・スクリーンショット・スキャンした PDF から文字を取り出します。アップロードはありません。",
+      blurb:
+        "写真・スクリーンショット・スキャンした PDF から文字を取り出します。アップロードはありません。",
       metaTitle: "画像・PDF から文字を抽出 (OCR)",
       metaDescription:
         "写真やスクリーンショット、スキャンした PDF の文字をアップロードせずに読み取ります。7 言語対応、すべてブラウザ内で完結し、登録も不要です。",
@@ -403,8 +417,10 @@ export const ja = {
         dropHint: "PNG · JPG · WebP · PDF — 1 つずつ",
         pdfLimit: "{max} ページまで",
         languageLabel: "文書の言語",
-        downloadNote: "ボタンを押すとエンジンと言語データ約 {size} を受信します。",
-        cachedNote: "受信は一度だけで、あとはブラウザが保持します — 次の文書はすぐ始まります。",
+        downloadNote:
+          "ボタンを押すとエンジンと言語データ約 {size} を受信します。",
+        cachedNote:
+          "受信は一度だけで、あとはブラウザが保持します — 次の文書はすぐ始まります。",
         run: "文字を読む",
         working: "読み取り中…",
         stageEngine: "エンジン準備 {percent}%",
@@ -414,9 +430,11 @@ export const ja = {
         copy: "コピー",
         copied: "コピーしました",
         resultLabel: "認識された文字",
-        truncated: "この文書は {total} ページですが、先頭の {max} ページだけを読みました。",
+        truncated:
+          "この文書は {total} ページですが、先頭の {max} ページだけを読みました。",
         nothingFound: "この画像から文字を見つけられませんでした。",
-        lowConfidence: "確信度が低めです — 信じる前に原本と照らし合わせてください。",
+        lowConfidence:
+          "確信度が低いです — 原本と見くらべてください。いちばん多い原因は、上の文書の言語が実際と違うことです。",
         errEngine: "OCR エンジンを読み込めませんでした",
         errTooManyPages: "一度に読めるのは {max} ページまでです",
         languages: {
@@ -432,7 +450,8 @@ export const ja = {
     },
 
     "image-compress": {
-      blurb: "形式はそのままに、写真の容量だけ小さくします。ファイルごとの削減量が見えます。",
+      blurb:
+        "形式はそのままに、写真の容量だけ小さくします。ファイルごとの削減量が見えます。",
       metaTitle: "画像を軽くする — JPG・PNG・WebP",
       metaDescription:
         "アップロードせずにブラウザで写真を軽くします。元の形式を保ち、ファイルごとの削減量を表示。登録も枚数制限もありません。",
@@ -470,7 +489,8 @@ export const ja = {
         formatLabel: "出力",
         formatKeep: "元の形式のまま",
         keptNote: "これ以上小さくできません — 元のファイルのままにします",
-        losslessNote: "PNG は可逆なので品質を下げても小さくなりません。サイズを縮めるか、出力を WebP に変えてください。",
+        losslessNote:
+          "PNG は可逆なので品質を下げても小さくなりません。サイズを縮めるか、出力を WebP に変えてください。",
         run: "{n} 枚を圧縮",
         working: "圧縮中…",
         total: "{n} 枚 · {before} → {after} ({percent}% 削減)",
@@ -480,7 +500,8 @@ export const ja = {
     },
 
     "image-resize": {
-      blurb: "好みの幅に縮小し、正方形・4:5・16:9 に切り抜きます。アップロードはありません。",
+      blurb:
+        "好みの幅に縮小し、正方形・4:5・16:9 に切り抜きます。アップロードはありません。",
       metaTitle: "画像のサイズ変更・切り抜き — 1:1, 4:5",
       metaDescription:
         "写真を好きな幅に縮小し、正方形や 4:5 に切り抜きます。アップロードなしでブラウザ内で処理し、登録も透かしもありません。",
@@ -527,7 +548,8 @@ export const ja = {
     },
 
     "video-convert": {
-      blurb: "MOV を再エンコードなしで MP4 に、または MP4 を WebM へ。アップロードはありません。",
+      blurb:
+        "MOV を再エンコードなしで MP4 に、または MP4 を WebM へ。アップロードはありません。",
       metaTitle: "MOV → MP4・MP4 → WebM 変換",
       metaDescription:
         "MOV を再エンコードなしで MP4 に、MP4 を VP9・Opus の WebM に変換。ブラウザ内で完結し、アップロードも登録も容量制限もありません。",
@@ -564,11 +586,15 @@ export const ja = {
         targetLabel: "変換先",
         targetMp4: "MP4",
         targetWebm: "WebM",
-        mp4Note: "コーデックには触れず、入れ物だけを書き直します。失うものはなく、数秒で終わります。",
-        webmNote: "H.264 は WebM に入れないため、映像を VP9、音声を Opus で再エンコードします。時間がかかり、画質が少し下がります。",
-        alreadyMp4: "すでに MP4 です — 変換しても入れ物を書き直すだけになります。",
+        mp4Note:
+          "コーデックには触れず、入れ物だけを書き直します。失うものはなく、数秒で終わります。",
+        webmNote:
+          "H.264 は WebM に入れないため、映像を VP9、音声を Opus で再エンコードします。時間がかかり、画質が少し下がります。",
+        alreadyMp4:
+          "すでに MP4 です — 変換しても入れ物を書き直すだけになります。",
         mp4Unavailable: "この動画のコーデックは MP4 にそのまま移せません。",
-        webmUnavailable: "このブラウザは WebM をエンコードできません。MP4 は使えます。",
+        webmUnavailable:
+          "このブラウザは WebM をエンコードできません。MP4 は使えます。",
         sizeLabel: "サイズ",
         sizeOriginal: "元のサイズのまま",
         sizeMax: "長辺 {px}px",
@@ -588,7 +614,8 @@ export const ja = {
     },
 
     "video-compress": {
-      blurb: "MP4 をブラウザの中で小さくします。30MB のツールを落としません — 端末が自分でやります。",
+      blurb:
+        "MP4 をブラウザの中で小さくします。30MB のツールを落としません — 端末が自分でやります。",
       metaTitle: "動画圧縮 — ブラウザで MP4 を小さく",
       metaDescription:
         "アップロードせずに MP4 の容量を減らします。ブラウザ内蔵の動画エンコーダで端末上で処理するので、インストールも不要で、ファイルが外に出ることもありません。",
@@ -636,7 +663,8 @@ export const ja = {
     },
 
     "video-trim": {
-      blurb: "動画から必要な区間だけ切り出します。再エンコードしないので何も失われず、数秒で終わります。",
+      blurb:
+        "動画から必要な区間だけ切り出します。再エンコードしないので何も失われず、数秒で終わります。",
       metaTitle: "動画をトリミング — ブラウザでMP4を切り出す",
       metaDescription:
         "アップロードせずにMP4・MOVから必要な区間だけ切り出します。再エンコードしないので画質はそのまま、数秒で終わります。すべてブラウザ内で完結します。",
@@ -673,7 +701,8 @@ export const ja = {
         startLabel: "開始（秒）",
         endLabel: "終了（秒）",
         grabHere: "再生位置",
-        snapped: "{asked}秒ではなく{actual}秒で切れます — その手前で最も近いキーフレームです。",
+        snapped:
+          "{asked}秒ではなく{actual}秒で切れます — その手前で最も近いキーフレームです。",
         onKeyframe: "この開始位置はキーフレームにぴったり合っています。",
         run: "トリミング",
         working: "処理中…",
@@ -685,7 +714,8 @@ export const ja = {
     },
 
     "video-to-gif": {
-      blurb: "動画をループするGIFにします。アップロードなし、端末が直接処理します。",
+      blurb:
+        "動画をループするGIFにします。アップロードなし、端末が直接処理します。",
       metaTitle: "動画をGIFに変換 — ブラウザだけでMP4からGIFへ",
       metaDescription:
         "MP4・MOVをアップロードせずにループGIFへ変換します。フレームレートとサイズを選び、保存する前に結果をその場で確認できます。すべてブラウザ内で完結します。",
@@ -734,7 +764,8 @@ export const ja = {
         working: "作成中…",
         outputName: "{stem}.gif",
         resultFrames: "{n} フレーム · {fps} fps",
-        truncated: "最初の {n} フレームまでしか入らず、終わりの部分が欠けています。",
+        truncated:
+          "最初の {n} フレームまでしか入らず、終わりの部分が欠けています。",
         biggerNote:
           "GIFが元の動画より大きくなっています。GIFには動き圧縮がないため、これは正常です。",
         previewAlt: "作成したGIF",
@@ -742,7 +773,8 @@ export const ja = {
     },
 
     "audio-extract": {
-      blurb: "動画から音声だけを取り出します。再エンコードしないので失われるものがありません。",
+      blurb:
+        "動画から音声だけを取り出します。再エンコードしないので失われるものがありません。",
       metaTitle: "動画から音声を抽出 — MP4 を M4A・WAV に",
       metaDescription:
         "MP4・MOV から音声だけを取り出します。アップロードせずブラウザ内で処理し、M4A は原音のまま無劣化、WAV はどこでも開けます。",
@@ -776,9 +808,11 @@ export const ja = {
         seconds: "秒",
         channels: "{n}チャンネル",
         formatM4a: "M4A — 原音のまま",
-        formatM4aHint: "トラックを手つかずで取り出します。小さく、動画の音と完全に同じです。",
+        formatM4aHint:
+          "トラックを手つかずで取り出します。小さく、動画の音と完全に同じです。",
         formatWav: "WAV — どこでも開ける",
-        formatWavHint: "編集ソフトや古いソフトのための無圧縮 PCM。ずっと大きくなります。",
+        formatWavHint:
+          "編集ソフトや古いソフトのための無圧縮 PCM。ずっと大きくなります。",
         run: "音声を抽出",
         working: "抽出中…",
         outputNameM4a: "{stem}.m4a",
@@ -825,8 +859,10 @@ export const ja = {
         backgroundTransparent: "透明",
         backgroundWhite: "白",
         backgroundBlack: "黒",
-        downloadNote: "ボタンを押すと実行環境とモデルを約 {size} 受け取ります。",
-        cachedNote: "一度だけ受け取り、ブラウザが保持します — 次の写真はすぐ始まります。",
+        downloadNote:
+          "ボタンを押すと実行環境とモデルを約 {size} 受け取ります。",
+        cachedNote:
+          "一度だけ受け取り、ブラウザが保持します — 次の写真はすぐ始まります。",
         run: "背景を消す",
         working: "処理中…",
         stageEngine: "実行環境を受信中…",
@@ -835,8 +871,10 @@ export const ja = {
         resultAlt: "背景を消した写真",
         runtimeWebgpu: "GPU で処理",
         runtimeWasm: "CPU で処理",
-        unsureNote: "モデルが判断しきれませんでした。残した部分の多くが半透明なので、切り抜きが幽霊のように見えます。取り出したい物を直接クリックして選ぶ「クリック切り抜き」をお試しください。",
-        nothingFound: "この写真でははっきりした被写体が見つからず、ほとんどが切り落とされました。背景が単純なほどうまくいきます。",
+        unsureNote:
+          "モデルが判断しきれませんでした。残した部分の多くが半透明なので、切り抜きが幽霊のように見えます。取り出したい物を直接クリックして選ぶ「クリック切り抜き」をお試しください。",
+        nothingFound:
+          "この写真でははっきりした被写体が見つからず、ほとんどが切り落とされました。背景が単純なほどうまくいきます。",
         errEngine: "実行環境を読み込めませんでした",
         errModel: "モデルを受け取れませんでした",
         errUnsupportedInput: "この画像を読み取れませんでした",
@@ -886,14 +924,19 @@ export const ja = {
         scaleLabel: "何倍に",
         scaleOption: "{n} 倍",
         formatLabel: "保存形式",
-        downloadNote: "ボタンを押すと実行環境とモデルを約 {size} 受け取ります。",
-        cachedNote: "一度だけ受け取り、ブラウザが保持します — 次の絵はすぐ始まります。",
-        gpuNotice: "このブラウザには WebGPU があるので、グラフィックカードで処理します。",
-        cpuNotice: "このブラウザには WebGPU がないので CPU で処理します — かなり遅くなります。",
+        downloadNote:
+          "ボタンを押すと実行環境とモデルを約 {size} 受け取ります。",
+        cachedNote:
+          "一度だけ受け取り、ブラウザが保持します — 次の絵はすぐ始まります。",
+        gpuNotice:
+          "このブラウザには WebGPU があるので、グラフィックカードで処理します。",
+        cpuNotice:
+          "このブラウザには WebGPU がないので CPU で処理します — かなり遅くなります。",
         cpuNoticeWithEstimate:
           "このブラウザには WebGPU がないので CPU で処理します — おおよそ {seconds} 秒かかります。",
         preview: "{from} → {to}",
-        tooLargeNotice: "{from} は {max} メガピクセルの上限を超えています。先に縮めるか、小さい絵を使ってください。",
+        tooLargeNotice:
+          "{from} は {max} メガピクセルの上限を超えています。先に縮めるか、小さい絵を使ってください。",
         run: "拡大する",
         working: "処理中…",
         stageEngine: "実行環境を受信中…",
@@ -911,7 +954,8 @@ export const ja = {
       },
     },
     cutout: {
-      blurb: "写真の中の欲しいものを押して、それだけ切り抜きます。この端末の中で動きます。",
+      blurb:
+        "写真の中の欲しいものを押して、それだけ切り抜きます。この端末の中で動きます。",
       metaTitle: "クリック切り抜き — ブラウザの中で",
       metaDescription:
         "写真の中の物体を押して透過 PNG に切り抜きます。Apache-2.0 の SAM モデルがブラウザ内で動き、何もアップロードしません。登録は不要です。",
@@ -942,8 +986,10 @@ export const ja = {
       ui: {
         dropLabel: "写真をここに置いてください",
         dropHint: "PNG · JPG · WebP — 一度に一枚",
-        downloadNote: "写真を準備すると実行環境とモデルを約 {size} 受け取ります。",
-        cachedNote: "一度だけ受け取り、ブラウザが保持します — 次の写真は読み取りだけで済みます。",
+        downloadNote:
+          "写真を準備すると実行環境とモデルを約 {size} 受け取ります。",
+        cachedNote:
+          "一度だけ受け取り、ブラウザが保持します — 次の写真は読み取りだけで済みます。",
         prepare: "この写真を準備する",
         preparing: "準備中…",
         stageEngine: "実行環境を受信中…",
@@ -963,7 +1009,8 @@ export const ja = {
         resultAlt: "写真から切り抜いた物体",
         runtimeWebgpu: "GPU で処理",
         runtimeWasm: "CPU で処理",
-        nothingFound: "ほとんど何も残りませんでした。物体の中心寄りを押してみてください。",
+        nothingFound:
+          "ほとんど何も残りませんでした。物体の中心寄りを押してみてください。",
         errEngine: "実行環境を読み込めませんでした",
         errModel: "モデルを受け取れませんでした",
         errUnsupportedInput: "この画像を読み取れませんでした",
@@ -1020,8 +1067,10 @@ export const ja = {
           de: "ドイツ語",
           pt: "ポルトガル語",
         },
-        downloadNote: "ボタンを押すと実行環境とモデルを約 {size} 受け取ります。",
-        cachedNote: "一度だけ受け取り、ブラウザが保持します — 次のファイルはすぐ始まります。",
+        downloadNote:
+          "ボタンを押すと実行環境とモデルを約 {size} 受け取ります。",
+        cachedNote:
+          "一度だけ受け取り、ブラウザが保持します — 次のファイルはすぐ始まります。",
         noiseNote:
           "雑音が多い、または非常に古い録音では、モデルが同じ言葉を繰り返して止まることがあります。綺麗な音ほどうまくいきます。",
         run: "字幕を作る",
@@ -1038,15 +1087,18 @@ export const ja = {
         errEngine: "実行環境を読み込めませんでした",
         errModel: "モデルを受け取れませんでした",
         errNoAudio: "このファイルには音がありません",
-        errUnsupportedInput: "このファイルを読み取れませんでした — MP4・MOV・M4A・WAV・MP3",
+        errUnsupportedInput:
+          "このファイルを読み取れませんでした — MP4・MOV・M4A・WAV・MP3",
         errTooLong: "{minutes} 分より長いです",
         stop: "停止",
-        stoppedNote: "途中で停止しました — 字幕は停止した位置までで、それより後の音声は含まれていません。",
+        stoppedNote:
+          "途中で停止しました — 字幕は停止した位置までで、それより後の音声は含まれていません。",
         errGeneric: "字幕を作れませんでした",
       },
     },
     "subtitle-translate": {
-      blurb: "字幕ファイルを別の言語に訳します。モデルはお使いの端末で動きます。",
+      blurb:
+        "字幕ファイルを別の言語に訳します。モデルはお使いの端末で動きます。",
       metaTitle: "字幕翻訳 — ブラウザだけで",
       metaDescription:
         "SRT・VTT 字幕を 18 言語に翻訳します。アップロードせず、MIT ライセンスのモデルがブラウザの中で動きます。登録も API キーも不要です。",
@@ -1104,9 +1156,12 @@ export const ja = {
           nl: "オランダ語",
         },
         downloadNote: "ボタンを押すと実行環境とモデルを約 {size} 取得します。",
-        cachedNote: "一度だけ取得してブラウザが保持します — 次のファイルはすぐ始まります。",
-        qualityNote: "普通の文はよく出ますが、慣用句はよく外します。公開する前に一度読んでください。",
-        encodingNote: "このファイルは UTF-8 ではないため {encoding} として読みました。下の文字をご確認ください。",
+        cachedNote:
+          "一度だけ取得してブラウザが保持します — 次のファイルはすぐ始まります。",
+        qualityNote:
+          "普通の文はよく出ますが、慣用句はよく外します。公開する前に一度読んでください。",
+        encodingNote:
+          "このファイルは UTF-8 ではないため {encoding} として読みました。下の文字をご確認ください。",
         strippedNote: "{lines} 行から書式タグを取り除きました — 戻しません。",
         loadedSummary: "{lines} 行 · 約 {estimate}",
         unitMinutes: "{value} 分",
@@ -1130,7 +1185,8 @@ export const ja = {
       },
     },
     stems: {
-      blurb: "曲をドラム・ベース・ボーカル・その他に分けます。モデルはお使いの端末で動きます。",
+      blurb:
+        "曲をドラム・ベース・ボーカル・その他に分けます。モデルはお使いの端末で動きます。",
       metaTitle: "ステム分離 — ボーカル抽出をブラウザで",
       metaDescription:
         "曲をドラム・ベース・ボーカルなどに分離します。アップロードせず、MIT ライセンスの Demucs がブラウザ内で動きます。登録も API キーも不要です。",
@@ -1166,7 +1222,8 @@ export const ja = {
         dropLabel: "音声または動画ファイルをここに置いてください",
         dropHint: "MP4 · MOV · M4A · WAV · MP3 — 先頭 {seconds} 秒を使います",
         downloadNote: "ボタンを押すと実行環境とモデルを約 {size} 取得します。",
-        cachedNote: "一度だけ取得してブラウザが保持します — 次のファイルはすぐ始まります。",
+        cachedNote:
+          "一度だけ取得してブラウザが保持します — 次のファイルはすぐ始まります。",
         slowNote:
           "分離は CPU で動きます — {seconds} 秒の音声に約 {minutes} 分。この道具が試聴用である理由です。",
         run: "ステムに分ける",
@@ -1184,7 +1241,8 @@ export const ja = {
         errEngine: "実行環境を読み込めませんでした",
         errModel: "モデルを取得できませんでした",
         errNoAudio: "このファイルには音がありません",
-        errUnsupportedInput: "このファイルを読み取れませんでした — MP4、MOV、M4A、WAV、MP3",
+        errUnsupportedInput:
+          "このファイルを読み取れませんでした — MP4、MOV、M4A、WAV、MP3",
         errGeneric: "ステムを分けられませんでした",
       },
     },
@@ -1230,8 +1288,10 @@ export const ja = {
         dropHint: "TXT · MD · HTML · PDF — または下に文章を貼り付け",
         textLabel: "文書",
         textPlaceholder: "要約したい文章を貼り付けてください…",
-        downloadNote: "ボタンを押すとランタイムとモデルを約 {size} 取得します。",
-        cachedNote: "一度だけ取得してブラウザが保持します — 次の文書はすぐ始まります。",
+        downloadNote:
+          "ボタンを押すとランタイムとモデルを約 {size} 取得します。",
+        cachedNote:
+          "一度だけ取得してブラウザが保持します — 次の文書はすぐ始まります。",
         qualityNote:
           "モデルは小さめです。大筋は合いますが細部は外すことがあります。大事なところは文書で直接ご確認ください。",
         loadedSummary: "約 {tokens} トークン · モデル準備後およそ {seconds} 秒",
@@ -1249,10 +1309,14 @@ export const ja = {
         errNoWebgpu: "この道具にはWebGPUが必要です",
         errEngine: "ランタイムを読み込めませんでした",
         errModel: "モデルを取得できませんでした",
-        errUnsupportedInput: "このファイルは読めませんでした — TXT、MD、HTML、PDF",
-        errNoText: "このファイルから文字が見つかりませんでした — スキャンしたPDFは先に画像・PDFからテキストへの道具をお使いください",
-        errTooShort: "要約するには短すぎます: {tokens} トークン、最低 {minimum} トークン必要です",
-        errTooLong: "長すぎます: {tokens} トークン、上限は {maximum} トークンです",
+        errUnsupportedInput:
+          "このファイルは読めませんでした — TXT、MD、HTML、PDF",
+        errNoText:
+          "このファイルから文字が見つかりませんでした — スキャンしたPDFは先に画像・PDFからテキストへの道具をお使いください",
+        errTooShort:
+          "要約するには短すぎます: {tokens} トークン、最低 {minimum} トークン必要です",
+        errTooLong:
+          "長すぎます: {tokens} トークン、上限は {maximum} トークンです",
         errGeneric: "文書を要約できませんでした",
       },
     },

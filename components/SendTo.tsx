@@ -25,6 +25,11 @@ export interface SendableFile {
   name: string;
   /** 아는 도구만 준다. 안 주면 이름의 확장자로 정한다. */
   type?: string;
+  /**
+   * 화소 수. 그림을 다루는 도구만 준다 — 형식이 맞아도 **크기 때문에** 못 받는
+   * 곳이 있다(업스케일 1메가픽셀). 안 주면 크기로는 안 거른다.
+   */
+  pixels?: number;
 }
 
 export function SendTo({

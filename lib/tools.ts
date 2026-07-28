@@ -172,11 +172,40 @@ export const CHAINS: Partial<Record<ToolSlug, ToolSlug[]>> = {
 };
 
 /**
+ * 형식이 맞아도 **크기 때문에** 못 받는 곳.
+ *
+ * 실측(2026-07-28, 실물 인물 사진 3839×5759): 배경을 지운 뒤 "이미지 업스케일 →" 이
+ * 떴는데, 업스케일은 1메가픽셀까지만 받는다. 눌러 보면 버튼이 비활성이고 "상한을
+ * 넘습니다" 만 적혀 있다 — **눌러 보고 나서야 못 한다는 것을 아는 것**이 규칙 3 이
+ * 막으려는 바로 그 상황이다.
+ *
+ * **값이 여기 사는 이유.** 반대 방향(`lib/upscale/upscale-core.ts` 에서 가져오기)이
+ * 자연스러워 보이지만, 그쪽은 `lib/onnx/runtime` 을 물고 있다. `lib/tools.ts` 는
+ * 사이트맵·스키마·모든 페이지가 부르는 곳이라 거기로 ONNX 갈래를 끌어들이면 안 된다.
+ * 그래서 **값은 여기 두고 코어가 가져간다** — 한 곳인 것은 그대로다.
+ */
+export const MAX_PIXELS: Partial<Record<ToolSlug, number>> = {
+  /**
+   * ×4 는 화소가 16배가 된다 — 100만 화소를 넣으면 1600만 화소가 나오고 RGBA 로만
+   * 64MB 다. 시간도 CPU 100만 화소에 1분 남짓(실측). 넘으면 시작하지 않는다.
+   */
+  upscale: 1_000_000,
+};
+
+/**
  * 이 결과를 이어서 넣을 수 있는 도구. 만들어진 파일을 실제로 받는 것만 남긴다.
  *
  * `acceptsFile` 은 `lib/handoff.ts` 에 있고 그쪽은 여기서 **타입만** 가져간다
  * (`import type` 은 컴파일에서 지워진다) — 실행 시점의 순환 참조가 아니다.
  */
-export function chainTargets(slug: ToolSlug, produced: { name: string; type: string }): ToolSlug[] {
-  return (CHAINS[slug] ?? []).filter((target) => acceptsFile(ACCEPT[target], produced));
+export function chainTargets(
+  slug: ToolSlug,
+  produced: { name: string; type: string; pixels?: number },
+): ToolSlug[] {
+  return (CHAINS[slug] ?? []).filter((target) => {
+    if (!acceptsFile(ACCEPT[target], produced)) return false;
+    const limit = MAX_PIXELS[target];
+    // 크기를 모르면 막지 않는다 — 아는 것만 걸러야 멀쩡한 길을 지우지 않는다
+    return !(limit && produced.pixels && produced.pixels > limit);
+  });
 }

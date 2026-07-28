@@ -21,7 +21,8 @@ export const de = {
     availableHeading: "Verfügbar",
     searchLabel: "Werkzeug finden",
     searchPlaceholder: "Suchen — HEIC, PDF, Untertitel…",
-    searchEmpty: "Kein Werkzeug passt dazu. Versuchen Sie ein Dateiformat wie HEIC oder MP4.",
+    searchEmpty:
+      "Kein Werkzeug passt dazu. Versuchen Sie ein Dateiformat wie HEIC oder MP4.",
     upcomingHeading: "In Vorbereitung",
   },
 
@@ -35,19 +36,22 @@ export const de = {
     relatedHeading: "Weitere Werkzeuge",
     sendToHeading: "Mit diesem Ergebnis weitermachen:",
     notFoundTitle: "Diese Seite gibt es nicht",
-    notFoundLead: "Möglicherweise ist die Adresse falsch geschrieben oder die Seite wurde verschoben.",
+    notFoundLead:
+      "Möglicherweise ist die Adresse falsch geschrieben oder die Seite wurde verschoben.",
     notFoundHome: "Zur Werkzeugliste",
     chooseFile: "Dateien wählen",
     download: "Herunterladen",
     clear: "Leeren",
     downloadAll: "Alle herunterladen",
-    workerUnsupportedTitle: "Dieser Browser kann dieses Werkzeug nicht ausführen.",
+    workerUnsupportedTitle:
+      "Dieser Browser kann dieses Werkzeug nicht ausführen.",
     workerUnsupportedHint:
       "Bitte in einem aktuellen Chrome, Edge, Firefox oder Safari mit Web-Worker-Unterstützung öffnen.",
   },
 
   mediaErrors: {
-    unsupportedContainer: "Diese Datei ist kein MP4 oder MOV, das wir öffnen können",
+    unsupportedContainer:
+      "Diese Datei ist kein MP4 oder MOV, das wir öffnen können",
     noAudioTrack: "Diese Datei hat keinen Ton zum Herausziehen",
     noVideoTrack: "Diese Datei hat keine Videospur",
     unsupportedCodec: "Dieser Browser kann dieses Video nicht dekodieren",
@@ -94,7 +98,8 @@ export const de = {
 
   tools: {
     "image-convert": {
-      blurb: "HEIC, PNG, JPG, WebP und AVIF in jede Richtung. Komprimieren und skalieren in einem Zug.",
+      blurb:
+        "HEIC, PNG, JPG, WebP und AVIF in jede Richtung. Komprimieren und skalieren in einem Zug.",
       metaTitle: "Bildkonverter — HEIC, PNG, JPG, WebP, AVIF",
       metaDescription:
         "iPhone-HEIC-Fotos in JPG, PNG in WebP umwandeln. Direkt im Browser konvertieren und komprimieren, ohne Upload. Ohne Anmeldung, ohne Mengenbegrenzung.",
@@ -115,12 +120,14 @@ export const de = {
         },
       ],
       ui: {
-          animatedNote: "Dieses Bild ist animiert. Nur das erste Einzelbild bleibt erhalten — die Animation geht verloren.",
+        animatedNote:
+          "Dieses Bild ist animiert. Nur das erste Einzelbild bleibt erhalten — die Animation geht verloren.",
         unsupportedTitle: "Dieser Browser kann keine Bilder umwandeln.",
         unsupportedHint:
           "Bitte in einem aktuellen Chrome, Edge, Firefox oder Safari 17+ mit OffscreenCanvas öffnen.",
         dropLabel: "Bilder hier ablegen",
-        dropHint: "HEIC · PNG · JPG · WebP · AVIF · GIF · BMP — mehrere auf einmal",
+        dropHint:
+          "HEIC · PNG · JPG · WebP · AVIF · GIF · BMP — mehrere auf einmal",
         formatLabel: "Ausgabeformat",
         qualityLabel: "Qualität {value}",
         qualityLossless: "Qualität (PNG ist verlustfrei)",
@@ -136,7 +143,8 @@ export const de = {
     },
 
     "pdf-merge": {
-      blurb: "Mehrere PDFs zu einem, in Ihrer Reihenfolge. Seiten werden kopiert, nicht neu gerendert.",
+      blurb:
+        "Mehrere PDFs zu einem, in Ihrer Reihenfolge. Seiten werden kopiert, nicht neu gerendert.",
       metaTitle: "PDF zusammenfügen — mehrere PDFs zu einem",
       metaDescription:
         "Fügen Sie mehrere PDFs in beliebiger Reihenfolge zusammen. Vollständig im Browser, ohne Upload, ohne Anmeldung, ohne Wasserzeichen und ohne Mengenbegrenzung.",
@@ -178,7 +186,8 @@ export const de = {
     },
 
     "pdf-split": {
-      blurb: "Einzelne Seiten herausziehen oder jede Seite als eigenes PDF in einem ZIP.",
+      blurb:
+        "Einzelne Seiten herausziehen oder jede Seite als eigenes PDF in einem ZIP.",
       metaTitle: "PDF teilen — Seiten extrahieren oder auftrennen",
       metaDescription:
         "Ziehen Sie Seiten aus einem PDF oder trennen Sie jede Seite in eine eigene Datei. Im Browser, ohne Upload, ohne Anmeldung, ohne Wasserzeichen.",
@@ -204,7 +213,8 @@ export const de = {
       ],
       ui: {
         dropLabel: "PDF hier ablegen",
-        dropHint: "Eine Datei nach der anderen — Seiten herausziehen oder alle auftrennen",
+        dropHint:
+          "Eine Datei nach der anderen — Seiten herausziehen oder alle auftrennen",
         reading: "wird gelesen…",
         pageCount: "{n} Seiten",
         modeExtract: "Seitenbereich extrahieren",
@@ -226,7 +236,8 @@ export const de = {
     },
 
     "pdf-organize": {
-      blurb: "Alle Seiten im Blick: quer liegende aufrichten, überflüssige herausnehmen.",
+      blurb:
+        "Alle Seiten im Blick: quer liegende aufrichten, überflüssige herausnehmen.",
       metaTitle: "PDF drehen und Seiten löschen — Scan begradigen",
       metaDescription:
         "Quer eingescannte Seiten aufrichten und überflüssige entfernen. Jede Seite wird als Miniatur gezeigt. Im Browser, ohne Upload, ohne Anmeldung.",
@@ -252,7 +263,8 @@ export const de = {
       ],
       ui: {
         dropLabel: "PDF hier ablegen",
-        dropHint: "Eine Datei nach der anderen — jede Seite wird zur Auswahl gezeigt",
+        dropHint:
+          "Eine Datei nach der anderen — jede Seite wird zur Auswahl gezeigt",
         rendering: "Vorschauen werden gezeichnet…",
         pageCount: "{n} Seiten",
         gridLabel: "Seiten",
@@ -272,7 +284,8 @@ export const de = {
     },
 
     "pdf-compress": {
-      blurb: "Komprimiert die Fotos im PDF neu. Der Text bleibt Text — nichts wird plattgebügelt.",
+      blurb:
+        "Komprimiert die Fotos im PDF neu. Der Text bleibt Text — nichts wird plattgebügelt.",
       metaTitle: "PDF verkleinern — kleiner werden, Text behalten",
       metaDescription:
         "Verkleinern Sie ein PDF, indem die enthaltenen Fotos neu komprimiert werden. Der Text bleibt markierbar und durchsuchbar. Ohne Upload, ohne Anmeldung.",
@@ -298,7 +311,8 @@ export const de = {
       ],
       ui: {
         dropLabel: "PDF hier ablegen",
-        dropHint: "Eine Datei nach der anderen — die Fotos darin werden neu komprimiert",
+        dropHint:
+          "Eine Datei nach der anderen — die Fotos darin werden neu komprimiert",
         reading: "wird gelesen…",
         pageCount: "{n} Seiten",
         qualityLabel: "Fotoqualität {value}",
@@ -310,14 +324,17 @@ export const de = {
         working: "Wird verkleinert…",
         outputName: "{stem}-verkleinert.pdf",
         rewroteImages: "{n} von {total} Fotos neu komprimiert",
-        keepOriginal: "Behalten Sie die Datei, die Sie schon haben — kleiner wird sie hier nicht.",
+        keepOriginal:
+          "Behalten Sie die Datei, die Sie schon haben — kleiner wird sie hier nicht.",
         noImages: "In diesem PDF gibt es keine Fotos zum Neukomprimieren.",
-        alreadySmall: "Die Fotos waren bereits gut komprimiert — kleiner ging es nicht.",
+        alreadySmall:
+          "Die Fotos waren bereits gut komprimiert — kleiner ging es nicht.",
       },
     },
 
     "data-query": {
-      blurb: "Führt SQL auf einer CSV- oder Parquet-Datei aus. Die Datei verlässt Ihr Gerät nicht.",
+      blurb:
+        "Führt SQL auf einer CSV- oder Parquet-Datei aus. Die Datei verlässt Ihr Gerät nicht.",
       metaTitle: "SQL-Abfragen auf CSV und Parquet",
       metaDescription:
         "Öffnen Sie eine CSV- oder Parquet-Datei und fragen Sie sie mit SQL ab. DuckDB läuft in Ihrem Browser — ohne Upload, ohne Anmeldung, ohne Zeilenlimit.",
@@ -348,8 +365,10 @@ export const de = {
       ui: {
         dropLabel: "CSV- oder Parquet-Datei hier ablegen",
         dropHint: "CSV · TSV · Parquet · JSON — eine nach der anderen",
-        downloadNote: "Beim Öffnen wird die DuckDB-Engine geladen, rund {size}.",
-        localNote: "Die Datei selbst wird nicht hochgeladen — DuckDB liest sie von Ihrer Festplatte.",
+        downloadNote:
+          "Beim Öffnen wird die DuckDB-Engine geladen, rund {size}.",
+        localNote:
+          "Die Datei selbst wird nicht hochgeladen — DuckDB liest sie von Ihrer Festplatte.",
         open: "Öffnen und abfragen",
         opening: "Wird geöffnet…",
         rowCount: "{rows} Zeilen",
@@ -364,13 +383,15 @@ export const de = {
         noRows: "Diese Abfrage lieferte keine Zeilen.",
         downloadCsv: "CSV herunterladen",
         errEngine: "Die DuckDB-Engine konnte nicht geladen werden",
-        errFormat: "Dieser Dateityp lässt sich nicht öffnen — CSV, TSV, Parquet oder JSON",
+        errFormat:
+          "Dieser Dateityp lässt sich nicht öffnen — CSV, TSV, Parquet oder JSON",
         errRead: "Die Datei konnte nicht gelesen werden",
       },
     },
 
     ocr: {
-      blurb: "Holt den Text aus einem Foto, Screenshot oder gescannten PDF. Nichts wird hochgeladen.",
+      blurb:
+        "Holt den Text aus einem Foto, Screenshot oder gescannten PDF. Nichts wird hochgeladen.",
       metaTitle: "Bild und PDF zu Text (OCR) im Browser",
       metaDescription:
         "Lesen Sie den Text aus einem Foto, Screenshot oder gescannten PDF, ohne es hochzuladen. Sieben Sprachen, komplett im Browser, ohne Anmeldung.",
@@ -403,8 +424,10 @@ export const de = {
         dropHint: "PNG · JPG · WebP · PDF — eines nach dem anderen",
         pdfLimit: "bis zu {max} Seiten",
         languageLabel: "Sprache im Dokument",
-        downloadNote: "Mit dem Knopfdruck werden rund {size} an Engine- und Sprachdaten geladen.",
-        cachedNote: "Das geschieht einmal, danach behält Ihr Browser es — das nächste Dokument startet sofort.",
+        downloadNote:
+          "Mit dem Knopfdruck werden rund {size} an Engine- und Sprachdaten geladen.",
+        cachedNote:
+          "Das geschieht einmal, danach behält Ihr Browser es — das nächste Dokument startet sofort.",
         run: "Text lesen",
         working: "Wird gelesen…",
         stageEngine: "Engine wird geladen {percent}%",
@@ -414,9 +437,11 @@ export const de = {
         copy: "Kopieren",
         copied: "Kopiert",
         resultLabel: "Erkannter Text",
-        truncated: "Dieses Dokument hat {total} Seiten; gelesen wurden nur die ersten {max}.",
+        truncated:
+          "Dieses Dokument hat {total} Seiten; gelesen wurden nur die ersten {max}.",
         nothingFound: "In diesem Bild wurde kein Text gefunden.",
-        lowConfidence: "Die Konfidenz ist niedrig — gleichen Sie es mit dem Original ab, bevor Sie sich darauf verlassen.",
+        lowConfidence:
+          "Die Konfidenz ist niedrig — vergleichen Sie das Ergebnis mit dem Original. Die häufigste Ursache ist eine falsch gewählte Dokumentsprache oben.",
         errEngine: "Die OCR-Engine konnte nicht geladen werden",
         errTooManyPages: "Es können nur {max} Seiten auf einmal gelesen werden",
         languages: {
@@ -432,7 +457,8 @@ export const de = {
     },
 
     "image-compress": {
-      blurb: "Macht Fotos kleiner, ohne das Format zu ändern. Sie sehen bei jeder Datei, wie viel gespart wurde.",
+      blurb:
+        "Macht Fotos kleiner, ohne das Format zu ändern. Sie sehen bei jeder Datei, wie viel gespart wurde.",
       metaTitle: "Bilder verkleinern — JPG, PNG, WebP",
       metaDescription:
         "Verkleinern Sie Fotos im Browser, ohne sie hochzuladen. Das Originalformat bleibt erhalten und jede Datei zeigt ihre Ersparnis. Ohne Anmeldung und Limit.",
@@ -470,7 +496,8 @@ export const de = {
         formatLabel: "Ausgabe",
         formatKeep: "Originalformat behalten",
         keptNote: "schon so klein wie möglich — Original behalten",
-        losslessNote: "PNG ist verlustfrei, der Qualitätsregler verkleinert es also nicht. Reduzieren Sie die Größe oder stellen Sie die Ausgabe auf WebP.",
+        losslessNote:
+          "PNG ist verlustfrei, der Qualitätsregler verkleinert es also nicht. Reduzieren Sie die Größe oder stellen Sie die Ausgabe auf WebP.",
         run: "{n} Datei(en) verkleinern",
         working: "Wird verkleinert…",
         total: "{n} Dateien · {before} → {after} ({percent}% kleiner)",
@@ -480,7 +507,8 @@ export const de = {
     },
 
     "image-resize": {
-      blurb: "Bringt Fotos auf die gewünschte Breite und schneidet sie quadratisch, 4:5 oder 16:9 zu.",
+      blurb:
+        "Bringt Fotos auf die gewünschte Breite und schneidet sie quadratisch, 4:5 oder 16:9 zu.",
       metaTitle: "Bilder skalieren & zuschneiden — 1:1, 4:5",
       metaDescription:
         "Bringen Sie ein Foto auf die exakte Breite und schneiden Sie es quadratisch oder 4:5 zu. Im Browser, ohne Upload, ohne Anmeldung, ohne Wasserzeichen.",
@@ -527,7 +555,8 @@ export const de = {
     },
 
     "video-convert": {
-      blurb: "MOV ohne Neukodierung zu MP4, oder MP4 zu WebM fürs Web. Nichts wird hochgeladen.",
+      blurb:
+        "MOV ohne Neukodierung zu MP4, oder MP4 zu WebM fürs Web. Nichts wird hochgeladen.",
       metaTitle: "MOV in MP4 und MP4 in WebM umwandeln",
       metaDescription:
         "Wandeln Sie MOV ohne Neukodierung in MP4 um oder MP4 mit VP9 und Opus in WebM. Läuft in Ihrem Browser — ohne Upload, ohne Anmeldung, ohne Größenlimit.",
@@ -564,11 +593,16 @@ export const de = {
         targetLabel: "Umwandeln in",
         targetMp4: "MP4",
         targetWebm: "WebM",
-        mp4Note: "Die Codecs bleiben unangetastet, nur der Container wird neu geschrieben. Es geht nichts verloren und es dauert Sekunden.",
-        webmNote: "H.264 passt nicht in ein WebM, deshalb wird das Bild neu in VP9 und der Ton in Opus kodiert. Das dauert und kostet etwas Qualität.",
-        alreadyMp4: "Diese Datei ist bereits ein MP4 — die Umwandlung würde nur den Container neu schreiben.",
-        mp4Unavailable: "Der Codec dieses Videos lässt sich nicht unverändert in ein MP4 kopieren.",
-        webmUnavailable: "Dieser Browser kann kein WebM kodieren. MP4 funktioniert weiterhin.",
+        mp4Note:
+          "Die Codecs bleiben unangetastet, nur der Container wird neu geschrieben. Es geht nichts verloren und es dauert Sekunden.",
+        webmNote:
+          "H.264 passt nicht in ein WebM, deshalb wird das Bild neu in VP9 und der Ton in Opus kodiert. Das dauert und kostet etwas Qualität.",
+        alreadyMp4:
+          "Diese Datei ist bereits ein MP4 — die Umwandlung würde nur den Container neu schreiben.",
+        mp4Unavailable:
+          "Der Codec dieses Videos lässt sich nicht unverändert in ein MP4 kopieren.",
+        webmUnavailable:
+          "Dieser Browser kann kein WebM kodieren. MP4 funktioniert weiterhin.",
         sizeLabel: "Größe",
         sizeOriginal: "Originalgröße behalten",
         sizeMax: "Lange Kante {px}px",
@@ -588,7 +622,8 @@ export const de = {
     },
 
     "video-compress": {
-      blurb: "Verkleinert ein MP4 im Browser. Ohne 30MB Werkzeugkasten — Ihr Gerät erledigt es selbst.",
+      blurb:
+        "Verkleinert ein MP4 im Browser. Ohne 30MB Werkzeugkasten — Ihr Gerät erledigt es selbst.",
       metaTitle: "Video verkleinern — MP4 im Browser schrumpfen",
       metaDescription:
         "Machen Sie ein MP4 kleiner, ohne es hochzuladen. Läuft mit dem Video-Encoder des Browsers auf Ihrem Gerät — keine Datei verlässt den Rechner.",
@@ -622,7 +657,11 @@ export const de = {
         seconds: " s",
         noAudio: "ohne Ton",
         qualityLabel: "Qualität",
-        quality: { high: "Hoch", balanced: "Ausgewogen", small: "So klein wie möglich" },
+        quality: {
+          high: "Hoch",
+          balanced: "Ausgewogen",
+          small: "So klein wie möglich",
+        },
         sizeLabel: "Auflösung",
         sizeOriginal: "Originalauflösung behalten",
         sizeMax: "Längste Kante {px} px",
@@ -636,7 +675,8 @@ export const de = {
     },
 
     "video-trim": {
-      blurb: "Schneiden Sie einen Ausschnitt heraus, ohne neu zu kodieren. Nichts geht verloren, und es dauert Sekunden.",
+      blurb:
+        "Schneiden Sie einen Ausschnitt heraus, ohne neu zu kodieren. Nichts geht verloren, und es dauert Sekunden.",
       metaTitle: "Video zuschneiden — MP4 im Browser kürzen",
       metaDescription:
         "Schneiden Sie einen Ausschnitt aus einem MP4 oder MOV, ohne es hochzuladen. Nichts wird neu kodiert, die Qualität bleibt und es dauert Sekunden.",
@@ -673,7 +713,8 @@ export const de = {
         startLabel: "Anfang (Sekunden)",
         endLabel: "Ende (Sekunden)",
         grabHere: "Abspielposition",
-        snapped: "Schneidet bei {actual}s statt {asked}s — das ist der nächste Keyframe davor.",
+        snapped:
+          "Schneidet bei {actual}s statt {asked}s — das ist der nächste Keyframe davor.",
         onKeyframe: "Dieser Anfang liegt genau auf einem Keyframe.",
         run: "Zuschneiden",
         working: "Wird zugeschnitten…",
@@ -685,7 +726,8 @@ export const de = {
     },
 
     "video-to-gif": {
-      blurb: "Aus einem Clip wird ein GIF in Dauerschleife. Ohne Upload — Ihr Gerät erledigt das.",
+      blurb:
+        "Aus einem Clip wird ein GIF in Dauerschleife. Ohne Upload — Ihr Gerät erledigt das.",
       metaTitle: "Video zu GIF — MP4 im Browser umwandeln",
       metaDescription:
         "Erstellen Sie aus einem MP4 oder MOV ein GIF in Dauerschleife, ohne Upload. Bildrate und Größe wählen, Ergebnis vorab ansehen. Alles im Browser.",
@@ -734,7 +776,8 @@ export const de = {
         working: "Wird erstellt…",
         outputName: "{stem}.gif",
         resultFrames: "{n} Bilder · {fps} fps",
-        truncated: "Es haben nur die ersten {n} Bilder hineingepasst, das Ende des Clips fehlt.",
+        truncated:
+          "Es haben nur die ersten {n} Bilder hineingepasst, das Ende des Clips fehlt.",
         biggerNote:
           "Das GIF ist größer als das Video. Das ist normal — GIF komprimiert keine Bewegung.",
         previewAlt: "Das eben erstellte GIF",
@@ -742,7 +785,8 @@ export const de = {
     },
 
     "audio-extract": {
-      blurb: "Holt den Ton aus einem Video. Nichts wird neu kodiert, also geht nichts verloren.",
+      blurb:
+        "Holt den Ton aus einem Video. Nichts wird neu kodiert, also geht nichts verloren.",
       metaTitle: "Audio aus Video — MP4 zu M4A oder WAV",
       metaDescription:
         "Holen Sie die Tonspur aus einem MP4 oder MOV, ohne Upload. Verlustfrei als M4A behalten oder als WAV, das sich überall öffnet. Alles im Browser.",
@@ -776,9 +820,11 @@ export const de = {
         seconds: " s",
         channels: "{n} Kanäle",
         formatM4a: "M4A — Original behalten",
-        formatM4aHint: "Hebt die Spur unverändert heraus. Klein und identisch mit dem Videoton.",
+        formatM4aHint:
+          "Hebt die Spur unverändert heraus. Klein und identisch mit dem Videoton.",
         formatWav: "WAV — öffnet sich überall",
-        formatWavHint: "Unkomprimiertes PCM für Schnittprogramme und ältere Software. Viel größer.",
+        formatWavHint:
+          "Unkomprimiertes PCM für Schnittprogramme und ältere Software. Viel größer.",
         run: "Audio extrahieren",
         working: "Wird extrahiert…",
         outputNameM4a: "{stem}.m4a",
@@ -787,7 +833,8 @@ export const de = {
       },
     },
     "remove-bg": {
-      blurb: "Schneidet den Hintergrund aus einem Foto. Das Modell läuft auf Ihrem Gerät.",
+      blurb:
+        "Schneidet den Hintergrund aus einem Foto. Das Modell läuft auf Ihrem Gerät.",
       metaTitle: "Hintergrund entfernen — im Browser",
       metaDescription:
         "Entfernen Sie den Hintergrund eines Fotos, ohne es hochzuladen. Ein Apache-2.0-Modell läuft im Browser und liefert ein transparentes PNG. Ohne Anmeldung.",
@@ -825,8 +872,10 @@ export const de = {
         backgroundTransparent: "Transparent",
         backgroundWhite: "Weiß",
         backgroundBlack: "Schwarz",
-        downloadNote: "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
-        cachedNote: "Es wird einmal geladen und von Ihrem Browser behalten — das nächste Foto startet sofort.",
+        downloadNote:
+          "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
+        cachedNote:
+          "Es wird einmal geladen und von Ihrem Browser behalten — das nächste Foto startet sofort.",
         run: "Hintergrund entfernen",
         working: "Wird bearbeitet…",
         stageEngine: "Laufzeit wird geladen…",
@@ -835,8 +884,10 @@ export const de = {
         resultAlt: "Das Foto ohne Hintergrund",
         runtimeWebgpu: "auf der GPU gerechnet",
         runtimeWasm: "auf der CPU gerechnet",
-        unsureNote: "Das Modell war sich nicht sicher: Vieles vom Behaltenen ist nur halbtransparent, der Freisteller wirkt daher wie ein Geist. Versuchen Sie das Klick-Freistellen, bei dem Sie auf das gewünschte Objekt zeigen.",
-        nothingFound: "Hier hat das Modell kein klares Motiv gefunden, deshalb wurde fast alles weggeschnitten. Ein schlichterer Hintergrund hilft.",
+        unsureNote:
+          "Das Modell war sich nicht sicher: Vieles vom Behaltenen ist nur halbtransparent, der Freisteller wirkt daher wie ein Geist. Versuchen Sie das Klick-Freistellen, bei dem Sie auf das gewünschte Objekt zeigen.",
+        nothingFound:
+          "Hier hat das Modell kein klares Motiv gefunden, deshalb wurde fast alles weggeschnitten. Ein schlichterer Hintergrund hilft.",
         errEngine: "Die Laufzeit konnte nicht geladen werden",
         errModel: "Das Modell konnte nicht geladen werden",
         errUnsupportedInput: "Dieses Bild konnte nicht gelesen werden",
@@ -844,7 +895,8 @@ export const de = {
       },
     },
     upscale: {
-      blurb: "Vergrößert ein kleines Bild, ohne dass es weich wird. Läuft auf Ihrem Gerät.",
+      blurb:
+        "Vergrößert ein kleines Bild, ohne dass es weich wird. Läuft auf Ihrem Gerät.",
       metaTitle: "Bild vergrößern 4× — im Browser",
       metaDescription:
         "Vergrößern Sie ein Foto 2× oder 4×, ohne es hochzuladen. Ein Real-ESRGAN-Modell unter BSD-Lizenz läuft im Browser und hält die Kanten scharf. Ohne Anmeldung.",
@@ -886,14 +938,19 @@ export const de = {
         scaleLabel: "Vergrößern um",
         scaleOption: "{n}×",
         formatLabel: "Speichern als",
-        downloadNote: "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
-        cachedNote: "Es wird einmal geladen und von Ihrem Browser behalten — das nächste Bild startet sofort.",
-        gpuNotice: "Ihr Browser hat WebGPU, das läuft also auf der Grafikkarte.",
-        cpuNotice: "Ihr Browser hat kein WebGPU, das läuft also auf der CPU — deutlich langsamer.",
+        downloadNote:
+          "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
+        cachedNote:
+          "Es wird einmal geladen und von Ihrem Browser behalten — das nächste Bild startet sofort.",
+        gpuNotice:
+          "Ihr Browser hat WebGPU, das läuft also auf der Grafikkarte.",
+        cpuNotice:
+          "Ihr Browser hat kein WebGPU, das läuft also auf der CPU — deutlich langsamer.",
         cpuNoticeWithEstimate:
           "Ihr Browser hat kein WebGPU, das läuft also auf der CPU — rechnen Sie mit etwa {seconds} Sekunden.",
         preview: "{from} → {to}",
-        tooLargeNotice: "{from} liegt über der Grenze von {max} Megapixel. Verkleinern Sie es zuerst oder nehmen Sie ein kleineres Bild.",
+        tooLargeNotice:
+          "{from} liegt über der Grenze von {max} Megapixel. Verkleinern Sie es zuerst oder nehmen Sie ein kleineres Bild.",
         run: "Vergrößern",
         working: "Wird bearbeitet…",
         stageEngine: "Laufzeit wird geladen…",
@@ -911,7 +968,8 @@ export const de = {
       },
     },
     cutout: {
-      blurb: "Klicken Sie ein Ding im Foto an und schneiden Sie nur das heraus. Läuft auf Ihrem Gerät.",
+      blurb:
+        "Klicken Sie ein Ding im Foto an und schneiden Sie nur das heraus. Läuft auf Ihrem Gerät.",
       metaTitle: "Objekt per Klick freistellen — im Browser",
       metaDescription:
         "Klicken Sie ein beliebiges Objekt im Foto an und stellen Sie es als transparentes PNG frei. Ein SAM-Modell unter Apache-2.0 läuft im Browser. Ohne Anmeldung.",
@@ -942,8 +1000,10 @@ export const de = {
       ui: {
         dropLabel: "Foto hier ablegen",
         dropHint: "PNG · JPG · WebP — eins nach dem anderen",
-        downloadNote: "Ein Foto vorzubereiten lädt rund {size} an Laufzeit und Modell herunter.",
-        cachedNote: "Es wird einmal geladen und von Ihrem Browser behalten — beim nächsten Foto bleibt nur das Lesen.",
+        downloadNote:
+          "Ein Foto vorzubereiten lädt rund {size} an Laufzeit und Modell herunter.",
+        cachedNote:
+          "Es wird einmal geladen und von Ihrem Browser behalten — beim nächsten Foto bleibt nur das Lesen.",
         prepare: "Dieses Foto vorbereiten",
         preparing: "Wird vorbereitet…",
         stageEngine: "Laufzeit wird geladen…",
@@ -963,7 +1023,8 @@ export const de = {
         resultAlt: "Das aus dem Foto freigestellte Objekt",
         runtimeWebgpu: "auf der GPU gerechnet",
         runtimeWasm: "auf der CPU gerechnet",
-        nothingFound: "Es ist fast nichts übrig geblieben. Klicken Sie näher an die Mitte des Objekts.",
+        nothingFound:
+          "Es ist fast nichts übrig geblieben. Klicken Sie näher an die Mitte des Objekts.",
         errEngine: "Die Laufzeit konnte nicht geladen werden",
         errModel: "Das Modell konnte nicht geladen werden",
         errUnsupportedInput: "Dieses Bild konnte nicht gelesen werden",
@@ -972,7 +1033,8 @@ export const de = {
       },
     },
     subtitles: {
-      blurb: "Macht aus dem Gesprochenen im Video Untertitel. Das Modell läuft auf Ihrem Gerät.",
+      blurb:
+        "Macht aus dem Gesprochenen im Video Untertitel. Das Modell läuft auf Ihrem Gerät.",
       metaTitle: "Untertitel erzeugen — im Browser",
       metaDescription:
         "Erzeugen Sie SRT- und VTT-Untertitel aus einem Video, ohne es hochzuladen. Ein Whisper-Modell unter Apache-2.0 läuft im Browser, in 99 Sprachen. Ohne Anmeldung.",
@@ -1020,8 +1082,10 @@ export const de = {
           de: "Deutsch",
           pt: "Portugiesisch",
         },
-        downloadNote: "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
-        cachedNote: "Es wird einmal geladen und von Ihrem Browser behalten — die nächste Datei startet sofort.",
+        downloadNote:
+          "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
+        cachedNote:
+          "Es wird einmal geladen und von Ihrem Browser behalten — die nächste Datei startet sofort.",
         noiseNote:
           "Bei verrauschten oder sehr alten Aufnahmen kann das Modell hängen bleiben und Wörter wiederholen. Mit sauberem Ton geht es deutlich besser.",
         run: "Untertitel schreiben",
@@ -1038,15 +1102,18 @@ export const de = {
         errEngine: "Die Laufzeit konnte nicht geladen werden",
         errModel: "Das Modell konnte nicht geladen werden",
         errNoAudio: "In dieser Datei ist kein Ton",
-        errUnsupportedInput: "Diese Datei konnte nicht gelesen werden — MP4, MOV, M4A, WAV oder MP3",
+        errUnsupportedInput:
+          "Diese Datei konnte nicht gelesen werden — MP4, MOV, M4A, WAV oder MP3",
         errTooLong: "Das ist länger als {minutes} Minuten",
         stop: "Anhalten",
-        stoppedNote: "Vorzeitig angehalten — die Untertitel reichen bis zur Stelle, an der Sie angehalten haben; der Rest des Tons fehlt darin.",
+        stoppedNote:
+          "Vorzeitig angehalten — die Untertitel reichen bis zur Stelle, an der Sie angehalten haben; der Rest des Tons fehlt darin.",
         errGeneric: "Die Untertitel konnten nicht geschrieben werden",
       },
     },
     "subtitle-translate": {
-      blurb: "Übersetzt eine Untertiteldatei in eine andere Sprache, auf Ihrem Gerät.",
+      blurb:
+        "Übersetzt eine Untertiteldatei in eine andere Sprache, auf Ihrem Gerät.",
       metaTitle: "Untertitel übersetzen — im Browser",
       metaDescription:
         "Übersetzen Sie SRT- und VTT-Untertitel zwischen 18 Sprachen, ohne sie hochzuladen. Ein MIT-lizenziertes Modell läuft im Browser. Ohne Anmeldung.",
@@ -1103,12 +1170,16 @@ export const de = {
           pl: "Polnisch",
           nl: "Niederländisch",
         },
-        downloadNote: "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
-        cachedNote: "Es wird einmal geladen und von Ihrem Browser behalten — die nächste Datei startet sofort.",
+        downloadNote:
+          "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
+        cachedNote:
+          "Es wird einmal geladen und von Ihrem Browser behalten — die nächste Datei startet sofort.",
         qualityNote:
           "Schlichte Sätze gelingen, Redewendungen oft nicht. Lesen Sie es durch, bevor Sie es veröffentlichen.",
-        encodingNote: "Diese Datei ist nicht UTF-8 und wurde als {encoding} gelesen. Prüfen Sie den Text unten.",
-        strippedNote: "Aus {lines} Zeilen wurden Formatierungs-Tags entfernt — sie kommen nicht zurück.",
+        encodingNote:
+          "Diese Datei ist nicht UTF-8 und wurde als {encoding} gelesen. Prüfen Sie den Text unten.",
+        strippedNote:
+          "Aus {lines} Zeilen wurden Formatierungs-Tags entfernt — sie kommen nicht zurück.",
         loadedSummary: "{lines} Zeilen · etwa {estimate}",
         unitMinutes: "{value} Min.",
         unitSeconds: "{value} Sek.",
@@ -1118,9 +1189,11 @@ export const de = {
         sameLanguage: "Wählen Sie zwei verschiedene Sprachen.",
         stageModel: "Modell wird geladen {percent}%",
         stageTranslating: "übersetzt {done} / {total}",
-        resultSummary: "{lines} Zeilen · {calls} übersetzt · {seconds}s gebraucht",
+        resultSummary:
+          "{lines} Zeilen · {calls} übersetzt · {seconds}s gebraucht",
         stoppedNote: "vorzeitig angehalten — der Rest ist unverändert",
-        failedNote: "{lines} Zeilen kamen kaputt zurück, deshalb blieb der Originaltext stehen.",
+        failedNote:
+          "{lines} Zeilen kamen kaputt zurück, deshalb blieb der Originaltext stehen.",
         downloadSrt: ".srt herunterladen",
         downloadVtt: ".vtt herunterladen",
         errEngine: "Die Laufzeit konnte nicht geladen werden",
@@ -1131,7 +1204,8 @@ export const de = {
       },
     },
     stems: {
-      blurb: "Trennt einen Song in Schlagzeug, Bass, Gesang und den Rest — auf Ihrem Gerät.",
+      blurb:
+        "Trennt einen Song in Schlagzeug, Bass, Gesang und den Rest — auf Ihrem Gerät.",
       metaTitle: "Stem-Trennung — Gesang & Schlagzeug",
       metaDescription:
         "Trennen Sie einen Track in Schlagzeug, Bass, Gesang und weitere Spuren, ohne ihn hochzuladen. Ein MIT-lizenziertes Demucs-Modell läuft im Browser.",
@@ -1165,9 +1239,12 @@ export const de = {
       ],
       ui: {
         dropLabel: "Audio- oder Videodatei hier ablegen",
-        dropHint: "MP4 · MOV · M4A · WAV · MP3 — die ersten {seconds} Sekunden werden genutzt",
-        downloadNote: "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
-        cachedNote: "Es wird einmal geladen und von Ihrem Browser behalten — die nächste Datei startet sofort.",
+        dropHint:
+          "MP4 · MOV · M4A · WAV · MP3 — die ersten {seconds} Sekunden werden genutzt",
+        downloadNote:
+          "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
+        cachedNote:
+          "Es wird einmal geladen und von Ihrem Browser behalten — die nächste Datei startet sofort.",
         slowNote:
           "Die Trennung läuft auf dem Prozessor: etwa {minutes} Min. für {seconds} Sekunden Ton. Deshalb ist dies eine Vorschau.",
         run: "In Stems trennen",
@@ -1185,12 +1262,14 @@ export const de = {
         errEngine: "Die Laufzeit konnte nicht geladen werden",
         errModel: "Das Modell konnte nicht geladen werden",
         errNoAudio: "In dieser Datei ist kein Ton",
-        errUnsupportedInput: "Diese Datei konnte nicht gelesen werden — MP4, MOV, M4A, WAV oder MP3",
+        errUnsupportedInput:
+          "Diese Datei konnte nicht gelesen werden — MP4, MOV, M4A, WAV oder MP3",
         errGeneric: "Die Stems konnten nicht getrennt werden",
       },
     },
     summarize: {
-      blurb: "Kürzt ein langes Dokument auf ein paar Sätze — ohne dass es den Tab verlässt.",
+      blurb:
+        "Kürzt ein langes Dokument auf ein paar Sätze — ohne dass es den Tab verlässt.",
       metaTitle: "Text zusammenfassen — ohne Upload",
       metaDescription:
         "Fassen Sie ein PDF, eine Textdatei oder eingefügten Text zusammen, ohne ihn hochzuladen. Ein kleines KI-Modell läuft in Ihrem Browser-Tab.",
@@ -1230,12 +1309,16 @@ export const de = {
         dropLabel: "Dokument hier ablegen",
         dropHint: "TXT · MD · HTML · PDF — oder den Text unten einfügen",
         textLabel: "Dokument",
-        textPlaceholder: "Fügen Sie den Text ein, der zusammengefasst werden soll…",
-        downloadNote: "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
-        cachedNote: "Es wird einmal geladen und von Ihrem Browser behalten — das nächste Dokument startet sofort.",
+        textPlaceholder:
+          "Fügen Sie den Text ein, der zusammengefasst werden soll…",
+        downloadNote:
+          "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
+        cachedNote:
+          "Es wird einmal geladen und von Ihrem Browser behalten — das nächste Dokument startet sofort.",
         qualityNote:
           "Das Modell ist klein: Es trifft den Kern und kann Details verfehlen. Prüfen Sie alles Wichtige am Dokument selbst nach.",
-        loadedSummary: "Rund {tokens} Token · etwa {seconds}s, sobald das Modell bereit ist",
+        loadedSummary:
+          "Rund {tokens} Token · etwa {seconds}s, sobald das Modell bereit ist",
         tooShortNote:
           "Das ist kürzer als {minimum} Token. Darunter fasst das Modell nicht mehr zusammen, sondern erfindet Inhalte.",
         run: "Zusammenfassen",
@@ -1250,9 +1333,12 @@ export const de = {
         errNoWebgpu: "Dieses Werkzeug braucht WebGPU",
         errEngine: "Die Laufzeit konnte nicht geladen werden",
         errModel: "Das Modell konnte nicht geladen werden",
-        errUnsupportedInput: "Diese Datei konnte nicht gelesen werden — TXT, MD, HTML oder PDF",
-        errNoText: "In dieser Datei wurde kein Text gefunden — ein eingescanntes PDF braucht zuerst das Werkzeug Bild zu Text",
-        errTooShort: "Zu kurz zum Zusammenfassen: {tokens} Token, nötig sind mindestens {minimum}",
+        errUnsupportedInput:
+          "Diese Datei konnte nicht gelesen werden — TXT, MD, HTML oder PDF",
+        errNoText:
+          "In dieser Datei wurde kein Text gefunden — ein eingescanntes PDF braucht zuerst das Werkzeug Bild zu Text",
+        errTooShort:
+          "Zu kurz zum Zusammenfassen: {tokens} Token, nötig sind mindestens {minimum}",
         errTooLong: "Zu lang: {tokens} Token, die Grenze liegt bei {maximum}",
         errGeneric: "Das Dokument konnte nicht zusammengefasst werden",
       },

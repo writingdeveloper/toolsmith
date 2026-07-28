@@ -24,6 +24,7 @@ import {
 } from "@/lib/onnx/runtime";
 
 export { ENGINE_BYTES } from "@/lib/onnx/runtime";
+import { MAX_PIXELS as TOOL_MAX_PIXELS } from "@/lib/tools";
 
 const MODEL_URL =
   "https://huggingface.co/CoderViking/realesr-general-x4v3-onnx/resolve/main/realesr-general-x4v3.onnx";
@@ -48,13 +49,14 @@ const TILE_CORE = 384;
 const TILE_PAD = 32;
 
 /**
- * 한 번에 받는 원본 화소 수 상한.
+ * 한 번에 받는 원본 화소 수 상한. 넘으면 **시작하지 않고 그렇다고 말한다** —
+ * 브라우저를 몇 분 멈춰 놓고 결과를 못 내는 것이 가장 나쁘다.
  *
- * ×4 는 화소가 16배가 된다 — 100만 화소를 넣으면 1600만 화소가 나오고, 그것만으로
- * RGBA 64MB 다. 시간도 실측으로 CPU 100만 화소에 1분 남짓이다. 넘으면 **시작하지 않고
- * 그렇다고 말한다** — 브라우저를 몇 분 멈춰 놓고 결과를 못 내는 것이 가장 나쁘다.
+ * **값은 `lib/tools.ts` 가 갖는다.** 다른 도구가 "여기로 결과를 보낼 수 있는가" 를
+ * 판단할 때 같은 숫자를 봐야 하는데, 그쪽에서 이 파일을 가져오면 ONNX 갈래가 모든
+ * 페이지로 딸려 들어간다. 그래서 방향이 이쪽이다.
  */
-export const MAX_PIXELS = 1_000_000;
+export const MAX_PIXELS = TOOL_MAX_PIXELS.upscale as number;
 
 /** 실측 처리 속도(원본 화소당 초). CPU wasm 단일 스레드, 2026-07-26. */
 export const CPU_SECONDS_PER_PIXEL = 16.5 / (512 * 512);

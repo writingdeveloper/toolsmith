@@ -52,6 +52,23 @@ test("만든 형식이 안 맞으면 그 도구는 목록에서 빠진다", () =
   expect(chainTargets("pdf-split", { name: "pages.zip", type: "application/zip" })).toEqual([]);
 });
 
+test("형식이 맞아도 너무 크면 그 도구는 목록에서 빠진다", () => {
+  /*
+   * 실측(2026-07-28, 실물 인물 사진 3839×5759 = 22메가픽셀): 배경을 지운 뒤
+   * "이미지 업스케일 →" 이 떴는데 업스케일은 1메가픽셀까지만 받는다. 눌러 보면
+   * 버튼이 비활성이고 "상한을 넘습니다" 만 적혀 있었다 — **눌러 보고 나서야 못 한다는
+   * 것을 아는 것**이 규칙 3 이 막으려는 상황이다. 갈 수 있는 길(크기 조절)은 남는다.
+   */
+  const huge = { name: "portrait.png", type: "image/png", pixels: 3839 * 5759 };
+  expect(chainTargets("remove-bg", huge)).toEqual(["image-convert", "image-resize"]);
+
+  const small = { name: "portrait.png", type: "image/png", pixels: 800 * 600 };
+  expect(chainTargets("remove-bg", small)).toContain("upscale");
+
+  // 크기를 모르면 막지 않는다 — 아는 것만 걸러야 멀쩡한 길을 지우지 않는다
+  expect(chainTargets("remove-bg", { name: "a.png", type: "image/png" })).toContain("upscale");
+});
+
 test("accept 규칙은 확장자·정확 일치·와일드카드를 브라우저와 같게 읽는다", () => {
   expect(acceptsFile("image/*,.heic", { name: "a.png", type: "image/png" })).toBe(true);
   expect(acceptsFile("image/*,.heic", { name: "a.heic", type: "" })).toBe(true);

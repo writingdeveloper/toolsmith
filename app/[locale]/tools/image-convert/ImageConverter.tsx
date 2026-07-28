@@ -18,7 +18,11 @@ import {
   type ConvertOptions,
   type OutputFormat,
 } from "@/lib/image/convert-core";
-import type { WorkerRequest, WorkerRequestPayload, WorkerResponse } from "./convert.worker";
+import type {
+  WorkerRequest,
+  WorkerRequestPayload,
+  WorkerResponse,
+} from "./convert.worker";
 
 type Ui = Dictionary["tools"]["image-convert"]["ui"];
 type Common = Dictionary["common"];
@@ -29,17 +33,33 @@ interface Item {
   id: number;
   file: File;
   status: "queued" | "working" | "done" | "error";
-  result?: { url: string; size: number; width: number; height: number; name: string };
+  result?: {
+    url: string;
+    size: number;
+    width: number;
+    height: number;
+    name: string;
+  };
   error?: string;
   /** 움직이는 그림인가. 판별 전에는 undefined. */
   animated?: boolean;
 }
 
 function describeError(ui: Ui, message: string): string {
-  return message === "UNSUPPORTED_INPUT" ? ui.errUnsupportedInput : ui.errGeneric;
+  return message === "UNSUPPORTED_INPUT"
+    ? ui.errUnsupportedInput
+    : ui.errGeneric;
 }
 
-export function ImageConverter({ chain, ui, common }: { chain: ChainCopy; ui: Ui; common: Common }) {
+export function ImageConverter({
+  chain,
+  ui,
+  common,
+}: {
+  chain: ChainCopy;
+  ui: Ui;
+  common: Common;
+}) {
   /** 워커를 못 만들었거나 형식 조사가 실패한 경우. 능력 판정과 원인이 다르다. */
   const [broken, setBroken] = useState(false);
   const capable = useCapability(canRunImageTools);
@@ -52,19 +72,27 @@ export function ImageConverter({ chain, ui, common }: { chain: ChainCopy; ui: Ui
   const [busy, setBusy] = useState(false);
 
   const workerRef = useRef<Worker | null>(null);
-  const pendingRef = useRef(new Map<number, { resolve: (v: WorkerResponse) => void; reject: (e: Error) => void }>());
+  const pendingRef = useRef(
+    new Map<
+      number,
+      { resolve: (v: WorkerResponse) => void; reject: (e: Error) => void }
+    >(),
+  );
   const rpcId = useRef(0);
   const itemId = useRef(0);
 
-  const callWorker = useCallback((request: WorkerRequestPayload): Promise<WorkerResponse> => {
-    const worker = workerRef.current;
-    if (!worker) return Promise.reject(new Error("NO_WORKER"));
-    const id = ++rpcId.current;
-    return new Promise((resolve, reject) => {
-      pendingRef.current.set(id, { resolve, reject });
-      worker.postMessage({ ...request, id } as WorkerRequest);
-    });
-  }, []);
+  const callWorker = useCallback(
+    (request: WorkerRequestPayload): Promise<WorkerResponse> => {
+      const worker = workerRef.current;
+      if (!worker) return Promise.reject(new Error("NO_WORKER"));
+      const id = ++rpcId.current;
+      return new Promise((resolve, reject) => {
+        pendingRef.current.set(id, { resolve, reject });
+        worker.postMessage({ ...request, id } as WorkerRequest);
+      });
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!capable) return;
@@ -139,7 +167,9 @@ export function ImageConverter({ chain, ui, common }: { chain: ChainCopy; ui: Ui
             if (response.kind !== "probed") return;
             setItems((prev) =>
               prev.map((entry) =>
-                entry.id === item.id ? { ...entry, animated: response.animated } : entry,
+                entry.id === item.id
+                  ? { ...entry, animated: response.animated }
+                  : entry,
               ),
             );
           })
@@ -166,10 +196,18 @@ export function ImageConverter({ chain, ui, common }: { chain: ChainCopy; ui: Ui
 
     for (const target of targets) {
       setItems((prev) =>
-        prev.map((item) => (item.id === target.id ? { ...item, status: "working", error: undefined } : item)),
+        prev.map((item) =>
+          item.id === target.id
+            ? { ...item, status: "working", error: undefined }
+            : item,
+        ),
       );
       try {
-        const response = await callWorker({ kind: "convert", file: target.file, options });
+        const response = await callWorker({
+          kind: "convert",
+          file: target.file,
+          options,
+        });
         if (response.kind !== "converted") throw new Error("UNKNOWN");
         succeeded += 1;
         const url = URL.createObjectURL(response.blob);
@@ -185,7 +223,10 @@ export function ImageConverter({ chain, ui, common }: { chain: ChainCopy; ui: Ui
                 size: response.blob.size,
                 width: response.width,
                 height: response.height,
-                name: replaceExtension(target.file.name, FORMAT_EXTENSION[options.format]),
+                name: replaceExtension(
+                  target.file.name,
+                  FORMAT_EXTENSION[options.format],
+                ),
               },
             };
           }),
@@ -325,22 +366,38 @@ export function ImageConverter({ chain, ui, common }: { chain: ChainCopy; ui: Ui
 
           <ul className="divide-y divide-border rounded-xl border border-border">
             {items.map((item) => (
-              <li key={item.id} className="flex flex-wrap items-center gap-3 p-4">
+              <li
+                key={item.id}
+                className="flex flex-wrap items-center gap-3 p-4"
+              >
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{item.file.name}</p>
+                  <p className="truncate text-sm font-medium">
+                    {item.file.name}
+                  </p>
                   <p className="text-xs text-muted">
                     {formatBytes(item.file.size)}
                     {item.result && (
                       <>
                         {" → "}
-                        <span className="text-fg">{formatBytes(item.result.size)}</span>{" "}
+                        <span className="text-fg">
+                          {formatBytes(item.result.size)}
+                        </span>{" "}
                         <span
                           className={
-                            savingsPercent(item.file.size, item.result.size) >= 0 ? "text-ok" : "text-warn"
+                            savingsPercent(item.file.size, item.result.size) >=
+                            0
+                              ? "text-ok"
+                              : "text-warn"
                           }
                         >
-                          ({savingsPercent(item.file.size, item.result.size) >= 0 ? "-" : "+"}
-                          {Math.abs(savingsPercent(item.file.size, item.result.size))}%)
+                          (
+                          {savingsPercent(item.file.size, item.result.size) >= 0
+                            ? "-"
+                            : "+"}
+                          {Math.abs(
+                            savingsPercent(item.file.size, item.result.size),
+                          )}
+                          %)
                         </span>{" "}
                         · {item.result.width}×{item.result.height}
                       </>
@@ -356,7 +413,9 @@ export function ImageConverter({ chain, ui, common }: { chain: ChainCopy; ui: Ui
                 {item.status === "working" && (
                   <span className="text-sm text-muted">{ui.itemWorking}</span>
                 )}
-                {item.status === "error" && <span className="text-sm text-err">{item.error}</span>}
+                {item.status === "error" && (
+                  <span className="text-sm text-err">{item.error}</span>
+                )}
                 {item.status === "done" && item.result && (
                   <a
                     href={item.result.url}
@@ -376,7 +435,15 @@ export function ImageConverter({ chain, ui, common }: { chain: ChainCopy; ui: Ui
         chain={chain}
         from="image-convert"
         files={items.flatMap((item) =>
-          item.result ? [{ url: item.result.url, name: item.result.name }] : [],
+          item.result
+            ? [
+                {
+                  url: item.result.url,
+                  name: item.result.name,
+                  pixels: item.result.width * item.result.height,
+                },
+              ]
+            : [],
         )}
       />
     </div>

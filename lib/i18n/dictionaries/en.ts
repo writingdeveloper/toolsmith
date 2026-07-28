@@ -37,7 +37,8 @@ export const en = {
     relatedHeading: "Other tools",
     sendToHeading: "Keep going with this result:",
     notFoundTitle: "This page does not exist",
-    notFoundLead: "The address may be mistyped, or the page may have been moved.",
+    notFoundLead:
+      "The address may be mistyped, or the page may have been moved.",
     notFoundHome: "Go to the tool list",
     chooseFile: "Choose files",
     download: "Download",
@@ -97,7 +98,8 @@ export const en = {
 
   tools: {
     "image-convert": {
-      blurb: "HEIC, PNG, JPG, WebP and AVIF in every direction. Compress and resize in one pass.",
+      blurb:
+        "HEIC, PNG, JPG, WebP and AVIF in every direction. Compress and resize in one pass.",
       metaTitle: "Image Converter — HEIC, PNG, JPG, WebP, AVIF",
       metaDescription:
         "Turn iPhone HEIC photos into JPG, PNG into WebP. Convert and compress right in your browser with no upload. No sign-up, no file limit.",
@@ -118,12 +120,14 @@ export const en = {
         },
       ],
       ui: {
-          animatedNote: "This image is animated. Only the first frame is kept — the animation is lost.",
+        animatedNote:
+          "This image is animated. Only the first frame is kept — the animation is lost.",
         unsupportedTitle: "This browser can't run image conversion.",
         unsupportedHint:
           "Please open it in an up-to-date Chrome, Edge, Firefox or Safari 17+ that supports OffscreenCanvas.",
         dropLabel: "Drop your images here",
-        dropHint: "HEIC · PNG · JPG · WebP · AVIF · GIF · BMP — several at once",
+        dropHint:
+          "HEIC · PNG · JPG · WebP · AVIF · GIF · BMP — several at once",
         formatLabel: "Output format",
         qualityLabel: "Quality {value}",
         qualityLossless: "Quality (PNG is lossless)",
@@ -139,7 +143,8 @@ export const en = {
     },
 
     "pdf-merge": {
-      blurb: "Several PDFs into one, in the order you choose. Pages are copied, never re-rendered.",
+      blurb:
+        "Several PDFs into one, in the order you choose. Pages are copied, never re-rendered.",
       metaTitle: "Merge PDF — combine several PDFs into one",
       metaDescription:
         "Join multiple PDFs in any order you like. Runs entirely in your browser with no upload, no sign-up, no watermark and no file limit.",
@@ -181,7 +186,8 @@ export const en = {
     },
 
     "pdf-split": {
-      blurb: "Pull out the pages you want, or explode every page into its own PDF inside a ZIP.",
+      blurb:
+        "Pull out the pages you want, or explode every page into its own PDF inside a ZIP.",
       metaTitle: "Split PDF — extract pages or burst to singles",
       metaDescription:
         "Pull selected pages out of a PDF or split every page into its own file. Runs entirely in your browser with no upload, no sign-up and no watermark.",
@@ -207,7 +213,8 @@ export const en = {
       ],
       ui: {
         dropLabel: "Drop a PDF here",
-        dropHint: "One at a time — pull out the pages you want, or burst every page apart",
+        dropHint:
+          "One at a time — pull out the pages you want, or burst every page apart",
         reading: "reading…",
         pageCount: "{n} pages",
         modeExtract: "Extract a page range",
@@ -229,7 +236,8 @@ export const en = {
     },
 
     "pdf-organize": {
-      blurb: "See every page, turn the sideways ones upright and drop the ones you don't want.",
+      blurb:
+        "See every page, turn the sideways ones upright and drop the ones you don't want.",
       metaTitle: "Rotate PDF & delete pages — fix a crooked scan",
       metaDescription:
         "Turn sideways scans upright and drop the pages you don't need. Every page is shown as a thumbnail. All in your browser — no upload, no sign-up.",
@@ -275,7 +283,8 @@ export const en = {
     },
 
     "pdf-compress": {
-      blurb: "Re-compress the photos inside a PDF. The text stays text — nothing is flattened.",
+      blurb:
+        "Re-compress the photos inside a PDF. The text stays text — nothing is flattened.",
       metaTitle: "Compress PDF — shrink the file, keep the text",
       metaDescription:
         "Make a PDF smaller by re-compressing the photos inside it. Text stays selectable and searchable. Runs entirely in your browser with no upload and no sign-up.",
@@ -313,14 +322,17 @@ export const en = {
         working: "Compressing…",
         outputName: "{stem}-compressed.pdf",
         rewroteImages: "Re-compressed {n} of {total} photos",
-        keepOriginal: "Keep the file you already have — this one would not be any smaller.",
+        keepOriginal:
+          "Keep the file you already have — this one would not be any smaller.",
         noImages: "This PDF has no photos to re-compress.",
-        alreadySmall: "The photos were already well compressed — this could not be made smaller.",
+        alreadySmall:
+          "The photos were already well compressed — this could not be made smaller.",
       },
     },
 
     "data-query": {
-      blurb: "Run SQL over a CSV or Parquet file. The file never leaves your device.",
+      blurb:
+        "Run SQL over a CSV or Parquet file. The file never leaves your device.",
       metaTitle: "CSV & Parquet SQL Query — in your browser",
       metaDescription:
         "Open a CSV or Parquet file and query it with SQL. Powered by DuckDB, running entirely in your browser — no upload, no sign-up, no row limit.",
@@ -351,8 +363,10 @@ export const en = {
       ui: {
         dropLabel: "Drop a CSV or Parquet file here",
         dropHint: "CSV · TSV · Parquet · JSON — one at a time",
-        downloadNote: "Opening the file downloads the DuckDB engine, about {size}.",
-        localNote: "The file itself is not uploaded — DuckDB reads it from your disk.",
+        downloadNote:
+          "Opening the file downloads the DuckDB engine, about {size}.",
+        localNote:
+          "The file itself is not uploaded — DuckDB reads it from your disk.",
         open: "Open and query",
         opening: "Opening…",
         rowCount: "{rows} rows",
@@ -373,7 +387,8 @@ export const en = {
     },
 
     ocr: {
-      blurb: "Pull the text out of a photo, screenshot or scanned PDF. Nothing is uploaded.",
+      blurb:
+        "Pull the text out of a photo, screenshot or scanned PDF. Nothing is uploaded.",
       metaTitle: "Image & PDF to Text — OCR in your browser",
       metaDescription:
         "Read the text out of a photo, screenshot or scanned PDF without uploading it. Seven languages, runs entirely in your browser, no sign-up.",
@@ -406,8 +421,10 @@ export const en = {
         dropHint: "PNG · JPG · WebP · PDF — one at a time",
         pdfLimit: "up to {max} pages",
         languageLabel: "Language in the document",
-        downloadNote: "Pressing the button downloads about {size} of engine and language data.",
-        cachedNote: "It is fetched once and kept by your browser — the next document starts straight away.",
+        downloadNote:
+          "Pressing the button downloads about {size} of engine and language data.",
+        cachedNote:
+          "It is fetched once and kept by your browser — the next document starts straight away.",
         run: "Read the text",
         working: "Reading…",
         stageEngine: "loading engine {percent}%",
@@ -417,9 +434,11 @@ export const en = {
         copy: "Copy",
         copied: "Copied",
         resultLabel: "Recognised text",
-        truncated: "This document has {total} pages; only the first {max} were read.",
+        truncated:
+          "This document has {total} pages; only the first {max} were read.",
         nothingFound: "No text was found in this image.",
-        lowConfidence: "Confidence is low — check it against the original before you trust it.",
+        lowConfidence:
+          "Confidence is low — check it against the original. The usual cause is the wrong document language above.",
         errEngine: "The OCR engine could not be loaded",
         errTooManyPages: "Only {max} pages can be read at once",
         languages: {
@@ -435,7 +454,8 @@ export const en = {
     },
 
     "image-compress": {
-      blurb: "Make photos smaller without changing their format. Drag the quality down and watch the size drop.",
+      blurb:
+        "Make photos smaller without changing their format. Drag the quality down and watch the size drop.",
       metaTitle: "Compress Images — JPG, PNG, WebP",
       metaDescription:
         "Shrink photos in your browser without uploading them. Keeps the original format, shows exactly how much each file saved. No sign-up, no file limit.",
@@ -473,7 +493,8 @@ export const en = {
         formatLabel: "Output",
         formatKeep: "Keep original format",
         keptNote: "already as small as we can make it — original kept",
-        losslessNote: "PNG is lossless, so the quality slider will not shrink it. Reduce the size, or switch the output to WebP.",
+        losslessNote:
+          "PNG is lossless, so the quality slider will not shrink it. Reduce the size, or switch the output to WebP.",
         run: "Compress {n} file(s)",
         working: "Compressing…",
         total: "{n} files · {before} → {after} ({percent}% smaller)",
@@ -483,7 +504,8 @@ export const en = {
     },
 
     "image-resize": {
-      blurb: "Resize photos to an exact width and crop them square, 4:5 or 16:9. Nothing is uploaded.",
+      blurb:
+        "Resize photos to an exact width and crop them square, 4:5 or 16:9. Nothing is uploaded.",
       metaTitle: "Resize & Crop Images — exact px, 1:1, 4:5",
       metaDescription:
         "Resize a photo to an exact width and crop it to a square or 4:5 for social. Runs in your browser with no upload, no sign-up and no watermark.",
@@ -530,7 +552,8 @@ export const en = {
     },
 
     "video-convert": {
-      blurb: "MOV to MP4 without re-encoding, or MP4 to WebM for the web. Nothing is uploaded.",
+      blurb:
+        "MOV to MP4 without re-encoding, or MP4 to WebM for the web. Nothing is uploaded.",
       metaTitle: "MOV to MP4 & MP4 to WebM Converter",
       metaDescription:
         "Convert MOV to MP4 with no re-encoding, or MP4 to WebM with VP9 and Opus. Runs in your browser — no upload, no sign-up, no file size limit.",
@@ -567,10 +590,14 @@ export const en = {
         targetLabel: "Convert to",
         targetMp4: "MP4",
         targetWebm: "WebM",
-        mp4Note: "The codecs are left alone and only the container is rewritten. Nothing is lost and it takes seconds.",
-        webmNote: "H.264 cannot live in a WebM, so the picture is re-encoded to VP9 and the sound to Opus. This takes a while and costs a little quality.",
-        alreadyMp4: "This file is already an MP4 — converting would only rewrite the container.",
-        mp4Unavailable: "This video's codec can't be copied into an MP4 as it is.",
+        mp4Note:
+          "The codecs are left alone and only the container is rewritten. Nothing is lost and it takes seconds.",
+        webmNote:
+          "H.264 cannot live in a WebM, so the picture is re-encoded to VP9 and the sound to Opus. This takes a while and costs a little quality.",
+        alreadyMp4:
+          "This file is already an MP4 — converting would only rewrite the container.",
+        mp4Unavailable:
+          "This video's codec can't be copied into an MP4 as it is.",
         webmUnavailable: "This browser can't encode WebM. MP4 still works.",
         sizeLabel: "Size",
         sizeOriginal: "Keep original size",
@@ -591,7 +618,8 @@ export const en = {
     },
 
     "video-compress": {
-      blurb: "Shrink an MP4 in your browser. No 30MB toolchain to download — your device does the work.",
+      blurb:
+        "Shrink an MP4 in your browser. No 30MB toolchain to download — your device does the work.",
       metaTitle: "Compress Video — shrink MP4 in your browser",
       metaDescription:
         "Make an MP4 smaller without uploading it. Runs on your device with the browser's own video encoder — nothing to install, no file ever leaves it.",
@@ -639,7 +667,8 @@ export const en = {
     },
 
     "video-trim": {
-      blurb: "Cut a clip out of a video without re-encoding it. Nothing is lost, and it takes seconds.",
+      blurb:
+        "Cut a clip out of a video without re-encoding it. Nothing is lost, and it takes seconds.",
       metaTitle: "Trim Video — cut an MP4 in your browser",
       metaDescription:
         "Cut a section out of an MP4 or MOV without uploading it. Nothing is re-encoded, so the quality is untouched and it finishes in seconds. Runs in your browser.",
@@ -676,7 +705,8 @@ export const en = {
         startLabel: "Start (seconds)",
         endLabel: "End (seconds)",
         grabHere: "Use playhead",
-        snapped: "Cuts at {actual}s, not {asked}s — that is the nearest keyframe before it.",
+        snapped:
+          "Cuts at {actual}s, not {asked}s — that is the nearest keyframe before it.",
         onKeyframe: "This start lands exactly on a keyframe.",
         run: "Trim",
         working: "Trimming…",
@@ -688,7 +718,8 @@ export const en = {
     },
 
     "video-to-gif": {
-      blurb: "Turn a clip into a looping GIF. Your device does the work — nothing is uploaded.",
+      blurb:
+        "Turn a clip into a looping GIF. Your device does the work — nothing is uploaded.",
       metaTitle: "Video to GIF — MP4 to GIF in your browser",
       metaDescription:
         "Make a looping GIF from an MP4 or MOV without uploading it. Choose the frame rate and size and see the result before you save. All in your browser.",
@@ -737,7 +768,8 @@ export const en = {
         working: "Building…",
         outputName: "{stem}.gif",
         resultFrames: "{n} frames · {fps} fps",
-        truncated: "Only the first {n} frames fit, so the end of the clip is missing.",
+        truncated:
+          "Only the first {n} frames fit, so the end of the clip is missing.",
         biggerNote:
           "The GIF is larger than the video. That is normal — GIF has no motion compression.",
         previewAlt: "The GIF that was just made",
@@ -745,7 +777,8 @@ export const en = {
     },
 
     "audio-extract": {
-      blurb: "Pull the sound out of a video. Nothing is re-encoded, so nothing is lost.",
+      blurb:
+        "Pull the sound out of a video. Nothing is re-encoded, so nothing is lost.",
       metaTitle: "Extract Audio from Video — MP4 to M4A or WAV",
       metaDescription:
         "Take the soundtrack out of an MP4 or MOV without uploading it. Keep it lossless as M4A or get a WAV that opens anywhere. Runs entirely in your browser.",
@@ -779,9 +812,11 @@ export const en = {
         seconds: "s",
         channels: "{n} channels",
         formatM4a: "M4A — keep the original",
-        formatM4aHint: "Lifts the track out untouched. Small, and identical to the video's audio.",
+        formatM4aHint:
+          "Lifts the track out untouched. Small, and identical to the video's audio.",
         formatWav: "WAV — opens anywhere",
-        formatWavHint: "Uncompressed PCM for editors and older software. Much larger.",
+        formatWavHint:
+          "Uncompressed PCM for editors and older software. Much larger.",
         run: "Extract audio",
         working: "Extracting…",
         outputNameM4a: "{stem}.m4a",
@@ -790,7 +825,8 @@ export const en = {
       },
     },
     "remove-bg": {
-      blurb: "Cut the background out of a photo. The model runs on your device.",
+      blurb:
+        "Cut the background out of a photo. The model runs on your device.",
       metaTitle: "Background Remover — in your browser",
       metaDescription:
         "Remove the background from a photo without uploading it. An open Apache-2.0 model runs inside your browser and hands you a transparent PNG. No sign-up.",
@@ -828,8 +864,10 @@ export const en = {
         backgroundTransparent: "Transparent",
         backgroundWhite: "White",
         backgroundBlack: "Black",
-        downloadNote: "Pressing the button downloads about {size} of runtime and model.",
-        cachedNote: "It is fetched once and kept by your browser — the next photo starts straight away.",
+        downloadNote:
+          "Pressing the button downloads about {size} of runtime and model.",
+        cachedNote:
+          "It is fetched once and kept by your browser — the next photo starts straight away.",
         run: "Remove the background",
         working: "Working…",
         stageEngine: "loading the runtime…",
@@ -838,8 +876,10 @@ export const en = {
         resultAlt: "The photo with its background removed",
         runtimeWebgpu: "ran on the GPU",
         runtimeWasm: "ran on the CPU",
-        unsureNote: "The model was not sure here: much of what it kept is only half-transparent, so the cut-out will look like a ghost. Try the click-to-cut-out tool, which lets you point at the object you want.",
-        nothingFound: "The model found no clear subject here, so almost everything was cut away. A plainer background helps.",
+        unsureNote:
+          "The model was not sure here: much of what it kept is only half-transparent, so the cut-out will look like a ghost. Try the click-to-cut-out tool, which lets you point at the object you want.",
+        nothingFound:
+          "The model found no clear subject here, so almost everything was cut away. A plainer background helps.",
         errEngine: "The runtime could not be loaded",
         errModel: "The model could not be downloaded",
         errUnsupportedInput: "This image could not be read",
@@ -847,7 +887,8 @@ export const en = {
       },
     },
     upscale: {
-      blurb: "Enlarge a small image without it going soft. Runs on your device.",
+      blurb:
+        "Enlarge a small image without it going soft. Runs on your device.",
       metaTitle: "Image Upscaler 4× — in your browser",
       metaDescription:
         "Enlarge a photo 2× or 4× without uploading it. A BSD-licensed Real-ESRGAN model runs inside your browser and keeps the edges sharp. No sign-up.",
@@ -889,14 +930,19 @@ export const en = {
         scaleLabel: "Enlarge by",
         scaleOption: "{n}×",
         formatLabel: "Save as",
-        downloadNote: "Pressing the button downloads about {size} of runtime and model.",
-        cachedNote: "It is fetched once and kept by your browser — the next picture starts straight away.",
-        gpuNotice: "Your browser has WebGPU, so this runs on the graphics card.",
-        cpuNotice: "Your browser has no WebGPU, so this runs on the CPU — considerably slower.",
+        downloadNote:
+          "Pressing the button downloads about {size} of runtime and model.",
+        cachedNote:
+          "It is fetched once and kept by your browser — the next picture starts straight away.",
+        gpuNotice:
+          "Your browser has WebGPU, so this runs on the graphics card.",
+        cpuNotice:
+          "Your browser has no WebGPU, so this runs on the CPU — considerably slower.",
         cpuNoticeWithEstimate:
           "Your browser has no WebGPU, so this runs on the CPU — expect roughly {seconds} seconds.",
         preview: "{from} → {to}",
-        tooLargeNotice: "{from} is over the {max} megapixel limit. Shrink it first, or use a smaller picture.",
+        tooLargeNotice:
+          "{from} is over the {max} megapixel limit. Shrink it first, or use a smaller picture.",
         run: "Upscale",
         working: "Working…",
         stageEngine: "loading the runtime…",
@@ -914,7 +960,8 @@ export const en = {
       },
     },
     cutout: {
-      blurb: "Click a thing in a photo and cut just that out. Runs on your device.",
+      blurb:
+        "Click a thing in a photo and cut just that out. Runs on your device.",
       metaTitle: "Cut out an object — click, in your browser",
       metaDescription:
         "Click any object in a photo and cut it out as a transparent PNG. An Apache-2.0 SAM model runs inside your browser, nothing is uploaded. No sign-up.",
@@ -945,8 +992,10 @@ export const en = {
       ui: {
         dropLabel: "Drop a photo here",
         dropHint: "PNG · JPG · WebP — one at a time",
-        downloadNote: "Preparing a photo downloads about {size} of runtime and model.",
-        cachedNote: "It is fetched once and kept by your browser — the next photo only needs the reading.",
+        downloadNote:
+          "Preparing a photo downloads about {size} of runtime and model.",
+        cachedNote:
+          "It is fetched once and kept by your browser — the next photo only needs the reading.",
         prepare: "Prepare this photo",
         preparing: "Preparing…",
         stageEngine: "loading the runtime…",
@@ -966,7 +1015,8 @@ export const en = {
         resultAlt: "The object cut out of the photo",
         runtimeWebgpu: "ran on the GPU",
         runtimeWasm: "ran on the CPU",
-        nothingFound: "Almost nothing was kept. Try clicking nearer the middle of the object.",
+        nothingFound:
+          "Almost nothing was kept. Try clicking nearer the middle of the object.",
         errEngine: "The runtime could not be loaded",
         errModel: "The model could not be downloaded",
         errUnsupportedInput: "This image could not be read",
@@ -975,7 +1025,8 @@ export const en = {
       },
     },
     subtitles: {
-      blurb: "Turn speech in a video into subtitles. The model runs on your device.",
+      blurb:
+        "Turn speech in a video into subtitles. The model runs on your device.",
       metaTitle: "Subtitle Generator — in your browser",
       metaDescription:
         "Generate SRT and VTT subtitles from a video without uploading it. An Apache-2.0 Whisper model runs inside your browser in 99 languages. No sign-up.",
@@ -1023,8 +1074,10 @@ export const en = {
           de: "German",
           pt: "Portuguese",
         },
-        downloadNote: "Pressing the button downloads about {size} of runtime and model.",
-        cachedNote: "It is fetched once and kept by your browser — the next file starts straight away.",
+        downloadNote:
+          "Pressing the button downloads about {size} of runtime and model.",
+        cachedNote:
+          "It is fetched once and kept by your browser — the next file starts straight away.",
         noiseNote:
           "On noisy or very old recordings the model can get stuck repeating the same words. Clean audio works much better.",
         run: "Write the subtitles",
@@ -1041,15 +1094,18 @@ export const en = {
         errEngine: "The runtime could not be loaded",
         errModel: "The model could not be downloaded",
         errNoAudio: "There is no sound in this file",
-        errUnsupportedInput: "This file could not be read — MP4, MOV, M4A, WAV or MP3",
+        errUnsupportedInput:
+          "This file could not be read — MP4, MOV, M4A, WAV or MP3",
         errTooLong: "This is longer than {minutes} minutes",
         stop: "Stop",
-        stoppedNote: "Stopped early — the subtitles end where you stopped, so the rest of the audio is not in them.",
+        stoppedNote:
+          "Stopped early — the subtitles end where you stopped, so the rest of the audio is not in them.",
         errGeneric: "The subtitles could not be written",
       },
     },
     "subtitle-translate": {
-      blurb: "Translate a subtitle file into another language, on your own machine.",
+      blurb:
+        "Translate a subtitle file into another language, on your own machine.",
       metaTitle: "Subtitle Translator — in your browser",
       metaDescription:
         "Translate SRT and VTT subtitles between 18 languages without uploading them. An MIT-licensed model runs inside your browser. No sign-up, no API key.",
@@ -1062,7 +1118,7 @@ export const en = {
         },
         {
           q: "How good is the translation?",
-          a: "Good enough to follow, not good enough to publish unedited. Plain sentences come out well. Idioms are where it slips: \"let's wrap this up\" came back as something closer to \"let's get this started\" in both Spanish and German. It also gets the occasional article or plural wrong. Treat it as a solid first draft that a human still reads through.",
+          a: 'Good enough to follow, not good enough to publish unedited. Plain sentences come out well. Idioms are where it slips: "let\'s wrap this up" came back as something closer to "let\'s get this started" in both Spanish and German. It also gets the occasional article or plural wrong. Treat it as a solid first draft that a human still reads through.',
         },
         {
           q: "Why this model and not a bigger one?",
@@ -1106,12 +1162,16 @@ export const en = {
           pl: "Polish",
           nl: "Dutch",
         },
-        downloadNote: "Pressing the button downloads about {size} of runtime and model.",
-        cachedNote: "It is fetched once and kept by your browser — the next file starts straight away.",
+        downloadNote:
+          "Pressing the button downloads about {size} of runtime and model.",
+        cachedNote:
+          "It is fetched once and kept by your browser — the next file starts straight away.",
         qualityNote:
           "Plain sentences come out well; idioms often do not. Read it through before you publish it.",
-        encodingNote: "This file is not UTF-8, so it was read as {encoding}. Check the text below.",
-        strippedNote: "Formatting tags were removed from {lines} lines — they are not put back.",
+        encodingNote:
+          "This file is not UTF-8, so it was read as {encoding}. Check the text below.",
+        strippedNote:
+          "Formatting tags were removed from {lines} lines — they are not put back.",
         loadedSummary: "{lines} lines · about {estimate}",
         unitMinutes: "{value} min",
         unitSeconds: "{value} sec",
@@ -1123,7 +1183,8 @@ export const en = {
         stageTranslating: "translating {done} / {total}",
         resultSummary: "{lines} lines · {calls} translated · took {seconds}s",
         stoppedNote: "stopped early — the rest are unchanged",
-        failedNote: "{lines} lines came back broken, so the original text was kept.",
+        failedNote:
+          "{lines} lines came back broken, so the original text was kept.",
         downloadSrt: "Download .srt",
         downloadVtt: "Download .vtt",
         errEngine: "The runtime could not be loaded",
@@ -1134,7 +1195,8 @@ export const en = {
       },
     },
     stems: {
-      blurb: "Split a song into drums, bass, vocals and everything else — on your own machine.",
+      blurb:
+        "Split a song into drums, bass, vocals and everything else — on your own machine.",
       metaTitle: "Stem Splitter — vocals & drums in your browser",
       metaDescription:
         "Split a track into drums, bass, vocals and other stems without uploading it. An MIT-licensed Demucs model runs in your browser. No sign-up, no API key.",
@@ -1168,9 +1230,12 @@ export const en = {
       ],
       ui: {
         dropLabel: "Drop an audio or video file here",
-        dropHint: "MP4 · MOV · M4A · WAV · MP3 — the first {seconds} seconds are used",
-        downloadNote: "Pressing the button downloads about {size} of runtime and model.",
-        cachedNote: "It is fetched once and kept by your browser — the next file starts straight away.",
+        dropHint:
+          "MP4 · MOV · M4A · WAV · MP3 — the first {seconds} seconds are used",
+        downloadNote:
+          "Pressing the button downloads about {size} of runtime and model.",
+        cachedNote:
+          "It is fetched once and kept by your browser — the next file starts straight away.",
         slowNote:
           "Separation runs on the processor: about {minutes} min for {seconds} seconds of audio. That is why this is a preview.",
         run: "Split into stems",
@@ -1188,12 +1253,14 @@ export const en = {
         errEngine: "The runtime could not be loaded",
         errModel: "The model could not be downloaded",
         errNoAudio: "There is no sound in this file",
-        errUnsupportedInput: "This file could not be read — MP4, MOV, M4A, WAV or MP3",
+        errUnsupportedInput:
+          "This file could not be read — MP4, MOV, M4A, WAV or MP3",
         errGeneric: "The stems could not be separated",
       },
     },
     summarize: {
-      blurb: "Boil a long document down to a few sentences, without it ever leaving your tab.",
+      blurb:
+        "Boil a long document down to a few sentences, without it ever leaving your tab.",
       metaTitle: "Document Summarizer — no upload",
       metaDescription:
         "Summarize a PDF, a text file or pasted text without uploading it. A small AI model runs inside your browser tab. No sign-up, no API key.",
@@ -1214,7 +1281,7 @@ export const en = {
         },
         {
           q: "Which files can I use?",
-          a: "Plain text, Markdown, HTML and PDF. A PDF only works if it has a real text layer — a scanned page is a picture of words, and nothing can be extracted from it. If you get \"no text found\", run the file through the image-to-text tool first and paste the result here.",
+          a: 'Plain text, Markdown, HTML and PDF. A PDF only works if it has a real text layer — a scanned page is a picture of words, and nothing can be extracted from it. If you get "no text found", run the file through the image-to-text tool first and paste the result here.',
         },
         {
           q: "Can it summarize into a different language?",
@@ -1234,11 +1301,14 @@ export const en = {
         dropHint: "TXT · MD · HTML · PDF — or paste the text below",
         textLabel: "Document",
         textPlaceholder: "Paste the text you want summarized…",
-        downloadNote: "Pressing the button downloads about {size} of runtime and model.",
-        cachedNote: "It is fetched once and kept by your browser — the next document starts straight away.",
+        downloadNote:
+          "Pressing the button downloads about {size} of runtime and model.",
+        cachedNote:
+          "It is fetched once and kept by your browser — the next document starts straight away.",
         qualityNote:
           "The model is small: it gets the gist right and can get details wrong. Check anything that matters against the document.",
-        loadedSummary: "About {tokens} tokens · roughly {seconds}s once the model is ready",
+        loadedSummary:
+          "About {tokens} tokens · roughly {seconds}s once the model is ready",
         tooShortNote:
           "This is shorter than {minimum} tokens. Below that the model starts inventing content instead of summarizing.",
         run: "Summarize",
@@ -1253,9 +1323,12 @@ export const en = {
         errNoWebgpu: "This tool needs WebGPU",
         errEngine: "The runtime could not be loaded",
         errModel: "The model could not be downloaded",
-        errUnsupportedInput: "This file could not be read — TXT, MD, HTML or PDF",
-        errNoText: "No text could be found in this file — a scanned PDF needs the image-to-text tool first",
-        errTooShort: "Too short to summarize: {tokens} tokens, and at least {minimum} are needed",
+        errUnsupportedInput:
+          "This file could not be read — TXT, MD, HTML or PDF",
+        errNoText:
+          "No text could be found in this file — a scanned PDF needs the image-to-text tool first",
+        errTooShort:
+          "Too short to summarize: {tokens} tokens, and at least {minimum} are needed",
         errTooLong: "Too long: {tokens} tokens, and the limit is {maximum}",
         errGeneric: "The document could not be summarized",
       },

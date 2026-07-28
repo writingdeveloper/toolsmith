@@ -2,7 +2,8 @@ import type { Dictionary } from "./en";
 
 export const ptBR = {
   site: {
-    title: "toolsmith — ferramentas de navegador que nunca enviam seus arquivos",
+    title:
+      "toolsmith — ferramentas de navegador que nunca enviam seus arquivos",
     titleTemplate: "%s | toolsmith",
     description:
       "Seus arquivos nunca saem do seu aparelho. Converta imagens, vídeo e PDF inteiramente dentro do navegador. Sem cadastro e sem upload.",
@@ -21,7 +22,8 @@ export const ptBR = {
     availableHeading: "Disponíveis",
     searchLabel: "Encontrar uma ferramenta",
     searchPlaceholder: "Buscar — HEIC, PDF, legendas…",
-    searchEmpty: "Nenhuma ferramenta corresponde. Tente um formato, como HEIC ou MP4.",
+    searchEmpty:
+      "Nenhuma ferramenta corresponde. Tente um formato, como HEIC ou MP4.",
     upcomingHeading: "Em breve",
   },
 
@@ -35,19 +37,22 @@ export const ptBR = {
     relatedHeading: "Outras ferramentas",
     sendToHeading: "Continuar com este resultado:",
     notFoundTitle: "Esta página não existe",
-    notFoundLead: "O endereço pode estar incorreto ou a página pode ter sido movida.",
+    notFoundLead:
+      "O endereço pode estar incorreto ou a página pode ter sido movida.",
     notFoundHome: "Ir para a lista de ferramentas",
     chooseFile: "Escolher arquivos",
     download: "Baixar",
     clear: "Limpar",
     downloadAll: "Baixar tudo",
-    workerUnsupportedTitle: "Este navegador não consegue executar esta ferramenta.",
+    workerUnsupportedTitle:
+      "Este navegador não consegue executar esta ferramenta.",
     workerUnsupportedHint:
       "Abra em uma versão recente do Chrome, Edge, Firefox ou Safari com suporte a Web Workers.",
   },
 
   mediaErrors: {
-    unsupportedContainer: "Este arquivo não é um MP4 ou MOV que consigamos abrir",
+    unsupportedContainer:
+      "Este arquivo não é um MP4 ou MOV que consigamos abrir",
     noAudioTrack: "Este arquivo não tem som para extrair",
     noVideoTrack: "Este arquivo não tem faixa de vídeo",
     unsupportedCodec: "Este navegador não consegue decodificar este vídeo",
@@ -94,7 +99,8 @@ export const ptBR = {
 
   tools: {
     "image-convert": {
-      blurb: "HEIC, PNG, JPG, WebP e AVIF em qualquer direção. Comprima e redimensione de uma vez.",
+      blurb:
+        "HEIC, PNG, JPG, WebP e AVIF em qualquer direção. Comprima e redimensione de uma vez.",
       metaTitle: "Conversor de imagens — HEIC, PNG, JPG, WebP",
       metaDescription:
         "Converta fotos HEIC do iPhone para JPG e PNG para WebP. Tudo no navegador, sem enviar nada. Sem cadastro e sem limite de arquivos.",
@@ -115,12 +121,14 @@ export const ptBR = {
         },
       ],
       ui: {
-          animatedNote: "Esta imagem é animada. Apenas o primeiro quadro é mantido — a animação se perde.",
+        animatedNote:
+          "Esta imagem é animada. Apenas o primeiro quadro é mantido — a animação se perde.",
         unsupportedTitle: "Este navegador não consegue converter imagens.",
         unsupportedHint:
           "Abra em uma versão recente do Chrome, Edge, Firefox ou Safari 17+ com suporte a OffscreenCanvas.",
         dropLabel: "Solte suas imagens aqui",
-        dropHint: "HEIC · PNG · JPG · WebP · AVIF · GIF · BMP — várias de uma vez",
+        dropHint:
+          "HEIC · PNG · JPG · WebP · AVIF · GIF · BMP — várias de uma vez",
         formatLabel: "Formato de saída",
         qualityLabel: "Qualidade {value}",
         qualityLossless: "Qualidade (PNG é sem perdas)",
@@ -136,7 +144,8 @@ export const ptBR = {
     },
 
     "pdf-merge": {
-      blurb: "Vários PDFs em um só, na ordem que você quiser. As páginas são copiadas, nunca re-renderizadas.",
+      blurb:
+        "Vários PDFs em um só, na ordem que você quiser. As páginas são copiadas, nunca re-renderizadas.",
       metaTitle: "Juntar PDF — combinar vários PDFs em um",
       metaDescription:
         "Junte vários PDFs na ordem que quiser. Tudo no navegador, sem enviar nada, sem cadastro, sem marca d'água e sem limite de arquivos.",
@@ -178,7 +187,8 @@ export const ptBR = {
     },
 
     "pdf-split": {
-      blurb: "Tire as páginas que quiser ou separe cada página em seu próprio PDF dentro de um ZIP.",
+      blurb:
+        "Tire as páginas que quiser ou separe cada página em seu próprio PDF dentro de um ZIP.",
       metaTitle: "Dividir PDF — extrair ou separar páginas",
       metaDescription:
         "Extraia páginas específicas de um PDF ou separe cada página em seu próprio arquivo. Tudo no navegador, sem enviar nada, sem cadastro e sem marca d'água.",
@@ -226,7 +236,8 @@ export const ptBR = {
     },
 
     "pdf-organize": {
-      blurb: "Veja todas as páginas, endireite as que saíram deitadas e tire as que sobram.",
+      blurb:
+        "Veja todas as páginas, endireite as que saíram deitadas e tire as que sobram.",
       metaTitle: "Girar PDF e apagar páginas no navegador",
       metaDescription:
         "Endireite páginas digitalizadas de lado e remova as que você não precisa. Cada página aparece em miniatura. Tudo no navegador, sem enviar nada e sem cadastro.",
@@ -252,7 +263,8 @@ export const ptBR = {
       ],
       ui: {
         dropLabel: "Solte um PDF aqui",
-        dropHint: "Um de cada vez — todas as páginas aparecem para você escolher",
+        dropHint:
+          "Um de cada vez — todas as páginas aparecem para você escolher",
         rendering: "desenhando as prévias…",
         pageCount: "{n} páginas",
         gridLabel: "Páginas",
@@ -272,7 +284,8 @@ export const ptBR = {
     },
 
     "pdf-compress": {
-      blurb: "Recomprime as fotos de dentro do PDF. O texto continua texto — nada é achatado.",
+      blurb:
+        "Recomprime as fotos de dentro do PDF. O texto continua texto — nada é achatado.",
       metaTitle: "Comprimir PDF sem perder o texto",
       metaDescription:
         "Diminua um PDF recomprimindo as fotos que ele carrega. O texto continua selecionável e pesquisável. Tudo no navegador, sem enviar nada e sem cadastro.",
@@ -310,14 +323,17 @@ export const ptBR = {
         working: "Comprimindo…",
         outputName: "{stem}-comprimido.pdf",
         rewroteImages: "Recomprimimos {n} de {total} fotos",
-        keepOriginal: "Fique com o arquivo que você já tem — este não ficaria menor.",
+        keepOriginal:
+          "Fique com o arquivo que você já tem — este não ficaria menor.",
         noImages: "Este PDF não tem fotos para recomprimir.",
-        alreadySmall: "As fotos já estavam bem comprimidas — não deu para diminuir mais.",
+        alreadySmall:
+          "As fotos já estavam bem comprimidas — não deu para diminuir mais.",
       },
     },
 
     "data-query": {
-      blurb: "Roda SQL sobre um CSV ou Parquet. O arquivo não sai do seu aparelho.",
+      blurb:
+        "Roda SQL sobre um CSV ou Parquet. O arquivo não sai do seu aparelho.",
       metaTitle: "Consultas SQL em CSV e Parquet",
       metaDescription:
         "Abra um arquivo CSV ou Parquet e consulte com SQL. Com DuckDB dentro do navegador: sem envio, sem cadastro e sem limite de linhas.",
@@ -364,13 +380,15 @@ export const ptBR = {
         noRows: "Esta consulta não retornou linhas.",
         downloadCsv: "Baixar CSV",
         errEngine: "Não foi possível carregar o motor DuckDB",
-        errFormat: "Não dá para abrir este tipo de arquivo — CSV, TSV, Parquet ou JSON",
+        errFormat:
+          "Não dá para abrir este tipo de arquivo — CSV, TSV, Parquet ou JSON",
         errRead: "Não foi possível ler o arquivo",
       },
     },
 
     ocr: {
-      blurb: "Tira o texto de uma foto, captura de tela ou PDF digitalizado. Nada é enviado.",
+      blurb:
+        "Tira o texto de uma foto, captura de tela ou PDF digitalizado. Nada é enviado.",
       metaTitle: "Imagem e PDF para texto (OCR) no navegador",
       metaDescription:
         "Extraia o texto de uma foto, captura de tela ou PDF digitalizado sem enviá-lo. Sete idiomas, tudo no seu navegador e sem cadastro.",
@@ -403,8 +421,10 @@ export const ptBR = {
         dropHint: "PNG · JPG · WebP · PDF — um por vez",
         pdfLimit: "até {max} páginas",
         languageLabel: "Idioma do documento",
-        downloadNote: "Ao apertar o botão são baixados cerca de {size} de motor e dados de idioma.",
-        cachedNote: "Isso acontece uma vez e o navegador guarda — o próximo documento começa direto.",
+        downloadNote:
+          "Ao apertar o botão são baixados cerca de {size} de motor e dados de idioma.",
+        cachedNote:
+          "Isso acontece uma vez e o navegador guarda — o próximo documento começa direto.",
         run: "Ler o texto",
         working: "Lendo…",
         stageEngine: "preparando o motor {percent}%",
@@ -414,9 +434,11 @@ export const ptBR = {
         copy: "Copiar",
         copied: "Copiado",
         resultLabel: "Texto reconhecido",
-        truncated: "Este documento tem {total} páginas; apenas as {max} primeiras foram lidas.",
+        truncated:
+          "Este documento tem {total} páginas; apenas as {max} primeiras foram lidas.",
         nothingFound: "Nenhum texto foi encontrado nesta imagem.",
-        lowConfidence: "A confiança está baixa — confira com o original antes de confiar.",
+        lowConfidence:
+          "A confiança está baixa — confira com o original. A causa mais comum é o idioma do documento selecionado acima não ser o real.",
         errEngine: "Não foi possível carregar o motor de OCR",
         errTooManyPages: "Só é possível ler {max} páginas por vez",
         languages: {
@@ -432,7 +454,8 @@ export const ptBR = {
     },
 
     "image-compress": {
-      blurb: "Deixa as fotos mais leves sem mudar o formato. Você vê quanto cada arquivo economizou.",
+      blurb:
+        "Deixa as fotos mais leves sem mudar o formato. Você vê quanto cada arquivo economizou.",
       metaTitle: "Comprimir imagens — JPG, PNG, WebP",
       metaDescription:
         "Deixe suas fotos mais leves no navegador sem enviá-las. Mantém o formato original e mostra quanto cada arquivo economizou. Sem cadastro nem limite.",
@@ -470,7 +493,8 @@ export const ptBR = {
         formatLabel: "Saída",
         formatKeep: "Manter o formato original",
         keptNote: "já está o menor possível — mantivemos o original",
-        losslessNote: "PNG é sem perdas, então a qualidade não vai reduzi-lo. Diminua o tamanho ou mude a saída para WebP.",
+        losslessNote:
+          "PNG é sem perdas, então a qualidade não vai reduzi-lo. Diminua o tamanho ou mude a saída para WebP.",
         run: "Comprimir {n} arquivo(s)",
         working: "Comprimindo…",
         total: "{n} arquivos · {before} → {after} ({percent}% menor)",
@@ -480,7 +504,8 @@ export const ptBR = {
     },
 
     "image-resize": {
-      blurb: "Ajusta a largura das fotos e corta em quadrado, 4:5 ou 16:9. Nada é enviado.",
+      blurb:
+        "Ajusta a largura das fotos e corta em quadrado, 4:5 ou 16:9. Nada é enviado.",
       metaTitle: "Redimensionar e cortar imagens — 1:1, 4:5",
       metaDescription:
         "Ajuste uma foto à largura exata e corte em quadrado ou 4:5 para redes. Tudo no navegador, sem envio, sem cadastro e sem marca d'água.",
@@ -527,7 +552,8 @@ export const ptBR = {
     },
 
     "video-convert": {
-      blurb: "De MOV para MP4 sem recodificar, ou de MP4 para WebM. Nada é enviado.",
+      blurb:
+        "De MOV para MP4 sem recodificar, ou de MP4 para WebM. Nada é enviado.",
       metaTitle: "Converter MOV para MP4 e MP4 para WebM",
       metaDescription:
         "Converta MOV para MP4 sem recodificar, ou MP4 para WebM com VP9 e Opus. Tudo no seu navegador: sem envio, sem cadastro e sem limite de tamanho.",
@@ -564,11 +590,16 @@ export const ptBR = {
         targetLabel: "Converter para",
         targetMp4: "MP4",
         targetWebm: "WebM",
-        mp4Note: "Os codecs não são tocados: só o contêiner é reescrito. Nada se perde e leva segundos.",
-        webmNote: "H.264 não cabe em um WebM, então a imagem é recodificada em VP9 e o som em Opus. Demora um pouco e custa alguma qualidade.",
-        alreadyMp4: "Este arquivo já é um MP4 — converter apenas reescreveria o contêiner.",
-        mp4Unavailable: "O codec deste vídeo não pode ser copiado como está para um MP4.",
-        webmUnavailable: "Este navegador não consegue codificar WebM. MP4 continua funcionando.",
+        mp4Note:
+          "Os codecs não são tocados: só o contêiner é reescrito. Nada se perde e leva segundos.",
+        webmNote:
+          "H.264 não cabe em um WebM, então a imagem é recodificada em VP9 e o som em Opus. Demora um pouco e custa alguma qualidade.",
+        alreadyMp4:
+          "Este arquivo já é um MP4 — converter apenas reescreveria o contêiner.",
+        mp4Unavailable:
+          "O codec deste vídeo não pode ser copiado como está para um MP4.",
+        webmUnavailable:
+          "Este navegador não consegue codificar WebM. MP4 continua funcionando.",
         sizeLabel: "Tamanho",
         sizeOriginal: "Manter o tamanho original",
         sizeMax: "Lado maior {px}px",
@@ -588,7 +619,8 @@ export const ptBR = {
     },
 
     "video-compress": {
-      blurb: "Diminui um MP4 no navegador. Sem baixar 30MB de ferramentas — seu aparelho faz o trabalho.",
+      blurb:
+        "Diminui um MP4 no navegador. Sem baixar 30MB de ferramentas — seu aparelho faz o trabalho.",
       metaTitle: "Comprimir vídeo — diminua um MP4 no navegador",
       metaDescription:
         "Deixe um MP4 menor sem enviá-lo. Roda no seu aparelho com o codificador de vídeo do navegador: nada para instalar e nada sai da sua máquina.",
@@ -622,7 +654,11 @@ export const ptBR = {
         seconds: " s",
         noAudio: "sem som",
         qualityLabel: "Qualidade",
-        quality: { high: "Alta", balanced: "Equilibrada", small: "O menor possível" },
+        quality: {
+          high: "Alta",
+          balanced: "Equilibrada",
+          small: "O menor possível",
+        },
         sizeLabel: "Resolução",
         sizeOriginal: "Manter a resolução original",
         sizeMax: "Lado maior {px} px",
@@ -636,7 +672,8 @@ export const ptBR = {
     },
 
     "video-trim": {
-      blurb: "Corte um trecho do vídeo sem recodificar. Nada se perde e leva segundos.",
+      blurb:
+        "Corte um trecho do vídeo sem recodificar. Nada se perde e leva segundos.",
       metaTitle: "Cortar vídeo — recorte um MP4 no navegador",
       metaDescription:
         "Corte um trecho de um MP4 ou MOV sem enviá-lo. Nada é recodificado, então a qualidade fica intacta e termina em segundos. Tudo no seu navegador.",
@@ -673,7 +710,8 @@ export const ptBR = {
         startLabel: "Início (segundos)",
         endLabel: "Fim (segundos)",
         grabHere: "Posição atual",
-        snapped: "Corta em {actual}s, não em {asked}s — é o quadro-chave mais próximo antes.",
+        snapped:
+          "Corta em {actual}s, não em {asked}s — é o quadro-chave mais próximo antes.",
         onKeyframe: "Este início cai exatamente em um quadro-chave.",
         run: "Cortar",
         working: "Cortando…",
@@ -685,7 +723,8 @@ export const ptBR = {
     },
 
     "video-to-gif": {
-      blurb: "Transforma um clipe em GIF em loop. Sem upload — quem trabalha é o seu aparelho.",
+      blurb:
+        "Transforma um clipe em GIF em loop. Sem upload — quem trabalha é o seu aparelho.",
       metaTitle: "Vídeo para GIF — de MP4 a GIF no navegador",
       metaDescription:
         "Crie um GIF em loop a partir de um MP4 ou MOV sem enviar nada. Escolha os quadros e o tamanho e veja o resultado antes de salvar. Tudo no navegador.",
@@ -714,7 +753,8 @@ export const ptBR = {
         },
       ],
       ui: {
-        unsupportedTitle: "Este navegador não consegue criar GIF a partir de vídeo.",
+        unsupportedTitle:
+          "Este navegador não consegue criar GIF a partir de vídeo.",
         unsupportedHint:
           "Ler o vídeo exige WebCodecs — tente um Chrome ou Edge atualizado, Safari 16.4+ ou Firefox 130+.",
         dropLabel: "Solte um vídeo aqui",
@@ -734,7 +774,8 @@ export const ptBR = {
         working: "Criando…",
         outputName: "{stem}.gif",
         resultFrames: "{n} quadros · {fps} fps",
-        truncated: "Só couberam os primeiros {n} quadros, então o final do clipe ficou de fora.",
+        truncated:
+          "Só couberam os primeiros {n} quadros, então o final do clipe ficou de fora.",
         biggerNote:
           "O GIF ficou maior que o vídeo. Isso é normal — GIF não comprime movimento.",
         previewAlt: "O GIF recém-criado",
@@ -742,7 +783,8 @@ export const ptBR = {
     },
 
     "audio-extract": {
-      blurb: "Tira o som de um vídeo. Nada é recodificado, então nada se perde.",
+      blurb:
+        "Tira o som de um vídeo. Nada é recodificado, então nada se perde.",
       metaTitle: "Extrair áudio de vídeo — de MP4 para M4A ou WAV",
       metaDescription:
         "Tire a trilha sonora de um MP4 ou MOV sem enviá-lo. Guarde sem perdas em M4A ou leve um WAV que abre em qualquer lugar. Roda inteiramente no navegador.",
@@ -776,9 +818,11 @@ export const ptBR = {
         seconds: " s",
         channels: "{n} canais",
         formatM4a: "M4A — mantém o original",
-        formatM4aHint: "Levanta a faixa intacta. Pequena e idêntica ao áudio do vídeo.",
+        formatM4aHint:
+          "Levanta a faixa intacta. Pequena e idêntica ao áudio do vídeo.",
         formatWav: "WAV — abre em qualquer lugar",
-        formatWavHint: "PCM sem compressão para editores e programas antigos. Bem maior.",
+        formatWavHint:
+          "PCM sem compressão para editores e programas antigos. Bem maior.",
         run: "Extrair áudio",
         working: "Extraindo…",
         outputNameM4a: "{stem}.m4a",
@@ -825,8 +869,10 @@ export const ptBR = {
         backgroundTransparent: "Transparente",
         backgroundWhite: "Branco",
         backgroundBlack: "Preto",
-        downloadNote: "Apertar o botão baixa cerca de {size} de motor e modelo.",
-        cachedNote: "É baixado uma vez e o seu navegador guarda — a próxima foto começa na hora.",
+        downloadNote:
+          "Apertar o botão baixa cerca de {size} de motor e modelo.",
+        cachedNote:
+          "É baixado uma vez e o seu navegador guarda — a próxima foto começa na hora.",
         run: "Remover o fundo",
         working: "Processando…",
         stageEngine: "carregando o motor…",
@@ -835,8 +881,10 @@ export const ptBR = {
         resultAlt: "A foto com o fundo removido",
         runtimeWebgpu: "processado na GPU",
         runtimeWasm: "processado na CPU",
-        unsureNote: "O modelo não teve certeza: boa parte do que ele manteve está apenas semitransparente, então o recorte vai parecer um fantasma. Experimente a ferramenta de recorte por clique, que deixa você apontar o objeto que quer.",
-        nothingFound: "O modelo não encontrou um objeto claro aqui, então quase tudo foi recortado. Um fundo mais simples ajuda.",
+        unsureNote:
+          "O modelo não teve certeza: boa parte do que ele manteve está apenas semitransparente, então o recorte vai parecer um fantasma. Experimente a ferramenta de recorte por clique, que deixa você apontar o objeto que quer.",
+        nothingFound:
+          "O modelo não encontrou um objeto claro aqui, então quase tudo foi recortado. Um fundo mais simples ajuda.",
         errEngine: "Não foi possível carregar o motor",
         errModel: "Não foi possível baixar o modelo",
         errUnsupportedInput: "Não foi possível ler esta imagem",
@@ -844,7 +892,8 @@ export const ptBR = {
       },
     },
     upscale: {
-      blurb: "Amplia uma imagem pequena sem ela ficar borrada. Roda no seu dispositivo.",
+      blurb:
+        "Amplia uma imagem pequena sem ela ficar borrada. Roda no seu dispositivo.",
       metaTitle: "Ampliar imagem 4× — no navegador",
       metaDescription:
         "Amplie uma foto 2× ou 4× sem enviá-la. Um modelo Real-ESRGAN com licença BSD roda no seu navegador e mantém as bordas nítidas. Sem cadastro.",
@@ -886,14 +935,19 @@ export const ptBR = {
         scaleLabel: "Ampliar em",
         scaleOption: "{n}×",
         formatLabel: "Salvar como",
-        downloadNote: "Apertar o botão baixa cerca de {size} de motor e modelo.",
-        cachedNote: "É baixado uma vez e o seu navegador guarda — a próxima imagem começa na hora.",
-        gpuNotice: "Seu navegador tem WebGPU, então isto roda na placa de vídeo.",
-        cpuNotice: "Seu navegador não tem WebGPU, então isto roda na CPU — bem mais devagar.",
+        downloadNote:
+          "Apertar o botão baixa cerca de {size} de motor e modelo.",
+        cachedNote:
+          "É baixado uma vez e o seu navegador guarda — a próxima imagem começa na hora.",
+        gpuNotice:
+          "Seu navegador tem WebGPU, então isto roda na placa de vídeo.",
+        cpuNotice:
+          "Seu navegador não tem WebGPU, então isto roda na CPU — bem mais devagar.",
         cpuNoticeWithEstimate:
           "Seu navegador não tem WebGPU, então isto roda na CPU — conte com uns {seconds} segundos.",
         preview: "{from} → {to}",
-        tooLargeNotice: "{from} passa do limite de {max} megapixel. Reduza antes ou use uma imagem menor.",
+        tooLargeNotice:
+          "{from} passa do limite de {max} megapixel. Reduza antes ou use uma imagem menor.",
         run: "Ampliar",
         working: "Processando…",
         stageEngine: "carregando o motor…",
@@ -911,7 +965,8 @@ export const ptBR = {
       },
     },
     cutout: {
-      blurb: "Clique numa coisa da foto e recorte só ela. Roda no seu dispositivo.",
+      blurb:
+        "Clique numa coisa da foto e recorte só ela. Roda no seu dispositivo.",
       metaTitle: "Recortar objeto com um clique — navegador",
       metaDescription:
         "Clique em qualquer objeto de uma foto e recorte como PNG transparente. Um modelo SAM Apache-2.0 roda no seu navegador, sem enviar nada. Sem cadastro.",
@@ -942,8 +997,10 @@ export const ptBR = {
       ui: {
         dropLabel: "Solte uma foto aqui",
         dropHint: "PNG · JPG · WebP — uma por vez",
-        downloadNote: "Preparar uma foto baixa cerca de {size} de motor e modelo.",
-        cachedNote: "É baixado uma vez e o seu navegador guarda — a próxima foto só precisa da leitura.",
+        downloadNote:
+          "Preparar uma foto baixa cerca de {size} de motor e modelo.",
+        cachedNote:
+          "É baixado uma vez e o seu navegador guarda — a próxima foto só precisa da leitura.",
         prepare: "Preparar esta foto",
         preparing: "Preparando…",
         stageEngine: "carregando o motor…",
@@ -963,7 +1020,8 @@ export const ptBR = {
         resultAlt: "O objeto recortado da foto",
         runtimeWebgpu: "processado na GPU",
         runtimeWasm: "processado na CPU",
-        nothingFound: "Quase nada foi mantido. Tente clicar mais perto do centro do objeto.",
+        nothingFound:
+          "Quase nada foi mantido. Tente clicar mais perto do centro do objeto.",
         errEngine: "Não foi possível carregar o motor",
         errModel: "Não foi possível baixar o modelo",
         errUnsupportedInput: "Não foi possível ler esta imagem",
@@ -972,7 +1030,8 @@ export const ptBR = {
       },
     },
     subtitles: {
-      blurb: "Transforma a fala de um vídeo em legendas. O modelo roda no seu dispositivo.",
+      blurb:
+        "Transforma a fala de um vídeo em legendas. O modelo roda no seu dispositivo.",
       metaTitle: "Gerar legendas — no seu navegador",
       metaDescription:
         "Gere legendas SRT e VTT de um vídeo sem enviá-lo. Um modelo Whisper Apache-2.0 roda no seu navegador em 99 idiomas. Sem cadastro.",
@@ -1020,8 +1079,10 @@ export const ptBR = {
           de: "Alemão",
           pt: "Português",
         },
-        downloadNote: "Apertar o botão baixa cerca de {size} de motor e modelo.",
-        cachedNote: "É baixado uma vez e o seu navegador guarda — o próximo arquivo começa na hora.",
+        downloadNote:
+          "Apertar o botão baixa cerca de {size} de motor e modelo.",
+        cachedNote:
+          "É baixado uma vez e o seu navegador guarda — o próximo arquivo começa na hora.",
         noiseNote:
           "Em gravações ruidosas ou muito antigas o modelo pode travar repetindo as mesmas palavras. Com áudio limpo funciona bem melhor.",
         run: "Escrever as legendas",
@@ -1038,15 +1099,18 @@ export const ptBR = {
         errEngine: "Não foi possível carregar o motor",
         errModel: "Não foi possível baixar o modelo",
         errNoAudio: "Este arquivo não tem som",
-        errUnsupportedInput: "Não foi possível ler este arquivo — MP4, MOV, M4A, WAV ou MP3",
+        errUnsupportedInput:
+          "Não foi possível ler este arquivo — MP4, MOV, M4A, WAV ou MP3",
         errTooLong: "Isto é mais longo que {minutes} minutos",
         stop: "Parar",
-        stoppedNote: "Parado antes do fim — as legendas vão até onde você parou, então o resto do áudio não está nelas.",
+        stoppedNote:
+          "Parado antes do fim — as legendas vão até onde você parou, então o resto do áudio não está nelas.",
         errGeneric: "Não foi possível escrever as legendas",
       },
     },
     "subtitle-translate": {
-      blurb: "Traduz um arquivo de legendas para outro idioma, no seu próprio aparelho.",
+      blurb:
+        "Traduz um arquivo de legendas para outro idioma, no seu próprio aparelho.",
       metaTitle: "Tradutor de legendas — no navegador",
       metaDescription:
         "Traduza legendas SRT e VTT entre 18 idiomas sem enviá-las. Um modelo com licença MIT roda dentro do seu navegador. Sem cadastro e sem chave de API.",
@@ -1103,12 +1167,16 @@ export const ptBR = {
           pl: "Polonês",
           nl: "Holandês",
         },
-        downloadNote: "Apertar o botão baixa cerca de {size} de motor e modelo.",
-        cachedNote: "É baixado uma vez e o seu navegador guarda — o próximo arquivo começa na hora.",
+        downloadNote:
+          "Apertar o botão baixa cerca de {size} de motor e modelo.",
+        cachedNote:
+          "É baixado uma vez e o seu navegador guarda — o próximo arquivo começa na hora.",
         qualityNote:
           "Frases comuns saem bem; expressões idiomáticas, muitas vezes não. Leia antes de publicar.",
-        encodingNote: "Este arquivo não é UTF-8, então foi lido como {encoding}. Confira o texto abaixo.",
-        strippedNote: "Etiquetas de formatação foram removidas de {lines} linhas — elas não voltam.",
+        encodingNote:
+          "Este arquivo não é UTF-8, então foi lido como {encoding}. Confira o texto abaixo.",
+        strippedNote:
+          "Etiquetas de formatação foram removidas de {lines} linhas — elas não voltam.",
         loadedSummary: "{lines} linhas · cerca de {estimate}",
         unitMinutes: "{value} min",
         unitSeconds: "{value} s",
@@ -1120,7 +1188,8 @@ export const ptBR = {
         stageTranslating: "traduzindo {done} / {total}",
         resultSummary: "{lines} linhas · {calls} traduzidas · levou {seconds}s",
         stoppedNote: "parado antes do fim — o resto está inalterado",
-        failedNote: "{lines} linhas voltaram quebradas, então o texto original foi mantido.",
+        failedNote:
+          "{lines} linhas voltaram quebradas, então o texto original foi mantido.",
         downloadSrt: "Baixar .srt",
         downloadVtt: "Baixar .vtt",
         errEngine: "Não foi possível carregar o motor",
@@ -1131,7 +1200,8 @@ export const ptBR = {
       },
     },
     stems: {
-      blurb: "Separa uma música em bateria, baixo, voz e todo o resto, no seu próprio aparelho.",
+      blurb:
+        "Separa uma música em bateria, baixo, voz e todo o resto, no seu próprio aparelho.",
       metaTitle: "Separador de faixas — voz e bateria",
       metaDescription:
         "Separe uma faixa em bateria, baixo, voz e outras trilhas sem enviá-la. Um modelo Demucs com licença MIT roda no seu navegador. Sem cadastro nem chave de API.",
@@ -1165,9 +1235,12 @@ export const ptBR = {
       ],
       ui: {
         dropLabel: "Solte um arquivo de áudio ou vídeo aqui",
-        dropHint: "MP4 · MOV · M4A · WAV · MP3 — usamos os primeiros {seconds} segundos",
-        downloadNote: "Apertar o botão baixa cerca de {size} de motor e modelo.",
-        cachedNote: "É baixado uma vez e o seu navegador guarda — o próximo arquivo começa na hora.",
+        dropHint:
+          "MP4 · MOV · M4A · WAV · MP3 — usamos os primeiros {seconds} segundos",
+        downloadNote:
+          "Apertar o botão baixa cerca de {size} de motor e modelo.",
+        cachedNote:
+          "É baixado uma vez e o seu navegador guarda — o próximo arquivo começa na hora.",
         slowNote:
           "A separação roda no processador: cerca de {minutes} min para {seconds} segundos de áudio. É por isso que isto é uma prévia.",
         run: "Separar em faixas",
@@ -1185,12 +1258,14 @@ export const ptBR = {
         errEngine: "Não foi possível carregar o motor",
         errModel: "Não foi possível baixar o modelo",
         errNoAudio: "Este arquivo não tem som",
-        errUnsupportedInput: "Não foi possível ler este arquivo — MP4, MOV, M4A, WAV ou MP3",
+        errUnsupportedInput:
+          "Não foi possível ler este arquivo — MP4, MOV, M4A, WAV ou MP3",
         errGeneric: "Não foi possível separar as faixas",
       },
     },
     summarize: {
-      blurb: "Reduz um documento longo a poucas frases, sem que ele saia da sua aba.",
+      blurb:
+        "Reduz um documento longo a poucas frases, sem que ele saia da sua aba.",
       metaTitle: "Resumir documentos — sem enviar",
       metaDescription:
         "Resuma um PDF, um arquivo de texto ou um texto colado sem enviá-lo. Um modelo de IA pequeno roda dentro do seu navegador. Sem cadastro nem chave de API.",
@@ -1231,11 +1306,14 @@ export const ptBR = {
         dropHint: "TXT · MD · HTML · PDF — ou cole o texto abaixo",
         textLabel: "Documento",
         textPlaceholder: "Cole o texto que você quer resumir…",
-        downloadNote: "Apertar o botão baixa cerca de {size} de motor e modelo.",
-        cachedNote: "É baixado uma vez e o seu navegador guarda — o próximo documento começa na hora.",
+        downloadNote:
+          "Apertar o botão baixa cerca de {size} de motor e modelo.",
+        cachedNote:
+          "É baixado uma vez e o seu navegador guarda — o próximo documento começa na hora.",
         qualityNote:
           "O modelo é pequeno: acerta o essencial e pode errar detalhes. Confira no documento tudo o que for importante.",
-        loadedSummary: "Cerca de {tokens} tokens · aproximadamente {seconds}s com o modelo pronto",
+        loadedSummary:
+          "Cerca de {tokens} tokens · aproximadamente {seconds}s com o modelo pronto",
         tooShortNote:
           "Isto é menor que {minimum} tokens. Abaixo disso o modelo deixa de resumir e passa a inventar conteúdo.",
         run: "Resumir",
@@ -1250,9 +1328,12 @@ export const ptBR = {
         errNoWebgpu: "Esta ferramenta precisa de WebGPU",
         errEngine: "Não foi possível carregar o motor",
         errModel: "Não foi possível baixar o modelo",
-        errUnsupportedInput: "Não foi possível ler este arquivo — TXT, MD, HTML ou PDF",
-        errNoText: "Nenhum texto foi encontrado neste arquivo — um PDF digitalizado precisa antes da ferramenta de imagem para texto",
-        errTooShort: "Curto demais para resumir: {tokens} tokens, e são necessários pelo menos {minimum}",
+        errUnsupportedInput:
+          "Não foi possível ler este arquivo — TXT, MD, HTML ou PDF",
+        errNoText:
+          "Nenhum texto foi encontrado neste arquivo — um PDF digitalizado precisa antes da ferramenta de imagem para texto",
+        errTooShort:
+          "Curto demais para resumir: {tokens} tokens, e são necessários pelo menos {minimum}",
         errTooLong: "Longo demais: {tokens} tokens, e o limite é {maximum}",
         errGeneric: "Não foi possível resumir o documento",
       },
