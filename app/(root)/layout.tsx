@@ -1,4 +1,5 @@
 import "../globals.css";
+import { ThemeScript } from "@/components/Theme";
 
 /**
  * 언어 선택 화면 전용 루트 레이아웃.
@@ -9,7 +10,11 @@ import "../globals.css";
  */
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="h-full">
+    /* 고른 밝기는 여기서도 지켜져야 한다 — 근거는 components/Theme.tsx */
+    <html lang="en" className="h-full" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );

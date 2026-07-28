@@ -9,6 +9,8 @@ export const ja = {
     tagline: "アップロードなし · すべてブラウザ内で処理",
     footerNote:
       "選んだファイルがサーバーに送られることはありません。処理はすべてこのブラウザタブの中で完結します。",
+    themeLabel: "画面の明るさ",
+    themeNames: { system: "システム設定", light: "ライト", dark: "ダーク" },
   },
 
   home: {

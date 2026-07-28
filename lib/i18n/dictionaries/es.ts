@@ -9,6 +9,8 @@ export const es = {
     tagline: "Sin subidas · todo se ejecuta en tu navegador",
     footerNote:
       "Los archivos que eliges nunca se envían a un servidor. Todo ocurre dentro de esta pestaña del navegador.",
+    themeLabel: "Apariencia",
+    themeNames: { system: "Sistema", light: "Claro", dark: "Oscuro" },
   },
 
   home: {

@@ -9,6 +9,8 @@ export const de = {
     tagline: "Kein Upload · alles läuft im Browser",
     footerNote:
       "Die gewählten Dateien werden nie an einen Server geschickt. Alles passiert in diesem Browser-Tab.",
+    themeLabel: "Darstellung",
+    themeNames: { system: "System", light: "Hell", dark: "Dunkel" },
   },
 
   home: {

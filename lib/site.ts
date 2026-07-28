@@ -66,6 +66,23 @@ export const OG_IMAGE = "/og.png";
 export const OG_IMAGE_SIZE = { width: 1200, height: 630 };
 
 /**
+ * 이 문서의 공유 카드.
+ *
+ * **도구 페이지에는 전용 카드가 있다**(`scripts/make-icons.mjs` 가 굽는다).
+ * 스물한 도구가 카드 하나를 함께 쓰던 것을 2026-07-28 에 갈랐다 — 어디를 공유해도
+ * 똑같이 보였다.
+ *
+ * **경로에서 유도한다.** 도구 페이지 21곳에 각각 파일 이름을 적게 하면 도구를
+ * 더할 때 빠뜨릴 자리가 스물두 번째로 늘어난다. 여기서 한 번 갈라 두면
+ * `PATH` 만 맞으면 저절로 따라온다. 파일이 실제로 있는지는
+ * `tests/seo.spec.ts` 가 살아 있는 도구 전부에 대해 확인한다.
+ */
+export function ogImageFor(path: string): string {
+  const tool = /^\/tools\/([a-z0-9-]+)$/.exec(path);
+  return tool ? `/og/${tool[1]}.png` : OG_IMAGE;
+}
+
+/**
  * 공유 카드(Open Graph · X) 메타.
  *
  * **Next 는 `title`/`description` 을 og 로 자동 복사하지 않는다.** 레이아웃에 한 번
@@ -86,7 +103,7 @@ export function socialFor(
   urlOverride?: string,
 ): Pick<Metadata, "openGraph" | "twitter"> {
   const url = urlOverride ?? absolute(pathFor(locale, path));
-  const image = absolute(OG_IMAGE);
+  const image = absolute(ogImageFor(path));
   return {
     openGraph: {
       type: "website",

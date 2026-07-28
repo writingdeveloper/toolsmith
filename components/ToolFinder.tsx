@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useId, useMemo, useState } from "react";
+import { FamilyIcon } from "@/components/FamilyIcon";
 
 export interface FinderTool {
   slug: string;
@@ -94,10 +95,13 @@ export function ToolFinder({
                 <li key={tool.slug}>
                   <Link
                     href={tool.href}
-                    className="block h-full rounded-xl border border-border bg-panel p-5 transition-colors hover:border-accent"
+                    className="flex h-full gap-3 rounded-xl border border-border bg-panel p-5 transition-colors hover:border-accent"
                   >
-                    <p className="font-medium">{tool.name}</p>
-                    <p className="mt-1 text-sm text-muted">{tool.blurb}</p>
+                    <FamilyIcon family={group.key} />
+                    <span className="min-w-0">
+                      <span className="block font-medium">{tool.name}</span>
+                      <span className="mt-1 block text-sm text-muted">{tool.blurb}</span>
+                    </span>
                   </Link>
                 </li>
               ))}

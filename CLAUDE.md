@@ -83,7 +83,7 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 ## 현재 상태 (2026-07-27)
 
 **라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 21 + 글 목록
-+ 글 8) = 186 페이지 + 루트 언어 선택. 전부 정적. Playwright **375종**. 두 프로젝트로 돈다 — 기본
++ 글 8) = 186 페이지 + 루트 언어 선택. 전부 정적. Playwright **382종**. 두 프로젝트로 돈다 — 기본
 `chromium`(전부)과 `chromium-webgpu`(모델 도구 다섯을 GPU 경로로). **지연 로딩 판정만은
 여전히 프로덕션으로 한다**(Turbopack dev 가 동적 import 를 당겨오기 때문).
 
@@ -206,6 +206,22 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   이쪽은 읽는 글이다). 글은 **도구와 같은 낱말을 노리지 않는다**(`what-is-heic` 이지
   `heic-to-jpg` 가 아니다) — 우리 두 페이지가 서로를 밀어내면 안 된다. 근거는
   `docs/TOOLS.md` 의 "도구가 아닌 페이지가 처음 생겼다" 와 "두 번째 묶음".
+- `components/Theme.tsx` — **화면 밝기를 정하는 유일한 곳.** `globals.css` 에는 어두운 색이
+  **한 벌**뿐이고 `:root[data-theme="dark"]` 로만 켜진다 — 고르기를 CSS 에 맡기면
+  `prefers-color-scheme` 을 이길 규칙이 하나 더 필요해져 같은 색 목록이 두 곳에 산다.
+  `<head>` 의 인라인 스크립트가 **첫 페인트 전에** 값을 확정한다(늦으면 흰 화면이 한 번
+  번쩍이고, 그 깜빡임은 되돌릴 수 없다). `localStorage` 는 **읽기만 해도 예외가 나는**
+  브라우저가 있어 전부 try 로 감싼다 — `<head>` 에서 던지면 문서 파싱이 멈춰 페이지가
+  통째로 빈다. 저장값은 `useSyncExternalStore` 로 읽는다(`useEffect` + `setState` 는
+  린트가 막는다 — `lib/use-capability.ts` 와 같은 자리다). `<html>` 에 
+  `suppressHydrationWarning` 이 붙는 이유도 여기다.
+- `components/FamilyIcon.tsx` — 카드 그림. **도구마다가 아니라 계열마다 하나다**
+  (이름과 설명이 이미 글로 있다). 글자를 안 넣으므로 6개 언어가 함께 쓴다.
+- `lib/site.ts` 의 `ogImageFor` — 공유 카드. **경로에서 유도한다**(`/tools/<slug>` →
+  `/og/<slug>.png`). 도구 21곳에 파일 이름을 적게 하면 도구를 더할 때 빠뜨릴 자리가
+  하나 더 는다. 그림은 `scripts/make-icons.mjs` 가 굽고 **문장을 넣지 않는다** —
+  한 장을 6개 언어가 쓰므로 형식 이름(`MOV → MP4`)만 쓴다. 파일이 실제로 있는지는
+  `tests/seo.spec.ts` 가 살아 있는 도구 전부에 대해 확인한다.
 - `components/RichText.tsx` — 본문의 `**강조**` 하나만 그린다. **배포하고 나서야 별표가
   화면에 찍힌 것을 봤다** — 스펙은 h1·h2·링크만 보고 있어서 전부 초록색이었다.
   마크다운 파서를 넣지 않은 이유(문법이 조용히 열린다)가 주석에 있다.

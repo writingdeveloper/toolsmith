@@ -11,7 +11,7 @@
  * 아이콘 모양을 바꾸려면 `app/icon.svg` 만 고치고 이 스크립트를 다시 돌린다 —
  * 여기 있는 마크는 그 파일에서 읽어 온다. 두 곳에 같은 그림을 두지 않는다.
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
@@ -129,5 +129,82 @@ const og = page(
   "#0b0b0e",
 );
 await shoot(browser, og, 1200, 630, path.join(ROOT, "public", "og.png"));
+
+/*
+ * 도구별 OG 카드.
+ *
+ * **왜 필요했나.** 스물한 도구가 위의 카드 하나를 함께 썼다. 어디를 공유해도 똑같이
+ * 보였고, 공유 카드에서 도구를 구별할 방법이 없었다.
+ *
+ * **그런데 문장은 여전히 안 넣는다.** 이미지 한 장을 6개 언어가 함께 쓰기 때문이다
+ * (위의 og.png 에 적어 둔 이유 그대로). 대신 **형식 이름과 화살표**만 쓴다 —
+ * `MOV → MP4`, `PDF ↓` 는 어느 언어에서나 같은 낱말이라 거짓말이 되지 않는다.
+ * 제목·설명은 어차피 `og:title`/`og:description` 이 언어별로 따로 나른다.
+ *
+ * 계열 색이 한 번 더 갈라 준다. 형식이 같은 둘(배경 제거·컷아웃)은 카드도 닮는데,
+ * **목적이 "전부 구별" 이 아니라 "전부 같지 않게" 이므로** 그대로 둔다.
+ */
+const FAMILY_COLOR = {
+  image: "#3b82f6",
+  pdf: "#ef4444",
+  video: "#a855f7",
+  data: "#10b981",
+};
+
+/** 슬러그 → [계열, 형식 표기]. 표기에 **어느 언어의 문장도 넣지 않는다.** */
+const CARDS = [
+  ["image-convert", "image", "HEIC · PNG · JPG · WebP"],
+  ["image-compress", "image", "JPG ↓"],
+  ["image-resize", "image", "4000 → 1200"],
+  ["remove-bg", "image", "JPG → PNG"],
+  ["upscale", "image", "1× → 4×"],
+  ["cutout", "image", "PNG ⌖"],
+  ["pdf-merge", "pdf", "PDF + PDF → PDF"],
+  ["pdf-split", "pdf", "PDF → 1 · 2 · 3"],
+  ["pdf-organize", "pdf", "PDF ↻"],
+  ["pdf-compress", "pdf", "PDF ↓"],
+  ["ocr", "pdf", "PDF · JPG → TXT"],
+  ["summarize", "pdf", "PDF → TXT"],
+  ["video-convert", "video", "MOV → MP4"],
+  ["video-compress", "video", "MP4 ↓"],
+  ["video-trim", "video", "MP4 ⟨ ⟩"],
+  ["video-to-gif", "video", "MP4 → GIF"],
+  ["audio-extract", "video", "MP4 → M4A · WAV"],
+  ["subtitles", "video", "MP4 → SRT · VTT"],
+  ["subtitle-translate", "video", "SRT → SRT"],
+  ["stems", "video", "MP3 → 4 × WAV"],
+  ["data-query", "data", "CSV · Parquet → SQL"],
+];
+
+mkdirSync(path.join(ROOT, "public", "og"), { recursive: true });
+
+for (const [slug, family, label] of CARDS) {
+  const color = FAMILY_COLOR[family];
+  const card = page(
+    `<div style="width:1200px;height:630px;position:relative;display:flex;flex-direction:column;
+          align-items:center;justify-content:center;gap:56px;background:#0b0b0e;
+          font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif">
+       <div style="position:absolute;top:0;left:0;right:0;height:10px;background:${color}"></div>
+       <div style="color:#f4f4f5;font-size:76px;font-weight:600;letter-spacing:-.02em;
+             text-align:center;padding:0 80px;line-height:1.15">${label}</div>
+       <div style="display:flex;align-items:center;gap:18px">
+         <div style="width:52px;height:52px">${MARK}</div>
+         <div style="color:#a1a1aa;font-size:40px;font-weight:500;letter-spacing:-.02em">toolsmith</div>
+       </div>
+       <div style="position:absolute;bottom:52px;display:flex;gap:12px">
+         ${[0.9, 0.6, 0.35, 0.18]
+           .map(
+             (o) =>
+               `<span style="width:12px;height:12px;border-radius:99px;background:${color};opacity:${o}"></span>`,
+           )
+           .join("")}
+       </div>
+     </div>`,
+    1200,
+    630,
+    "#0b0b0e",
+  );
+  await shoot(browser, card, 1200, 630, path.join(ROOT, "public", "og", `${slug}.png`));
+}
 
 await browser.close();

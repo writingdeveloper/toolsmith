@@ -10,6 +10,8 @@ export const ptBR = {
     tagline: "Sem upload · tudo roda no seu navegador",
     footerNote:
       "Os arquivos que você escolhe nunca são enviados a um servidor. Tudo acontece dentro desta aba do navegador.",
+    themeLabel: "Aparência",
+    themeNames: { system: "Sistema", light: "Claro", dark: "Escuro" },
   },
 
   home: {

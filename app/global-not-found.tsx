@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { NotFoundBody, type NotFoundCopy } from "@/components/NotFoundBody";
+import { ThemeScript } from "@/components/Theme";
 import { getDictionary } from "@/lib/i18n";
 import { DEFAULT_LOCALE, HTML_LANG, LOCALES, type Locale } from "@/lib/i18n/config";
 
@@ -37,7 +38,10 @@ export default function GlobalNotFound() {
   ) as Record<Locale, NotFoundCopy>;
 
   return (
-    <html lang={HTML_LANG[DEFAULT_LOCALE]} className="h-full">
+    <html lang={HTML_LANG[DEFAULT_LOCALE]} className="h-full" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body className="flex min-h-full flex-col">
         <NotFoundBody copy={copy} />
       </body>

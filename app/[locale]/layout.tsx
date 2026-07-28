@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import "../globals.css";
 import { Analytics } from "@/components/Analytics";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
+import { ThemeScript, ThemeToggle } from "@/components/Theme";
 import { getDictionary } from "@/lib/i18n";
 import { HTML_LANG, isLocale, LOCALE_NAME, LOCALES, type Locale } from "@/lib/i18n/config";
 import { alternatesFor, GA_ID, SITE_URL, socialFor } from "@/lib/site";
@@ -45,7 +46,17 @@ export default async function LocaleLayout({
   const dict = getDictionary(typed);
 
   return (
-    <html lang={HTML_LANG[typed]} className="h-full">
+    /*
+      `data-theme` 은 아래 인라인 스크립트가 **React 가 붙기 전에** 적는다. 서버가 찍은
+      HTML 에는 그 속성이 없으므로 React 가 불일치로 보고 경고를 낸다 — 여기서는 그것이
+      정상이다(그 한 박자를 없애려고 스크립트를 둔 것이다). 이 표시를 빼면 모든 페이지
+      로드마다 콘솔에 오류가 남는다.
+    */
+    <html lang={HTML_LANG[typed]} className="h-full" suppressHydrationWarning>
+      <head>
+        {/* 첫 페인트 전에 화면 밝기를 확정한다 — 근거는 components/Theme.tsx */}
+        <ThemeScript />
+      </head>
       <body className="flex min-h-full flex-col">
         <header className="border-b border-border">
           <div className="mx-auto max-w-5xl px-5 py-4">
@@ -57,6 +68,7 @@ export default async function LocaleLayout({
                 <span className="hidden rounded-full border border-border px-3 py-1 text-xs text-muted sm:inline">
                   {dict.site.tagline}
                 </span>
+                <ThemeToggle label={dict.site.themeLabel} names={dict.site.themeNames} />
                 <LocaleSwitcher current={typed} />
               </div>
             </div>

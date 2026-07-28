@@ -11,6 +11,8 @@ export const en = {
     tagline: "No upload · everything runs in your browser",
     footerNote:
       "The files you pick are never sent to a server. Everything happens inside this browser tab.",
+    themeLabel: "Appearance",
+    themeNames: { system: "System", light: "Light", dark: "Dark" },
   },
 
   home: {

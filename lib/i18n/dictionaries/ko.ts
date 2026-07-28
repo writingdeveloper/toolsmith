@@ -9,6 +9,8 @@ export const ko = {
     tagline: "업로드 없음 · 전부 브라우저에서 처리",
     footerNote:
       "선택한 파일은 서버로 전송되지 않습니다. 모든 처리는 이 브라우저 탭 안에서 끝납니다.",
+    themeLabel: "화면 밝기",
+    themeNames: { system: "시스템 설정", light: "밝게", dark: "어둡게" },
   },
 
   home: {
