@@ -29,6 +29,7 @@
  */
 
 import { hasWebGPU } from "@/lib/capabilities";
+import { readMp3, type Mp3Stream } from "@/lib/video/mp3-source";
 import { MediaError, readMp4 } from "@/lib/video/mp4-source";
 
 const TRANSFORMERS_VERSION = "4.2.0";
@@ -206,6 +207,73 @@ function readWav(bytes: Uint8Array): { channels: Float32Array[]; sampleRate: num
 }
 
 /** MP4/MOV/M4A 는 우리가 이미 가진 demux + WebCodecs 로 편다. */
+/**
+ * 잘라 둔 MP3 프레임을 브라우저 디코더에 먹인다.
+ *
+ * MP4 쪽과 모으는 방식이 같으므로 뒤처리는 `collect()` 가 함께 쓴다.
+ */
+async function decodeMp3(
+  stream: Mp3Stream,
+  onProgress?: (ratio: number) => void,
+): Promise<{ channels: Float32Array[]; sampleRate: number }> {
+  const planes: Float32Array[][] = [];
+  let channelCount = stream.channels;
+  let sampleRate = stream.sampleRate;
+  let failure: unknown = null;
+  let done = 0;
+
+  const decoder = new AudioDecoder({
+    output: (data) => {
+      try {
+        channelCount = data.numberOfChannels;
+        sampleRate = data.sampleRate;
+        const frame: Float32Array[] = [];
+        for (let channel = 0; channel < channelCount; channel += 1) {
+          const plane = new Float32Array(data.numberOfFrames);
+          data.copyTo(plane, { planeIndex: channel, format: "f32-planar" });
+          frame.push(plane);
+        }
+        planes.push(frame);
+      } catch (error) {
+        failure = error;
+      } finally {
+        data.close();
+        done += 1;
+        onProgress?.(Math.min(1, done / Math.max(1, stream.frames.length)));
+      }
+    },
+    error: (error) => {
+      failure = error;
+    },
+  });
+
+  decoder.configure({
+    codec: stream.codec,
+    sampleRate: stream.sampleRate,
+    numberOfChannels: stream.channels,
+  });
+
+  // MP3 는 프레임마다 독립이라 전부 key 다. 시각은 프레임 표본 수로 만든다.
+  const perFrame = (stream.samplesPerFrame / stream.sampleRate) * 1_000_000;
+  for (let index = 0; index < stream.frames.length; index += 1) {
+    if (failure) break;
+    decoder.decode(
+      new EncodedAudioChunk({
+        type: "key",
+        timestamp: Math.round(index * perFrame),
+        duration: Math.round(perFrame),
+        data: stream.frames[index],
+      }),
+    );
+    if (decoder.decodeQueueSize > 32) await new Promise((resolve) => setTimeout(resolve, 0));
+  }
+
+  await decoder.flush();
+  decoder.close();
+  if (failure || planes.length === 0) throw new SubtitleError("NO_AUDIO");
+  return collect(planes, channelCount, sampleRate);
+}
+
 async function decodeMp4(
   bytes: Uint8Array,
   onProgress?: (ratio: number) => void,
@@ -268,6 +336,15 @@ async function decodeMp4(
   decoder.close();
   if (failure || planes.length === 0) throw new SubtitleError("NO_AUDIO");
 
+  return collect(planes, channelCount, sampleRate);
+}
+
+/** 디코더가 조각조각 낸 것을 채널마다 하나로 잇는다. MP3·MP4 가 함께 쓴다. */
+function collect(
+  planes: Float32Array[][],
+  channelCount: number,
+  sampleRate: number,
+): { channels: Float32Array[]; sampleRate: number } {
   const total = planes.reduce((sum, frame) => sum + (frame[0]?.length ?? 0), 0);
   const channels = Array.from({ length: channelCount }, () => new Float32Array(total));
   let offset = 0;
@@ -322,7 +399,12 @@ export async function decodeAudio(
   onProgress?: (ratio: number) => void,
 ): Promise<{ channels: Float32Array[]; sampleRate: number }> {
   try {
-    return readWav(bytes) ?? (await decodeMp4(bytes, onProgress));
+    const wav = readWav(bytes);
+    if (wav) return wav;
+    // MP3 는 컨테이너가 없는 날 프레임 흐름이다 — 우리가 잘라서 넣는다(lib/video/mp3-source.ts)
+    const mp3 = readMp3(bytes);
+    if (mp3) return await decodeMp3(mp3, onProgress);
+    return await decodeMp4(bytes, onProgress);
   } catch (error) {
     if (error instanceof SubtitleError) throw error;
     if (error instanceof MediaError) throw new SubtitleError("UNSUPPORTED_INPUT");
@@ -440,16 +522,17 @@ export async function transcribe(
   onProgress?.({ stage: "decoding", ratio: 0 });
   const bytes = new Uint8Array(await file.arrayBuffer());
 
-  let decoded: { channels: Float32Array[]; sampleRate: number };
-  try {
-    decoded =
-      readWav(bytes) ??
-      (await decodeMp4(bytes, (ratio) => onProgress?.({ stage: "decoding", ratio })));
-  } catch (error) {
-    if (error instanceof SubtitleError) throw error;
-    if (error instanceof MediaError) throw new SubtitleError("UNSUPPORTED_INPUT");
-    throw new SubtitleError("UNSUPPORTED_INPUT");
-  }
+  /*
+   * **`decodeAudio` 를 부른다. 여기서 형식을 다시 고르지 않는다.**
+   *
+   * 예전에는 이 자리에 `readWav(bytes) ?? decodeMp4(...)` 가 따로 적혀 있었다. 그래서
+   * `decodeAudio` 에 MP3 를 붙였을 때 **스템 분리에서는 열리고 자막 생성에서는 거부됐다**
+   * (2026-07-27, 실제 연설 MP3 로 확인). 같은 판단이 두 곳에 있으면 한 곳만 고쳐진다 —
+   * OCR 에서 PDF 만 줄이고 그림은 안 줄이던 것과 같은 실패다.
+   */
+  const decoded = await decodeAudio(bytes, (ratio) =>
+    onProgress?.({ stage: "decoding", ratio }),
+  );
 
   const audio = toMono16k(decoded.channels, decoded.sampleRate);
   const durationSec = audio.length / TARGET_RATE;

@@ -976,7 +976,7 @@ export const de = {
         },
         {
           q: "Welche Dateien kann ich nehmen?",
-          a: "MP4, MOV, M4A und WAV. Das sind die, die Ihr Browser allein öffnen kann, ohne dass wir einen weiteren Decoder mitschicken. MP3 steht nicht auf der Liste — nicht weil es exotisch wäre, sondern weil das Lesen zusätzlichen Code bedeuten würde. Lieber lassen wir es weg, als so zu tun.",
+          a: "MP4, MOV, M4A, WAV und MP3. Das sind die Formate, die Ihr Browser allein öffnen kann — wir schicken nie einen weiteren Decoder mit. MP3 kam zuletzt dazu, nicht weil es schwer wäre, sondern weil es **keinen Container hat**: Es ist ein blanker Strom von Frames, und jemand muss die Frame-Grenzen finden, bevor der Decoder des Browsers ihn annimmt. Diesen Teil haben wir geschrieben; heruntergeladen wird nichts zusätzlich.",
         },
         {
           q: "Das Ergebnis wiederholt dieselben Wörter.",
@@ -993,7 +993,7 @@ export const de = {
       ],
       ui: {
         dropLabel: "Video oder Audiodatei hier ablegen",
-        dropHint: "MP4 · MOV · M4A · WAV — bis {minutes} Minuten",
+        dropHint: "MP4 · MOV · M4A · WAV · MP3 — bis {minutes} Minuten",
         modelLabel: "Modell",
         modelFast: "Kompakt — {size}, schneller",
         modelAccurate: "Genau — {size}, weniger Fehler",
@@ -1025,7 +1025,7 @@ export const de = {
         errEngine: "Die Laufzeit konnte nicht geladen werden",
         errModel: "Das Modell konnte nicht geladen werden",
         errNoAudio: "In dieser Datei ist kein Ton",
-        errUnsupportedInput: "Diese Datei konnte nicht gelesen werden — MP4, MOV, M4A oder WAV",
+        errUnsupportedInput: "Diese Datei konnte nicht gelesen werden — MP4, MOV, M4A, WAV oder MP3",
         errTooLong: "Das ist länger als {minutes} Minuten",
         errGeneric: "Die Untertitel konnten nicht geschrieben werden",
       },
@@ -1137,7 +1137,7 @@ export const de = {
         },
         {
           q: "Welche Dateien kann ich nehmen?",
-          a: "MP4, MOV, M4A und WAV. Das sind die, die Ihr Browser allein öffnen kann, ohne dass wir einen weiteren Decoder mitschicken. MP3 steht nicht auf der Liste — nicht weil es exotisch wäre, sondern weil das Lesen zusätzlichen Code bedeuten würde. Lieber lassen wir es weg, als so zu tun.",
+          a: "MP4, MOV, M4A, WAV und MP3. Das sind die Formate, die Ihr Browser allein öffnen kann — wir schicken nie einen weiteren Decoder mit. MP3 kam zuletzt dazu, nicht weil es schwer wäre, sondern weil es **keinen Container hat**: Es ist ein blanker Strom von Frames, und jemand muss die Frame-Grenzen finden, bevor der Decoder des Browsers ihn annimmt. Diesen Teil haben wir geschrieben; heruntergeladen wird nichts zusätzlich.",
         },
         {
           q: "Warum ist der Download so groß?",
@@ -1150,7 +1150,7 @@ export const de = {
       ],
       ui: {
         dropLabel: "Audio- oder Videodatei hier ablegen",
-        dropHint: "MP4 · MOV · M4A · WAV — die ersten {seconds} Sekunden werden genutzt",
+        dropHint: "MP4 · MOV · M4A · WAV · MP3 — die ersten {seconds} Sekunden werden genutzt",
         downloadNote: "Ein Klick lädt rund {size} an Laufzeit und Modell herunter.",
         cachedNote: "Es wird einmal geladen und von Ihrem Browser behalten — die nächste Datei startet sofort.",
         slowNote:
@@ -1170,7 +1170,7 @@ export const de = {
         errEngine: "Die Laufzeit konnte nicht geladen werden",
         errModel: "Das Modell konnte nicht geladen werden",
         errNoAudio: "In dieser Datei ist kein Ton",
-        errUnsupportedInput: "Diese Datei konnte nicht gelesen werden — MP4, MOV, M4A oder WAV",
+        errUnsupportedInput: "Diese Datei konnte nicht gelesen werden — MP4, MOV, M4A, WAV oder MP3",
         errGeneric: "Die Stems konnten nicht getrennt werden",
       },
     },

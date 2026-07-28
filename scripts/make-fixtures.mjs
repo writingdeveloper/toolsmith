@@ -636,3 +636,28 @@ await write("article-utf16.txt", Buffer.concat([Buffer.from([0xff, 0xfe]), Buffe
  * 비둘기 14마리가 고르게 놓여 있어 모델이 결정을 못 내리고 **반투명한 유령**을 낸다
  * (단호 3.1% · 비율 0.13). 이 픽스처가 `data-unsure` 경고를 고정한다.
  */
+
+/*
+ * music.mp3 는 여기서 만들지 않는다.
+ *
+ * **진짜 MP3 여야 한다.** 우리가 붙인 프레임 파서(lib/video/mp3-source.ts)가 검증하는
+ * 것이 바로 실제 인코더가 낸 프레임 배치이기 때문이다. 합성으로는 만들 수 없다.
+ *
+ * 1918년 녹음 "At the Jazz Band Ball"(퍼블릭 도메인, 위키미디어 커먼즈)의 앞 6초다:
+ *   https://upload.wikimedia.org/wikipedia/commons/a/a6/At_the_jazz_band_ball_%281918_sound_recording%29.mp3
+ * 다시 만들어야 하면 그 파일을 받아 ID3 를 건너뛴 뒤 **프레임 경계에서** 6초만 자르면
+ * 된다(230프레임 · 47KB). 바이트 중간에서 자르면 마지막 프레임이 깨진다.
+ */
+
+/*
+ * speech.mp3 도 여기서 만들지 않는다.
+ *
+ * **말소리가 든 진짜 MP3 여야 한다.** music.mp3(연주곡)로는 자막 생성을 검증할 수 없다 —
+ * Whisper 에게 연주곡은 병적인 입력이라 10분을 넘겨도 끝나지 않는다. 그것 때문에
+ * "자막도 MP3 를 받는다" 를 확인하지 못한 채 화면에만 적어 둘 뻔했다.
+ *
+ * 1908년 부커 T. 워싱턴이 1895년 애틀랜타 연설의 한 대목을 읽은 녹음이다.
+ * 미국에서 퍼블릭 도메인이고 위키미디어 커먼즈에 있다:
+ *   https://upload.wikimedia.org/wikipedia/commons/a/a5/Booker_T._Washington_reading_an_excerpt_from_his_1895_Atlanta_Compromise_speech.mp3
+ * 다시 만들어야 하면 ID3 를 건너뛴 뒤 **프레임 경계에서** 12초만 자르면 된다(187KB).
+ */

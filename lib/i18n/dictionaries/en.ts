@@ -979,7 +979,7 @@ export const en = {
         },
         {
           q: "Which files can I use?",
-          a: "MP4, MOV, M4A and WAV. Those are the ones your browser can open on its own without us shipping another decoder. MP3 is not in the list — not because it is exotic, but because reading it would mean downloading more code, and we would rather leave it out than pretend.",
+          a: "MP4, MOV, M4A, WAV and MP3. Those are the ones your browser can open on its own, so we never ship another decoder. MP3 took longest to add — not because it is heavy, but because it has no container: it is a bare stream of frames, and something has to find the frame boundaries before the browser's decoder will take it. We wrote that part; nothing extra is downloaded.",
         },
         {
           q: "The result keeps repeating the same words.",
@@ -996,7 +996,7 @@ export const en = {
       ],
       ui: {
         dropLabel: "Drop a video or audio file here",
-        dropHint: "MP4 · MOV · M4A · WAV — up to {minutes} minutes",
+        dropHint: "MP4 · MOV · M4A · WAV · MP3 — up to {minutes} minutes",
         modelLabel: "Model",
         modelFast: "Compact — {size}, quicker",
         modelAccurate: "Accurate — {size}, fewer mistakes",
@@ -1028,7 +1028,7 @@ export const en = {
         errEngine: "The runtime could not be loaded",
         errModel: "The model could not be downloaded",
         errNoAudio: "There is no sound in this file",
-        errUnsupportedInput: "This file could not be read — MP4, MOV, M4A or WAV",
+        errUnsupportedInput: "This file could not be read — MP4, MOV, M4A, WAV or MP3",
         errTooLong: "This is longer than {minutes} minutes",
         errGeneric: "The subtitles could not be written",
       },
@@ -1140,7 +1140,7 @@ export const en = {
         },
         {
           q: "Which files can I use?",
-          a: "MP4, MOV, M4A and WAV. Those are the ones your browser can open on its own without us shipping another decoder. MP3 is not in the list — not because it is exotic, but because reading it would mean downloading more code, and we would rather leave it out than pretend.",
+          a: "MP4, MOV, M4A, WAV and MP3. Those are the ones your browser can open on its own, so we never ship another decoder. MP3 took longest to add — not because it is heavy, but because it has no container: it is a bare stream of frames, and something has to find the frame boundaries before the browser's decoder will take it. We wrote that part; nothing extra is downloaded.",
         },
         {
           q: "Why is the download so large?",
@@ -1153,7 +1153,7 @@ export const en = {
       ],
       ui: {
         dropLabel: "Drop an audio or video file here",
-        dropHint: "MP4 · MOV · M4A · WAV — the first {seconds} seconds are used",
+        dropHint: "MP4 · MOV · M4A · WAV · MP3 — the first {seconds} seconds are used",
         downloadNote: "Pressing the button downloads about {size} of runtime and model.",
         cachedNote: "It is fetched once and kept by your browser — the next file starts straight away.",
         slowNote:
@@ -1173,7 +1173,7 @@ export const en = {
         errEngine: "The runtime could not be loaded",
         errModel: "The model could not be downloaded",
         errNoAudio: "There is no sound in this file",
-        errUnsupportedInput: "This file could not be read — MP4, MOV, M4A or WAV",
+        errUnsupportedInput: "This file could not be read — MP4, MOV, M4A, WAV or MP3",
         errGeneric: "The stems could not be separated",
       },
     },

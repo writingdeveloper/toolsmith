@@ -203,7 +203,7 @@ export function SubtitleMaker({
   return (
     <div className="space-y-6">
       <FileDrop
-        accept="video/mp4,video/quicktime,audio/mp4,audio/x-m4a,audio/wav"
+        accept="video/mp4,video/quicktime,audio/mp4,audio/x-m4a,audio/wav,audio/mpeg,.mp3"
         onFiles={addFiles}
         label={ui.dropLabel}
         hint={fill(ui.dropHint, { minutes: MAX_SECONDS / 60 })}

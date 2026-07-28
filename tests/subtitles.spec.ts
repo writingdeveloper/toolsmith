@@ -6,6 +6,8 @@ import { isAnalytics } from "./net";
 
 /** 1961년 케네디 취임 연설 앞 6초(퍼블릭 도메인), 16kHz 모노. */
 const SPEECH = path.join(__dirname, "fixtures", "speech.wav");
+/** 1908년 부커 T. 워싱턴 연설 녹음 12초(퍼블릭 도메인). **컨테이너가 없는 MP3** 다. */
+const SPEECH_MP3 = path.join(__dirname, "fixtures", "speech.mp3");
 /** 소리가 없는 영상 — "소리가 없다" 를 제대로 말하는지 본다. */
 const SILENT = path.join(__dirname, "fixtures", "silent.mp4");
 
@@ -126,6 +128,35 @@ test.describe("브라우저", () => {
     );
     expect(stamps.length).toBeGreaterThan(0);
     expect(Math.max(...stamps)).toBeLessThanOrEqual(7);
+  });
+
+  /**
+   * MP3 도 읽는다.
+   *
+   * **붙이자마자 한 번 놓쳤다(2026-07-27).** `decodeAudio()` 에 MP3 를 붙이고 화면에도
+   * 적었는데, 전사 경로가 `decodeAudio()` 를 부르지 않고 자체 디코드 호출을 갖고 있어
+   * **스템 분리에서는 열리고 여기서는 거부됐다.** 같은 판단이 두 곳에 있으면 한 곳만
+   * 고쳐진다. 이 검사가 그 자리를 지킨다.
+   */
+  test("MP3 도 읽는다 — 컨테이너가 없는 형식이다", async ({ page }) => {
+    test.setTimeout(600_000);
+    await page.locator('input[type="file"]').setInputFiles(SPEECH_MP3);
+    await page.getByLabel("말하는 언어").selectOption("en");
+    await run(page);
+
+    const srt = await page.evaluate(async () => {
+      const anchor = document.querySelector<HTMLAnchorElement>('a[download$=".srt"]')!;
+      return { name: anchor.download, text: await (await fetch(anchor.href)).text() };
+    });
+    expect(srt.name).toBe("speech.srt");
+    // 1908년 축음기 녹음이라 낱말은 흔들린다. 연설에 분명히 있는 낱말 하나만 본다.
+    expect(srt.text.toLowerCase()).toContain("south");
+    expect(srt.text).toMatch(/^1\n00:00:\d\d,\d\d\d --> 00:00:\d\d,\d\d\d\n/);
+    // 12초짜리 파일이다 — 프레임 시각을 잘못 매기면 여기서 걸린다
+    const stamps = [...srt.text.matchAll(/(\d\d):(\d\d):(\d\d),(\d\d\d)/g)].map(
+      (m) => Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3]) + Number(m[4]) / 1000,
+    );
+    expect(Math.max(...stamps)).toBeLessThanOrEqual(14);
   });
 
   test("소리가 없는 영상에는 없다고 말한다", async ({ page }) => {

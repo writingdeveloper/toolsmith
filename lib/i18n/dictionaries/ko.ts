@@ -976,7 +976,7 @@ export const ko = {
         },
         {
           q: "어떤 파일을 넣을 수 있나요?",
-          a: "MP4 · MOV · M4A · WAV 입니다. 브라우저가 스스로 열 수 있는 것들이고, 그래야 디코더를 더 받지 않습니다. MP3 는 목록에 없습니다 — 흔치 않아서가 아니라, 읽으려면 코드를 더 받아야 하기 때문입니다. **할 수 있는 척하느니 빼는 쪽**을 골랐습니다.",
+          a: "MP4, MOV, M4A, WAV, MP3 입니다. 브라우저가 스스로 열 수 있는 것들이라 디코더를 더 보내지 않습니다. MP3 가 가장 늦게 붙었는데, 무거워서가 아니라 **컨테이너가 없어서**입니다 — 날 프레임이 이어진 흐름이라 누군가 프레임 경계를 짚어 줘야 브라우저 디코더가 받습니다. 그 부분을 우리가 썼고, 더 받는 것은 없습니다.",
         },
         {
           q: "결과가 같은 말을 계속 반복해요.",
@@ -993,7 +993,7 @@ export const ko = {
       ],
       ui: {
         dropLabel: "영상이나 음성 파일을 여기에 놓으세요",
-        dropHint: "MP4 · MOV · M4A · WAV — {minutes}분까지",
+        dropHint: "MP4 · MOV · M4A · WAV · MP3 — {minutes}분까지",
         modelLabel: "모델",
         modelFast: "작은 모델 — {size}, 빠름",
         modelAccurate: "정확한 모델 — {size}, 오류가 적음",
@@ -1025,7 +1025,7 @@ export const ko = {
         errEngine: "실행기를 불러오지 못했습니다",
         errModel: "모델을 받지 못했습니다",
         errNoAudio: "이 파일에는 소리가 없습니다",
-        errUnsupportedInput: "이 파일을 읽지 못했습니다 — MP4 · MOV · M4A · WAV",
+        errUnsupportedInput: "이 파일을 읽지 못했습니다 — MP4 · MOV · M4A · WAV · MP3",
         errTooLong: "{minutes}분보다 깁니다",
         errGeneric: "자막을 만들지 못했습니다",
       },
@@ -1136,7 +1136,7 @@ export const ko = {
         },
         {
           q: "어떤 파일을 넣을 수 있습니까?",
-          a: "MP4, MOV, M4A, WAV 입니다. 브라우저가 스스로 열 수 있는 형식이라 디코더를 더 보내지 않아도 됩니다. MP3 는 목록에 없습니다 — 드물어서가 아니라 읽으려면 코드를 더 받아야 하기 때문이고, 되는 척하느니 빼는 쪽을 골랐습니다.",
+          a: "MP4, MOV, M4A, WAV, MP3 입니다. 브라우저가 스스로 열 수 있는 것들이라 디코더를 더 보내지 않습니다. MP3 가 가장 늦게 붙었는데, 무거워서가 아니라 **컨테이너가 없어서**입니다 — 날 프레임이 이어진 흐름이라 누군가 프레임 경계를 짚어 줘야 브라우저 디코더가 받습니다. 그 부분을 우리가 썼고, 더 받는 것은 없습니다.",
         },
         {
           q: "왜 이렇게 많이 받습니까?",
@@ -1149,7 +1149,7 @@ export const ko = {
       ],
       ui: {
         dropLabel: "오디오나 영상 파일을 여기에 놓으세요",
-        dropHint: "MP4 · MOV · M4A · WAV — 앞 {seconds}초만 씁니다",
+        dropHint: "MP4 · MOV · M4A · WAV · MP3 — 앞 {seconds}초만 씁니다",
         downloadNote: "버튼을 누르면 실행기와 모델 약 {size} 를 받습니다.",
         cachedNote: "한 번만 받고 브라우저가 갖고 있습니다 — 다음 파일은 바로 시작합니다.",
         slowNote:
@@ -1169,7 +1169,7 @@ export const ko = {
         errEngine: "실행기를 불러오지 못했습니다",
         errModel: "모델을 받지 못했습니다",
         errNoAudio: "이 파일에는 소리가 없습니다",
-        errUnsupportedInput: "이 파일을 읽지 못했습니다 — MP4, MOV, M4A, WAV",
+        errUnsupportedInput: "이 파일을 읽지 못했습니다 — MP4, MOV, M4A, WAV, MP3",
         errGeneric: "스템을 나누지 못했습니다",
       },
     },

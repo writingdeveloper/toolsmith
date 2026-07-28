@@ -6,6 +6,8 @@ import { isAnalytics } from "./net";
 
 /** 1961년 케네디 취임 연설 앞 6초(퍼블릭 도메인), 16kHz 모노. */
 const SPEECH = path.join(__dirname, "fixtures", "speech.wav");
+/** 1918년 재즈 밴드 녹음 앞 6초(퍼블릭 도메인). **진짜 인코더가 낸 MP3** 다. */
+const MUSIC = path.join(__dirname, "fixtures", "music.mp3");
 /** 소리가 없는 영상 — "소리가 없다" 를 제대로 말하는지 본다. */
 const SILENT = path.join(__dirname, "fixtures", "silent.mp4");
 
@@ -156,6 +158,43 @@ test.describe("브라우저", () => {
     expect(byName["vocals.wav"]).toBeGreaterThan(byName["bass.wav"]);
     expect(byName["vocals.wav"]).toBeGreaterThan(byName["other.wav"]);
   });
+
+  /**
+ * MP3 를 받는다.
+ *
+ * 오랫동안 받지 않았고, FAQ 는 그 이유를 "읽으려면 코드를 더 받아야 하기 때문" 이라고
+ * 적어 두었다. **그것은 사실이 아니었다(2026-07-27 실측)** — 브라우저의 `AudioDecoder`
+ * 는 워커 안에서도 `mp3` 를 지원한다. 없던 것은 우리 쪽 프레임 파서였다.
+ * 근거와 실측표는 `lib/video/mp3-source.ts` 에 있다.
+ */
+test("MP3 도 나눈다 — 가장 흔한 형식이다", async ({ page }) => {
+  test.setTimeout(900_000);
+  await page.goto("/ko/tools/stems");
+  await page.locator('input[type="file"]').setInputFiles(MUSIC);
+  await run(page);
+
+  await expect(page.locator("[data-stems] li")).toHaveCount(4);
+  const stems = await page.evaluate(async () => {
+    const out: Array<{ name: string; rate: number; rms: number }> = [];
+    for (const anchor of document.querySelectorAll<HTMLAnchorElement>('a[download$=".wav"]')) {
+      const buffer = await (await fetch(anchor.href)).arrayBuffer();
+      const view = new DataView(buffer);
+      let sum = 0;
+      const samples = (buffer.byteLength - 44) / 2;
+      for (let i = 0; i < samples; i += 1) {
+        const v = view.getInt16(44 + i * 2, true) / 32768;
+        sum += v * v;
+      }
+      out.push({ name: anchor.download, rate: view.getUint32(24, true), rms: Math.sqrt(sum / samples) });
+    }
+    return out;
+  });
+
+  expect(stems).toHaveLength(4);
+  for (const stem of stems) expect(stem.rate).toBe(44_100);
+  // 소리가 실제로 들어 있어야 한다 — 전부 0 이면 디코드가 조용히 실패한 것이다
+  expect(Math.max(...stems.map((s) => s.rms))).toBeGreaterThan(0.01);
+});
 
   test("소리가 없는 영상에는 없다고 말한다", async ({ page }) => {
     test.setTimeout(300_000);

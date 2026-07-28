@@ -976,7 +976,7 @@ export const ptBR = {
         },
         {
           q: "Que arquivos posso usar?",
-          a: "MP4, MOV, M4A e WAV. São os que o seu navegador abre sozinho, sem precisarmos enviar outro decodificador. MP3 não está na lista — não por ser exótico, mas porque lê-lo exigiria baixar mais código, e preferimos deixar de fora a fingir que dá.",
+          a: "MP4, MOV, M4A, WAV e MP3. São os que o seu navegador abre sozinho, então nunca enviamos outro decodificador. O MP3 foi o último a entrar, não por ser pesado, mas porque **não tem contêiner**: é um fluxo cru de quadros, e alguém precisa marcar onde cada um começa antes de o decodificador do navegador aceitá-lo. Essa parte fomos nós que escrevemos; nada extra é baixado.",
         },
         {
           q: "O resultado fica repetindo as mesmas palavras.",
@@ -993,7 +993,7 @@ export const ptBR = {
       ],
       ui: {
         dropLabel: "Solte um vídeo ou áudio aqui",
-        dropHint: "MP4 · MOV · M4A · WAV — até {minutes} minutos",
+        dropHint: "MP4 · MOV · M4A · WAV · MP3 — até {minutes} minutos",
         modelLabel: "Modelo",
         modelFast: "Compacto — {size}, mais rápido",
         modelAccurate: "Preciso — {size}, menos erros",
@@ -1025,7 +1025,7 @@ export const ptBR = {
         errEngine: "Não foi possível carregar o motor",
         errModel: "Não foi possível baixar o modelo",
         errNoAudio: "Este arquivo não tem som",
-        errUnsupportedInput: "Não foi possível ler este arquivo — MP4, MOV, M4A ou WAV",
+        errUnsupportedInput: "Não foi possível ler este arquivo — MP4, MOV, M4A, WAV ou MP3",
         errTooLong: "Isto é mais longo que {minutes} minutos",
         errGeneric: "Não foi possível escrever as legendas",
       },
@@ -1137,7 +1137,7 @@ export const ptBR = {
         },
         {
           q: "Que arquivos posso usar?",
-          a: "MP4, MOV, M4A e WAV. São os que o seu navegador abre sozinho, sem precisarmos enviar outro decodificador. MP3 não está na lista — não por ser exótico, mas porque lê-lo exigiria baixar mais código, e preferimos deixar de fora a fingir que dá.",
+          a: "MP4, MOV, M4A, WAV e MP3. São os que o seu navegador abre sozinho, então nunca enviamos outro decodificador. O MP3 foi o último a entrar, não por ser pesado, mas porque **não tem contêiner**: é um fluxo cru de quadros, e alguém precisa marcar onde cada um começa antes de o decodificador do navegador aceitá-lo. Essa parte fomos nós que escrevemos; nada extra é baixado.",
         },
         {
           q: "Por que o download é tão grande?",
@@ -1150,7 +1150,7 @@ export const ptBR = {
       ],
       ui: {
         dropLabel: "Solte um arquivo de áudio ou vídeo aqui",
-        dropHint: "MP4 · MOV · M4A · WAV — usamos os primeiros {seconds} segundos",
+        dropHint: "MP4 · MOV · M4A · WAV · MP3 — usamos os primeiros {seconds} segundos",
         downloadNote: "Apertar o botão baixa cerca de {size} de motor e modelo.",
         cachedNote: "É baixado uma vez e o seu navegador guarda — o próximo arquivo começa na hora.",
         slowNote:
@@ -1170,7 +1170,7 @@ export const ptBR = {
         errEngine: "Não foi possível carregar o motor",
         errModel: "Não foi possível baixar o modelo",
         errNoAudio: "Este arquivo não tem som",
-        errUnsupportedInput: "Não foi possível ler este arquivo — MP4, MOV, M4A ou WAV",
+        errUnsupportedInput: "Não foi possível ler este arquivo — MP4, MOV, M4A, WAV ou MP3",
         errGeneric: "Não foi possível separar as faixas",
       },
     },
