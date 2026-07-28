@@ -6,6 +6,21 @@ import { isAnalytics } from "./net";
 
 /** 640×480. 밝은 배경 한가운데 어두운 덩어리(타원 + 원). */
 const SUBJECT = path.join(__dirname, "fixtures", "subject.png");
+/**
+ * 1914년 백과사전 비둘기 도판 500×782(퍼블릭 도메인). **비슷한 새가 14마리** 있다.
+ * 배경 제거는 이 그림에서 무너진다 — 고를 것이 하나가 아니기 때문이다. 이 도구는
+ * 사람이 눌러서 고르므로 **되어야 한다.** 그 차이를 여기서 못 박는다.
+ */
+const PLATE = path.join(__dirname, "fixtures", "plate.jpg");
+
+/*
+ * 누를 자리는 **눈짐작이 아니라 픽셀에서 계산했다.** 붉은/흰 화소의 연결된 덩어리 중
+ * 가장 큰 것의 중심이다(각각 3,795화소 · 1,768화소). 한 번 눈대중으로 찍었다가 종이
+ * 배경을 눌러 놓고 "도구가 이상하다" 고 적을 뻔했다 — 조준을 검증하지 않은 클릭은
+ * 아무것도 증명하지 않는다.
+ */
+const RED_BIRD = { x: 123, y: 71 };
+const WHITE_BIRD = { x: 396, y: 576 };
 
 const MODEL_HOST = /huggingface\.co|hf\.co|cdn-lfs/;
 const ENGINE_HOST = /cdn\.jsdelivr\.net\/npm\/onnxruntime-web/;
@@ -160,5 +175,67 @@ test.describe("브라우저", () => {
     await page.getByRole("button", { name: "오려 내기" }).click();
     await expect(page.locator("a[download]")).toHaveCount(1, { timeout: 120_000 });
     expect(outbound.filter((url) => !isAnalytics(url))).toEqual([]);
+  });
+});
+
+/**
+ * **누른 것을 고른다.**
+ *
+ * 배경 제거가 무너지는 그림(비둘기 14마리)에서, 한 마리를 눌러 그 마리만 남는지 본다.
+ * 화소를 직접 읽어 **누른 자리는 남고 다른 새는 지워졌는지**를 확인한다 — 결과가
+ * 나왔다는 것만으로는 아무것도 증명되지 않는다.
+ */
+test.describe("여러 개 중 하나 고르기", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/ko/tools/cutout");
+  });
+
+  test("누른 새만 남고 다른 새는 지워진다", async ({ page }) => {
+    test.setTimeout(600_000);
+    await page.locator('input[type="file"]').setInputFiles(PLATE);
+    await page.getByRole("button", { name: "이 사진 준비하기" }).click();
+    await expect(page.locator("[data-hint]")).toBeVisible({ timeout: 300_000 });
+
+    await clickAt(page, RED_BIRD.x, RED_BIRD.y);
+    await page.getByRole("button", { name: "오려 내기" }).click();
+    await expect(page.locator("a[download]")).toHaveCount(1, { timeout: 300_000 });
+
+    const alpha = await page.evaluate(
+      async ({ red, white }) => {
+        const anchor = document.querySelector<HTMLAnchorElement>("a[download]")!;
+        const bitmap = await createImageBitmap(await (await fetch(anchor.href)).blob());
+        const canvas = document.createElement("canvas");
+        canvas.width = bitmap.width;
+        canvas.height = bitmap.height;
+        const ctx = canvas.getContext("2d")!;
+        ctx.drawImage(bitmap, 0, 0);
+        const { data } = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
+        const at = (x: number, y: number) => data[(y * bitmap.width + x) * 4 + 3];
+        let kept = 0;
+        for (let i = 3; i < data.length; i += 4) if (data[i] > 240) kept += 1;
+        // **닫기 전에 읽는다.** 닫힌 비트맵은 크기를 0 으로 돌려준다.
+        const out = {
+          width: bitmap.width,
+          height: bitmap.height,
+          onClicked: at(red.x, red.y),
+          onOther: at(white.x, white.y),
+          kept: kept / (data.length / 4),
+        };
+        bitmap.close();
+        return out;
+      },
+      { red: RED_BIRD, white: WHITE_BIRD },
+    );
+
+    // 크기는 원본 그대로여야 한다
+    expect(alpha.width).toBe(500);
+    expect(alpha.height).toBe(782);
+    // 누른 자리는 남아야 한다
+    expect(alpha.onClicked).toBeGreaterThan(240);
+    // 누르지 않은 다른 새는 지워져야 한다 — 이것이 배경 제거와 갈리는 지점이다
+    expect(alpha.onOther).toBeLessThan(16);
+    // 열넷 중 한 마리다. 절반이 남았다면 종이나 여러 마리를 고른 것이다.
+    expect(alpha.kept).toBeGreaterThan(0.002);
+    expect(alpha.kept).toBeLessThan(0.2);
   });
 });
