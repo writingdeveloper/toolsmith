@@ -9,6 +9,8 @@ const SCAN_PDF = path.join(__dirname, "fixtures", "scan.pdf");
 const BROKEN = path.join(__dirname, "fixtures", "broken.pdf");
 /** 4962×4192. OCR 에 넘기기 전에 반드시 줄여야 하는 크기다. */
 const BIG_SCAN = path.join(__dirname, "fixtures", "big-scan.jpg");
+/** 글자가 없는 실사진. tesseract 는 무엇이든 읽으려 들기 때문에 빈손으로 끝나지 않는다. */
+const PHOTO = path.join(__dirname, "fixtures", "photo.jpg");
 
 /*
  * 엔진 wasm 3.4MB + 언어 데이터를 남의 CDN 에서 받고 나서야 글자를 읽기 시작한다.
@@ -123,6 +125,48 @@ test("스캔본 PDF 도 페이지를 그려서 읽는다", async ({ page }) => {
  * 다른 도구와 달리 이건 남의 CDN 에서 몇 MB 를 받아야 시작한다.
  * **누르고 나서 알게 두지 않는다** — 크기와 언어가 눌리기 전에 화면에 있어야 한다.
  */
+/*
+ * 확신도가 낮을 때 그렇다고 말하는 분기(`confidence < 70`)를 **스펙이 하나도 보지
+ * 않고 있었다(2026-07-27).** 배경 제거에서 겪은 것과 같은 자리다 — 화면에만 있고
+ * 검사가 없는 분기는 언젠가 조용히 죽는다.
+ *
+ * 임계값 70 이 두 무리 사이 어디에 있는지는 실물 여덟으로 쟀다:
+ *
+ * | 입력 | 확신도 | 경고 |
+ * |---|---|---|
+ * | 깨끗한 활자(text.png) | 93 | 없음 |
+ * | 저품질 타자 스캔 16쪽 | 81 | 없음 |
+ * | 1919 타자기 스캔 | 70 | 없음 |
+ * | 영어 문서에 중국어를 고름 | 56 | **뜸** |
+ * | 17세기 손글씨 | 48 · 38 | **뜸** |
+ * | 일본어 문서에 영어를 고름 | 27 | **뜸** |
+ * | 글자 없는 사진 | 21 | **뜸** |
+ *
+ * 아래 둘은 그 표의 **양 끝**을 잡는다. 가운데를 잡으려면 손글씨 표본을 커밋해야
+ * 하는데, 양 끝이 93 대 21 로 벌어져 있어 임계값이 움직여도 판정이 뒤집히지 않는다.
+ */
+test("확신도가 낮으면 결과 옆에 그렇다고 적는다", async ({ page }) => {
+  await open(page, PHOTO);
+  await useLanguage(page, "영어");
+  await read(page);
+
+  // 사진에서도 무언가는 읽어 낸다 — 빈손이 아니라 "못 믿을 결과" 라는 것이 요점이다
+  await expect(page.getByText(/^1쪽 · 확신도 \d+%$/)).toBeVisible();
+  const shown = await page.getByText(/^1쪽 · 확신도 \d+%$/).innerText({ timeout: 5_000 });
+  expect(Number(shown.match(/(\d+)%/)![1])).toBeLessThan(70);
+  await expect(page.getByText("확신도가 낮습니다", { exact: false })).toBeVisible();
+});
+
+test("깨끗한 글씨에는 그 경고를 달지 않는다", async ({ page }) => {
+  await open(page, TEXT_PNG);
+  await useLanguage(page, "영어");
+  await read(page);
+
+  const shown = await page.getByText(/^1쪽 · 확신도 \d+%$/).innerText({ timeout: 5_000 });
+  expect(Number(shown.match(/(\d+)%/)![1])).toBeGreaterThanOrEqual(70);
+  await expect(page.getByText("확신도가 낮습니다", { exact: false })).toHaveCount(0);
+});
+
 test("받아야 하는 용량을 누르기 전에 말하고, 언어를 바꾸면 그 숫자도 바뀐다", async ({ page }) => {
   await open(page, TEXT_PNG);
 
