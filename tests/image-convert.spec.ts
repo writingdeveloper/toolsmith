@@ -3,6 +3,13 @@ import { expect, test, type Page } from "@playwright/test";
 import { isAnalytics } from "./net";
 
 const FIXTURES = path.join(__dirname, "fixtures");
+/**
+ * 움직이는 GIF(44프레임 · 978KB). **합성으로 만들지 않는다** — 실제 인코더가 낸
+ * 블록 배치를 걷는 것이 `probeAnimation()` 이 하는 일이기 때문이다.
+ * 위키미디어 커먼즈의 회전하는 지구(퍼블릭 도메인):
+ *   https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif
+ */
+const ANIMATED = path.join(__dirname, "fixtures", "anim.gif");
 const PHOTO = path.join(FIXTURES, "photo.jpg");
 const ALPHA = path.join(FIXTURES, "alpha.png");
 const ROTATED = path.join(FIXTURES, "rotated.jpg");
@@ -190,4 +197,29 @@ test("콘솔 에러 없이 동작한다", async ({ page }) => {
   await convert(page, 1);
 
   expect(errors).toEqual([]);
+});
+
+/*
+ * **움직이는 GIF 가 조용히 정지 그림이 되던 것 (2026-07-28).**
+ *
+ * 이 도구는 GIF 를 받는다고 화면에 적어 두고 실제로 받는다. 그런데
+ * `createImageBitmap` 은 첫 프레임만 주므로 978KB GIF 가 12KB 정지 WebP 로 나갔고,
+ * 화면에는 `-99%` 만 떴다 — 애니메이션이 사라졌다는 말이 어디에도 없었다. 규칙 3.
+ *
+ * 거절하지 않고 **누르기 전에 말하는** 쪽을 골랐다. 한 장만 뽑고 싶은 사람도 있고,
+ * 움직이는 결과가 필요하면 영상 → GIF 도구가 이미 있다.
+ */
+test("움직이는 GIF 는 첫 프레임만 남는다고 누르기 전에 말한다", async ({ page }) => {
+  await page.goto("/ko/tools/image-convert");
+  await page.locator('input[type="file"]').setInputFiles(ANIMATED);
+  await expect(page.locator("[data-animated]")).toBeVisible({ timeout: 30_000 });
+  await expect(page.locator("[data-animated]")).toContainText("첫 프레임만");
+});
+
+test("정지 그림에는 그 말을 붙이지 않는다", async ({ page }) => {
+  await page.goto("/ko/tools/image-convert");
+  await page.locator('input[type="file"]').setInputFiles(PHOTO);
+  await expect(page.getByRole("button", { name: /변환하기$/ })).toBeEnabled({ timeout: 30_000 });
+  await page.waitForTimeout(1_500);
+  await expect(page.locator("[data-animated]")).toHaveCount(0);
 });

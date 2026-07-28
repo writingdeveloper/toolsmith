@@ -106,6 +106,7 @@ export const en = {
         },
       ],
       ui: {
+          animatedNote: "This image is animated. Only the first frame is kept — the animation is lost.",
         unsupportedTitle: "This browser can't run image conversion.",
         unsupportedHint:
           "Please open it in an up-to-date Chrome, Edge, Firefox or Safari 17+ that supports OffscreenCanvas.",

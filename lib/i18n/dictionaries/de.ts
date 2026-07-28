@@ -103,6 +103,7 @@ export const de = {
         },
       ],
       ui: {
+          animatedNote: "Dieses Bild ist animiert. Nur das erste Einzelbild bleibt erhalten — die Animation geht verloren.",
         unsupportedTitle: "Dieser Browser kann keine Bilder umwandeln.",
         unsupportedHint:
           "Bitte in einem aktuellen Chrome, Edge, Firefox oder Safari 17+ mit OffscreenCanvas öffnen.",

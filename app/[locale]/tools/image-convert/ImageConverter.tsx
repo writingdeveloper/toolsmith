@@ -28,6 +28,8 @@ interface Item {
   status: "queued" | "working" | "done" | "error";
   result?: { url: string; size: number; width: number; height: number; name: string };
   error?: string;
+  /** 움직이는 그림인가. 판별 전에는 undefined. */
+  animated?: boolean;
 }
 
 function describeError(ui: Ui, message: string): string {
@@ -115,12 +117,36 @@ export function ImageConverter({ ui, common }: { ui: Ui; common: Common }) {
     };
   }, []);
 
-  const addFiles = useCallback((files: File[]) => {
-    setItems((prev) => [
-      ...prev,
-      ...files.map((file) => ({ id: ++itemId.current, file, status: "queued" as const })),
-    ]);
-  }, []);
+  const addFiles = useCallback(
+    (files: File[]) => {
+      const added = files.map((file) => ({
+        id: ++itemId.current,
+        file,
+        status: "queued" as const,
+      }));
+      setItems((prev) => [...prev, ...added]);
+
+      /*
+       * **누르기 전에 말해야 한다.** 움직이는 GIF 는 첫 프레임만 남는데, 그것을
+       * 결과가 나온 뒤에 알려 주면 이미 늦다 — 화면에는 "-99%" 만 보이기 때문이다.
+       */
+      for (const item of added) {
+        callWorker({ kind: "probe", file: item.file })
+          .then((response) => {
+            if (response.kind !== "probed") return;
+            setItems((prev) =>
+              prev.map((entry) =>
+                entry.id === item.id ? { ...entry, animated: response.animated } : entry,
+              ),
+            );
+          })
+          .catch(() => {
+            // 판별 실패는 조용히 넘긴다 — 변환 자체를 막을 이유가 없다
+          });
+      }
+    },
+    [callWorker],
+  );
 
   const reset = useCallback(() => {
     for (const item of itemsRef.current) {
@@ -317,6 +343,11 @@ export function ImageConverter({ ui, common }: { ui: Ui; common: Common }) {
                       </>
                     )}
                   </p>
+                  {item.animated && (
+                    <p className="mt-1 text-xs text-warn" data-animated>
+                      {ui.animatedNote}
+                    </p>
+                  )}
                 </div>
 
                 {item.status === "working" && (

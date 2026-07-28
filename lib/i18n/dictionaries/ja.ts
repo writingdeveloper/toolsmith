@@ -103,6 +103,7 @@ export const ja = {
         },
       ],
       ui: {
+          animatedNote: "アニメーション画像です。最初のフレームだけが残り、動きは失われます。",
         unsupportedTitle: "このブラウザでは画像変換を実行できません。",
         unsupportedHint:
           "OffscreenCanvas に対応した最新の Chrome、Edge、Firefox、Safari 17 以降で開いてください。",

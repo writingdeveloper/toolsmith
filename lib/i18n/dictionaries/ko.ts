@@ -101,6 +101,7 @@ export const ko = {
         },
       ],
       ui: {
+          animatedNote: "움직이는 그림입니다. 첫 프레임만 남고 움직임은 사라집니다.",
         unsupportedTitle: "이 브라우저에서는 이미지 변환을 실행할 수 없습니다.",
         unsupportedHint:
           "OffscreenCanvas 를 지원하는 최신 Chrome, Edge, Firefox, Safari 17 이상에서 열어 주세요.",

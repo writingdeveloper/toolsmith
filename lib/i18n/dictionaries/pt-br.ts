@@ -103,6 +103,7 @@ export const ptBR = {
         },
       ],
       ui: {
+          animatedNote: "Esta imagem é animada. Apenas o primeiro quadro é mantido — a animação se perde.",
         unsupportedTitle: "Este navegador não consegue converter imagens.",
         unsupportedHint:
           "Abra em uma versão recente do Chrome, Edge, Firefox ou Safari 17+ com suporte a OffscreenCanvas.",
