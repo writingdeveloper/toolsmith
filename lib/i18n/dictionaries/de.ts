@@ -12,6 +12,10 @@ export const de = {
   },
 
   home: {
+    familyImage: "Bilder",
+    familyVideo: "Video & Audio",
+    familyPdf: "Dokumente",
+    familyData: "Daten",
     title: "Datei-Werkzeuge, die nichts hochladen",
     lead: "Bilder, Video und PDF werden direkt im Browser verarbeitet. Nichts hochladen, nichts abwarten, nichts hinterher löschen.",
     availableHeading: "Verfügbar",
@@ -24,6 +28,7 @@ export const de = {
   },
 
   common: {
+    breadcrumbLabel: "Brotkrümelnavigation",
     relatedHeading: "Weitere Werkzeuge",
     chooseFile: "Dateien wählen",
     download: "Herunterladen",

@@ -11,6 +11,10 @@ export const ko = {
   },
 
   home: {
+    familyImage: "이미지",
+    familyVideo: "영상·오디오",
+    familyPdf: "문서",
+    familyData: "데이터",
     title: "파일을 업로드하지 않는 변환 도구",
     lead: "이미지·영상·PDF를 브라우저 안에서 직접 처리합니다. 파일이 기기를 떠나지 않으니 업로드를 기다릴 필요도, 삭제를 걱정할 필요도 없습니다.",
     availableHeading: "사용 가능",
@@ -23,6 +27,7 @@ export const ko = {
   },
 
   common: {
+    breadcrumbLabel: "위치",
     relatedHeading: "다른 도구",
     chooseFile: "파일 선택",
     download: "다운로드",

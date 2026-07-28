@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { JsonLd } from "@/components/JsonLd";
 import { getDictionary } from "@/lib/i18n";
+import { rootJsonLd } from "@/lib/schema";
 import { DEFAULT_LOCALE, HTML_LANG, LOCALE_NAME, LOCALES } from "@/lib/i18n/config";
 import { absolute, alternatesFor, socialFor } from "@/lib/site";
 
@@ -24,6 +26,7 @@ export const metadata: Metadata = {
 export default function LanguagePicker() {
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-5 py-16">
+      <JsonLd data={rootJsonLd(dict)} />
       <p className="text-lg font-semibold tracking-tight">toolsmith</p>
       <h1 className="mt-6 text-2xl font-semibold tracking-tight">{dict.localePicker.title}</h1>
       <p className="mt-2 text-muted">{dict.localePicker.lead}</p>

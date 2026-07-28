@@ -12,6 +12,10 @@ export const ja = {
   },
 
   home: {
+    familyImage: "画像",
+    familyVideo: "動画・音声",
+    familyPdf: "ドキュメント",
+    familyData: "データ",
     title: "アップロードしないファイル変換ツール",
     lead: "画像・動画・PDFをブラウザの中で直接処理します。ファイルが端末を離れないので、アップロードを待つ必要も、あとで削除を気にする必要もありません。",
     availableHeading: "利用できるツール",
@@ -24,6 +28,7 @@ export const ja = {
   },
 
   common: {
+    breadcrumbLabel: "パンくずリスト",
     relatedHeading: "ほかの道具",
     chooseFile: "ファイルを選択",
     download: "ダウンロード",

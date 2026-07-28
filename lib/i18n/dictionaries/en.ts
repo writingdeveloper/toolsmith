@@ -14,6 +14,10 @@ export const en = {
   },
 
   home: {
+    familyImage: "Images",
+    familyVideo: "Video & audio",
+    familyPdf: "Documents",
+    familyData: "Data",
     title: "File tools that never upload anything",
     lead: "Images, video and PDFs are processed right inside your browser. Nothing to upload, nothing to wait for, nothing to delete afterwards.",
     availableHeading: "Available",
@@ -26,6 +30,7 @@ export const en = {
   },
 
   common: {
+    breadcrumbLabel: "Breadcrumb",
     relatedHeading: "Other tools",
     chooseFile: "Choose files",
     download: "Download",

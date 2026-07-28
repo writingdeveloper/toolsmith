@@ -12,6 +12,10 @@ export const ptBR = {
   },
 
   home: {
+    familyImage: "Imagens",
+    familyVideo: "Vídeo e áudio",
+    familyPdf: "Documentos",
+    familyData: "Dados",
     title: "Ferramentas de arquivo que não enviam nada",
     lead: "Imagens, vídeo e PDF são processados dentro do seu navegador. Nada para enviar, nada para esperar e nada para apagar depois.",
     availableHeading: "Disponíveis",
@@ -24,6 +28,7 @@ export const ptBR = {
   },
 
   common: {
+    breadcrumbLabel: "Trilha de navegação",
     relatedHeading: "Outras ferramentas",
     chooseFile: "Escolher arquivos",
     download: "Baixar",

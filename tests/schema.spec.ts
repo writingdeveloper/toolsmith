@@ -64,12 +64,18 @@ test("모든 언어가 자기 언어의 구조화 데이터를 낸다", async ({
   }
 });
 
-test("홈은 사이트 자체를 설명한다", async ({ page }) => {
+test("홈은 사이트 자체를 설명하고 만든 주체를 가리킨다", async ({ page }) => {
   await page.goto("/en");
-  const [site] = await jsonLdOf(page);
-  expect(site["@type"]).toBe("WebSite");
+  const [graph] = await jsonLdOf(page);
+  const nodes = graph["@graph"] as Array<Record<string, unknown>>;
+
+  const site = nodes.find((node) => node["@type"] === "WebSite")!;
   expect(site.name).toBe("toolsmith");
   expect(site.inLanguage).toBe("en");
+
+  // 사이트와 만든 주체가 이어져 있어야 한 덩어리로 읽힌다
+  const org = nodes.find((node) => node["@type"] === "Organization")!;
+  expect((site.publisher as { "@id": string })["@id"]).toBe(org["@id"]);
 });
 
 test("배포본은 절대 URL 로 자기를 가리킨다", async ({ page }) => {
@@ -82,4 +88,46 @@ test("배포본은 절대 URL 로 자기를 가리킨다", async ({ page }) => {
     const app = nodes.find((node) => node["@type"] === "WebApplication")!;
     expect(app.url, tool.slug).toBe(`${process.env.BASE_URL}/ko/tools/${tool.slug}`);
   }
+});
+
+/*
+ * **루트 `/` 에는 구조화 데이터가 하나도 없었다 (2026-07-28).**
+ *
+ * 도구 페이지마다 세 개씩 넣어 두고도 바깥 검사 도구에서는 "JSON-LD 없음" 으로 보였다 —
+ * 그런 도구는 대개 **입력한 도메인의 루트**를 보기 때문이다. 루트는 언어 선택 한 장이라
+ * 도구 스키마를 넣을 수 없지만, 사이트와 만든 주체는 여기서도 말할 수 있다.
+ */
+test("언어 선택 루트에도 구조화 데이터가 있다", async ({ page }) => {
+  await page.goto("/");
+  const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
+  expect(blocks).toHaveLength(1);
+
+  const graph = JSON.parse(blocks[0])["@graph"] as Array<Record<string, unknown>>;
+  const types = graph.map((node) => node["@type"]);
+  expect(types).toContain("WebSite");
+  expect(types).toContain("Organization");
+
+  // WebSite 가 Organization 을 실제로 가리켜야 한 덩어리로 읽힌다
+  const site = graph.find((node) => node["@type"] === "WebSite")!;
+  const org = graph.find((node) => node["@type"] === "Organization")!;
+  expect((site.publisher as { "@id": string })["@id"]).toBe(org["@id"]);
+});
+
+/*
+ * 구조화 데이터는 **보이는 내용을 반영해야 한다**(구글 정책). BreadcrumbList 를
+ * 넣어 두고 화면에는 아무것도 없던 상태를 이 검사가 막는다.
+ */
+test("BreadcrumbList 가 화면의 위치 표시와 같은 것을 말한다", async ({ page }) => {
+  await page.goto("/ko/tools/pdf-merge");
+
+  const crumb = page.locator("[data-breadcrumb]");
+  await expect(crumb).toBeVisible();
+  const shown = (await crumb.innerText({ timeout: 5_000 })).replace(/\s+/g, " ");
+
+  const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
+  const graph = JSON.parse(blocks[0])["@graph"] as Array<Record<string, unknown>>;
+  const list = graph.find((node) => node["@type"] === "BreadcrumbList")!;
+  const items = list.itemListElement as Array<{ name: string }>;
+
+  for (const item of items) expect(shown).toContain(item.name);
 });

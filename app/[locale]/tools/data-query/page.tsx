@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { RelatedTools } from "@/components/RelatedTools";
 import { getDictionary } from "@/lib/i18n";
@@ -39,6 +40,8 @@ export default async function VideoConvertPage({
   return (
     <article className="space-y-10">
       <JsonLd data={toolJsonLd(locale, dict, "data-query")} />
+
+      <Breadcrumb locale={locale} label={dict.common.breadcrumbLabel} current={tool.h1} />
 
       <header className="space-y-3">
         <h1 className="text-3xl font-semibold tracking-tight">{tool.h1}</h1>

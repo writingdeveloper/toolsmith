@@ -12,6 +12,10 @@ export const es = {
   },
 
   home: {
+    familyImage: "Imágenes",
+    familyVideo: "Vídeo y audio",
+    familyPdf: "Documentos",
+    familyData: "Datos",
     title: "Herramientas de archivos que no suben nada",
     lead: "Las imágenes, el vídeo y los PDF se procesan dentro de tu navegador. Nada que subir, nada que esperar y nada que borrar después.",
     availableHeading: "Disponibles",
@@ -24,6 +28,7 @@ export const es = {
   },
 
   common: {
+    breadcrumbLabel: "Ruta de navegación",
     relatedHeading: "Otras herramientas",
     chooseFile: "Elegir archivos",
     download: "Descargar",
