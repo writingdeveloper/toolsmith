@@ -1027,6 +1027,8 @@ export const ko = {
         errNoAudio: "이 파일에는 소리가 없습니다",
         errUnsupportedInput: "이 파일을 읽지 못했습니다 — MP4 · MOV · M4A · WAV · MP3",
         errTooLong: "{minutes}분보다 깁니다",
+        stop: "멈추기",
+        stoppedNote: "도중에 멈췄습니다 — 자막은 멈춘 자리까지이고, 뒷부분의 소리는 들어 있지 않습니다.",
         errGeneric: "자막을 만들지 못했습니다",
       },
     },

@@ -421,10 +421,20 @@ interface Transcriber {
     options: Record<string, unknown>,
   ): Promise<{ text: string; chunks?: Array<{ timestamp: [number, number | null]; text: string }> }>;
   dispose?(): Promise<void>;
+  /** `WhisperTextStreamer` 가 낱말을 풀어내는 데 쓴다. */
+  tokenizer: unknown;
+}
+
+interface Interruptable {
+  interrupt(): void;
 }
 
 interface TransformersModule {
   pipeline(task: string, model: string, options: Record<string, unknown>): Promise<Transcriber>;
+  /** 생성 도중에 세울 수 있게 해 준다. 4.2.0 에 있는 것을 확인하고 쓴다. */
+  InterruptableStoppingCriteria: new () => Interruptable;
+  /** Whisper 가 조각을 넘길 때마다 부르는 것들이 달려 있다. */
+  WhisperTextStreamer: new (tokenizer: unknown, options: Record<string, unknown>) => unknown;
 }
 
 let transformersPromise: Promise<TransformersModule> | null = null;
@@ -512,12 +522,15 @@ export interface SubtitleResult {
   runtime: "webgpu" | "wasm";
   /** 인식에 실제로 걸린 초 */
   seconds: number;
+  /** 사람이 도중에 세웠는가. 그러면 뒷부분이 없는 자막이므로 화면이 그렇게 적는다. */
+  stopped: boolean;
 }
 
 export async function transcribe(
   file: Blob,
   options: SubtitleOptions,
   onProgress?: (progress: SubtitleProgress) => void,
+  shouldStop?: () => boolean,
 ): Promise<SubtitleResult> {
   onProgress?.({ stage: "decoding", ratio: 0 });
   const bytes = new Uint8Array(await file.arrayBuffer());
@@ -542,6 +555,34 @@ export async function transcribe(
 
   onProgress?.({ stage: "transcribing", ratio: 0 });
   const started = Date.now();
+  /*
+   * **멈출 수 있어야 한다.**
+   *
+   * 이 도구는 한 번의 `asr()` 호출로 끝난다 — 자막 번역처럼 줄 사이에서 값을 볼 자리가
+   * 없다. 그래서 라이브러리가 주는 두 가지를 쓴다(4.2.0 에 있는 것을 확인하고 골랐다):
+   * `WhisperTextStreamer` 는 낱말이 나올 때마다 부르고, `InterruptableStoppingCriteria`
+   * 는 그 자리에서 생성을 끊는다.
+   *
+   * 왜 필요한가. 둘 다 이 저장소가 이미 아는 것이다:
+   *  - **길다.** 받는 상한이 20분이고 인식은 실시간보다 조금 빠른 정도다(CPU 실측:
+   *    6초 오디오에 1.3초). 20분짜리를 넣으면 몇 분을 기다리게 되는데, 그동안 손을
+   *    뗄 방법이 없었다.
+   *  - **무너지면 반복한다.** 잡음이 많은 녹음에서 같은 말을 되풀이하는 것을 앞서
+   *    실측해 FAQ 에 적어 두었다(1948년 연설 녹음). 그때도 세울 길은 없었다.
+   *
+   * **연주곡이 끝나지 않는다는 뜻은 아니다.** 그렇게 적었다가 재 보고 지웠다 —
+   * 6초 연주곡은 1.3초에 끝나고 빈 자막 한 줄을 낸다. 오래 걸린 것처럼 보였던 것은
+   * MP3 지원이 없던 시절 도구가 파일을 거부했고 검사가 결과를 기다린 것이었다.
+   */
+  const tf = await loadTransformers();
+  const stopper = new tf.InterruptableStoppingCriteria();
+  let stopped = false;
+  const check = () => {
+    if (stopped || !shouldStop?.()) return;
+    stopped = true;
+    stopper.interrupt();
+  };
+
   let output;
   try {
     output = await asr(audio, {
@@ -549,6 +590,14 @@ export async function transcribe(
       // 30초를 넘는 소리는 잘라서 넣어야 한다. 겹치는 5초가 경계에서 말을 안 끊는다.
       chunk_length_s: 30,
       stride_length_s: 5,
+      stopping_criteria: stopper,
+      // 낱말이 나올 때마다 멈춤 요청을 살핀다
+      streamer: new tf.WhisperTextStreamer(asr.tokenizer, {
+        skip_prompt: true,
+        callback_function: check,
+        on_chunk_start: check,
+        on_chunk_end: check,
+      }),
       ...(options.language === "auto" ? {} : { language: WHISPER_LANGUAGE[options.language] }),
     });
   } catch {
@@ -562,5 +611,6 @@ export async function transcribe(
     durationSec,
     runtime,
     seconds: (Date.now() - started) / 1000,
+    stopped,
   };
 }

@@ -1027,6 +1027,8 @@ export const de = {
         errNoAudio: "In dieser Datei ist kein Ton",
         errUnsupportedInput: "Diese Datei konnte nicht gelesen werden — MP4, MOV, M4A, WAV oder MP3",
         errTooLong: "Das ist länger als {minutes} Minuten",
+        stop: "Anhalten",
+        stoppedNote: "Vorzeitig angehalten — die Untertitel reichen bis zur Stelle, an der Sie angehalten haben; der Rest des Tons fehlt darin.",
         errGeneric: "Die Untertitel konnten nicht geschrieben werden",
       },
     },

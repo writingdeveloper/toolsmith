@@ -35,6 +35,8 @@ interface Result {
   srt: string;
   vtt: string;
   txt: string;
+  /** 사람이 도중에 세웠는가. 그러면 뒷부분이 없는 자막이다. */
+  stopped: boolean;
 }
 
 function textUrl(text: string): string {
@@ -155,6 +157,7 @@ export function SubtitleMaker({
         durationSec: response.durationSec,
         runtime: response.runtime,
         seconds: response.seconds,
+        stopped: response.stopped,
         srt: textUrl(toSrt(response.cues)),
         vtt: textUrl(toVtt(response.cues)),
         txt: textUrl(response.text),
@@ -180,6 +183,10 @@ export function SubtitleMaker({
       setProgress(null);
     }
   }, [callWorker, file, language, model, revoke, ui]);
+
+  const stop = useCallback(() => {
+    workerRef.current?.postMessage({ kind: "stop" } as WorkerRequest);
+  }, []);
 
   if (supported === false) {
     return (
@@ -268,6 +275,17 @@ export function SubtitleMaker({
           >
             {busy ? ui.working : ui.run}
           </button>
+          {/* 끝나지 않을 수 있는 도구다 — 세울 길을 늘 보여 준다 */}
+          {busy && (
+            <button
+              type="button"
+              onClick={stop}
+              data-stop
+              className="rounded-lg border border-border px-4 py-2 text-sm font-medium"
+            >
+              {ui.stop}
+            </button>
+          )}
           <span className="min-w-0 truncate text-sm text-muted">{file.name}</span>
         </div>
       )}
@@ -285,6 +303,13 @@ export function SubtitleMaker({
             })}{" "}
             · {result.runtime === "webgpu" ? ui.runtimeWebgpu : ui.runtimeWasm}
           </p>
+
+          {/* 뒷부분이 없는 자막을 온전한 것처럼 주지 않는다 */}
+          {result.stopped && (
+            <p className="text-sm text-warn" data-stopped>
+              {ui.stoppedNote}
+            </p>
+          )}
 
           <ul className="max-h-80 space-y-2 overflow-y-auto text-sm" data-cues>
             {result.cues.map((cue, index) => (

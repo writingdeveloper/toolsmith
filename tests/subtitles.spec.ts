@@ -8,6 +8,8 @@ import { isAnalytics } from "./net";
 const SPEECH = path.join(__dirname, "fixtures", "speech.wav");
 /** 1908년 부커 T. 워싱턴 연설 녹음 12초(퍼블릭 도메인). **컨테이너가 없는 MP3** 다. */
 const SPEECH_MP3 = path.join(__dirname, "fixtures", "speech.mp3");
+/** 1918년 재즈 연주 6초. 말이 아닌 소리 — 빈 자막 한 줄이 나온다. */
+const MUSIC = path.join(__dirname, "fixtures", "music.mp3");
 /** 소리가 없는 영상 — "소리가 없다" 를 제대로 말하는지 본다. */
 const SILENT = path.join(__dirname, "fixtures", "silent.mp4");
 
@@ -157,6 +159,52 @@ test.describe("브라우저", () => {
       (m) => Number(m[1]) * 3600 + Number(m[2]) * 60 + Number(m[3]) + Number(m[4]) / 1000,
     );
     expect(Math.max(...stamps)).toBeLessThanOrEqual(14);
+  });
+
+  /**
+   * **도중에 세울 수 있어야 한다.**
+   *
+   * 받는 상한이 20분이고 인식은 실시간보다 조금 빠른 정도다 — 긴 파일은 몇 분을
+   * 기다리게 된다. 잡음이 심하면 모델이 같은 말을 반복하는 것도 앞서 실측해 FAQ 에
+   * 적어 두었다. 그런데도 **세울 방법이 없었다.**
+   *
+   * 버튼이 보이자마자 누른다. 오래 걸리는 파일을 픽스처로 두지 않기 위해서다 —
+   * 멈춤 요청은 모델을 받는 동안에도 받아 두었다가 첫 낱말에서 듣는다.
+   */
+  test("도중에 세울 수 있고, 세웠다고 말한다", async ({ page }) => {
+    test.setTimeout(600_000);
+    await page.locator('input[type="file"]').setInputFiles(SPEECH);
+    await page.getByLabel("말하는 언어").selectOption("en");
+    await page.getByRole("button", { name: "자막 만들기" }).click();
+
+    await page.locator("[data-stop]").click({ timeout: 300_000 });
+
+    // 세운 뒤에는 **반드시 끝나야 한다** — 여기서 걸리면 멈춤이 듣지 않는 것이다
+    await expect(page.locator("[data-summary]")).toBeVisible({ timeout: 300_000 });
+    // 뒷부분이 없는 자막을 온전한 것처럼 주지 않는다
+    await expect(page.locator("[data-stopped]")).toBeVisible();
+  });
+
+  /**
+   * 노래를 넣는 사람은 반드시 있다. **그때 무슨 일이 나는지 재 두었다(2026-07-27).**
+   *
+   * 1918년 재즈 연주 6초 → **1.3초**에 끝나고 `music` 한 줄이 나온다. 헤매지도,
+   * 빈 자막을 내지도 않는다. 한동안 "연주곡에서 끝나지 않는다" 고 적어 두었는데
+   * **틀린 관찰이었다** — 그 지연은 MP3 를 못 받던 시절 도구가 파일을 거부한 것이었다.
+   */
+  test("말이 아닌 소리에는 헤매지 않고 그렇다고 적는다", async ({ page }) => {
+    test.setTimeout(600_000);
+    await page.locator('input[type="file"]').setInputFiles(MUSIC);
+    await page.getByLabel("말하는 언어").selectOption("en");
+    await run(page);
+
+    const srt = await page.evaluate(async () => {
+      const anchor = document.querySelector<HTMLAnchorElement>('a[download$=".srt"]')!;
+      return await (await fetch(anchor.href)).text();
+    });
+    // 시간만 있고 글이 없는 칸은 깨진 자막이다 — 그런 것을 내려받게 하지 않는다
+    expect(srt).toMatch(/-->.*\n\S/);
+    await expect(page.locator("[data-cues] li")).toHaveCount(1);
   });
 
   test("소리가 없는 영상에는 없다고 말한다", async ({ page }) => {

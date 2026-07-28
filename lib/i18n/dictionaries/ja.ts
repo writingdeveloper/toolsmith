@@ -1027,6 +1027,8 @@ export const ja = {
         errNoAudio: "このファイルには音がありません",
         errUnsupportedInput: "このファイルを読み取れませんでした — MP4・MOV・M4A・WAV・MP3",
         errTooLong: "{minutes} 分より長いです",
+        stop: "停止",
+        stoppedNote: "途中で停止しました — 字幕は停止した位置までで、それより後の音声は含まれていません。",
         errGeneric: "字幕を作れませんでした",
       },
     },

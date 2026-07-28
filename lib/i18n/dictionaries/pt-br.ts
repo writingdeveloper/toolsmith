@@ -1027,6 +1027,8 @@ export const ptBR = {
         errNoAudio: "Este arquivo não tem som",
         errUnsupportedInput: "Não foi possível ler este arquivo — MP4, MOV, M4A, WAV ou MP3",
         errTooLong: "Isto é mais longo que {minutes} minutos",
+        stop: "Parar",
+        stoppedNote: "Parado antes do fim — as legendas vão até onde você parou, então o resto do áudio não está nelas.",
         errGeneric: "Não foi possível escrever as legendas",
       },
     },

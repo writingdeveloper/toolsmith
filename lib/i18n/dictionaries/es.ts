@@ -1027,6 +1027,8 @@ export const es = {
         errNoAudio: "Este archivo no tiene sonido",
         errUnsupportedInput: "No se pudo leer este archivo — MP4, MOV, M4A, WAV o MP3",
         errTooLong: "Esto dura más de {minutes} minutos",
+        stop: "Detener",
+        stoppedNote: "Se detuvo antes de tiempo: los subtítulos llegan hasta donde paraste, así que el resto del audio no está en ellos.",
         errGeneric: "No se pudieron escribir los subtítulos",
       },
     },

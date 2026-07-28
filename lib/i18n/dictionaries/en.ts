@@ -1030,6 +1030,8 @@ export const en = {
         errNoAudio: "There is no sound in this file",
         errUnsupportedInput: "This file could not be read — MP4, MOV, M4A, WAV or MP3",
         errTooLong: "This is longer than {minutes} minutes",
+        stop: "Stop",
+        stoppedNote: "Stopped early — the subtitles end where you stopped, so the rest of the audio is not in them.",
         errGeneric: "The subtitles could not be written",
       },
     },
