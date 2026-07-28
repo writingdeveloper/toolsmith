@@ -7,6 +7,7 @@
  * 없는 것을 지어내지 않는다. 평점(aggregateRating)은 받은 적이 없으므로 넣지 않는다.
  */
 
+import type { GuideCopy, GuideMeta } from "./guides/registry";
 import type { Locale } from "./i18n/config";
 import { HTML_LANG } from "./i18n/config";
 import type { Dictionary } from "./i18n/dictionaries/en";
@@ -116,6 +117,101 @@ export function toolJsonLd(locale: Locale, dict: Dictionary, slug: ToolKey) {
           { "@type": "ListItem", position: 2, name: tool.h1, item: url },
         ],
       },
+    ],
+  };
+}
+
+/**
+ * 설명 글 한 편.
+ *
+ * **`Article` 을 쓰는 첫 자리다.** 도구 페이지는 `WebApplication` — "무엇을 하는
+ * 물건" 이라 글이 아니다. 여기는 읽을거리이므로 유형이 다르고, 그래서 날짜가
+ * 의미를 갖는다.
+ *
+ * `dateModified` 는 **빌드 시각이 아니라 글을 고친 날**이다(`lib/guides/registry.ts`).
+ * 안 고쳤는데 배포마다 날짜가 바뀌면 그 값 자체를 믿을 수 없게 된다.
+ */
+export function guideJsonLd(locale: Locale, copy: GuideCopy, meta: GuideMeta) {
+  const article = copy.articles[meta.slug];
+  const url = absolute(pathFor(locale, `/guides/${meta.slug}`));
+  const language = HTML_LANG[locale];
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        headline: article.h1,
+        description: article.metaDescription,
+        url,
+        mainEntityOfPage: { "@type": "WebPage", "@id": url },
+        inLanguage: language,
+        datePublished: meta.published,
+        dateModified: meta.updated,
+        // 사람 이름을 지어내지 않는다 — 쓴 주체는 이 사이트다
+        author: { "@id": `${absolute("/")}#org` },
+        publisher: { "@id": `${absolute("/")}#org` },
+        image: absolute("/og.png"),
+      },
+      {
+        "@type": "FAQPage",
+        inLanguage: language,
+        mainEntity: article.faq.map((entry) => ({
+          "@type": "Question",
+          name: entry.q,
+          acceptedAnswer: { "@type": "Answer", text: entry.a },
+        })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "toolsmith", item: absolute(pathFor(locale)) },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: copy.hub.h1,
+            item: absolute(pathFor(locale, "/guides")),
+          },
+          { "@type": "ListItem", position: 3, name: article.h1, item: url },
+        ],
+      },
+      publisher(),
+    ],
+  };
+}
+
+/** 글 목록. `ItemList` 로 어떤 글이 있는지 기계가 한 번에 읽게 한다. */
+export function guideHubJsonLd(locale: Locale, copy: GuideCopy, guides: GuideMeta[]) {
+  const url = absolute(pathFor(locale, "/guides"));
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        name: copy.hub.h1,
+        description: copy.hub.metaDescription,
+        url,
+        inLanguage: HTML_LANG[locale],
+        publisher: { "@id": `${absolute("/")}#org` },
+        mainEntity: {
+          "@type": "ItemList",
+          itemListElement: guides.map((meta, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: copy.articles[meta.slug].h1,
+            url: absolute(pathFor(locale, `/guides/${meta.slug}`)),
+          })),
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "toolsmith", item: absolute(pathFor(locale)) },
+          { "@type": "ListItem", position: 2, name: copy.hub.h1, item: url },
+        ],
+      },
+      publisher(),
     ],
   };
 }

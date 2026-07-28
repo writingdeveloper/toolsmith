@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { GUIDE_LIST } from "@/lib/guides";
 import { LOCALES } from "@/lib/i18n/config";
 import { alternatesFor, SITE_URL } from "@/lib/site";
 import { LIVE_TOOLS } from "@/lib/tools";
@@ -11,7 +12,29 @@ import { LIVE_TOOLS } from "@/lib/tools";
 export default function sitemap(): MetadataRoute.Sitemap {
   if (!SITE_URL) return [];
 
-  const paths = ["", ...LIVE_TOOLS.map((tool) => `/tools/${tool.slug}`)];
+  const now = new Date();
+
+  /**
+   * 경로마다 우선순위와 마지막 수정일이 다르다.
+   *
+   * **설명 글의 날짜는 빌드 시각이 아니라 글을 고친 날이다.** 도구 페이지는 코드가
+   * 바뀌면 화면도 바뀌므로 빌드 시각이 맞지만, 글은 안 고쳤는데 배포마다 날짜가
+   * 올라가면 크롤러가 `lastmod` 자체를 안 믿게 된다.
+   */
+  const pages: { path: string; priority: number; lastModified: Date }[] = [
+    { path: "", priority: 1, lastModified: now },
+    ...LIVE_TOOLS.map((tool) => ({
+      path: `/tools/${tool.slug}`,
+      priority: 0.8,
+      lastModified: now,
+    })),
+    { path: "/guides", priority: 0.6, lastModified: now },
+    ...GUIDE_LIST.map((guide) => ({
+      path: `/guides/${guide.slug}`,
+      priority: 0.7,
+      lastModified: new Date(`${guide.updated}T00:00:00Z`),
+    })),
+  ];
 
   /*
    * **언어 선택 화면(`/`)도 싣는다 (2026-07-28).**
@@ -22,7 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
    */
   const root = {
     url: `${SITE_URL}/`,
-    lastModified: new Date(),
+    lastModified: now,
     changeFrequency: "monthly" as const,
     // 언어판 홈이 실제 진입점이다 — 루트는 그리로 보내는 한 장이다
     priority: 0.5,
@@ -30,15 +53,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     root,
-    ...paths.flatMap((path) =>
+    ...pages.flatMap((page) =>
       LOCALES.map((locale) => ({
-        url: `${SITE_URL}/${locale}${path}`,
-        lastModified: new Date(),
+        url: `${SITE_URL}/${locale}${page.path}`,
+        lastModified: page.lastModified,
         changeFrequency: "weekly" as const,
-        priority: path === "" ? 1 : 0.8,
+        priority: page.priority,
         // **`<head>` 와 같은 함수를 부른다.** 둘이 어긋나면 구글이 어느 쪽을 믿을지
         // 모른다 — x-default 를 여기서 따로 계산하다가 실제로 어긋날 뻔했다.
-        alternates: { languages: alternatesFor(locale, path).languages },
+        alternates: { languages: alternatesFor(locale, page.path).languages },
       })),
     ),
   ];

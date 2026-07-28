@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Fragment } from "react";
 import type { Locale } from "@/lib/i18n/config";
 
 /**
@@ -15,11 +16,20 @@ export function Breadcrumb({
   locale,
   label,
   current,
+  trail = [],
 }: {
   locale: Locale;
   /** 스크린리더가 읽을 영역 이름 */
   label: string;
   current: string;
+  /**
+   * 홈과 현재 위치 **사이**에 끼는 단계. 도구는 비어 있고(두 칸), 설명 글은
+   * 목록 페이지 한 칸이 들어간다(세 칸).
+   *
+   * 여기 그리는 순서와 `lib/schema.ts` 의 `BreadcrumbList` 순서가 같아야 한다 —
+   * 구글은 구조화 데이터가 **보이는 내용을 반영해야 한다**고 못 박아 두었다.
+   */
+  trail?: { name: string; href: string }[];
 }) {
   return (
     <nav aria-label={label} data-breadcrumb className="text-sm text-muted">
@@ -29,6 +39,16 @@ export function Breadcrumb({
             toolsmith
           </Link>
         </li>
+        {trail.map((step) => (
+          <Fragment key={step.href}>
+            <li aria-hidden="true">/</li>
+            <li>
+              <Link href={step.href} className="hover:text-fg">
+                {step.name}
+              </Link>
+            </li>
+          </Fragment>
+        ))}
         <li aria-hidden="true">/</li>
         {/* 현재 위치는 링크가 아니다 — 자기 자신으로 가는 링크는 길이 아니다 */}
         <li className="min-w-0 truncate text-fg">{current}</li>

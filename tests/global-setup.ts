@@ -15,6 +15,7 @@
  * 한 언어만 훑으면 전부 컴파일된다 — 108개가 아니라 18개면 된다.
  */
 
+import { GUIDE_LIST } from "../lib/guides";
 import { LIVE_TOOLS } from "../lib/tools";
 import { PORT } from "../playwright.config";
 
@@ -49,7 +50,16 @@ export default async function globalSetup() {
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
 
-  const paths = ["/ko", ...LIVE_TOOLS.map((tool) => `/ko/tools/${tool.slug}`)];
+  /*
+   * 설명 글은 라우트 모듈이 **하나**다(`app/[locale]/guides/[slug]/page.tsx`) — 슬러그가
+   * 넷이어도 컴파일되는 것은 한 번이므로 대표 하나만 친다. 목록은 별개 모듈이다.
+   */
+  const paths = [
+    "/ko",
+    ...LIVE_TOOLS.map((tool) => `/ko/tools/${tool.slug}`),
+    "/ko/guides",
+    `/ko/guides/${GUIDE_LIST[0].slug}`,
+  ];
   const started = Date.now();
   const failed: string[] = [];
   for (const path of paths) {

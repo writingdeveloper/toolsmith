@@ -1,3 +1,4 @@
+import { getGuideCopy, GUIDE_LIST } from "@/lib/guides";
 import { getDictionary } from "@/lib/i18n";
 import { DEFAULT_LOCALE, LOCALES } from "@/lib/i18n/config";
 import { LIVE_TOOLS } from "@/lib/tools";
@@ -26,6 +27,13 @@ export function GET(): Response {
   const tools = LIVE_TOOLS.map((tool) => {
     const entry = dict.tools[tool.slug];
     return `- [${entry.h1}](${absolute(pathFor(DEFAULT_LOCALE, `/tools/${tool.slug}`))}): ${entry.metaDescription}`;
+  }).join("\n");
+
+  // 글도 손으로 적지 않는다 — 도구 목록과 같은 이유다
+  const guideCopy = getGuideCopy(DEFAULT_LOCALE);
+  const guides = GUIDE_LIST.map((meta) => {
+    const article = guideCopy.articles[meta.slug];
+    return `- [${article.h1}](${absolute(pathFor(DEFAULT_LOCALE, `/guides/${meta.slug}`))}): ${article.metaDescription}`;
   }).join("\n");
 
   const body = `# toolsmith
@@ -64,6 +72,13 @@ browser. There is no upload step and no account.
 ## Tools
 
 ${tools}
+
+## Guides
+
+Short explanatory articles. Each answers the question that comes before the tool, and the
+claims in them come from files we actually opened and measured.
+
+${guides}
 
 ## Languages
 

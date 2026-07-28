@@ -1,9 +1,15 @@
 import { expect, test } from "@playwright/test";
+import { GUIDE_LIST } from "../lib/guides";
 import { HTML_LANG, LOCALES } from "../lib/i18n/config";
 import { getDictionary } from "../lib/i18n";
 import { LIVE_TOOLS } from "../lib/tools";
 
-const PATHS = ["", ...LIVE_TOOLS.map((tool) => `/tools/${tool.slug}`)];
+const PATHS = [
+  "",
+  ...LIVE_TOOLS.map((tool) => `/tools/${tool.slug}`),
+  "/guides",
+  ...GUIDE_LIST.map((guide) => `/guides/${guide.slug}`),
+];
 
 test("모든 언어 × 모든 도구 페이지가 열리고 lang 속성이 맞다", async ({ page }) => {
   /*

@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/JsonLd";
 import { ToolFinder } from "@/components/ToolFinder";
+import { getGuideCopy, GUIDE_LIST } from "@/lib/guides";
 import { getDictionary } from "@/lib/i18n";
 import { isLocale } from "@/lib/i18n/config";
 import { siteJsonLd } from "@/lib/schema";
@@ -20,6 +22,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
+  const guides = getGuideCopy(locale);
 
   return (
     <div className="space-y-12">
@@ -62,6 +65,27 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             ];
           })}
         />
+      </section>
+
+      {/*
+        * **글로 들어가는 길은 홈에 있어야 한다.** 도구 페이지 꼬리에도 링크가 있지만
+        * 그쪽은 그 도구를 다룬 글만 보여 준다. 목록 전체로 가는 길은 여기 하나다.
+        */}
+      <section className="space-y-4 border-t border-border pt-8">
+        <h2 className="text-lg font-medium">{guides.hub.h1}</h2>
+        <p className="max-w-2xl text-sm text-muted">{guides.hub.lead}</p>
+        <ul className="grid gap-3 sm:grid-cols-2" data-home-guides>
+          {GUIDE_LIST.map((meta) => (
+            <li key={meta.slug}>
+              <Link
+                href={`/${locale}/guides/${meta.slug}`}
+                className="block rounded-xl border border-border bg-panel p-4 text-sm hover:border-accent"
+              >
+                {guides.articles[meta.slug].h1}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="space-y-4">
