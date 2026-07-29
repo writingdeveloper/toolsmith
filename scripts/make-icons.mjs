@@ -131,10 +131,12 @@ const og = page(
 await shoot(browser, og, 1200, 630, path.join(ROOT, "public", "og.png"));
 
 /*
- * 도구별 OG 카드.
+ * 페이지별 OG 카드.
  *
  * **왜 필요했나.** 스물한 도구가 위의 카드 하나를 함께 썼다. 어디를 공유해도 똑같이
- * 보였고, 공유 카드에서 도구를 구별할 방법이 없었다.
+ * 보였고, 공유 카드에서 도구를 구별할 방법이 없었다. 2026-07-29 에 **설명 글과 Lab
+ * 도구까지** 넓혔다 — 그전에는 글 66쪽이 공용 카드였는데, 링크를 받으라고 만든 층에
+ * 카드가 없고 도구에만 있는 것은 앞뒤가 뒤집힌 것이다.
  *
  * **그런데 문장은 여전히 안 넣는다.** 이미지 한 장을 6개 언어가 함께 쓰기 때문이다
  * (위의 og.png 에 적어 둔 이유 그대로). 대신 **형식 이름과 화살표**만 쓴다 —
@@ -149,44 +151,29 @@ const FAMILY_COLOR = {
   pdf: "#ef4444",
   video: "#a855f7",
   data: "#10b981",
+  /** Lab. 나머지 넷과 성격이 다르다 — 계열이 아니라 **층**이다(받을 것이 880MB). */
+  lab: "#f59e0b",
 };
 
-/** 슬러그 → [계열, 형식 표기]. 표기에 **어느 언어의 문장도 넣지 않는다.** */
-const CARDS = [
-  ["image-convert", "image", "HEIC · PNG · JPG · WebP"],
-  ["image-compress", "image", "JPG ↓"],
-  ["image-resize", "image", "4000 → 1200"],
-  ["remove-bg", "image", "JPG → PNG"],
-  ["upscale", "image", "1× → 4×"],
-  ["cutout", "image", "PNG ⌖"],
-  ["pdf-merge", "pdf", "PDF + PDF → PDF"],
-  ["pdf-split", "pdf", "PDF → 1 · 2 · 3"],
-  ["pdf-organize", "pdf", "PDF ↻"],
-  ["pdf-compress", "pdf", "PDF ↓"],
-  ["ocr", "pdf", "PDF · JPG → TXT"],
-  ["summarize", "pdf", "PDF → TXT"],
-  ["video-convert", "video", "MOV → MP4"],
-  ["video-compress", "video", "MP4 ↓"],
-  ["video-trim", "video", "MP4 ⟨ ⟩"],
-  ["video-to-gif", "video", "MP4 → GIF"],
-  ["audio-extract", "video", "MP4 → M4A · WAV"],
-  ["subtitles", "video", "MP4 → SRT · VTT"],
-  ["subtitle-translate", "video", "SRT → SRT"],
-  ["stems", "video", "MP3 → 4 × WAV"],
-  ["data-query", "data", "CSV · Parquet → SQL"],
-];
-
-mkdirSync(path.join(ROOT, "public", "og"), { recursive: true });
-
-for (const [slug, family, label] of CARDS) {
-  const color = FAMILY_COLOR[family];
-  const card = page(
+/**
+ * 카드 하나. `ask` 를 켜면 계열 색 물음표가 붙는다 — **설명 글용**이다.
+ *
+ * 글에 물음표 하나만 더하는 이유: 글은 도구와 **같은 대상을 다루므로 표기도 같아야
+ * 한다**(업스케일 도구가 `1× → 4×` 면 "업스케일이 화질을 만드나" 도 `1× → 4×` 다).
+ * 다른 낱말을 억지로 찾으면 대상이 달라 보이게 만드는 거짓말이 된다. 갈라 주는 것은
+ * **물음표 하나**로 충분하다 — 어느 언어에서나 물음이라는 뜻이고, 글은 실제로 물음에
+ * 답하는 페이지다.
+ */
+function cardHtml(label, color, ask) {
+  return page(
     `<div style="width:1200px;height:630px;position:relative;display:flex;flex-direction:column;
           align-items:center;justify-content:center;gap:56px;background:#0b0b0e;
           font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif">
        <div style="position:absolute;top:0;left:0;right:0;height:10px;background:${color}"></div>
        <div style="color:#f4f4f5;font-size:76px;font-weight:600;letter-spacing:-.02em;
-             text-align:center;padding:0 80px;line-height:1.15">${label}</div>
+             text-align:center;padding:0 80px;line-height:1.15">${label}${
+               ask ? `<span style="color:${color}"> ?</span>` : ""
+             }</div>
        <div style="display:flex;align-items:center;gap:18px">
          <div style="width:52px;height:52px">${MARK}</div>
          <div style="color:#a1a1aa;font-size:40px;font-weight:500;letter-spacing:-.02em">toolsmith</div>
@@ -204,7 +191,73 @@ for (const [slug, family, label] of CARDS) {
     630,
     "#0b0b0e",
   );
-  await shoot(browser, card, 1200, 630, path.join(ROOT, "public", "og", `${slug}.png`));
+}
+
+/**
+ * [출력 경로, 계열, 형식 표기, 물음표].
+ *
+ * **출력 경로가 URL 경로 그대로다** — `lib/site.ts` 의 `ogImageFor` 가 `/og{경로}.png`
+ * 로 유도하므로 여기 적는 것과 저기 만드는 것이 어긋날 수 없다. 층 이름을 빼고
+ * 슬러그만 적으면 세 층의 슬러그가 겹치는 순간 카드가 조용히 섞인다.
+ *
+ * 표기에 **어느 언어의 문장도 넣지 않는다.**
+ */
+const CARDS = [
+  // ── 도구 ──
+  ["tools/image-convert", "image", "HEIC · PNG · JPG · WebP"],
+  ["tools/image-compress", "image", "JPG ↓"],
+  ["tools/image-resize", "image", "4000 → 1200"],
+  ["tools/remove-bg", "image", "JPG → PNG"],
+  ["tools/upscale", "image", "1× → 4×"],
+  ["tools/cutout", "image", "PNG ⌖"],
+  ["tools/pdf-merge", "pdf", "PDF + PDF → PDF"],
+  ["tools/pdf-split", "pdf", "PDF → 1 · 2 · 3"],
+  ["tools/pdf-organize", "pdf", "PDF ↻"],
+  ["tools/pdf-compress", "pdf", "PDF ↓"],
+  ["tools/ocr", "pdf", "PDF · JPG → TXT"],
+  ["tools/summarize", "pdf", "PDF → TXT"],
+  ["tools/video-convert", "video", "MOV → MP4"],
+  ["tools/video-compress", "video", "MP4 ↓"],
+  ["tools/video-trim", "video", "MP4 ⟨ ⟩"],
+  ["tools/video-to-gif", "video", "MP4 → GIF"],
+  ["tools/audio-extract", "video", "MP4 → M4A · WAV"],
+  ["tools/subtitles", "video", "MP4 → SRT · VTT"],
+  ["tools/subtitle-translate", "video", "SRT → SRT"],
+  ["tools/stems", "video", "MP3 → 4 × WAV"],
+  ["tools/data-query", "data", "CSV · Parquet → SQL"],
+
+  /*
+   * ── Lab ──
+   * 가린 자리를 블록으로 보인다(`█`). 도구가 실제로 쓰는 마스크 글자와 같은 것이고,
+   * 읽을 필요가 없으므로 언어에 걸리지 않는다.
+   */
+  ["lab/pii", "lab", "TXT · PDF → ███"],
+
+  /*
+   * ── 설명 글 ──
+   * 넷은 자기 도구와 표기가 같다(배경 제거·업스케일·스템·요약). 위 `cardHtml` 참고 —
+   * 같은 대상을 다루므로 그래야 맞고, 물음표가 갈라 준다.
+   */
+  ["guides/what-is-heic", "image", "HEIC", true],
+  ["guides/image-formats", "image", "JPG · PNG · WebP · AVIF", true],
+  ["guides/how-background-removal-works", "image", "JPG → PNG", true],
+  ["guides/does-upscaling-add-detail", "image", "1× → 4×", true],
+  ["guides/why-pdf-is-large", "pdf", "PDF ↑", true],
+  ["guides/why-pdf-wont-open", "pdf", "PDF ✕", true],
+  ["guides/can-ai-summarize", "pdf", "PDF → TXT", true],
+  ["guides/mov-vs-mp4", "video", "MOV ⇄ MP4", true],
+  ["guides/srt-vs-vtt", "video", "SRT ⇄ VTT", true],
+  ["guides/what-are-stems", "video", "MP3 → 4 × WAV", true],
+  ["guides/csv-vs-excel", "data", "CSV ⇄ XLSX", true],
+];
+
+for (const dir of ["tools", "guides", "lab"]) {
+  mkdirSync(path.join(ROOT, "public", "og", dir), { recursive: true });
+}
+
+for (const [out, family, label, ask = false] of CARDS) {
+  const card = cardHtml(label, FAMILY_COLOR[family], ask);
+  await shoot(browser, card, 1200, 630, path.join(ROOT, "public", "og", `${out}.png`));
 }
 
 await browser.close();
