@@ -25,6 +25,9 @@ export const GUIDE_SLUGS = [
   "does-upscaling-add-detail",
   "srt-vs-vtt",
   "what-are-stems",
+  "why-pdf-wont-open",
+  "csv-vs-excel",
+  "can-ai-summarize",
 ] as const;
 
 export type GuideSlug = (typeof GUIDE_SLUGS)[number];
@@ -106,6 +109,31 @@ export const GUIDES: Record<GuideSlug, GuideMeta> = {
     published: "2026-07-28",
     updated: "2026-07-28",
     tools: ["stems", "audio-extract"],
+  },
+
+  /*
+   * 세 번째 묶음(2026-07-28). **글이 없는 도구를 세어서 골랐다** — 짐작이 아니라
+   * `guidesForTool` 이 비는 자리를 계산해서 나온 셋이다(pdf-merge · data-query ·
+   * summarize). 검색 데이터가 아직 없으니 그 다음으로 확실한 근거는 "우리 도구 중
+   * 아무도 설명하지 않은 것" 이다.
+   */
+  "why-pdf-wont-open": {
+    slug: "why-pdf-wont-open",
+    published: "2026-07-28",
+    updated: "2026-07-28",
+    tools: ["pdf-merge", "pdf-organize", "pdf-split", "pdf-compress"],
+  },
+  "csv-vs-excel": {
+    slug: "csv-vs-excel",
+    published: "2026-07-28",
+    updated: "2026-07-28",
+    tools: ["data-query"],
+  },
+  "can-ai-summarize": {
+    slug: "can-ai-summarize",
+    published: "2026-07-28",
+    updated: "2026-07-28",
+    tools: ["summarize", "ocr"],
   },
 };
 

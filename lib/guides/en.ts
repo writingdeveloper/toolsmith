@@ -546,5 +546,207 @@ export const en = {
         },
       ],
     },
+
+    "why-pdf-wont-open": {
+      metaTitle: "Why Won't My PDF Open?",
+      metaDescription: "A PDF that fails is usually failing for one of five reasons, and they need different fixes. Here is how to tell which one you have.",
+      h1: "Why won't my PDF open?",
+      lead: "\"This file cannot be opened\" covers at least five completely different problems. Telling them apart takes about ten seconds and saves you from trying the wrong fix.",
+      sections: [
+        {
+          h2: "First: does it fail everywhere, or only in one place?",
+          body: [
+            "Open it in a browser — drag the file onto a browser tab. Browsers have their own PDF engine, so this tells you whether the file is broken or your reader is.",
+            "If it opens in the browser but not in your desktop reader, the file is fine. Update the reader, or just use the browser. If it fails in both, keep reading.",
+          ],
+        },
+        {
+          h2: "It asks for a password — and there are two kinds",
+          body: [
+            "PDFs can carry two separate passwords and people rarely realise it. A **user password** is required to open the document at all. An **owner password** leaves it readable but restricts printing, copying or editing.",
+            "This matters because tools behave differently. A file with only an owner password opens fine in most readers, so it feels unprotected — but many tools will still refuse to modify it, which looks like a broken file when it is really a permission.",
+            "There is no honest way around a user password: the content is genuinely encrypted. Our PDF tools refuse encrypted files and say so rather than producing something empty. We tested that with real AES-encrypted files and with ones written by LibreOffice; all four tools declined correctly.",
+          ],
+        },
+        {
+          h2: "The text is there but shows as empty boxes",
+          body: [
+            "This is a font problem, and it is very common with Chinese, Japanese and Korean documents. The characters exist in the file, but the font that draws them was not embedded — so the reader substitutes something that has no glyphs for those characters and you get rows of hollow rectangles.",
+            "It is worth knowing that this is a *rendering* failure, not a data failure. Copy the text out and it is intact. If you need it to look right, the fix is on the machine that made the PDF: embed the fonts when exporting.",
+          ],
+        },
+        {
+          h2: "Pages are blank, or a scan shows nothing",
+          body: [
+            "Some PDFs store their images in formats that not every engine implements — JBIG2 and JPEG 2000 are the usual culprits, and both are common in scanned documents from office equipment. An engine without those decoders draws a blank page rather than an error.",
+            "The tell is that the page is blank but the file size is large. Blank pages that are genuinely blank are tiny.",
+          ],
+        },
+        {
+          h2: "It is truncated or corrupt",
+          body: [
+            "A PDF keeps its index of objects at the **end** of the file. That is why a partially downloaded PDF fails completely rather than showing the first few pages — the reader looks for the index, does not find it, and gives up.",
+            "If a file arrived by email or download, check its size against the original. A file that stops early is not repairable in any meaningful sense; get it again.",
+          ],
+        },
+        {
+          h2: "What to do once you know which one it is",
+          body: [
+            "Matching the fix to the cause saves a lot of time:",
+          ],
+          list: [
+            "Opens in a browser but not your reader → the reader. Use the browser or update it.",
+            "Asks for a password → you need the password. No tool can honestly bypass it.",
+            "Empty boxes instead of characters → fonts were not embedded. The text is fine; re-export from the source.",
+            "Blank pages, large file → an image format your reader cannot decode. Try a different reader.",
+            "Fails immediately, file looks small → truncated. Download it again.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Can a tool remove a PDF password?",
+          a: "Not the one that encrypts the content. If a document needs a password to open, the bytes are encrypted and there is nothing to work with. Tools that claim otherwise are either guessing passwords or handling the permissions-only case.",
+        },
+        {
+          q: "Why does the same PDF look different in two programs?",
+          a: "Because every reader has its own engine, and they differ in which fonts they substitute and which image formats they decode. A PDF describes a page; it does not guarantee two engines draw it identically.",
+        },
+        {
+          q: "My PDF opens but I cannot select the text.",
+          a: "Then there is no text layer — the pages are pictures. That happens with scans, and also with files that some compressors produce by flattening every page to an image. Text recognition can put a layer back.",
+        },
+      ],
+    },
+
+    "csv-vs-excel": {
+      metaTitle: "CSV vs Excel: What Actually Differs",
+      metaDescription: "A CSV has no types, no formatting and no sheets — it is just text. That single fact explains every strange thing Excel does when it opens one.",
+      h1: "CSV vs Excel — what actually differs",
+      lead: "Almost every confusing thing that happens to a CSV comes from one fact: a CSV file has no idea what its values mean. Excel guesses, and the guesses are where data gets damaged.",
+      sections: [
+        {
+          h2: "A CSV is text. That is the whole format.",
+          body: [
+            "A CSV is lines of characters separated by commas. There is nothing else in it — no cell types, no formulas, no formatting, no multiple sheets, no column widths. `007` in a CSV is three characters, not a number and not a string; the file does not say which.",
+            "An .xlsx file is the opposite: a compressed bundle that records, for every cell, what kind of value it holds and how it should look. That is why it is bigger and why it survives a round trip unchanged.",
+          ],
+        },
+        {
+          h2: "What Excel does to your data when it opens a CSV",
+          body: [
+            "Because the file does not declare types, Excel infers them. Its guesses are reasonable in the average case and destructive in specific ones:",
+          ],
+          list: [
+            "Leading zeros disappear. `007` becomes `7`. Postal codes, account numbers and part numbers are the usual casualties.",
+            "Things that look like dates become dates. `1-2` becomes 2 January. This famously forced geneticists to rename genes because Excel kept turning SEPT2 into a date.",
+            "Long numbers switch to scientific notation and lose their tail. A 16-digit identifier can come back as `1.23457E+15`, and the lost digits are not recoverable by changing the format afterwards.",
+            "The damage is saved when you save. The original file was correct; the file Excel writes back is not.",
+          ],
+        },
+        {
+          h2: "Why your CSV shows as gibberish, or all in one column",
+          body: [
+            "Two separate problems, both about assumptions the file cannot state.",
+            "**Encoding.** A CSV does not record its character encoding. Excel on Windows historically assumes the local codepage rather than UTF-8, which is why Korean, Japanese and accented Latin text arrives mangled. A UTF-8 byte order mark at the start usually fixes it.",
+            "**The separator.** In countries where the comma is the decimal mark, spreadsheets write and expect semicolons instead. Open such a file elsewhere and every row lands in a single column. The file is not broken; the two programs disagree about what a comma means.",
+          ],
+        },
+        {
+          h2: "When the file is simply too big",
+          body: [
+            "A spreadsheet has a hard ceiling of about 1,048,576 rows, and it gets slow long before that because it loads everything into memory to make it all editable.",
+            "Past a certain size the right move is to stop opening the file and start asking it questions instead. `SELECT` a few columns, filter, group, count — you get an answer in seconds without the machine trying to render millions of cells you were never going to look at.",
+          ],
+        },
+        {
+          h2: "Parquet, briefly",
+          body: [
+            "If CSV keeps letting you down, Parquet is what the analytics world switched to. It stores types inside the file, so nothing is guessed. It stores data by column rather than by row, so reading three columns out of fifty reads roughly three columns' worth of bytes. And it compresses well — often five to ten times smaller than the same CSV.",
+            "The trade is that you cannot open it in a text editor. It is a format for querying, not for eyeballing.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "How do I stop Excel from mangling my CSV?",
+          a: "Do not double-click it. Use Data → From Text/CSV, which lets you set the encoding and mark columns as text before anything is converted. Or query the file directly and never let a spreadsheet touch it.",
+        },
+        {
+          q: "Is a CSV smaller than an Excel file?",
+          a: "Usually no, which surprises people. .xlsx is a zipped bundle, and zip compresses repetitive text well. A plain CSV is uncompressed characters. Parquet beats both by a wide margin.",
+        },
+        {
+          q: "Can I query a CSV without a database?",
+          a: "Yes. Our data tool runs a SQL engine inside the browser tab and reads the file straight from your disk — nothing is uploaded, and there is no server or database to set up.",
+        },
+      ],
+    },
+
+    "can-ai-summarize": {
+      metaTitle: "Can AI Summarise a Document Reliably?",
+      metaDescription: "Small summarisation models fail in specific, repeatable ways — copying, inventing and getting facts wrong. Here is what we measured, and when to trust it.",
+      h1: "Can AI summarise a document reliably?",
+      lead: "Sometimes, and the failures are specific enough to be worth learning. We tested four models on the same documents; two of them did not summarise at all.",
+      sections: [
+        {
+          h2: "What a summariser is actually doing",
+          body: [
+            "A summarisation model does not extract sentences and stitch them together. It reads the document and then writes new sentences, one word at a time, choosing each word by what tends to follow.",
+            "That is why the output reads naturally, and it is also why it can be wrong in ways that a copy-paste approach never could: nothing anchors the generated text to the source except the model's training.",
+          ],
+        },
+        {
+          h2: "Failure one: it copies instead of summarising",
+          body: [
+            "This was the biggest surprise in our testing. Two models with clean, permissive licences — one 600M parameters, one 350M — did not summarise narrative prose. They reproduced the opening of the document verbatim.",
+            "Both handled encyclopedia articles fine. It was only when we added a piece of narrative writing that the behaviour showed up. If we had tested with reference material alone, we would have shipped a model that copies.",
+            "Forcing it not to copy made things worse rather than better: wrapped in delimiters, the same model produced a fluent sentence that said something the document never said.",
+          ],
+        },
+        {
+          h2: "Failure two: it invents when there is nothing to work with",
+          body: [
+            "Given an empty input, one model produced a summary of a public health campaign. Given the single word \"hello\", it wrote three lines of a diary entry.",
+            "A model always produces something — there is no state in which it returns nothing. If the input is too short to summarise, what comes out is not a bad summary; it is fiction. This is why our tool has a minimum length and refuses below it rather than obliging.",
+          ],
+        },
+        {
+          h2: "Failure three: it gets facts wrong, fluently",
+          body: [
+            "In one run the model expanded the abbreviation NADPH into a chemical name that was not what NADPH stands for. The sentence was well-formed and confident.",
+            "Fluency and accuracy are separate things, and they fail separately. This is the failure mode you cannot spot by reading the summary alone, which is precisely why a summary is a way to decide whether to read something — not a replacement for reading it.",
+          ],
+        },
+        {
+          h2: "What it is genuinely good at",
+          body: [
+            "Working out whether a long document is relevant to you. Getting the gist of a report in a language you read slowly. Producing a first draft of an abstract that you then correct.",
+            "One more limit worth knowing: asking for a summary in a different language than the source is where small models fall apart — inventing words that do not exist, or ignoring the instruction and answering in the source language. Summarising and translating are two jobs; ask for them one at a time.",
+          ],
+        },
+        {
+          h2: "If the document is a scan, nothing above applies yet",
+          body: [
+            "A scanned PDF has no text in it, only pictures of text. A summariser given such a file receives nothing at all — and, per the second failure above, a model given nothing will still write something.",
+            "Run text recognition first, check the result, then summarise. Recognition on a poor scan produces its own errors, and summarising those errors compounds them quietly.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Can I trust an AI summary for something important?",
+          a: "Use it to decide what to read, not as a substitute for reading. The errors it makes are fluent and confident, which means they do not look like errors — that is exactly the property that makes them dangerous for decisions.",
+        },
+        {
+          q: "Why does the tool refuse very long documents instead of truncating?",
+          a: "Because summarising the first part and presenting it as a summary of the whole is a lie the reader cannot detect. Refusing is honest; silently truncating is not.",
+        },
+        {
+          q: "Does my document get uploaded?",
+          a: "No. The model is downloaded to your browser and the document is read there. It is the opposite arrangement from a hosted service: the model travels, not your file.",
+        },
+      ],
+    },
   },
 } satisfies GuideCopy;

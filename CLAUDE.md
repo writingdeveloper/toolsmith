@@ -83,7 +83,7 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
 ## 현재 상태 (2026-07-27)
 
 **라이브: https://toolsmith.writingdeveloper.blog** — 6개 언어 × (홈 + 도구 21 + 글 목록
-+ 글 8) = 186 페이지 + 루트 언어 선택. 전부 정적. Playwright **401종**. 두 프로젝트로 돈다 — 기본
++ 글 11) = 204 페이지 + 루트 언어 선택. 전부 정적. Playwright **404종**. 두 프로젝트로 돈다 — 기본
 `chromium`(전부)과 `chromium-webgpu`(모델 도구 다섯을 GPU 경로로). **지연 로딩 판정만은
 여전히 프로덕션으로 한다**(Turbopack dev 가 동적 import 를 당겨오기 때문).
 
@@ -199,7 +199,7 @@ vercel deploy --prod --yes --scope sihyeong-lees-projects-64e0ba83
   파일이 대상의 `ACCEPT` 에 걸릴 때만 보인다 — WebM·ZIP 은 저절로 빠진다.
 - `lib/i18n/dictionaries/en.ts` — 사전의 **타입 원본**. 여기에 키를 더하면 나머지 5개가
   타입 에러로 드러난다.
-- `lib/guides/registry.ts` — **도구가 아닌 페이지.** 설명 글 여덟(`/guides/…`)이 여기 있다.
+- `lib/guides/registry.ts` — **도구가 아닌 페이지.** 설명 글 열하나(`/guides/…`)이 여기 있다.
   언어와 무관한 것만 둔다: 슬러그 · 날짜 · **어느 도구를 가리키나.** 도구→글 방향은
   적지 않고 `guidesForTool` 이 뒤집어 계산한다 — 양쪽에 적으면 한쪽만 고쳐진다.
   본문은 `lib/guides/{locale}.ts` 가 갖는다(**사전이 아니다** — 사전은 화면의 조각이고

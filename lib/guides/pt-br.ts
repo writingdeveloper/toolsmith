@@ -537,5 +537,207 @@ export const ptBr = {
         },
       ],
     },
+
+    "why-pdf-wont-open": {
+      metaTitle: "Por que meu PDF não abre?",
+      metaDescription: "Um PDF que falha costuma falhar por uma de cinco razões, e cada uma pede uma solução diferente. Veja como descobrir qual é a sua.",
+      h1: "Por que meu PDF não abre?",
+      lead: "«Não é possível abrir este arquivo» cobre pelo menos cinco problemas completamente distintos. Distingui-los leva uns dez segundos e evita que você tente a solução errada.",
+      sections: [
+        {
+          h2: "Primeiro: falha em todo lugar ou só num?",
+          body: [
+            "Arraste o arquivo para uma aba do navegador. Navegadores têm o próprio motor de PDF, então isso já diz se o arquivo está quebrado ou se é o seu leitor.",
+            "Se abre no navegador mas não no leitor de desktop, o arquivo está bem. Atualize o leitor ou simplesmente use o navegador. Se falha nos dois, continue lendo.",
+          ],
+        },
+        {
+          h2: "Ele pede senha — e existem duas",
+          body: [
+            "Um PDF pode carregar duas senhas distintas, e poucas pessoas sabem disso. A **senha de usuário** impede abrir o documento. A **senha de proprietário** deixa legível mas restringe imprimir, copiar ou editar.",
+            "Isso importa porque as ferramentas se comportam de forma diferente. Um arquivo só com senha de proprietário abre normalmente em quase qualquer leitor e parece desprotegido — mas muitas ferramentas se recusam a modificá-lo, o que parece arquivo quebrado quando na verdade é permissão.",
+            "Não há forma honesta de contornar uma senha de usuário: o conteúdo está realmente cifrado. Nossas ferramentas de PDF recusam arquivos cifrados e dizem isso, em vez de devolver algo vazio. Testamos com arquivos cifrados em AES reais e com outros escritos pelo LibreOffice; as quatro recusaram corretamente.",
+          ],
+        },
+        {
+          h2: "O texto está lá mas aparece como quadradinhos vazios",
+          body: [
+            "É problema de fonte, muito comum em documentos em chinês, japonês e coreano. Os caracteres existem no arquivo, mas a fonte que os desenha não foi incorporada — o leitor substitui por outra que não tem aqueles glifos e saem fileiras de retângulos ocos.",
+            "Vale saber que é uma falha de *desenho*, não de dados. Copie o texto e ele estará intacto. Se precisa que apareça certo, o conserto está na máquina que gerou o PDF: incorpore as fontes ao exportar.",
+          ],
+        },
+        {
+          h2: "Páginas em branco, ou um escaneamento que não mostra nada",
+          body: [
+            "Alguns PDFs guardam imagens em formatos que nem todo motor implementa — JBIG2 e JPEG 2000 são os usuais, e ambos são comuns em digitalizações de equipamentos de escritório. Um motor sem esses decodificadores desenha uma página em branco em vez de dar erro.",
+            "O sinal é a página vazia com arquivo pesado. Páginas realmente em branco são minúsculas.",
+          ],
+        },
+        {
+          h2: "Está truncado ou corrompido",
+          body: [
+            "Um PDF mantém o índice de objetos **no fim** do arquivo. Por isso um PDF baixado pela metade falha por completo em vez de mostrar as primeiras páginas: o leitor procura o índice, não acha e desiste.",
+            "Se veio por e-mail ou download, compare o tamanho com o original. Um arquivo que para no meio não tem conserto significativo; baixe de novo.",
+          ],
+        },
+        {
+          h2: "O que fazer depois de saber qual é",
+          body: [
+            "Casar a solução com a causa economiza muito tempo:",
+          ],
+          list: [
+            "Abre no navegador mas não no leitor → é o leitor. Use o navegador ou atualize-o.",
+            "Pede senha → você precisa da senha. Nenhuma ferramenta a contorna honestamente.",
+            "Quadradinhos em vez de caracteres → as fontes não foram incorporadas. O texto está bem; exporte de novo da origem.",
+            "Páginas em branco e arquivo grande → um formato de imagem que seu leitor não decodifica. Tente outro leitor.",
+            "Falha na hora e o arquivo parece pequeno → está truncado. Baixe outra vez.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Uma ferramenta consegue remover a senha de um PDF?",
+          a: "A que cifra o conteúdo, não. Se um documento exige senha para abrir, os bytes estão cifrados e não há com o que trabalhar. Ferramentas que dizem o contrário estão adivinhando senhas ou tratando o caso só de permissões.",
+        },
+        {
+          q: "Por que o mesmo PDF fica diferente em dois programas?",
+          a: "Porque cada leitor tem o próprio motor, e eles diferem em quais fontes substituem e quais formatos de imagem decodificam. Um PDF descreve uma página; não garante que dois motores a desenhem igual.",
+        },
+        {
+          q: "Meu PDF abre mas não consigo selecionar o texto.",
+          a: "Então não há camada de texto: as páginas são imagens. Acontece com digitalizações e também com arquivos que alguns compressores produzem achatando cada página. O reconhecimento de texto pode devolver essa camada.",
+        },
+      ],
+    },
+
+    "csv-vs-excel": {
+      metaTitle: "CSV contra Excel: o que muda de verdade",
+      metaDescription: "Um CSV não tem tipos, nem formatação, nem abas — é só texto. Esse único fato explica tudo de estranho que o Excel faz ao abrir um.",
+      h1: "CSV contra Excel — o que muda de verdade",
+      lead: "Quase tudo de confuso que acontece com um CSV vem de um fato: o arquivo não faz ideia do que seus valores significam. O Excel adivinha, e é no adivinhar que os dados se estragam.",
+      sections: [
+        {
+          h2: "Um CSV é texto. O formato é isso inteiro.",
+          body: [
+            "Um CSV são linhas de caracteres separadas por vírgulas. Não há mais nada — nem tipos de célula, nem fórmulas, nem formatação, nem várias abas, nem larguras de coluna. `007` num CSV são três caracteres, nem número nem texto; o arquivo não diz qual.",
+            "Um .xlsx é o oposto: um pacote compactado que registra, para cada célula, que tipo de valor ela guarda e como deve aparecer. Por isso é maior e por isso sobrevive intacto a uma ida e volta.",
+          ],
+        },
+        {
+          h2: "O que o Excel faz com seus dados ao abrir um CSV",
+          body: [
+            "Como o arquivo não declara tipos, o Excel os infere. Os palpites são razoáveis no caso médio e destrutivos em casos específicos:",
+          ],
+          list: [
+            "Zeros à esquerda somem. `007` vira `7`. CEPs, números de conta e códigos de peça são as vítimas de sempre.",
+            "O que parece data vira data. `1-2` vira 2 de janeiro. Isso obrigou geneticistas a renomear genes porque o Excel insistia em transformar SEPT2 numa data.",
+            "Números longos passam a notação científica e perdem o fim. Um identificador de 16 dígitos volta como `1,23457E+15`, e os dígitos perdidos não voltam mudando o formato depois.",
+            "E o estrago é salvo quando você salva. O arquivo original estava certo; o que o Excel grava de volta, não.",
+          ],
+        },
+        {
+          h2: "Por que seu CSV sai com caracteres estranhos ou tudo numa coluna",
+          body: [
+            "Dois problemas distintos, ambos sobre suposições que o arquivo não consegue declarar.",
+            "**A codificação.** Um CSV não registra sua codificação de caracteres. O Excel no Windows historicamente assumiu a página de código local em vez de UTF-8, e por isso acentos, coreano e japonês chegam destruídos. Uma marca UTF-8 no início costuma resolver.",
+            "**O separador.** Em países onde a vírgula é o separador decimal, as planilhas escrevem e esperam ponto e vírgula. Abra um arquivo desses em outro lugar e cada linha cai numa única coluna. O arquivo não está quebrado; os dois programas discordam sobre o que uma vírgula significa.",
+          ],
+        },
+        {
+          h2: "Quando o arquivo é simplesmente grande demais",
+          body: [
+            "Uma planilha tem um teto rígido de pouco mais de 1.048.576 linhas, e fica lenta muito antes disso porque carrega tudo na memória para deixar tudo editável.",
+            "Passado certo tamanho, o certo é parar de abrir o arquivo e começar a fazer perguntas a ele. Selecione algumas colunas, filtre, agrupe, conte: a resposta sai em segundos sem a máquina tentar desenhar milhões de células que você nunca ia olhar.",
+          ],
+        },
+        {
+          h2: "Parquet, em resumo",
+          body: [
+            "Se o CSV vive te decepcionando, Parquet é para onde o mundo da análise migrou. Guarda os tipos dentro do arquivo, então nada é adivinhado. Guarda por coluna em vez de por linha, então ler três colunas de cinquenta lê mais ou menos três colunas de bytes. E comprime bem — costuma ficar cinco a dez vezes menor que o mesmo CSV.",
+            "O preço é não poder abri-lo num editor de texto. É um formato para consultar, não para olhar.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Como impedir que o Excel destrua meu CSV?",
+          a: "Não abra com duplo clique. Use Dados → De Texto/CSV, que permite definir a codificação e marcar colunas como texto antes de qualquer conversão. Ou consulte o arquivo diretamente e não deixe planilha nenhuma tocá-lo.",
+        },
+        {
+          q: "Um CSV é menor que um arquivo do Excel?",
+          a: "Geralmente não, o que surpreende. Um .xlsx é um pacote compactado, e o zip comprime bem texto repetitivo. Um CSV são caracteres sem compressão. O Parquet ganha dos dois com folga.",
+        },
+        {
+          q: "Dá para consultar um CSV sem banco de dados?",
+          a: "Dá. Nossa ferramenta de dados roda um motor SQL dentro da aba e lê o arquivo direto do seu disco — nada é enviado, e não há servidor nem banco para montar.",
+        },
+      ],
+    },
+
+    "can-ai-summarize": {
+      metaTitle: "Dá para confiar num resumo feito por IA?",
+      metaDescription: "Modelos pequenos de resumo falham de formas específicas e repetíveis — copiam, inventam e erram fatos. Isto é o que medimos.",
+      h1: "Dá para confiar num resumo feito por IA?",
+      lead: "Às vezes, e as falhas são específicas o bastante para valer a pena conhecer. Testamos quatro modelos com os mesmos documentos; dois deles não resumiam nada.",
+      sections: [
+        {
+          h2: "O que um modelo de resumo realmente faz",
+          body: [
+            "Um modelo de resumo não extrai frases e as costura. Ele lê o documento e então escreve frases novas, palavra por palavra, escolhendo cada uma pelo que costuma vir depois.",
+            "Por isso o resultado se lê com naturalidade, e também por isso ele pode errar de um jeito que copiar e colar nunca poderia: nada ancora o texto gerado à fonte além do que o modelo aprendeu.",
+          ],
+        },
+        {
+          h2: "Falha um: ele copia em vez de resumir",
+          body: [
+            "Foi a maior surpresa dos testes. Dois modelos com licenças limpas e permissivas — um de 600 milhões de parâmetros, outro de 350 — não resumiam prosa narrativa. Reproduziam a abertura do documento literalmente.",
+            "Os dois lidavam bem com verbetes de enciclopédia. O comportamento só apareceu quando acrescentamos um texto narrativo. Se tivéssemos testado só com material de referência, teríamos publicado um modelo que copia.",
+            "Forçá-lo a não copiar piorou em vez de melhorar: envolto em delimitadores, o mesmo modelo produziu uma frase fluente que dizia algo que o documento nunca disse.",
+          ],
+        },
+        {
+          h2: "Falha dois: ele inventa quando não há com o que trabalhar",
+          body: [
+            "Com entrada vazia, um modelo produziu o resumo de uma campanha de saúde pública. Com a única palavra «olá», escreveu três linhas de diário.",
+            "Um modelo sempre produz alguma coisa — não existe estado em que ele devolva nada. Se a entrada é curta demais para resumir, o que sai não é um resumo ruim, é ficção. Por isso nossa ferramenta tem um comprimento mínimo e recusa abaixo dele em vez de agradar.",
+          ],
+        },
+        {
+          h2: "Falha três: ele erra fatos, com fluência",
+          body: [
+            "Numa execução o modelo expandiu a sigla NADPH num nome químico que não é o que NADPH significa. A frase estava bem formada e soava segura.",
+            "Fluência e exatidão são coisas separadas e falham separadamente. Essa é a falha que você não detecta lendo só o resumo — e é exatamente por isso que um resumo serve para decidir se vale ler algo, não para substituir a leitura.",
+          ],
+        },
+        {
+          h2: "No que ele é realmente bom",
+          body: [
+            "Em descobrir se um documento longo interessa a você. Em pegar a ideia de um relatório num idioma que você lê devagar. Em produzir um primeiro rascunho de resumo que você depois corrige.",
+            "Mais um limite que vale conhecer: pedir o resumo num idioma diferente do original é onde os modelos pequenos se desfazem — inventam palavras que não existem ou ignoram a instrução e respondem no idioma de origem. Resumir e traduzir são dois trabalhos; peça um de cada vez.",
+          ],
+        },
+        {
+          h2: "Se o documento é digitalizado, nada disso vale ainda",
+          body: [
+            "Um PDF digitalizado não tem texto, só imagens de texto. Um resumidor que recebe esse arquivo não recebe nada — e, pela segunda falha, um modelo sem nada ainda assim escreve algo.",
+            "Passe primeiro o reconhecimento de texto, confira o resultado e só então resuma. O reconhecimento sobre uma digitalização ruim produz os próprios erros, e resumi-los os agrava em silêncio.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Posso confiar num resumo de IA para algo importante?",
+          a: "Use-o para decidir o que ler, não como substituto da leitura. Os erros que ele comete são fluentes e confiantes, ou seja, não parecem erros — é justamente essa propriedade que os torna perigosos para decisões.",
+        },
+        {
+          q: "Por que a ferramenta recusa documentos muito longos em vez de cortá-los?",
+          a: "Porque resumir a primeira parte e apresentar como resumo do todo é uma mentira que o leitor não consegue detectar. Recusar é honesto; cortar em silêncio, não.",
+        },
+        {
+          q: "Meu documento é enviado para algum servidor?",
+          a: "Não. O modelo é baixado para o seu navegador e o documento é lido ali. É o arranjo inverso ao de um serviço hospedado: quem viaja é o modelo, não o seu arquivo.",
+        },
+      ],
+    },
   },
 } satisfies GuideCopy;

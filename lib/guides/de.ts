@@ -537,5 +537,207 @@ export const de = {
         },
       ],
     },
+
+    "why-pdf-wont-open": {
+      metaTitle: "Warum geht mein PDF nicht auf?",
+      metaDescription: "Ein PDF scheitert meist an einem von fünf Gründen, und jeder verlangt etwas anderes. Hier steht, wie Sie erkennen, welchen Sie vor sich haben.",
+      h1: "Warum geht mein PDF nicht auf?",
+      lead: "„Die Datei kann nicht geöffnet werden“ deckt mindestens fünf völlig verschiedene Probleme ab. Sie zu unterscheiden dauert zehn Sekunden und erspart Ihnen den falschen Lösungsversuch.",
+      sections: [
+        {
+          h2: "Zuerst: scheitert es überall oder nur an einer Stelle?",
+          body: [
+            "Ziehen Sie die Datei auf einen Browser-Tab. Browser haben eine eigene PDF-Engine, und das allein sagt Ihnen, ob die Datei kaputt ist oder Ihr Programm.",
+            "Öffnet sie im Browser, aber nicht im Desktop-Programm, ist die Datei in Ordnung. Aktualisieren Sie das Programm oder nehmen Sie einfach den Browser. Scheitert beides, lesen Sie weiter.",
+          ],
+        },
+        {
+          h2: "Es wird ein Passwort verlangt — und davon gibt es zwei Arten",
+          body: [
+            "Ein PDF kann zwei getrennte Passwörter tragen, und die wenigsten wissen das. Das **Benutzerpasswort** verhindert das Öffnen überhaupt. Das **Besitzerpasswort** lässt das Dokument lesbar, beschränkt aber Drucken, Kopieren oder Bearbeiten.",
+            "Das ist wichtig, weil Werkzeuge sich unterschiedlich verhalten. Eine Datei mit nur einem Besitzerpasswort öffnet in fast jedem Programm normal und wirkt daher ungeschützt — viele Werkzeuge weigern sich trotzdem, sie zu ändern. Das sieht aus wie eine kaputte Datei und ist in Wahrheit eine Berechtigung.",
+            "Ein Benutzerpasswort lässt sich nicht ehrlich umgehen: der Inhalt ist tatsächlich verschlüsselt. Unsere PDF-Werkzeuge lehnen verschlüsselte Dateien ab und sagen es, statt etwas Leeres zu liefern. Wir haben das mit echten AES-verschlüsselten Dateien und mit von LibreOffice geschriebenen geprüft; alle vier lehnten korrekt ab.",
+          ],
+        },
+        {
+          h2: "Der Text ist da, erscheint aber als leere Kästchen",
+          body: [
+            "Ein Schriftproblem, sehr häufig bei chinesischen, japanischen und koreanischen Dokumenten. Die Zeichen stehen in der Datei, aber die Schrift, die sie zeichnet, wurde nicht eingebettet — das Programm ersetzt sie durch eine ohne passende Glyphen, und Sie sehen Reihen hohler Rechtecke.",
+            "Wichtig ist: das ist ein *Darstellungs*fehler, kein Datenfehler. Kopieren Sie den Text heraus, und er ist unversehrt. Soll es richtig aussehen, liegt die Lösung beim Rechner, der das PDF erzeugt hat: Schriften beim Export einbetten.",
+          ],
+        },
+        {
+          h2: "Seiten sind leer, oder ein Scan zeigt nichts",
+          body: [
+            "Manche PDFs speichern ihre Bilder in Formaten, die nicht jede Engine umsetzt — JBIG2 und JPEG 2000 sind die üblichen, und beide sind in Scans aus Bürogeräten verbreitet. Eine Engine ohne diese Decoder zeichnet eine leere Seite, statt einen Fehler zu melden.",
+            "Das Erkennungszeichen: die Seite ist leer, die Datei aber groß. Wirklich leere Seiten sind winzig.",
+          ],
+        },
+        {
+          h2: "Sie ist abgeschnitten oder beschädigt",
+          body: [
+            "Ein PDF führt sein Objektverzeichnis **am Dateiende**. Deshalb scheitert ein halb geladenes PDF vollständig, statt die ersten Seiten zu zeigen — das Programm sucht das Verzeichnis, findet es nicht und gibt auf.",
+            "Kam die Datei per Mail oder Download, vergleichen Sie die Größe mit dem Original. Eine abgebrochene Datei lässt sich nicht sinnvoll reparieren; holen Sie sie neu.",
+          ],
+        },
+        {
+          h2: "Was zu tun ist, sobald Sie es wissen",
+          body: [
+            "Die Lösung zur Ursache passend zu wählen spart viel Zeit:",
+          ],
+          list: [
+            "Öffnet im Browser, nicht im Programm → das Programm. Browser nehmen oder aktualisieren.",
+            "Verlangt ein Passwort → Sie brauchen das Passwort. Kein Werkzeug umgeht es ehrlich.",
+            "Leere Kästchen statt Zeichen → Schriften nicht eingebettet. Der Text ist heil; neu aus der Quelle exportieren.",
+            "Leere Seiten, große Datei → ein Bildformat, das Ihr Programm nicht decodiert. Anderes Programm versuchen.",
+            "Scheitert sofort, Datei wirkt klein → abgeschnitten. Erneut herunterladen.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Kann ein Werkzeug ein PDF-Passwort entfernen?",
+          a: "Nicht das, welches den Inhalt verschlüsselt. Braucht ein Dokument ein Passwort zum Öffnen, sind die Bytes verschlüsselt und es gibt nichts, womit man arbeiten könnte. Werkzeuge, die etwas anderes behaupten, raten Passwörter oder behandeln den reinen Berechtigungsfall.",
+        },
+        {
+          q: "Warum sieht dasselbe PDF in zwei Programmen anders aus?",
+          a: "Weil jedes Programm eine eigene Engine hat und sie sich darin unterscheiden, welche Schriften sie ersetzen und welche Bildformate sie decodieren. Ein PDF beschreibt eine Seite; es garantiert nicht, dass zwei Engines sie gleich zeichnen.",
+        },
+        {
+          q: "Mein PDF öffnet, aber ich kann den Text nicht markieren.",
+          a: "Dann gibt es keine Textebene — die Seiten sind Bilder. Das passiert bei Scans und auch bei Dateien, die manche Kompressoren erzeugen, indem sie jede Seite zu einem Bild verflachen. Texterkennung kann die Ebene zurückbringen.",
+        },
+      ],
+    },
+
+    "csv-vs-excel": {
+      metaTitle: "CSV gegen Excel: was wirklich anders ist",
+      metaDescription: "Ein CSV hat keine Typen, keine Formatierung, keine Blätter — es ist nur Text. Diese eine Tatsache erklärt alles Seltsame, was Excel damit anstellt.",
+      h1: "CSV gegen Excel — was wirklich anders ist",
+      lead: "Fast alles Verwirrende an einer CSV-Datei folgt aus einer Tatsache: die Datei weiß nicht, was ihre Werte bedeuten. Excel rät, und beim Raten gehen Daten kaputt.",
+      sections: [
+        {
+          h2: "Ein CSV ist Text. Das ist das ganze Format.",
+          body: [
+            "Ein CSV besteht aus Zeilen von Zeichen, getrennt durch Kommas. Mehr ist nicht drin — keine Zelltypen, keine Formeln, keine Formatierung, keine mehreren Blätter, keine Spaltenbreiten. `007` in einem CSV sind drei Zeichen, weder Zahl noch Zeichenkette; die Datei sagt es nicht.",
+            "Eine .xlsx ist das Gegenteil: ein gepacktes Bündel, das für jede Zelle festhält, welche Art Wert sie enthält und wie sie aussehen soll. Deshalb ist sie größer und deshalb übersteht sie einen Umlauf unverändert.",
+          ],
+        },
+        {
+          h2: "Was Excel beim Öffnen eines CSV mit Ihren Daten macht",
+          body: [
+            "Weil die Datei keine Typen angibt, leitet Excel sie her. Die Vermutungen sind im Mittel vernünftig und in bestimmten Fällen zerstörerisch:",
+          ],
+          list: [
+            "Führende Nullen verschwinden. `007` wird `7`. Postleitzahlen, Kontonummern und Artikelnummern sind die üblichen Opfer.",
+            "Was nach einem Datum aussieht, wird eins. `1-2` wird zum 2. Januar. Bekanntlich mussten Genetiker Gene umbenennen, weil Excel SEPT2 immer wieder in ein Datum verwandelte.",
+            "Lange Zahlen wechseln in wissenschaftliche Schreibweise und verlieren ihr Ende. Eine 16-stellige Kennung kommt als `1,23457E+15` zurück, und die verlorenen Stellen holt kein nachträgliches Format zurück.",
+            "Und der Schaden wird beim Speichern festgeschrieben. Die Ursprungsdatei war richtig; die, die Excel zurückschreibt, nicht.",
+          ],
+        },
+        {
+          h2: "Warum Ihr CSV wirr aussieht oder alles in einer Spalte landet",
+          body: [
+            "Zwei getrennte Probleme, beide über Annahmen, die die Datei nicht aussprechen kann.",
+            "**Die Kodierung.** Ein CSV hält seine Zeichenkodierung nicht fest. Excel unter Windows nahm lange die lokale Codepage statt UTF-8 an, weshalb Umlaute, Koreanisch und Japanisch verstümmelt ankommen. Eine UTF-8-Bytereihenfolgemarke am Anfang behebt es meist.",
+            "**Das Trennzeichen.** In Ländern, in denen das Komma das Dezimalzeichen ist, schreiben und erwarten Tabellenprogramme Semikolons. Öffnen Sie so eine Datei anderswo, landet jede Zeile in einer einzigen Spalte. Die Datei ist nicht kaputt; die beiden Programme sind sich uneinig, was ein Komma bedeutet.",
+          ],
+        },
+        {
+          h2: "Wenn die Datei schlicht zu groß ist",
+          body: [
+            "Ein Tabellenprogramm hat eine harte Grenze von gut 1.048.576 Zeilen und wird lange davor langsam, weil es alles in den Speicher lädt, damit alles bearbeitbar ist.",
+            "Ab einer gewissen Größe ist es richtig, die Datei nicht mehr zu öffnen, sondern ihr Fragen zu stellen. Ein paar Spalten auswählen, filtern, gruppieren, zählen — die Antwort steht in Sekunden, ohne dass die Maschine Millionen Zellen zeichnet, die Sie nie ansehen wollten.",
+          ],
+        },
+        {
+          h2: "Parquet, kurz",
+          body: [
+            "Wenn CSV Sie immer wieder im Stich lässt: Parquet ist das, worauf die Analysewelt umgestiegen ist. Es speichert Typen in der Datei, es wird also nichts geraten. Es speichert spaltenweise statt zeilenweise, drei von fünfzig Spalten zu lesen liest also ungefähr drei Spalten an Bytes. Und es komprimiert gut — oft fünf- bis zehnmal kleiner als dasselbe CSV.",
+            "Der Preis: Sie können es nicht im Texteditor öffnen. Es ist ein Format zum Abfragen, nicht zum Ansehen.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Wie verhindere ich, dass Excel mein CSV zerlegt?",
+          a: "Nicht per Doppelklick öffnen. Nehmen Sie Daten → Aus Text/CSV; dort lassen sich Kodierung setzen und Spalten als Text markieren, bevor etwas umgewandelt wird. Oder fragen Sie die Datei direkt ab und lassen kein Tabellenprogramm daran.",
+        },
+        {
+          q: "Ist ein CSV kleiner als eine Excel-Datei?",
+          a: "Meist nicht, was überrascht. Eine .xlsx ist ein gepacktes Bündel, und ZIP komprimiert wiederkehrenden Text gut. Ein CSV besteht aus unkomprimierten Zeichen. Parquet schlägt beide deutlich.",
+        },
+        {
+          q: "Kann ich ein CSV ohne Datenbank abfragen?",
+          a: "Ja. Unser Datenwerkzeug betreibt eine SQL-Engine im Browser-Tab und liest die Datei direkt von Ihrer Platte — nichts wird hochgeladen, und es gibt weder Server noch Datenbank einzurichten.",
+        },
+      ],
+    },
+
+    "can-ai-summarize": {
+      metaTitle: "Kann man KI-Zusammenfassungen trauen?",
+      metaDescription: "Kleine Zusammenfassungsmodelle scheitern auf bestimmte, wiederholbare Weise — sie kopieren, erfinden und irren sich. Das haben wir gemessen.",
+      h1: "Kann man einer KI-Zusammenfassung trauen?",
+      lead: "Manchmal — und die Fehler sind konkret genug, dass es sich lohnt, sie zu kennen. Wir haben vier Modelle an denselben Dokumenten geprüft; zwei fassten überhaupt nicht zusammen.",
+      sections: [
+        {
+          h2: "Was ein Zusammenfassungsmodell tatsächlich tut",
+          body: [
+            "Es sucht keine Sätze heraus und näht sie zusammen. Es liest das Dokument und schreibt dann neue Sätze, Wort für Wort, und wählt jedes Wort danach, was üblicherweise folgt.",
+            "Deshalb liest sich das Ergebnis natürlich — und deshalb kann es auf eine Weise falsch sein, wie Ausschneiden und Einfügen es nie könnte: nichts verankert den erzeugten Text an der Quelle außer dem, was das Modell gelernt hat.",
+          ],
+        },
+        {
+          h2: "Fehler eins: es kopiert, statt zusammenzufassen",
+          body: [
+            "Das war die größte Überraschung. Zwei Modelle mit sauberen, freizügigen Lizenzen — eines mit 600 Millionen, eines mit 350 Millionen Parametern — fassten erzählende Prosa nicht zusammen. Sie gaben den Anfang des Dokuments wörtlich wieder.",
+            "Mit Enzyklopädieartikeln kamen beide gut zurecht. Erst als wir einen erzählenden Text hinzunahmen, zeigte sich das Verhalten. Hätten wir nur mit Sachtexten geprüft, hätten wir ein Modell ausgeliefert, das abschreibt.",
+            "Es zum Nichtkopieren zu zwingen machte es schlechter statt besser: in Trennzeichen gefasst, lieferte dasselbe Modell einen flüssigen Satz, der etwas behauptete, das im Dokument nie stand.",
+          ],
+        },
+        {
+          h2: "Fehler zwei: es erfindet, wenn es nichts zu arbeiten gibt",
+          body: [
+            "Bei leerer Eingabe erzeugte ein Modell die Zusammenfassung einer Gesundheitskampagne. Beim einzelnen Wort „hallo“ schrieb es drei Zeilen Tagebuch.",
+            "Ein Modell liefert **immer** etwas; es gibt keinen Zustand, in dem es nichts zurückgibt. Ist die Eingabe zu kurz zum Zusammenfassen, ist das Ergebnis keine schlechte Zusammenfassung, sondern Erfindung. Deshalb hat unser Werkzeug eine Mindestlänge und lehnt darunter ab, statt gefällig zu sein.",
+          ],
+        },
+        {
+          h2: "Fehler drei: es irrt sich in Fakten, und zwar flüssig",
+          body: [
+            "In einem Durchlauf löste das Modell die Abkürzung NADPH zu einem chemischen Namen auf, der nicht das ist, wofür NADPH steht. Der Satz war wohlgeformt und klang sicher.",
+            "Flüssigkeit und Richtigkeit sind zweierlei und scheitern getrennt. Diesen Fehler erkennt man nicht, wenn man nur die Zusammenfassung liest — und genau deshalb ist eine Zusammenfassung eine Entscheidungshilfe fürs Lesen, kein Ersatz dafür.",
+          ],
+        },
+        {
+          h2: "Worin es wirklich gut ist",
+          body: [
+            "Herauszufinden, ob ein langes Dokument Sie überhaupt betrifft. Den Kern eines Berichts in einer Sprache zu fassen, die Sie langsam lesen. Einen ersten Entwurf einer Kurzfassung zu liefern, den Sie dann berichtigen.",
+            "Eine Grenze noch: eine Zusammenfassung in einer anderen Sprache als das Original zu verlangen, ist der Punkt, an dem kleine Modelle auseinanderfallen — sie erfinden Wörter, die es nicht gibt, oder ignorieren die Anweisung und antworten in der Ausgangssprache. Zusammenfassen und Übersetzen sind zwei Aufgaben; verlangen Sie sie einzeln.",
+          ],
+        },
+        {
+          h2: "Ist das Dokument ein Scan, gilt nichts davon bisher",
+          body: [
+            "Ein gescanntes PDF enthält keinen Text, nur Bilder von Text. Ein Zusammenfasser bekommt damit **gar nichts** — und nach Fehler zwei schreibt ein Modell auch ohne Eingabe etwas.",
+            "Lassen Sie zuerst die Texterkennung laufen, prüfen Sie das Ergebnis, fassen Sie dann zusammen. Erkennung auf einem schlechten Scan produziert eigene Fehler, und diese zusammenzufassen verstärkt sie unbemerkt.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Kann ich einer KI-Zusammenfassung bei etwas Wichtigem trauen?",
+          a: "Nutzen Sie sie, um zu entscheiden, was Sie lesen — nicht als Ersatz fürs Lesen. Die Fehler sind flüssig und selbstsicher, sehen also nicht wie Fehler aus. Genau diese Eigenschaft macht sie für Entscheidungen gefährlich.",
+        },
+        {
+          q: "Warum lehnt das Werkzeug sehr lange Dokumente ab, statt sie zu kürzen?",
+          a: "Weil den ersten Teil zusammenzufassen und das als Zusammenfassung des Ganzen auszugeben eine Lüge ist, die der Lesende nicht bemerken kann. Ablehnen ist ehrlich; stilles Abschneiden nicht.",
+        },
+        {
+          q: "Wird mein Dokument hochgeladen?",
+          a: "Nein. Das Modell wird in Ihren Browser geladen, und das Dokument wird dort gelesen. Es ist die umgekehrte Anordnung zu einem gehosteten Dienst: das Modell reist, nicht Ihre Datei.",
+        },
+      ],
+    },
   },
 } satisfies GuideCopy;

@@ -537,5 +537,207 @@ export const es = {
         },
       ],
     },
+
+    "why-pdf-wont-open": {
+      metaTitle: "¿Por qué no se abre mi PDF?",
+      metaDescription: "Un PDF que falla suele fallar por una de cinco razones, y cada una pide un arreglo distinto. Aquí tienes cómo saber cuál te ha tocado.",
+      h1: "¿Por qué no se abre mi PDF?",
+      lead: "«No se puede abrir este archivo» cubre al menos cinco problemas completamente distintos. Distinguirlos lleva unos diez segundos y te ahorra probar el arreglo equivocado.",
+      sections: [
+        {
+          h2: "Primero: ¿falla en todas partes o solo en un sitio?",
+          body: [
+            "Arrastra el archivo a una pestaña del navegador. Los navegadores tienen su propio motor de PDF, así que esto te dice si el archivo está roto o si lo está tu lector.",
+            "Si abre en el navegador pero no en tu lector de escritorio, el archivo está bien. Actualiza el lector o simplemente usa el navegador. Si falla en los dos, sigue leyendo.",
+          ],
+        },
+        {
+          h2: "Pide contraseña — y hay dos clases",
+          body: [
+            "Un PDF puede llevar dos contraseñas distintas y poca gente lo sabe. La **contraseña de usuario** impide abrir el documento. La **contraseña de propietario** lo deja legible pero restringe imprimir, copiar o editar.",
+            "Esto importa porque las herramientas se comportan distinto. Un archivo con solo contraseña de propietario abre sin problema en casi cualquier lector, así que parece desprotegido — pero muchas herramientas se niegan a modificarlo, lo que parece un archivo roto cuando en realidad es un permiso.",
+            "No hay forma honesta de saltarse una contraseña de usuario: el contenido está realmente cifrado. Nuestras herramientas de PDF rechazan los archivos cifrados y lo dicen, en vez de devolver algo vacío. Lo probamos con archivos cifrados con AES reales y con otros escritos por LibreOffice; las cuatro herramientas los rechazaron correctamente.",
+          ],
+        },
+        {
+          h2: "El texto está pero sale como cuadros vacíos",
+          body: [
+            "Es un problema de fuentes, muy común en documentos en chino, japonés y coreano. Los caracteres existen en el archivo, pero la fuente que los dibuja no se incrustó, así que el lector sustituye otra que no tiene esos glifos y salen filas de rectángulos huecos.",
+            "Conviene saber que es un fallo de *dibujado*, no de datos. Copia el texto y estará intacto. Si necesitas que se vea bien, el arreglo está en la máquina que hizo el PDF: incrusta las fuentes al exportar.",
+          ],
+        },
+        {
+          h2: "Páginas en blanco, o un escaneo que no muestra nada",
+          body: [
+            "Algunos PDF guardan sus imágenes en formatos que no todos los motores implementan — JBIG2 y JPEG 2000 son los habituales, y ambos abundan en documentos escaneados con equipos de oficina. Un motor sin esos decodificadores dibuja una página en blanco en lugar de dar un error.",
+            "La señal es que la página está vacía pero el archivo pesa mucho. Las páginas realmente en blanco son diminutas.",
+          ],
+        },
+        {
+          h2: "Está truncado o corrupto",
+          body: [
+            "Un PDF guarda su índice de objetos **al final** del archivo. Por eso un PDF descargado a medias falla del todo en vez de mostrar las primeras páginas: el lector busca el índice, no lo encuentra y se rinde.",
+            "Si llegó por correo o descarga, compara su tamaño con el original. Un archivo que se corta no se repara de ninguna forma significativa; consíguelo otra vez.",
+          ],
+        },
+        {
+          h2: "Qué hacer una vez sabes cuál es",
+          body: [
+            "Emparejar el arreglo con la causa ahorra mucho tiempo:",
+          ],
+          list: [
+            "Abre en el navegador pero no en tu lector → es el lector. Usa el navegador o actualízalo.",
+            "Pide contraseña → necesitas la contraseña. Ninguna herramienta puede saltársela honestamente.",
+            "Cuadros vacíos en vez de caracteres → no se incrustaron las fuentes. El texto está bien; vuelve a exportar desde el origen.",
+            "Páginas en blanco y archivo grande → un formato de imagen que tu lector no decodifica. Prueba otro lector.",
+            "Falla al instante y el archivo parece pequeño → está truncado. Descárgalo de nuevo.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "¿Puede una herramienta quitar la contraseña de un PDF?",
+          a: "La que cifra el contenido, no. Si un documento necesita contraseña para abrirse, los bytes están cifrados y no hay nada con lo que trabajar. Las herramientas que dicen lo contrario o adivinan contraseñas o tratan el caso de solo permisos.",
+        },
+        {
+          q: "¿Por qué el mismo PDF se ve distinto en dos programas?",
+          a: "Porque cada lector tiene su propio motor y difieren en qué fuentes sustituyen y qué formatos de imagen decodifican. Un PDF describe una página; no garantiza que dos motores la dibujen igual.",
+        },
+        {
+          q: "Mi PDF abre pero no puedo seleccionar el texto.",
+          a: "Entonces no hay capa de texto: las páginas son imágenes. Pasa con los escaneos y también con archivos que algunos compresores producen aplanando cada página. El reconocimiento de texto puede devolver esa capa.",
+        },
+      ],
+    },
+
+    "csv-vs-excel": {
+      metaTitle: "CSV frente a Excel: qué cambia de verdad",
+      metaDescription: "Un CSV no tiene tipos, ni formato, ni hojas: es solo texto. Ese único hecho explica todo lo raro que hace Excel al abrir uno.",
+      h1: "CSV frente a Excel — qué cambia de verdad",
+      lead: "Casi todo lo confuso que le pasa a un CSV viene de un hecho: el archivo no tiene ni idea de qué significan sus valores. Excel lo adivina, y en esas adivinanzas es donde se estropean los datos.",
+      sections: [
+        {
+          h2: "Un CSV es texto. Ese es el formato entero.",
+          body: [
+            "Un CSV son líneas de caracteres separadas por comas. No hay nada más: ni tipos de celda, ni fórmulas, ni formato, ni varias hojas, ni anchos de columna. `007` en un CSV son tres caracteres, ni un número ni una cadena; el archivo no dice cuál.",
+            "Un .xlsx es lo contrario: un paquete comprimido que registra, para cada celda, qué clase de valor contiene y cómo debe verse. Por eso pesa más y por eso sobrevive intacto a una ida y vuelta.",
+          ],
+        },
+        {
+          h2: "Lo que Excel le hace a tus datos al abrir un CSV",
+          body: [
+            "Como el archivo no declara tipos, Excel los infiere. Sus conjeturas son razonables en el caso medio y destructivas en casos concretos:",
+          ],
+          list: [
+            "Los ceros a la izquierda desaparecen. `007` se vuelve `7`. Códigos postales, números de cuenta y referencias son las víctimas habituales.",
+            "Lo que parece una fecha se vuelve fecha. `1-2` pasa a ser 2 de enero. Esto obligó a los genetistas a renombrar genes porque Excel convertía SEPT2 en una fecha.",
+            "Los números largos pasan a notación científica y pierden su cola. Un identificador de 16 dígitos puede volver como `1.23457E+15`, y los dígitos perdidos no se recuperan cambiando el formato después.",
+            "Y el daño se guarda cuando guardas. El archivo original era correcto; el que Excel escribe de vuelta, no.",
+          ],
+        },
+        {
+          h2: "Por qué tu CSV sale con caracteres raros o todo en una columna",
+          body: [
+            "Dos problemas distintos, ambos sobre supuestos que el archivo no puede declarar.",
+            "**La codificación.** Un CSV no registra su codificación de caracteres. Excel en Windows ha asumido históricamente la página de códigos local en vez de UTF-8, y por eso llegan destrozados los textos con acentos, el coreano o el japonés. Una marca de orden de bytes UTF-8 al principio suele arreglarlo.",
+            "**El separador.** En los países donde la coma es el separador decimal, las hojas de cálculo escriben y esperan punto y coma. Abre uno de esos archivos en otro sitio y cada fila cae en una sola columna. El archivo no está roto; los dos programas no se ponen de acuerdo sobre qué significa una coma.",
+          ],
+        },
+        {
+          h2: "Cuando el archivo es sencillamente demasiado grande",
+          body: [
+            "Una hoja de cálculo tiene un techo duro de algo más de 1.048.576 filas, y se vuelve lenta mucho antes porque carga todo en memoria para que todo sea editable.",
+            "Pasado cierto tamaño lo correcto es dejar de abrir el archivo y empezar a hacerle preguntas. Selecciona unas columnas, filtra, agrupa, cuenta: tienes la respuesta en segundos sin que la máquina intente dibujar millones de celdas que nunca ibas a mirar.",
+          ],
+        },
+        {
+          h2: "Parquet, en breve",
+          body: [
+            "Si el CSV te falla una y otra vez, Parquet es a donde se pasó el mundo del análisis. Guarda los tipos dentro del archivo, así que no se adivina nada. Guarda por columnas en vez de por filas, así que leer tres columnas de cincuenta lee más o menos tres columnas de bytes. Y comprime bien: suele ocupar entre cinco y diez veces menos que el mismo CSV.",
+            "El precio es que no puedes abrirlo en un editor de texto. Es un formato para consultar, no para mirar.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "¿Cómo evito que Excel destroce mi CSV?",
+          a: "No lo abras con doble clic. Usa Datos → Desde texto/CSV, que te deja fijar la codificación y marcar columnas como texto antes de que se convierta nada. O consulta el archivo directamente y que ninguna hoja de cálculo lo toque.",
+        },
+        {
+          q: "¿Un CSV pesa menos que un archivo de Excel?",
+          a: "Normalmente no, y sorprende. Un .xlsx es un paquete comprimido, y el zip comprime bien el texto repetitivo. Un CSV son caracteres sin comprimir. Parquet gana a los dos por mucho.",
+        },
+        {
+          q: "¿Puedo consultar un CSV sin base de datos?",
+          a: "Sí. Nuestra herramienta de datos ejecuta un motor SQL dentro de la pestaña y lee el archivo directamente de tu disco: no se sube nada y no hay servidor ni base de datos que montar.",
+        },
+      ],
+    },
+
+    "can-ai-summarize": {
+      metaTitle: "¿Se puede fiar uno de un resumen de IA?",
+      metaDescription: "Los modelos pequeños de resumen fallan de formas concretas y repetibles: copian, inventan y se equivocan en los hechos. Esto es lo que medimos.",
+      h1: "¿Se puede fiar uno de un resumen hecho por IA?",
+      lead: "A veces, y los fallos son lo bastante concretos como para merecer aprenderlos. Probamos cuatro modelos con los mismos documentos; dos de ellos no resumían en absoluto.",
+      sections: [
+        {
+          h2: "Qué hace realmente un modelo de resumen",
+          body: [
+            "Un modelo de resumen no extrae frases y las cose. Lee el documento y luego escribe frases nuevas, palabra a palabra, eligiendo cada una por lo que suele venir después.",
+            "Por eso el resultado se lee con naturalidad, y también por eso puede equivocarse de formas en que un copiar y pegar nunca podría: nada ancla el texto generado al original salvo lo que el modelo aprendió.",
+          ],
+        },
+        {
+          h2: "Fallo uno: copia en vez de resumir",
+          body: [
+            "Fue la mayor sorpresa de nuestras pruebas. Dos modelos con licencias limpias y permisivas — uno de 600 millones de parámetros, otro de 350 — no resumían prosa narrativa. Reproducían el comienzo del documento tal cual.",
+            "Ambos manejaban bien los artículos de enciclopedia. El comportamiento solo apareció cuando añadimos un texto narrativo. Si hubiéramos probado únicamente con material de referencia, habríamos publicado un modelo que copia.",
+            "Forzarlo a no copiar lo empeoró en vez de mejorarlo: envuelto en delimitadores, el mismo modelo produjo una frase fluida que decía algo que el documento nunca decía.",
+          ],
+        },
+        {
+          h2: "Fallo dos: inventa cuando no hay con qué trabajar",
+          body: [
+            "Con una entrada vacía, un modelo produjo el resumen de una campaña de salud pública. Con la sola palabra «hola», escribió tres líneas de un diario.",
+            "Un modelo siempre produce algo: no existe un estado en el que no devuelva nada. Si la entrada es demasiado corta para resumirse, lo que sale no es un mal resumen, es ficción. Por eso nuestra herramienta tiene una longitud mínima y se niega por debajo en vez de complacer.",
+          ],
+        },
+        {
+          h2: "Fallo tres: se equivoca en los hechos, con fluidez",
+          body: [
+            "En una ejecución el modelo desarrolló la abreviatura NADPH en un nombre químico que no es lo que NADPH significa. La frase estaba bien formada y sonaba segura.",
+            "Fluidez y exactitud son cosas distintas y fallan por separado. Este es el fallo que no puedes detectar leyendo solo el resumen, y precisamente por eso un resumen sirve para decidir si leer algo, no para sustituir la lectura.",
+          ],
+        },
+        {
+          h2: "En qué es realmente bueno",
+          body: [
+            "En saber si un documento largo te interesa. En captar la idea de un informe en un idioma que lees despacio. En producir un primer borrador de un resumen que luego corriges.",
+            "Un límite más que conviene conocer: pedir el resumen en un idioma distinto al del original es donde los modelos pequeños se deshacen — inventan palabras que no existen o ignoran la instrucción y responden en el idioma de origen. Resumir y traducir son dos trabajos; pídelos de uno en uno.",
+          ],
+        },
+        {
+          h2: "Si el documento es un escaneo, nada de lo anterior aplica todavía",
+          body: [
+            "Un PDF escaneado no tiene texto, solo imágenes de texto. Un modelo de resumen que recibe ese archivo no recibe nada — y, según el segundo fallo, un modelo sin nada igualmente escribirá algo.",
+            "Pasa primero el reconocimiento de texto, revisa el resultado y luego resume. El reconocimiento sobre un escaneo malo produce sus propios errores, y resumirlos los agrava en silencio.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "¿Puedo fiarme de un resumen de IA para algo importante?",
+          a: "Úsalo para decidir qué leer, no como sustituto de leer. Los errores que comete son fluidos y seguros de sí mismos, o sea que no parecen errores — justo la propiedad que los hace peligrosos para decidir.",
+        },
+        {
+          q: "¿Por qué la herramienta rechaza documentos muy largos en vez de recortarlos?",
+          a: "Porque resumir la primera parte y presentarla como resumen del todo es una mentira que el lector no puede detectar. Negarse es honesto; recortar en silencio, no.",
+        },
+        {
+          q: "¿Se sube mi documento?",
+          a: "No. El modelo se descarga a tu navegador y el documento se lee ahí. Es la disposición contraria a un servicio alojado: viaja el modelo, no tu archivo.",
+        },
+      ],
+    },
   },
 } satisfies GuideCopy;
