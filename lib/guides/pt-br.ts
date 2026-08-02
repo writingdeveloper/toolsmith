@@ -739,5 +739,212 @@ export const ptBr = {
         },
       ],
     },
+
+    "wav-vs-mp3": {
+      metaTitle: "WAV ou MP3: qual você precisa mesmo?",
+      metaDescription:
+        "WAV guarda todas as amostras e custa cerca de 10 MB por minuto. MP3 joga quase tudo fora. Quando isso importa e por que converter MP3 em WAV não recupera nada.",
+      h1: "WAV ou MP3: qual você precisa de verdade?",
+      lead: "Um deles descarta som partindo do princípio de que você não vai sentir falta. O outro guarda tudo e cobra cerca de dez megabytes por minuto por isso. Qual é o certo depende inteiramente de para onde o arquivo vai depois.",
+      sections: [
+        {
+          h2: "O que cada um é de fato",
+          body: [
+            "MP3 é um formato **com perdas**. O codificador decide quais partes do som você tem menos chance de notar, joga fora e comprime o que sobra. É daí que vem a redução de cerca de dez vezes — não de empacotar com esperteza, mas de **apagar**.",
+            "WAV não é bem um formato de compressão. Um arquivo WAV é um cabeçalho de 44 bytes seguido das amostras cruas, uma atrás da outra. Esse é o projeto inteiro. Ele guarda o que o microfone mediu, sem modificar.",
+            "Então a comparação não é \"qual comprime melhor\". Só um dos dois comprime.",
+          ],
+        },
+        {
+          h2: "A diferença de tamanho é aritmética, não opinião",
+          body: [
+            "O tamanho de um WAV sai direto de três números: amostras por segundo, canais e bytes por amostra. Em qualidade de CD são 44.100 × 2 × 2 = 176.400 bytes a cada segundo, ou seja **cerca de 10,6 MB por minuto**, ou 42 MB para uma música de quatro minutos.",
+            "A mesma música em MP3 a 192 kbps fica em torno de 5,8 MB. Nada na música muda essa proporção; ela é fixada pelo formato.",
+            "Essa previsibilidade às vezes é justamente o ponto. Com a duração de um WAV você sabe exatamente onde cada amostra está, e é por isso que editores e ferramentas de análise gostam dele.",
+          ],
+        },
+        {
+          h2: "Converter MP3 em WAV não recupera nada",
+          body: [
+            "É o mal-entendido mais comum sobre esses dois formatos. O detalhe que o codificador MP3 descartou não está escondido em algum lugar do arquivo esperando ser descomprimido — ele **acabou**. Decodificar para WAV produz um arquivo maior com exatamente o mesmo áudio.",
+            "Isso não torna a conversão inútil. Muito software só aceita WAV, e dar um a ele é perfeitamente razoável. Só é preciso entender que você está **reempacotando**, não consertando.",
+            "É também por isso que a nossa extração de áudio nunca recodifica. Tirar como M4A copia os dados comprimidos originais para outro contêiner byte a byte; tirar como WAV decodifica uma vez para amostras cruas. Nenhum dos caminhos põe uma segunda geração de compressão sobre a primeira.",
+          ],
+        },
+        {
+          h2: "Quando WAV é a resposta certa",
+          body: [
+            "Sempre que o arquivo for **processado de novo**. Cada passagem por um codificador com perdas acrescenta mais uma geração de dano, e elas se acumulam: se você vai editar, mixar, filtrar ou entregar o áudio a um modelo, quer a versão que ainda não passou pelo moinho.",
+            "Nosso separador de faixas grava WAV exatamente por isso. As quatro saídas existem para entrar num editor, e entregar MP3s de uma estimativa seria empilhar uma aproximação sobre outra.",
+            "Arquivamento é o outro caso. Se esta é a única cópia que vai existir, fique com a que não jogou nada fora.",
+          ],
+        },
+        {
+          h2: "Quando MP3 é a resposta certa",
+          body: [
+            "Para ouvir, enviar e guardar muita coisa. A 192 kbps ou mais, em equipamento comum, quase ninguém identifica o MP3 de forma confiável. E ele ocupa um décimo.",
+            "Compatibilidade é a outra metade. MP3 abre praticamente em tudo, inclusive em aparelhos mais antigos do que qualquer alternativa que você estivesse considerando.",
+            "Não vamos dizer o que o seu ouvido escuta; isso não temos como medir por você. Podemos dizer que o arquivo é dez vezes menor e que a diferença é **apagamento, não degradação**.",
+          ],
+        },
+        {
+          h2: "Uma inconveniência do próprio MP3",
+          body: [
+            "MP3 **não tem contêiner**. É uma corrida nua de quadros, cada um com seu cabeçalho pequeno, enfileirados. Não há índice nem sumário, então o software que quiser trabalhar com um MP3 precisa **varrer os limites de quadro** em vez de consultar alguma coisa.",
+            "Essa varredura tivemos que escrever, e dois detalhes nos pegaram. A etiqueta ID3v2 no início guarda o próprio comprimento em bytes \"syncsafe\", que usam apenas sete bits cada — lê-lo como número comum joga você no meio do áudio. E o primeiro quadro costuma ser um quadro Xing ou Info com metadados em vez de som: se você o decodifica, sai um trecho de silêncio no começo.",
+            "A consequência prática é que MP3 é ruim para saltar a um ponto exato e sua duração declarada é muitas vezes uma estimativa. WAV tem a propriedade oposta: sem compressão a desfazer, toda posição é exata.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "WAV tem mais qualidade que MP3?",
+          a: "WAV está sem modificação, o que não é bem a mesma afirmação. Se o WAV foi feito a partir de um MP3, a qualidade é a do MP3 num arquivo maior. WAV só soa melhor quando nunca passou por um codificador com perdas.",
+        },
+        {
+          q: "Se eu converter WAV em MP3 e voltar, recupero o WAV original?",
+          a: "Não. Você obtém um WAV do MP3. A ida e volta não é simétrica: o primeiro passo apaga informação e o segundo não consegue inventá-la de novo.",
+        },
+        {
+          q: "Em qual formato devo extrair o áudio de um vídeo?",
+          a: "M4A se você quer só o som como ele já existe, porque esse caminho copia o áudio comprimido sem tocar nele. WAV se o arquivo vai para um editor ou uma ferramenta de análise que precisa de amostras cruas.",
+        },
+      ],
+    },
+
+    "what-is-a-codec": {
+      metaTitle: "Códec e contêiner: o que é um códec?",
+      metaDescription:
+        "MP4 é a caixa; H.264 é o que está dentro. Confundir os dois explica por que algumas conversões são instantâneas e sem perdas e outras custam qualidade.",
+      h1: "O que é um códec — e como ele difere do MP4?",
+      lead: "Quase tudo que confunde nos arquivos de vídeo vem de uma única distinção: a extensão nomeia a caixa, não o que está dentro dela. Separe as duas coisas e a maior parte do mistério desaparece.",
+      sections: [
+        {
+          h2: "A caixa e o conteúdo",
+          body: [
+            "Um **contêiner** — MP4, MOV, WebM, MKV — descreve como as partes de um arquivo estão dispostas: onde fica o fluxo de vídeo, onde fica o de áudio, como os dois se encaixam no tempo e onde mora o índice.",
+            "Um **códec** — H.264, HEVC, VP9, AV1 para imagem; AAC, Opus, MP3 para som — é como esse conteúdo foi comprimido em primeiro lugar.",
+            "Então `.mp4` informa o formato da caixa e quase nada sobre o que ela guarda. Dois arquivos terminados em `.mp4` podem conter códecs completamente diferentes, e um deles pode não tocar num aparelho em que o outro funciona perfeitamente.",
+          ],
+        },
+        {
+          h2: "É por isso que algumas conversões saem de graça e outras não",
+          body: [
+            "MOV para MP4 é quase de graça. Os dois são da mesma família de formato e o vídeo dentro de um MOV normalmente já é H.264, que o MP4 aceita. Então os dados comprimidos são copiados sem alteração e um índice novo é escrito em volta. Nada é decodificado e nada é recomprimido. É **sem perdas e quase instantâneo**. O nome próprio disso é remux.",
+            "MP4 para WebM é o oposto. WebM não aceita H.264, então cada quadro precisa ser decodificado e comprimido de novo como VP9, e o áudio como Opus. Isso leva tempo real e custa uma geração de qualidade.",
+            "As duas operações compartilham a palavra \"converter\" e nada mais, e é por isso que o nosso conversor diz qual das duas você está prestes a rodar antes de você apertar qualquer coisa.",
+          ],
+        },
+        {
+          h2: "Dá para fazer bastante coisa sem códec nenhum",
+          body: [
+            "Cortar, por exemplo, é só escolher quais amostras já comprimidas ficam. Nada é decodificado, então a qualidade é idêntica bit a bit e a operação termina quase na hora.",
+            "Há um custo, e ele sai direto de como a compressão funciona. Você só pode começar num **quadro-chave**, um quadro que se sustenta sozinho. Os quadros intermediários são guardados como descrições de quanto diferem dos anteriores, então cortar no meio dessa corrente deixa os primeiros segundos sem referência e eles saem quebrados.",
+            "Por isso puxamos o início de volta para o quadro-chave mais próximo antes do ponto que você pediu, e mostramos onde o corte vai cair de verdade. A alternativa é recodificar o começo para acertar o quadro exato, e isso custa qualidade — deve ser a sua escolha, não uma troca silenciosa.",
+            "Extrair o áudio como M4A funciona do mesmo jeito: os dados AAC comprimidos são erguidos para outro contêiner sem serem tocados.",
+          ],
+        },
+        {
+          h2: "O suporte é por códec, não por extensão",
+          body: [
+            "Quando um aparelho diz que não consegue tocar um MP4, o contêiner quase nunca é o problema. Em geral significa que o **códec de dentro** não é suportado — HEVC dentro de um `.mp4` é o caso típico, já que é o que os celulares novos gravam e o que os softwares antigos recusam.",
+            "Isso também explica por que renomear não muda nada. Trocar `.mov` por `.mp4` reetiqueta a caixa deixando caixa e conteúdo exatamente como estavam.",
+          ],
+        },
+        {
+          h2: "De onde vêm os nossos próprios limites",
+          body: [
+            "Nosso demuxer lê ISOBMFF, a família a que MP4, MOV e M4V pertencem. Não temos código que abra Matroska, que é a base do WebM — então \"WebM para MP4\" não está na lista, embora soe como o inverso de algo que já fazemos. Colocá-lo lá seria reivindicar uma capacidade que não temos.",
+            "Codificar é tarefa do navegador, não nossa, e quais códecs ele consegue codificar varia por máquina e sistema. Então perguntamos diretamente a ele e oferecemos só isso, em vez de imprimir um cardápio e falhar no meio.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Por que meu .mp4 não toca neste aparelho?",
+          a: "Quase sempre por causa do códec de dentro, e não do contêiner. Vídeo HEVC num MP4 é o suspeito de sempre: celulares novos gravam assim e players antigos não decodificam. Recodificar para H.264 resolve; renomear o arquivo não.",
+        },
+        {
+          q: "Trocar a extensão converte o vídeo?",
+          a: "Não. A extensão é um rótulo, não o formato. Renomear pode ocasionalmente fazer um player tentar abrir um arquivo que ele ignoraria, mas os bytes de dentro continuam iguais e ele vai falhar se realmente não conseguir lê-los.",
+        },
+        {
+          q: "Converter MOV para MP4 perde qualidade?",
+          a: "Não quando o vídeo de dentro já é H.264, o que costuma ser o caso. Os dados comprimidos são copiados para o novo contêiner sem serem tocados, então o resultado é a mesma imagem em outra caixa.",
+        },
+      ],
+    },
+
+    "why-video-is-sideways": {
+      metaTitle: "Por que meu vídeo fica deitado?",
+      metaDescription:
+        "Seu celular grava vídeo vertical como pixels horizontais mais uma marca de rotação. Players que leem a marca mostram certo; o resto deita o vídeo de lado.",
+      h1: "Por que meu vídeo fica deitado?",
+      lead: "O arquivo não está danificado e o seu celular não errou. Um vídeo vertical normalmente é guardado como uma imagem horizontal com um bilhete anexado, e tudo depende de o próximo programa se dar ao trabalho de ler o bilhete.",
+      sections: [
+        {
+          h2: "Seu celular não girou nada",
+          body: [
+            "O sensor da câmera tem formato horizontal, e continua assim não importa como você segure o aparelho. Então, ao gravar em pé, os quadros continuam sendo escritos **como imagens horizontais** — e junto deles o arquivo carrega uma matriz 3×3 no cabeçalho da trilha dizendo \"gire isto um quarto de volta antes de desenhar\".",
+            "O player do seu próprio celular lê essa matriz, aplica e mostra um vídeo vertical. Do seu ponto de vista, o vídeo é vertical. Entregue o mesmo arquivo a algo que ignore a matriz e ele desenha exatamente o que está guardado: uma imagem horizontal, deitada de lado.",
+          ],
+        },
+        {
+          h2: "É por isso que fica certo num lugar e errado em outro",
+          body: [
+            "Entre os dois programas a imagem não mudou em nada. Um honrou o bilhete e o outro não, e tecnicamente nenhum dos dois leu o arquivo errado.",
+            "O que significa que \"no meu celular fica certo\" não é prova de que o arquivo está bom. É prova de que o seu celular lê marcas de rotação — algo que você já sabia.",
+          ],
+        },
+        {
+          h2: "Nós mesmos erramos nisso",
+          body: [
+            "Por um tempo as nossas ferramentas de vídeo não liam a matriz de jeito nenhum. Em 2026-07-27 medimos direito e descobrimos que **quatro ferramentas — converter, cortar, comprimir e GIF — produziam saída deitada** a partir de entrada vertical. Ninguém tinha relatado e todos os testes estavam verdes.",
+            "O motivo de ter ficado escondido vale mais que o defeito. Todas as amostras de vídeo que tínhamos eram horizontais, então o caminho de rotação nunca havia sido exercitado uma única vez. Não foi um defeito que apareceu: foi um **buraco no conjunto de amostras** que estava lá desde o começo.",
+            "A correção veio com quatro arquivos do mesmo material escritos a 0, 90, 180 e 270 graus, de modo que a orientação é a única coisa que muda entre eles. É o tipo de amostra que torna impossível deixar passar uma categoria inteira de erro.",
+          ],
+        },
+        {
+          h2: "Tamanho não prova orientação",
+          body: [
+            "É uma armadilha fácil. Uma rotação de 180 graus deixa a largura e a altura completamente iguais, e 90 e 270 as trocam exatamente do mesmo jeito — então conferir as dimensões passa numa boa para um vídeo que sai de cabeça para baixo ou virado para o lado errado.",
+            "A única coisa que os separa é comparar a imagem de verdade. E cada resultado precisa ser conferido contra **a sua própria origem**: por um momento assumimos que as nossas quatro amostras eram o mesmo vídeo, quando na verdade eram os mesmos pixels guardados com marcas diferentes, o que torna inútil comparar as saídas entre si.",
+          ],
+        },
+        {
+          h2: "Corrigir depende de para onde o vídeo vai",
+          body: [
+            "Se a saída é MP4, o bilhete pode ser reescrito. Os pixels ficam exatamente como estão e só a matriz muda — o que também é a única opção em caminhos que nunca decodificam nada, como cortar ou trocar de contêiner.",
+            "Se a saída é WebM ou GIF, essa via está fechada. A rotação no Matroska tem suporte desigual entre players e o GIF não tem o conceito. Ali a imagem precisa ser girada de verdade e assada, o que significa redesenhar cada quadro.",
+            "Então \"girar o vídeo\" são duas operações diferentes conforme o destino, e escolher errado dá um arquivo que parece certo no seu player e errado em todo o resto — exatamente o problema que você estava tentando resolver.",
+          ],
+        },
+        {
+          h2: "O que conferir",
+          body: ["Uma lista curta que cobre quase todos os casos:"],
+          list: [
+            "Certo no celular, deitado depois de enviar → uma marca de rotação ignorada, não um arquivo quebrado.",
+            "As dimensões parecem trocadas → estão mostrando o tamanho guardado e não o tamanho exibido.",
+            "Vai para MP4 → a marca pode ser reescrita, pixels intactos, qualidade igual.",
+            "Vai para WebM ou GIF → os quadros precisam ser redesenhados, então conte com uma recodificação.",
+            "Testar se a correção funcionou → compare quadros. Dimensões não distinguem 180 graus de correto.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Meu arquivo de vídeo está danificado?",
+          a: "Quase certamente não. Um vídeo deitado costuma ser um arquivo perfeitamente válido cuja marca de rotação o programa atual está ignorando. O mesmo arquivo vai aparecer certo num player que leia a marca.",
+        },
+        {
+          q: "Por que as dimensões aparecem trocadas?",
+          a: "Porque estão mostrando o que está guardado e não o que é exibido. Um vídeo vertical de celular é realmente guardado como quadros horizontais, então uma ferramenta que dá os números crus vai dizer 1920 por 1080 de algo que você assiste como 1080 por 1920.",
+        },
+        {
+          q: "Girar um vídeo reduz a qualidade?",
+          a: "Depende da saída. Para um MP4 a rotação é escrita como marca e nenhum pixel é tocado, então nada se perde. Para WebM ou GIF os quadros precisam ser redesenhados, o que significa recodificar e, com isso, uma geração de qualidade.",
+        },
+      ],
+    },
   },
 } satisfies GuideCopy;

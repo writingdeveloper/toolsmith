@@ -249,6 +249,9 @@ const CARDS = [
   ["guides/srt-vs-vtt", "video", "SRT ⇄ VTT", true],
   ["guides/what-are-stems", "video", "MP3 → 4 × WAV", true],
   ["guides/csv-vs-excel", "data", "CSV ⇄ XLSX", true],
+  ["guides/wav-vs-mp3", "video", "WAV ⇄ MP3", true],
+  ["guides/what-is-a-codec", "video", "H.264 · VP9 · AAC", true],
+  ["guides/why-video-is-sideways", "video", "MP4 ↻", true],
 ];
 
 for (const dir of ["tools", "guides", "lab"]) {

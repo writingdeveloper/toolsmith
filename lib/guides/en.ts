@@ -748,5 +748,212 @@ export const en = {
         },
       ],
     },
+
+    "wav-vs-mp3": {
+      metaTitle: "WAV vs MP3: Which One Do You Need?",
+      metaDescription:
+        "WAV keeps every sample and costs about 10 MB a minute. MP3 throws most of it away. Here is when that matters, and why converting MP3 to WAV restores nothing.",
+      h1: "WAV vs MP3: which one do you actually need?",
+      lead: "One of these discards sound on the assumption you will not miss it. The other keeps everything and charges you about ten megabytes a minute for the privilege. Which is right depends entirely on what happens to the file next.",
+      sections: [
+        {
+          h2: "What each one actually is",
+          body: [
+            "MP3 is a **lossy** format. Its encoder decides which parts of the sound you are least likely to notice and throws them away, then compresses what is left. That is where the roughly tenfold size reduction comes from — not from clever packing, but from deletion.",
+            "WAV is not really a compression format at all. A WAV file is a 44-byte header followed by the raw samples, one after another. That is the whole design. It stores what the microphone measured, unmodified.",
+            "So the comparison is not \"which compresses better\". One of them compresses and the other one does not.",
+          ],
+        },
+        {
+          h2: "The size difference is arithmetic, not opinion",
+          body: [
+            "A WAV file's size follows directly from three numbers: how many samples per second, how many channels, and how many bytes per sample. At CD quality that is 44,100 × 2 × 2 = 176,400 bytes every second — about **10.6 MB per minute**, or 42 MB for a four-minute song.",
+            "The same song as a 192 kbps MP3 is around 5.8 MB. Nothing about the music changes that ratio; it is fixed by the format.",
+            "This predictability is occasionally the point. A WAV file's length tells you exactly where every sample sits, which is why editors and analysis tools like it.",
+          ],
+        },
+        {
+          h2: "Converting MP3 to WAV does not restore anything",
+          body: [
+            "This is the single most common misunderstanding about these two formats. The detail an MP3 encoder discarded is not hidden somewhere in the file waiting to be decompressed — it is **gone**. Decoding to WAV produces a larger file containing exactly the same audio.",
+            "That does not make the conversion pointless. Plenty of software only accepts WAV, and giving it one is a perfectly reasonable thing to do. Just understand you are re-packaging, not repairing.",
+            "It is also why our audio extractor never re-encodes. Pulling audio out as M4A copies the original compressed data into a new container byte for byte; pulling it out as WAV decodes it once to raw samples. Neither path adds a second generation of compression on top of the first.",
+          ],
+        },
+        {
+          h2: "When WAV is the right answer",
+          body: [
+            "Anything where the file will be processed again. Every trip through a lossy encoder adds another generation of damage, and those stack — so if you are going to edit, mix, filter or feed the audio to a model, you want the version that has not been through the mill.",
+            "Our stem separator writes WAV for precisely that reason. Its four outputs exist to be loaded into an editor, and handing you MP3s of an estimate would compound one approximation with another.",
+            "Archiving is the other case. If this is the only copy that will ever exist, keep the one that has not thrown anything away.",
+          ],
+        },
+        {
+          h2: "When MP3 is the right answer",
+          body: [
+            "Listening, sending, and storing a lot of it. At 192 kbps and above, on ordinary equipment, most people cannot reliably pick the MP3 out of a pair — and it is one tenth the size.",
+            "Compatibility is the other half. MP3 opens in essentially everything, including hardware old enough to predate whatever else you were considering.",
+            "We will not tell you what your ears can hear; that is not something we can measure for you. We can tell you the file is ten times smaller and that the difference is deletion rather than degradation.",
+          ],
+        },
+        {
+          h2: "One awkward thing about MP3 files themselves",
+          body: [
+            "MP3 has **no container**. It is a bare run of frames, each with its own small header, laid end to end. There is no index and no table of contents, so software that wants to work with an MP3 has to scan for frame boundaries rather than look anything up.",
+            "We had to write that scanner ourselves, and two details caught us out. An ID3v2 tag at the front of the file stores its own length in \"syncsafe\" bytes that only use seven bits each, so reading it as an ordinary number lands you in the middle of the audio. And the very first frame is often a Xing or Info frame carrying metadata rather than sound — decode it and you get a burst of silence at the start.",
+            "The practical consequence is that MP3 is poor at precise seeking and its reported duration is frequently an estimate. WAV has the opposite property: no compression to unpick, so every position is exact.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Is WAV higher quality than MP3?",
+          a: "WAV is unmodified, which is not quite the same claim. If the WAV was made from an MP3, its quality is the MP3's quality in a larger file. WAV only sounds better when it never went through a lossy encoder in the first place.",
+        },
+        {
+          q: "If I convert WAV to MP3 and back, do I get the original WAV?",
+          a: "No. You get a WAV of the MP3. The round trip is not symmetric — the first step deletes information and the second step cannot invent it again.",
+        },
+        {
+          q: "Which format should I extract audio from a video as?",
+          a: "M4A if you just want the sound as it already exists, because that path copies the compressed audio without touching it. WAV if the file is going into an editor or an analysis tool that needs raw samples.",
+        },
+      ],
+    },
+
+    "what-is-a-codec": {
+      metaTitle: "Codec vs Container: What Is a Codec?",
+      metaDescription:
+        "MP4 is the box; H.264 is what is inside it. Confusing the two is why some conversions are instant and lossless while others take minutes and cost quality.",
+      h1: "What is a codec — and how is it different from MP4?",
+      lead: "Almost everything confusing about video files comes from a single distinction: the extension names the box, not the thing inside it. Separate those two and most of the mystery goes away.",
+      sections: [
+        {
+          h2: "The box and the contents",
+          body: [
+            "A **container** — MP4, MOV, WebM, MKV — describes how the parts of a file are arranged: where the video stream is, where the audio is, how they line up in time, and where the index lives.",
+            "A **codec** — H.264, HEVC, VP9, AV1 for pictures; AAC, Opus, MP3 for sound — is how that content was compressed in the first place.",
+            "So `.mp4` tells you the shape of the box and almost nothing about what it holds. Two files that both end in `.mp4` can contain completely different codecs, and one of them may not play on a device where the other plays perfectly.",
+          ],
+        },
+        {
+          h2: "This is why some conversions are free and others are not",
+          body: [
+            "MOV to MP4 is nearly free. Both are the same underlying format family, and the video inside a MOV is usually already H.264 — which MP4 accepts. So the compressed data is copied across unchanged and a new index is written around it. Nothing is decoded and nothing is re-compressed. It is **lossless and close to instant**. The proper name for this is a remux.",
+            "MP4 to WebM is the opposite. WebM does not accept H.264, so every frame has to be decoded and compressed again as VP9, and the audio again as Opus. That takes real time and costs a generation of quality.",
+            "The two operations share the word \"convert\" and nothing else, which is why our converter tells you which one you are about to run before you press anything.",
+          ],
+        },
+        {
+          h2: "You can do a surprising amount without a codec at all",
+          body: [
+            "Trimming, for instance, is just choosing which already-compressed samples to keep. Nothing gets decoded, so the quality is bit-for-bit identical and the operation finishes almost immediately.",
+            "There is one cost, and it comes straight out of how compression works. You can only start at a **keyframe** — a frame that stands on its own. The frames between keyframes are stored as descriptions of how they differ from earlier ones, so if you cut in the middle of that chain the first seconds have nothing to refer back to and come out broken.",
+            "So we snap the start back to the nearest keyframe before the point you asked for, and show you where the cut will actually land. The alternative is re-encoding the beginning to hit the exact frame, which costs quality — and that should be your choice, not a silent substitution.",
+            "Extracting audio as M4A works the same way: the compressed AAC data is lifted into a new container without being touched.",
+          ],
+        },
+        {
+          h2: "Support is per-codec, not per-extension",
+          body: [
+            "When a device says it cannot play an MP4, the container is almost never the problem. What it usually means is that the codec inside is not supported — HEVC in an `.mp4` is the common case, since it is what newer phones record and what older software refuses.",
+            "This also explains why renaming a file changes nothing. Changing `.mov` to `.mp4` relabels the box while leaving both the box and the contents exactly as they were.",
+          ],
+        },
+        {
+          h2: "Where our own limits come from",
+          body: [
+            "Our demuxer reads ISOBMFF, the family MP4, MOV and M4V belong to. We have no code that opens Matroska, which is what WebM is built on — so \"WebM to MP4\" is not on our list even though it sounds like the reverse of something we already do. Listing it would be claiming an ability we do not have.",
+            "Encoding is the browser's job rather than ours, and which codecs a browser can encode varies by machine and operating system. So we ask it directly what it supports and offer only that, instead of printing a menu and failing halfway through.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Why won't my .mp4 play on this device?",
+          a: "Most often because of the codec inside rather than the container. HEVC video in an MP4 is the usual culprit — newer phones record it and older players cannot decode it. Re-encoding to H.264 fixes it; renaming the file does not.",
+        },
+        {
+          q: "Does changing the file extension convert the video?",
+          a: "No. The extension is a label, not the format. Renaming can occasionally make a player attempt a file it would otherwise skip, but the bytes inside are unchanged and it will fail if it genuinely cannot read them.",
+        },
+        {
+          q: "Is converting MOV to MP4 lossy?",
+          a: "Not when the video inside is already H.264, which it usually is. The compressed data is copied into the new container untouched, so the result is identical picture in a different box.",
+        },
+      ],
+    },
+
+    "why-video-is-sideways": {
+      metaTitle: "Why Is My Video Sideways?",
+      metaDescription:
+        "Your phone records portrait video as landscape pixels plus a rotation flag. Players that read the flag look right; everything else lays the video on its side.",
+      h1: "Why is my video sideways?",
+      lead: "The file is not damaged and your phone did not make a mistake. A portrait video is usually stored as a landscape picture with a note attached, and everything depends on whether the next program bothers to read the note.",
+      sections: [
+        {
+          h2: "Your phone did not rotate anything",
+          body: [
+            "The camera sensor is landscape-shaped, and it stays that way no matter how you hold the device. So when you record standing up, the frames are still written **as landscape pictures** — and alongside them the file carries a small 3×3 matrix in the track header saying \"turn this a quarter turn before you draw it\".",
+            "Your phone's own player reads that matrix, applies it, and shows you a portrait video. As far as you can tell, the video is portrait. Hand the same file to something that ignores the matrix and it draws exactly what is stored: a landscape picture, lying on its side.",
+          ],
+        },
+        {
+          h2: "This is why it looks fine in one place and wrong in another",
+          body: [
+            "Nothing about the picture changed between the two programs. One of them honoured the note and the other did not, and both were technically reading the file correctly.",
+            "Which means \"it looks fine on my phone\" is not evidence that the file is fine. It is evidence that your phone reads rotation flags — something you already knew.",
+          ],
+        },
+        {
+          h2: "We got this wrong ourselves",
+          body: [
+            "For a while our video tools did not read the matrix at all. On 2026-07-27 we measured it properly and found that **four tools — convert, trim, compress and GIF — all produced sideways output** from portrait input. Nobody had reported it and every test was green.",
+            "The reason it stayed hidden is worth more than the bug. Every video sample we had was landscape, so the rotation path had never once been exercised. It was not a defect that appeared; it was a **hole in the sample set** that had been there from the start.",
+            "The fix came with four files of the same footage written at 0, 90, 180 and 270 degrees, so orientation is the only thing that differs between them. That is the kind of sample that makes an entire category of error impossible to miss.",
+          ],
+        },
+        {
+          h2: "Size does not prove orientation",
+          body: [
+            "This trap is easy to fall into. A 180-degree rotation leaves the width and height completely unchanged, and 90 and 270 swap them in exactly the same way — so checking the dimensions passes happily for a video that comes out upside down, or turned the wrong way entirely.",
+            "The only thing that separates them is comparing the actual picture. And each result has to be checked against **its own source**: we briefly assumed our four samples were the same video, when in fact they were the same stored pixels with different flags, which makes comparing the outputs to each other meaningless.",
+          ],
+        },
+        {
+          h2: "Fixing it depends on where the video is going",
+          body: [
+            "If the output is MP4, the note can be rewritten. The pixels stay exactly as they are and only the matrix changes — which is also the only option available on paths that never decode anything in the first place, like trimming or a container swap.",
+            "If the output is WebM or GIF, that route is closed. Rotation in Matroska is supported unevenly across players, and GIF has no concept of it at all. There the picture genuinely has to be turned and baked in, which means re-drawing every frame.",
+            "So \"rotate the video\" is two different operations depending on the destination, and picking the wrong one gives you a file that looks correct in your player and wrong everywhere else — the exact problem you were trying to solve.",
+          ],
+        },
+        {
+          h2: "What to check",
+          body: ["A short list that covers almost every case:"],
+          list: [
+            "Right on the phone, sideways after uploading → a rotation flag being ignored, not a broken file.",
+            "The dimensions look backwards → you are being shown the stored size rather than the display size.",
+            "Heading to MP4 → the flag can be rewritten, pixels untouched, quality unchanged.",
+            "Heading to WebM or GIF → the frames must be re-drawn, so expect a re-encode.",
+            "Testing whether a fix worked → compare frames. Dimensions cannot tell 180 degrees from correct.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Is my video file damaged?",
+          a: "Almost certainly not. A sideways video is usually a perfectly valid file whose rotation flag the current program is ignoring. The same file will look correct in a player that reads the flag.",
+        },
+        {
+          q: "Why do the dimensions look swapped?",
+          a: "Because they are showing what is stored rather than what is displayed. A portrait phone video is genuinely stored as landscape frames, so a tool that reports the raw numbers will say 1920 by 1080 for something you watch as 1080 by 1920.",
+        },
+        {
+          q: "Does rotating a video reduce quality?",
+          a: "It depends on the output. Into an MP4 the rotation is written as a flag and no pixel is touched, so nothing is lost. Into WebM or GIF the frames have to be re-drawn, which means a re-encode and a generation of quality with it.",
+        },
+      ],
+    },
   },
 } satisfies GuideCopy;

@@ -1,10 +1,17 @@
 /**
  * 설명 글 레지스트리 — 도구가 아닌 것이 사이트에 생기는 첫 자리다.
  *
- * **왜 도구 페이지로는 안 되는가.** 132페이지가 전부 "무엇을 하는 곳" 이라 검색에서
- * 잡히는 질문이 **거래형**(`heic to jpg` 같은 것)뿐이었다. 그 앞에 오는 질문들 —
- * "HEIC 가 뭔데 안 열리지", "PDF 는 왜 이렇게 크지", "MOV 랑 MP4 는 뭐가 다르지" —
- * 은 답할 페이지가 하나도 없었다.
+ * **왜 도구 페이지로는 안 되는가.** 처음에는 이렇게 적어 두었다 — "도구 페이지가 전부
+ * '무엇을 하는 곳' 이라 검색에서 잡히는 질문이 **거래형**(`heic to jpg` 같은 것)뿐이고,
+ * 그 앞에 오는 질문에는 답할 페이지가 없었다."
+ *
+ * **절반이 틀렸다 (2026-08-01, 첫 질의 데이터).** 거래형으로도 잡히고 있지 않았다.
+ * 질의 36개 중 **35개가 정보형**이었고 `heic to jpg` · `merge pdf` 류는 **한 건도**
+ * 나오지 않았다. 노출 65 중 **59(91%)가 글 다섯 쪽**으로 갔고 도구 21개가 합쳐서 7 이다.
+ *
+ * 그러니 글은 "비는 앞자리를 메우는 것" 이 아니라 **우리가 실제로 경쟁 가능한 유일한
+ * 자리**다. 거래형 낱말은 iLovePDF·Smallpdf 가 앉아 있어 새 사이트가 낄 틈이 없다.
+ * 이 사실이 다음 묶음을 고르는 방식을 바꿨다 — 아래 네 번째 묶음 주석 참고.
  *
  * **일부러 도구와 다른 말을 겨눈다.** 같은 낱말을 노리면 우리 두 페이지가 서로를
  * 밀어낸다(카니벌라이제이션). 글은 "왜/무엇" 에 답하고 끝에서 도구로 보낸다.
@@ -28,6 +35,9 @@ export const GUIDE_SLUGS = [
   "why-pdf-wont-open",
   "csv-vs-excel",
   "can-ai-summarize",
+  "wav-vs-mp3",
+  "what-is-a-codec",
+  "why-video-is-sideways",
 ] as const;
 
 export type GuideSlug = (typeof GUIDE_SLUGS)[number];
@@ -134,6 +144,44 @@ export const GUIDES: Record<GuideSlug, GuideMeta> = {
     published: "2026-07-28",
     updated: "2026-07-28",
     tools: ["summarize", "ocr"],
+  },
+
+  /*
+   * 네 번째 묶음(2026-08-01). **처음으로 감이 아니라 질의로 골랐다.** 앞의 셋은 각각
+   * 짐작 · Tier 2 가 비어서 · 글 없는 도구를 세어서 골랐고, 이번에는 Search Console 이
+   * 실제로 보여 준 36개 질의에서 골랐다.
+   *
+   * | 묶음 | 질의 | 노출 | 받던 페이지 |
+   * |---|---|---|---|
+   * | 음악 스템 | 18 | **32** | `what-are-stems` |
+   * | MOV·MP4 | 9 | 11 | `mov-vs-mp4` |
+   * | PDF 안 열림 · HEIC · SRT | 8 | 9 | 각자의 글 |
+   *
+   * **주의해서 읽어야 한다.** 보이는 질의는 전부 *이미 우리가 쓴 글*의 질의다 —
+   * 구글은 "무엇이 비었나" 가 아니라 "무엇이 먹히나" 를 말한 것이다. 그래서 없는
+   * 수요를 상상하지 않고 **먹히는 두 묶음의 이웃**만 골랐다: 소리 하나, 영상 둘.
+   *
+   * **낱말이 겹치지 않게 골랐다.** `wav-vs-mp3` 는 형식이고 `what-are-stems` 는 분리다.
+   * `what-is-a-codec` 은 코덱이고 `mov-vs-mp4` 는 상자다 — 오히려 저쪽이 왜 그런지를
+   * 이쪽이 설명한다. `why-video-is-sideways` 는 아무 글도 건드린 적 없는 문제형이다.
+   */
+  "wav-vs-mp3": {
+    slug: "wav-vs-mp3",
+    published: "2026-08-01",
+    updated: "2026-08-01",
+    tools: ["audio-extract", "stems"],
+  },
+  "what-is-a-codec": {
+    slug: "what-is-a-codec",
+    published: "2026-08-01",
+    updated: "2026-08-01",
+    tools: ["video-convert", "video-compress", "audio-extract"],
+  },
+  "why-video-is-sideways": {
+    slug: "why-video-is-sideways",
+    published: "2026-08-01",
+    updated: "2026-08-01",
+    tools: ["video-convert", "video-trim", "video-compress", "video-to-gif"],
   },
 };
 

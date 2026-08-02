@@ -739,5 +739,212 @@ export const de = {
         },
       ],
     },
+
+    "wav-vs-mp3": {
+      metaTitle: "WAV oder MP3: Was brauchen Sie?",
+      metaDescription:
+        "WAV behält jedes Sample und kostet rund 10 MB pro Minute. MP3 wirft das meiste weg. Wann das zählt — und warum MP3 zu WAV nichts zurückholt.",
+      h1: "WAV oder MP3: Was brauchen Sie wirklich?",
+      lead: "Das eine Format verwirft Klang in der Annahme, dass Sie ihn nicht vermissen werden. Das andere behält alles und verlangt dafür rund zehn Megabyte pro Minute. Was richtig ist, entscheidet allein die Frage, wohin die Datei als Nächstes geht.",
+      sections: [
+        {
+          h2: "Was die beiden tatsächlich sind",
+          body: [
+            "MP3 ist ein **verlustbehaftetes** Format. Sein Encoder entscheidet, welche Anteile des Klangs Ihnen am wenigsten auffallen dürften, wirft sie weg und komprimiert den Rest. Daher kommt die etwa zehnfache Verkleinerung — nicht vom geschickten Packen, sondern vom **Löschen**.",
+            "WAV ist eigentlich gar kein Kompressionsformat. Eine WAV-Datei besteht aus einem 44-Byte-Kopf und danach den rohen Samples, eines nach dem anderen. Das ist der gesamte Entwurf. Gespeichert wird, was das Mikrofon gemessen hat, unverändert.",
+            "Die Frage lautet also nicht, welches Format besser komprimiert. Nur eines von beiden komprimiert überhaupt.",
+          ],
+        },
+        {
+          h2: "Der Größenunterschied ist Arithmetik, keine Ansichtssache",
+          body: [
+            "Die Größe einer WAV-Datei folgt direkt aus drei Zahlen: Samples pro Sekunde, Kanäle und Bytes pro Sample. Bei CD-Qualität sind das 44.100 × 2 × 2 = 176.400 Byte pro Sekunde, also **etwa 10,6 MB pro Minute** oder 42 MB für ein vierminütiges Stück.",
+            "Dasselbe Stück als MP3 mit 192 kbps liegt bei rund 5,8 MB. An diesem Verhältnis ändert die Musik nichts; es ist vom Format festgelegt.",
+            "Diese Berechenbarkeit ist gelegentlich genau der Punkt. Bei WAV verrät die Länge exakt, wo jedes Sample sitzt — deshalb mögen Editoren und Analysewerkzeuge dieses Format.",
+          ],
+        },
+        {
+          h2: "MP3 in WAV umzuwandeln holt nichts zurück",
+          body: [
+            "Das ist das häufigste Missverständnis zu diesen beiden Formaten. Was ein MP3-Encoder verworfen hat, liegt nicht irgendwo in der Datei und wartet auf das Entpacken — es ist **weg**. Das Dekodieren nach WAV ergibt eine größere Datei mit exakt demselben Klang.",
+            "Sinnlos ist die Umwandlung deshalb nicht. Reichlich Software akzeptiert nur WAV, und ihr eine zu geben ist völlig vernünftig. Man sollte nur wissen, dass man **neu verpackt** und nicht repariert.",
+            "Aus demselben Grund kodiert unsere Audio-Extraktion nie neu. Als M4A werden die ursprünglichen komprimierten Daten Byte für Byte in einen neuen Container kopiert; als WAV werden sie einmal zu rohen Samples dekodiert. Keiner der beiden Wege legt eine zweite Kompressionsgeneration über die erste.",
+          ],
+        },
+        {
+          h2: "Wann WAV die richtige Antwort ist",
+          body: [
+            "Immer dann, wenn die Datei **noch einmal verarbeitet wird**. Jeder Durchgang durch einen verlustbehafteten Encoder fügt eine weitere Generation Schaden hinzu, und die summieren sich. Wer schneiden, mischen, filtern oder das Audio einem Modell vorlegen will, braucht die Fassung, die noch nicht durch die Mühle gegangen ist.",
+            "Genau deshalb schreibt unsere Stem-Trennung WAV. Ihre vier Ausgaben sind dafür da, in einem Editor zu landen — Ihnen MP3s einer Schätzung zu geben hieße, eine Näherung auf eine andere zu stapeln.",
+            "Der zweite Fall ist die Archivierung. Wenn dies die einzige Kopie ist, die je existieren wird, behalten Sie die, die nichts weggeworfen hat.",
+          ],
+        },
+        {
+          h2: "Wann MP3 die richtige Antwort ist",
+          body: [
+            "Zum Hören, Versenden und Aufbewahren in großer Zahl. Ab 192 kbps kann auf gewöhnlichem Gerät kaum jemand das MP3 zuverlässig heraushören — bei einem Zehntel der Größe.",
+            "Die andere Hälfte ist die Kompatibilität. MP3 öffnet sich praktisch überall, auch auf Hardware, die älter ist als jede Alternative, die Sie erwogen haben.",
+            "Was Ihr Gehör wahrnimmt, sagen wir Ihnen nicht; das können wir für Sie nicht messen. Wir können Ihnen sagen, dass die Datei zehnmal kleiner ist und dass der Unterschied **Löschung ist, nicht Verschlechterung**.",
+          ],
+        },
+        {
+          h2: "Eine unangenehme Eigenheit von MP3 selbst",
+          body: [
+            "MP3 hat **keinen Container**. Es ist eine nackte Folge von Frames, jeder mit seinem eigenen kleinen Kopf, aneinandergereiht. Es gibt keinen Index und kein Inhaltsverzeichnis, also muss Software, die mit einem MP3 arbeiten will, die **Frame-Grenzen absuchen**, statt irgendwo nachzuschlagen.",
+            "Diese Suche mussten wir selbst schreiben, und zwei Details haben uns erwischt. Ein ID3v2-Tag am Dateianfang speichert seine eigene Länge in \"syncsafe\" Bytes, die je nur sieben Bit nutzen — liest man das als gewöhnliche Zahl, landet man mitten im Audio. Und der allererste Frame ist oft ein Xing- oder Info-Frame mit Metadaten statt Klang; dekodiert man ihn, gibt es am Anfang einen Schwall Stille.",
+            "Praktisch heißt das: MP3 taugt schlecht zum genauen Springen, und die angegebene Dauer ist häufig geschätzt. WAV hat die umgekehrte Eigenschaft — keine Kompression aufzudröseln, also ist jede Position exakt.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Hat WAV eine bessere Qualität als MP3?",
+          a: "WAV ist unverändert, was nicht ganz dieselbe Aussage ist. Stammt das WAV aus einem MP3, ist seine Qualität die des MP3 in einer größeren Datei. WAV klingt nur dann besser, wenn es nie durch einen verlustbehafteten Encoder gelaufen ist.",
+        },
+        {
+          q: "Bekomme ich das Original zurück, wenn ich WAV zu MP3 und zurück wandle?",
+          a: "Nein. Sie bekommen ein WAV des MP3. Der Hin- und Rückweg ist nicht symmetrisch: Der erste Schritt löscht Information, und der zweite kann sie nicht neu erfinden.",
+        },
+        {
+          q: "In welchem Format sollte ich Ton aus einem Video ziehen?",
+          a: "M4A, wenn Sie den Klang so wollen, wie er bereits vorliegt — dieser Weg kopiert das komprimierte Audio, ohne es anzufassen. WAV, wenn die Datei in einen Editor oder ein Analysewerkzeug geht, das rohe Samples braucht.",
+        },
+      ],
+    },
+
+    "what-is-a-codec": {
+      metaTitle: "Codec und Container: Was ist ein Codec?",
+      metaDescription:
+        "MP4 ist die Kiste, H.264 der Inhalt. Wer beides verwechselt, versteht nicht, warum manche Umwandlungen sofort und verlustfrei sind und andere Qualität kosten.",
+      h1: "Was ist ein Codec — und wie unterscheidet er sich von MP4?",
+      lead: "Fast alles Verwirrende an Videodateien kommt aus einer einzigen Unterscheidung: Die Endung benennt die Kiste, nicht das, was darin liegt. Trennen Sie die beiden, und das meiste Rätselhafte verschwindet.",
+      sections: [
+        {
+          h2: "Die Kiste und der Inhalt",
+          body: [
+            "Ein **Container** — MP4, MOV, WebM, MKV — beschreibt, wie die Teile einer Datei angeordnet sind: wo der Videostrom liegt, wo der Ton, wie beide zeitlich zusammenpassen und wo der Index steht.",
+            "Ein **Codec** — H.264, HEVC, VP9, AV1 für das Bild; AAC, Opus, MP3 für den Ton — ist, wie dieser Inhalt überhaupt komprimiert wurde.",
+            "`.mp4` verrät Ihnen also die Form der Kiste und fast nichts über ihren Inhalt. Zwei Dateien, die beide auf `.mp4` enden, können völlig verschiedene Codecs enthalten, und eine davon spielt auf einem Gerät womöglich nicht, auf dem die andere einwandfrei läuft.",
+          ],
+        },
+        {
+          h2: "Deshalb sind manche Umwandlungen gratis und andere nicht",
+          body: [
+            "MOV zu MP4 ist beinahe gratis. Beide gehören zur selben Formatfamilie, und das Video in einem MOV ist meist bereits H.264 — was MP4 akzeptiert. Also werden die komprimierten Daten unverändert übernommen und ein neuer Index darum geschrieben. Nichts wird dekodiert, nichts neu komprimiert. Das ist **verlustfrei und nahezu sofort**. Der richtige Name dafür ist Remux.",
+            "MP4 zu WebM ist das Gegenteil. WebM akzeptiert kein H.264, also muss jedes Einzelbild dekodiert und als VP9 neu komprimiert werden, der Ton als Opus. Das dauert echte Zeit und kostet eine Generation Qualität.",
+            "Die beiden Vorgänge teilen sich das Wort \"umwandeln\" und sonst nichts — deshalb sagt Ihnen unser Konverter vor dem Klick, welchen der beiden Sie gleich auslösen.",
+          ],
+        },
+        {
+          h2: "Erstaunlich viel geht ganz ohne Codec",
+          body: [
+            "Schneiden zum Beispiel heißt nur auszuwählen, welche bereits komprimierten Samples bleiben. Es wird nichts dekodiert, die Qualität ist also bitgenau dieselbe, und der Vorgang ist fast augenblicklich fertig.",
+            "Ein Preis fällt doch an, und er folgt direkt aus der Funktionsweise von Kompression. Beginnen können Sie nur an einem **Keyframe** — einem Bild, das für sich allein steht. Die Bilder dazwischen sind als Beschreibung gespeichert, wie sie sich von früheren unterscheiden; schneidet man mitten in diese Kette, haben die ersten Sekunden keinen Bezugspunkt und kommen kaputt heraus.",
+            "Deshalb ziehen wir den Anfang auf den nächstgelegenen Keyframe vor Ihrem Wunschpunkt zurück und zeigen, wo der Schnitt tatsächlich landet. Die Alternative wäre, den Anfang neu zu kodieren, um das exakte Bild zu treffen — das kostet Qualität und sollte Ihre Entscheidung sein, kein stiller Austausch.",
+            "Ton als M4A herauszuziehen funktioniert genauso: Die komprimierten AAC-Daten werden unangetastet in einen neuen Container gehoben.",
+          ],
+        },
+        {
+          h2: "Unterstützung gilt pro Codec, nicht pro Endung",
+          body: [
+            "Wenn ein Gerät sagt, es könne ein MP4 nicht abspielen, ist fast nie der Container das Problem. Meist heißt es, dass der **Codec darin** nicht unterstützt wird — HEVC in einer `.mp4` ist der übliche Fall, denn genau das nehmen neuere Telefone auf und genau das verweigert ältere Software.",
+            "Das erklärt auch, warum Umbenennen nichts ändert. Aus `.mov` ein `.mp4` zu machen beschriftet die Kiste neu und lässt Kiste wie Inhalt exakt so, wie sie waren.",
+          ],
+        },
+        {
+          h2: "Woher unsere eigenen Grenzen kommen",
+          body: [
+            "Unser Demuxer liest ISOBMFF, die Familie, zu der MP4, MOV und M4V gehören. Wir haben keinen Code, der Matroska öffnet — die Grundlage von WebM. Deshalb steht \"WebM zu MP4\" nicht auf unserer Liste, obwohl es nach der Umkehrung von etwas klingt, das wir bereits tun. Es aufzuführen hieße, eine Fähigkeit zu behaupten, die wir nicht haben.",
+            "Das Kodieren erledigt der Browser und nicht wir, und welche Codecs er kodieren kann, hängt von Maschine und Betriebssystem ab. Also fragen wir ihn direkt und bieten nur das an, statt eine Speisekarte zu drucken und auf halbem Weg zu scheitern.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Warum läuft meine .mp4 auf diesem Gerät nicht?",
+          a: "Meist wegen des Codecs darin und nicht wegen des Containers. HEVC-Video in einer MP4 ist der übliche Verdächtige: Neuere Telefone nehmen es auf, ältere Player dekodieren es nicht. Ein Neukodieren nach H.264 behebt es, Umbenennen nicht.",
+        },
+        {
+          q: "Wandelt das Ändern der Dateiendung das Video um?",
+          a: "Nein. Die Endung ist ein Etikett, nicht das Format. Umbenennen kann gelegentlich dazu führen, dass ein Player eine Datei überhaupt erst probiert, aber die Bytes darin bleiben gleich, und er scheitert, wenn er sie wirklich nicht lesen kann.",
+        },
+        {
+          q: "Ist die Umwandlung von MOV nach MP4 verlustbehaftet?",
+          a: "Nicht, wenn das Video darin bereits H.264 ist, was meist zutrifft. Die komprimierten Daten werden unangetastet in den neuen Container kopiert, das Ergebnis ist also dasselbe Bild in einer anderen Kiste.",
+        },
+      ],
+    },
+
+    "why-video-is-sideways": {
+      metaTitle: "Warum liegt mein Video auf der Seite?",
+      metaDescription:
+        "Ihr Telefon speichert Hochformat-Video als Querformat-Pixel plus eine Drehmarke. Player, die sie lesen, zeigen es richtig; alle anderen legen das Video um.",
+      h1: "Warum liegt mein Video auf der Seite?",
+      lead: "Die Datei ist nicht beschädigt, und Ihr Telefon hat keinen Fehler gemacht. Ein Hochformat-Video wird in der Regel als Querformat-Bild mit einem angehefteten Zettel gespeichert — und alles hängt davon ab, ob das nächste Programm den Zettel liest.",
+      sections: [
+        {
+          h2: "Ihr Telefon hat nichts gedreht",
+          body: [
+            "Der Kamerasensor ist quer geformt, und das bleibt er, wie auch immer Sie das Gerät halten. Beim Aufnehmen im Stehen werden die Einzelbilder deshalb weiterhin **als Querformat-Bilder** geschrieben — und daneben trägt die Datei im Spurkopf eine 3×3-Matrix, die sagt: \"Dreh das um eine Vierteldrehung, bevor du es zeichnest.\"",
+            "Der Player Ihres eigenen Telefons liest diese Matrix, wendet sie an und zeigt Ihnen ein Hochformat-Video. Für Sie ist das Video hochformatig. Geben Sie dieselbe Datei an etwas, das die Matrix ignoriert, zeichnet es genau das Gespeicherte: ein Querformat-Bild, auf der Seite liegend.",
+          ],
+        },
+        {
+          h2: "Deshalb sieht es an einer Stelle richtig und an anderer falsch aus",
+          body: [
+            "Am Bild selbst hat sich zwischen den beiden Programmen nichts geändert. Eines hat den Zettel beachtet, das andere nicht — und beide haben die Datei technisch korrekt gelesen.",
+            "\"Auf meinem Telefon sieht es richtig aus\" ist damit kein Beleg dafür, dass die Datei in Ordnung ist. Es ist ein Beleg dafür, dass Ihr Telefon Drehmarken liest, und das wussten Sie schon.",
+          ],
+        },
+        {
+          h2: "Wir selbst haben das falsch gemacht",
+          body: [
+            "Eine Zeit lang haben unsere Video-Werkzeuge die Matrix überhaupt nicht gelesen. Am 2026-07-27 haben wir richtig gemessen und festgestellt, dass **vier Werkzeuge — Umwandeln, Schneiden, Komprimieren und GIF — Hochformat-Eingaben allesamt liegend ausgaben**. Niemand hatte es gemeldet, und alle Prüfungen waren grün.",
+            "Warum es verborgen blieb, ist wichtiger als der Fehler. Sämtliche Videoproben, die wir hatten, waren im Querformat, der Rotationspfad war also kein einziges Mal durchlaufen worden. Es war kein Defekt, der auftauchte, sondern ein **Loch im Probensatz**, das von Anfang an da war.",
+            "Behoben wurde es mit vier Dateien desselben Materials, geschrieben mit 0, 90, 180 und 270 Grad — die Ausrichtung ist das Einzige, worin sie sich unterscheiden. Das ist die Art Probe, die eine ganze Fehlerklasse unübersehbar macht.",
+          ],
+        },
+        {
+          h2: "Die Größe beweist die Ausrichtung nicht",
+          body: [
+            "In diese Falle tappt man leicht. Eine Drehung um 180 Grad lässt Breite und Höhe völlig unverändert, und 90 und 270 vertauschen sie auf exakt dieselbe Weise. Eine Prüfung der Maße geht also fröhlich durch bei einem Video, das auf dem Kopf steht oder in die falsche Richtung gedreht ist.",
+            "Das Einzige, was sie trennt, ist der Vergleich des tatsächlichen Bildes. Und jedes Ergebnis muss gegen **seine eigene Quelle** geprüft werden: Wir nahmen kurz an, unsere vier Proben seien dasselbe Video — tatsächlich waren es dieselben gespeicherten Pixel mit unterschiedlichen Marken, weshalb ein Vergleich der Ausgaben untereinander nichts aussagt.",
+          ],
+        },
+        {
+          h2: "Die Behebung hängt vom Ziel ab",
+          body: [
+            "Ist die Ausgabe MP4, lässt sich der Zettel neu schreiben. Die Pixel bleiben genau so, wie sie sind, und nur die Matrix ändert sich — was zugleich die einzige Möglichkeit auf Wegen ist, die ohnehin nichts dekodieren, etwa Schneiden oder ein Containerwechsel.",
+            "Ist die Ausgabe WebM oder GIF, ist dieser Weg versperrt. Rotation in Matroska wird von Playern unterschiedlich gut unterstützt, und GIF kennt das Konzept gar nicht. Dort muss das Bild wirklich gedreht und eingebrannt werden, das heißt: jedes Einzelbild neu zeichnen.",
+            "\"Das Video drehen\" sind also zwei verschiedene Vorgänge, je nach Ziel — und die falsche Wahl liefert eine Datei, die in Ihrem Player richtig und überall sonst falsch aussieht. Genau das Problem, das Sie lösen wollten.",
+          ],
+        },
+        {
+          h2: "Was Sie prüfen sollten",
+          body: ["Eine kurze Liste, die fast alle Fälle abdeckt:"],
+          list: [
+            "Auf dem Telefon richtig, nach dem Hochladen liegend → eine ignorierte Drehmarke, keine kaputte Datei.",
+            "Die Maße wirken vertauscht → Ihnen wird die gespeicherte Größe gezeigt, nicht die Anzeigegröße.",
+            "Ziel MP4 → die Marke lässt sich neu schreiben, Pixel unberührt, Qualität unverändert.",
+            "Ziel WebM oder GIF → die Einzelbilder müssen neu gezeichnet werden, rechnen Sie mit einem Neukodieren.",
+            "Prüfen, ob die Behebung wirkte → Einzelbilder vergleichen. Maße unterscheiden 180 Grad nicht von richtig.",
+          ],
+        },
+      ],
+      faq: [
+        {
+          q: "Ist meine Videodatei beschädigt?",
+          a: "Mit ziemlicher Sicherheit nicht. Ein liegendes Video ist meist eine völlig gültige Datei, deren Drehmarke das aktuelle Programm ignoriert. In einem Player, der die Marke liest, sieht dieselbe Datei richtig aus.",
+        },
+        {
+          q: "Warum wirken die Maße vertauscht?",
+          a: "Weil sie das Gespeicherte zeigen und nicht das Angezeigte. Ein Hochformat-Video vom Telefon wird tatsächlich als Querformat-Einzelbilder gespeichert, ein Werkzeug mit rohen Zahlen nennt also 1920 mal 1080, was Sie als 1080 mal 1920 sehen.",
+        },
+        {
+          q: "Verliert ein Video durch Drehen an Qualität?",
+          a: "Das hängt von der Ausgabe ab. In eine MP4 wird die Drehung als Marke geschrieben und kein Pixel angefasst, es geht also nichts verloren. Nach WebM oder GIF müssen die Einzelbilder neu gezeichnet werden, das bedeutet Neukodieren und damit eine Generation Qualität.",
+        },
+      ],
+    },
   },
 } satisfies GuideCopy;
