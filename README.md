@@ -1,90 +1,146 @@
 # toolsmith
 
-업로드 없이 브라우저 안에서 끝나는 파일 변환 도구 모음.
+File tools that never upload your files. Images, video, audio, PDFs — converted,
+compressed, split and transcribed **entirely inside the browser tab**.
 
-**새 세션은 [`docs/TOOLS.md`](docs/TOOLS.md) 부터 읽는다.** 무엇을 만들 것인지, 무엇을
-만들지 않기로 했는지, 왜 그렇게 정했는지가 전부 거기 있다.
+**[toolsmith.writingdeveloper.blog](https://toolsmith.writingdeveloper.blog)** ·
+21 tools · 6 languages · no backend, no account, no watermark
 
-## 왜 이 형태인가
+---
 
-기존 변환 사이트(FreeConvert 월 1,130만 방문, 유입 71%가 오가닉)는 10년치 도메인 권위가
-자산이라 정면 클론이 불가능하다. 대신 **무료층을 100% 클라이언트로 돌려 원가를 0으로 만들고**,
-"파일이 서버로 가지 않는다"는 것을 경쟁사가 구조상 버릴 수 없는 차별점으로 삼는다.
-(그들은 서버 처리가 곧 광고 인벤토리다.)
+## "No upload" is a structural claim here, not a promise
 
-유료층(긴 파일·대형 모델·배치)은 4080 노트북 서버에 붙이되, **Tier 1~2가 실제 유입을
-만든 뒤에** 착수한다. v1은 4080을 쓰지 않는다.
+There is no server to upload to. Every page is prerendered static HTML on a CDN;
+all processing happens in a Web Worker in your tab. The paid converters can't
+match this — server-side processing *is* their ad inventory — but it also means
+we give up anything that needs a server.
 
-## 스택
+You do not have to take our word for it. Open the network tab, or read the specs:
+all 21 tools have one that runs the real conversion with request interception on and
+fails if any outbound POST/PUT carries a byte of your file.
 
-- Next.js 16 (App Router, Turbopack) + TypeScript + Tailwind 4
-- 배포: Vercel Pro 단독. 서버 연산이 0이라 백엔드가 없다.
-- 처리: Web Worker + OffscreenCanvas / WASM / (추후) WebGPU
+Models are the one exception, and they are downloads *to* you, never uploads:
+they come from the Hugging Face CDN and only after you press the button.
 
-## 개발
+## Three things that cost us the most
+
+### 1. `@ffmpeg/core` is GPL, and shipping it to a browser is distribution
+
+The wasm binary is built with `--enable-gpl --enable-libx264 --enable-libx265`.
+Sending those 30.7 MB to a visitor is distribution, so the whole site becomes GPL.
+Almost every "convert video in your browser" tutorial skips this.
+
+We went to **WebCodecs** instead — built into the browser, 0 MB to download,
+hardware accelerated. We only open the containers ourselves: `mp4box.js` (BSD-3) to
+demux, `mp4-muxer`/`webm-muxer` (MIT) to mux. MOV→MP4 became a *remux* — no
+re-encoding at all, so it is lossless and near-instant.
+
+### 2. Four video tools rotated portrait video sideways, with every test green
+
+Phones store portrait video as landscape pixels plus a rotation matrix in the `tkhd`
+box. We never read it, so convert, trim, compress and GIF all emitted sideways video.
+
+The tests were green because **every video fixture we had was landscape**. It was not
+a bug that slipped through review — it was a hole in the sample set. Two further traps
+came with it: matching dimensions do *not* prove correct orientation (180° preserves
+them, and 90°/270° are indistinguishable by size alone), and the four rotated files
+had to be compared **each against its own source**, not against each other.
+
+The fix also splits by output: MP4 rewrites the matrix, WebM and GIF must bake the
+rotation into pixels.
+
+### 3. A clean license does not mean a usable model
+
+Picking on-device models turned out to be five gates — *exists → license → size →
+speed → quality* — and every one of them rejected a candidate we had already
+committed to on paper:
+
+- **Exists.** A well-cited candidate table pointed at a model that does not exist.
+- **License.** Kokoro TTS has genuinely clean weights, but its grapheme-to-phoneme
+  step bundles a compiled eSpeak NG (GPL-3.0). The license gate is not a weights gate —
+  it covers everything the model *requires* to run. Spleeter was the third "code is
+  MIT, weights are not" we hit.
+- **Quality.** Two Apache-2.0 summarizers copied the source text back instead of
+  summarizing it. A clean license is worth nothing if the model cannot do the job.
+
+And a runtime version can flip a model verdict: subtitle translation only works on
+transformers.js **3.7.6**, summarization only on **4.2.0**. Unifying them silently
+kills one.
+
+The full engineering log — every rejected candidate, every measurement — is in
+[`docs/TOOLS.md`](docs/TOOLS.md). It is written in Korean.
+
+## What it does
+
+| | |
+|---|---|
+| **Images** | convert (incl. HEIC), compress, resize/crop |
+| **PDF** | merge, split, rotate/delete pages, compress (re-encodes JPEGs only, so text stays text) |
+| **Video** | convert, compress, trim, extract audio, to GIF |
+| **On-device models** | background removal, upscaling, click-to-cutout, subtitles, subtitle translation, stem separation, summarization, OCR |
+| **Data** | SQL over CSV/Parquet via DuckDB-wasm — the file is handed over as a handle, never read into memory |
+
+Results chain: finish in one tool and hand the output straight to the next. The blob
+travels through IndexedDB and is deleted the moment it is claimed.
+
+## Stack
+
+- Next.js 16 (App Router, Turbopack) + TypeScript (strict) + Tailwind 4
+- Fully static: 235 prerendered pages, zero server compute, no middleware
+- Processing: Web Workers + `OffscreenCanvas` / WASM / WebCodecs / WebGPU
+- ONNX Runtime Web is loaded from a CDN and is deliberately **not** an npm dependency —
+  its default export embeds the wasm as base64, so importing it ships ~20 MB from your host
+- 411 Playwright specs across two projects (one forces the WebGPU path)
+
+## Development
 
 ```bash
 pnpm install
-pnpm dev              # http://localhost:3000
-pnpm build
-pnpm fixtures         # tests/fixtures/*.{jpg,png} 재생성
-pnpm test             # Playwright — dev 서버를 자동으로 띄운다
+pnpm dev        # http://localhost:3000
+pnpm build      # includes typecheck
+pnpm test       # Playwright; starts its own dev server
+pnpm fixtures   # regenerate tests/fixtures
 ```
 
-## 구조
+Specs verify decoded output, not UI text — magic bytes, real pixel values, output
+dimensions. The word "converted" appearing on screen proves nothing.
+
+## Layout
 
 ```
 app/
-  (root)/page.tsx              "/" 언어 선택 (정적, 리다이렉트 없음)
+  (root)/page.tsx        "/" language picker — static, no redirect
   [locale]/
-    layout.tsx                 <html lang>, 헤더·푸터, hreflang
-    page.tsx                   홈 — 도구 그리드 (lib/tools.ts 레지스트리 기반)
-    tools/<slug>/
-      page.tsx                 서버 컴포넌트: 메타데이터 + SEO 본문
-      <Tool>.tsx               'use client' — UI와 워커 RPC (문자열은 prop 으로 받는다)
-      *.worker.ts              실제 처리. 메인 스레드에서 돌리지 않는다
-  sitemap.ts / robots.ts       언어 × 페이지 전부
+    layout.tsx           <html lang>, header/footer, hreflang
+    page.tsx             home — tool grid, driven by lib/tools.ts
+    tools/<slug>/        page.tsx (server) + <Tool>.tsx ('use client') + *.worker.ts
+    guides/ lab/
 lib/
-  tools.ts                     도구 레지스트리 (docs/TOOLS.md 의 코드측 거울)
-  i18n/config.ts               지원 언어 목록 ← 라우팅·hreflang·sitemap 이 전부 이걸 읽는다
-  i18n/dictionaries/*.ts       en 이 기준. 나머지는 satisfies Dictionary 로 강제된다
-  capabilities.ts              WebGPU / OffscreenCanvas / crossOriginIsolated 감지
-  image/convert-core.ts        디코드·인코드 핵심. window·document 를 참조하지 않는다
-  onnx/runtime.ts              ONNX Runtime 을 여는 유일한 자리. **npm 의존성이 아니다** (CDN)
-  matting/matte-core.ts        배경 제거(U²-Net, Apache-2.0)
-  upscale/upscale-core.ts      업스케일(Real-ESRGAN, BSD-3). 덧대어 넣고 알맹이만 오려 붙인다
-  pdf/document.ts              PDF 공통 토대(열기·오류 번역). pdf-lib 은 여기서만 동적 로드
-  pdf/merge-core.ts            병합
-  pdf/split-core.ts            범위 추출·낱장 분리·ZIP
-tests/                         Playwright 스펙 + 픽스처
-docs/TOOLS.md                  마스터 도구 목록 ← 단일 진실원천
+  tools.ts               tool registry
+  i18n/                  en is the type source; the other five are enforced by `satisfies`
+  image/ pdf/ video/     pure processing modules — never touch window or document
+  onnx/runtime.ts        the only place a model runtime is opened
+  segment/ upscale/ subtitles/ translate/ stems/ summarize/ ocr/ pii/
+  handoff.ts             the only path a result takes from one tool to the next
+tests/                   Playwright specs + fixtures
+docs/TOOLS.md            master log (Korean)
 ```
 
-## 도구를 하나 추가할 때
+## Known gaps
 
-1. `docs/TOOLS.md` 에서 다음 도구를 고른다. 여러 개를 동시에 열지 않는다.
-2. `lib/tools.ts` 에 등록하고 `app/tools/<slug>/` 를 만든다.
-3. 처리 로직은 `lib/<domain>/` 에 순수 모듈로 두고 워커가 그것을 부른다.
-4. `tests/<slug>.spec.ts` 를 쓴다. **UI 텍스트가 아니라 결과 blob 을 디코드해서 검증한다.**
-5. `pnpm test` → 배포 → `docs/TOOLS.md` 의 상태 칸 갱신 → 커밋.
+Kept here honestly rather than quietly:
 
-## 지켜야 할 것
+- **AVIF encoding** is unverified — the test Chromium does not support it, so it drops
+  off the capability list automatically.
+- **Safari's native HEIC path** is unverified. Chrome's libheif path was checked with
+  real iPhone photos.
+- **Summarization requires WebGPU** and has nowhere to fall back to: the wasm execution
+  provider has no implementation of the operators this export uses.
+- Animated GIFs keep only the first frame when converted. The UI says so before you start.
 
-- **버튼을 누르기 전엔 무거운 자산을 받지 않는다.** libheif 는 HEIC 파일이 들어온 순간에만
-  동적 import 된다. 워커도 마찬가지다 — 시작할 때 워커에 물어볼 것이 없다면 워커 생성 자체를
-  미룬다. 워커 청크를 받는 순간 그 워커가 참조하는 동적 import 대상까지 함께 내려온다.
-- **브라우저가 실제로 못 하는 것을 할 수 있다고 표시하지 않는다.** `convertToBlob` 은 지원하지
-  않는 형식을 받으면 조용히 PNG 를 뱉으므로, 반환된 `blob.type` 을 대조해 인코더 목록을 만든다.
-- **COOP/COEP 를 전역으로 켜지 않는다.** `require-corp` 는 교차 출처 리소스를 전부 막아
-  HuggingFace CDN 모델 로드와 충돌한다. `SharedArrayBuffer` 가 필요한 경로(ffmpeg 멀티스레드)에만
-  스코프해서 건다.
-- **무거운 자산은 Vercel 에서 서빙하지 않는다.** 모델 100MB × 방문 1만 = 1TB(Pro 한도).
+## License
 
-## 알려진 미검증 항목
+MIT — see [`LICENSE`](LICENSE).
 
-- **HEIC 실파일 검증.** sharp 로 HEIC 를 만들 수 없어 픽스처가 없다. 실제 아이폰 사진으로
-  Chrome(libheif 경로)과 Safari(네이티브 경로) 양쪽에서 수동 확인이 필요하다.
-- **AVIF 인코딩.** 테스트 환경 Chromium 은 `convertToBlob('image/avif')` 를 지원하지 않아
-  목록에서 자동으로 빠진다. 지원 브라우저에서의 동작은 미검증.
-- **진짜 암호화 PDF.** `tests/fixtures/encrypted.pdf` 는 trailer 에 `/Encrypt` 참조만 주입한
-  합성 파일이다. 오류 분기는 그대로 타지만 실제 RC4/AES 암호화 파일은 확인하지 못했다.
+Third-party models are downloaded at runtime from the Hugging Face CDN under their own
+licenses (Apache-2.0, BSD-3, MIT). No copyleft dependency is used anywhere, by rule.
