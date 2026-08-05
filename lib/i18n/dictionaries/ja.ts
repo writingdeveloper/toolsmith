@@ -80,6 +80,9 @@ export const ja = {
   },
 
   localePicker: {
+    metaTitle: "toolsmith — 6言語で使えるファイル道具",
+    metaDescription:
+      "言語を選んで続けてください。toolsmith は画像・動画・音声・PDF をブラウザの中だけで変換します。ファイルは一切アップロードされません。",
     title: "言語を選んでください",
     lead: "toolsmith はすべてのファイルをブラウザの中で処理します。言語を選んで続けてください。",
   },

@@ -2,8 +2,7 @@ import type { Dictionary } from "./en";
 
 export const ptBR = {
   site: {
-    title:
-      "toolsmith — ferramentas de navegador que nunca enviam seus arquivos",
+    title: "toolsmith — ferramentas de navegador que não enviam nada",
     titleTemplate: "%s | toolsmith",
     description:
       "Seus arquivos nunca saem do seu aparelho. Converta imagens, vídeo e PDF inteiramente dentro do navegador. Sem cadastro e sem upload.",
@@ -81,6 +80,9 @@ export const ptBR = {
   },
 
   localePicker: {
+    metaTitle: "toolsmith — ferramentas de arquivo em seis idiomas",
+    metaDescription:
+      "Escolha um idioma para continuar. O toolsmith converte imagens, vídeo, áudio e PDF dentro do navegador. Nenhum arquivo é enviado.",
     title: "Escolha seu idioma",
     lead: "O toolsmith processa cada arquivo dentro do seu navegador. Escolha um idioma para continuar.",
   },

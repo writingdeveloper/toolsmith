@@ -2,7 +2,7 @@ import type { Dictionary } from "./en";
 
 export const es = {
   site: {
-    title: "toolsmith — herramientas de navegador que nunca suben tus archivos",
+    title: "toolsmith — herramientas de navegador que no suben nada",
     titleTemplate: "%s | toolsmith",
     description:
       "Tus archivos nunca salen de tu dispositivo. Convierte imágenes, vídeo y PDF enteramente dentro del navegador. Sin registro y sin subidas.",
@@ -14,7 +14,7 @@ export const es = {
   },
 
   lab: {
-    metaTitle: "Laboratorio — experimentos pesados en tu navegador",
+    metaTitle: "Laboratorio — experimentos pesados, sin subidas",
     metaDescription: "Herramientas demasiado grandes para el uso diario, puestas aquí a propósito. Cada una dice cuánto descargará antes de empezar. No se sube nada.",
     h1: "Laboratorio",
     lead: "Cosas demasiado pesadas para la portada, pero reales y tuyas para usar si tu conexión y tu equipo aguantan.",
@@ -80,6 +80,9 @@ export const es = {
   },
 
   localePicker: {
+    metaTitle: "toolsmith — herramientas de archivos en seis idiomas",
+    metaDescription:
+      "Elige un idioma para continuar. toolsmith convierte imágenes, vídeo, audio y PDF dentro de tu navegador. Nunca se sube ningún archivo.",
     title: "Elige tu idioma",
     lead: "toolsmith procesa cada archivo dentro de tu navegador. Elige un idioma para continuar.",
   },

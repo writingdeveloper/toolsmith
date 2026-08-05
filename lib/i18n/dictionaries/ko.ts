@@ -80,6 +80,9 @@ export const ko = {
   },
 
   localePicker: {
+    metaTitle: "toolsmith — 6개 언어로 쓰는 파일 도구",
+    metaDescription:
+      "언어를 고르고 계속하세요. toolsmith 는 이미지·영상·소리·PDF 를 브라우저 안에서만 바꿉니다. 어떤 파일도 올라가지 않습니다.",
     title: "언어를 선택하세요",
     lead: "toolsmith 는 모든 파일을 브라우저 안에서 처리합니다. 언어를 골라 계속하세요.",
   },

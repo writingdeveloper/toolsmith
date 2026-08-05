@@ -81,6 +81,20 @@ export const en = {
   },
 
   localePicker: {
+    /*
+     * **루트는 제 제목을 갖는다 (2026-08-04).**
+     *
+     * 그전까지 `/` 는 `site.title`·`site.description` 을 그대로 썼는데, 그것은
+     * `/en` 이 쓰는 바로 그 문자열이다. 두 URL 이 **글자 하나까지 같은 제목과 설명**을
+     * 달고 **각자 자기를 canonical 로 선언**하고 **둘 다 사이트맵에 있으니**, 교차검증
+     * 도구에는 "같은 페이지가 둘인데 서로 정본이라고 우긴다" 로 보인다.
+     *
+     * 2026-07-28 에 `/` 의 canonical 을 `/en` 에서 자기 자신으로 돌린 그 수정의
+     * **남은 절반**이다 — 주소만 갈라 두고 내용은 안 갈랐다.
+     */
+    metaTitle: "toolsmith — file tools in six languages",
+    metaDescription:
+      "Pick a language to continue. toolsmith converts images, video, audio and PDFs entirely inside your browser — nothing is ever uploaded.",
     title: "Choose your language",
     lead: "toolsmith processes every file inside your browser. Pick a language to continue.",
   },

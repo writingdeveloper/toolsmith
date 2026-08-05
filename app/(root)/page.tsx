@@ -8,9 +8,13 @@ import { absolute, alternatesFor, socialFor } from "@/lib/site";
 
 const dict = getDictionary(DEFAULT_LOCALE);
 
+/*
+ * 제목·설명은 **`localePicker` 것을 쓴다** — `site` 것을 쓰면 `/en` 과 글자 하나까지
+ * 같아진다. 근거는 `lib/i18n/dictionaries/en.ts` 의 `localePicker` 주석.
+ */
 export const metadata: Metadata = {
-  title: dict.site.title,
-  description: dict.site.description,
+  title: dict.localePicker.metaTitle,
+  description: dict.localePicker.metaDescription,
   alternates: {
     /*
      * **자기 자신을 가리킨다 (2026-07-28).**
@@ -24,7 +28,13 @@ export const metadata: Metadata = {
     canonical: absolute("/"),
     languages: alternatesFor(DEFAULT_LOCALE).languages,
   },
-  ...socialFor(DEFAULT_LOCALE, dict.site.title, dict.site.description, "", absolute("/")),
+  ...socialFor(
+    DEFAULT_LOCALE,
+    dict.localePicker.metaTitle,
+    dict.localePicker.metaDescription,
+    "",
+    absolute("/"),
+  ),
 };
 
 /**

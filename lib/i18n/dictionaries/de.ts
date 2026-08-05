@@ -80,6 +80,9 @@ export const de = {
   },
 
   localePicker: {
+    metaTitle: "toolsmith — Dateiwerkzeuge in sechs Sprachen",
+    metaDescription:
+      "Wählen Sie eine Sprache. toolsmith wandelt Bilder, Video, Audio und PDF vollständig im Browser um — es wird nie eine Datei hochgeladen.",
     title: "Sprache wählen",
     lead: "toolsmith verarbeitet jede Datei im Browser. Wählen Sie eine Sprache, um fortzufahren.",
   },
