@@ -8,19 +8,29 @@ compressed, split and transcribed **entirely inside the browser tab**.
 
 ---
 
-## "No upload" is a structural claim here, not a promise
+## Everyone says "runs in your browser". This one is tested.
 
-There is no server to upload to. Every page is prerendered static HTML on a CDN;
-all processing happens in a Web Worker in your tab. The paid converters can't
-match this — server-side processing *is* their ad inventory — but it also means
-we give up anything that needs a server.
+That phrase has become table stakes for indie tools, so it is worth being precise
+about what is actually enforced here.
 
-You do not have to take our word for it. Open the network tab, or read the specs:
-all 21 tools have one that runs the real conversion with request interception on and
-fails if any outbound POST/PUT carries a byte of your file.
+**There is no server to upload to.** Every page is prerendered static HTML on a CDN;
+all processing happens in a Web Worker in your tab. That is a structural fact, not a
+policy — but it also means we give up anything that genuinely needs a server.
 
-Models are the one exception, and they are downloads *to* you, never uploads:
-they come from the Hugging Face CDN and only after you press the button.
+**The specs fail if a byte leaks.** All 21 tools have a test that runs the real
+conversion with request interception on and fails if any outbound POST/PUT carries
+part of your file. Open the network tab if you would rather check yourself.
+
+**Video and on-device models, not just PDFs.** Most browser-only tool sites stop at
+documents and images. Video here goes through WebCodecs — MOV→MP4 is a lossless
+remux, no re-encode — and eight tools run real models in the tab: background removal,
+upscaling, click-to-cutout, subtitles, subtitle translation, stem separation,
+summarization, OCR.
+
+Models are the one thing downloaded, and they travel *to* you, never away: they come
+from the Hugging Face CDN, and only after you press the button.
+
+We are not trying to out-count the big converters — 21 tools, deliberately.
 
 ## Three things that cost us the most
 
@@ -137,6 +147,20 @@ Kept here honestly rather than quietly:
 - **Summarization requires WebGPU** and has nowhere to fall back to: the wasm execution
   provider has no implementation of the operators this export uses.
 - Animated GIFs keep only the first frame when converted. The UI says so before you start.
+
+## Status
+
+**Feature-complete and frozen as of 2026-08-12.** All 21 planned tools shipped; no new
+tools, languages or articles are planned. Bug fixes and dependency updates continue.
+
+The reason is written down rather than left implied: after three weeks indexed the site
+had 280 search impressions and **zero** clicks, and the honest arithmetic said that
+ranking #1 for everything it currently surfaces for would earn about $0.50/month. Adding
+a 22nd tool does not change that — distribution does. The full measurement log, including
+the 18-month comparable that recalibrated the estimate, is in
+[`docs/TOOLS.md`](docs/TOOLS.md).
+
+Issues and PRs are welcome; treat the roadmap as closed.
 
 ## License
 
