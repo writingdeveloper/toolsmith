@@ -88,21 +88,31 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </ul>
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-sm font-medium tracking-wide text-muted uppercase">
-          {dict.home.upcomingHeading}
-        </h2>
-        <ul className="flex flex-wrap gap-2">
-          {UPCOMING_TOOLS.map((tool) => (
-            <li
-              key={tool.slug}
-              className="rounded-lg border border-border px-3 py-1.5 text-sm text-muted"
-            >
-              {dict.toolNames[tool.slug]}
-            </li>
-          ))}
-        </ul>
-      </section>
+      {/*
+       * **비어 있으면 통째로 사라진다 (2026-08-12).** 21개가 전부 `live` 가 된 순간
+       * `UPCOMING_TOOLS` 는 빈 배열이 됐는데 제목은 조건 없이 렌더되고 있었다 —
+       * 홈 맨 아래, 푸터 바로 위에 **내용 없는 "Coming soon"** 이 6개 언어 전부에
+       * 떠 있었다. 아무것도 안 오는데 곧 온다고 말하는 것은 규칙 3 위반이고,
+       * 처음 온 사람에게는 그냥 깨진 화면으로 보인다.
+       * 목록이 다시 차면 저절로 돌아온다.
+       */}
+      {UPCOMING_TOOLS.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="text-sm font-medium tracking-wide text-muted uppercase">
+            {dict.home.upcomingHeading}
+          </h2>
+          <ul className="flex flex-wrap gap-2">
+            {UPCOMING_TOOLS.map((tool) => (
+              <li
+                key={tool.slug}
+                className="rounded-lg border border-border px-3 py-1.5 text-sm text-muted"
+              >
+                {dict.toolNames[tool.slug]}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

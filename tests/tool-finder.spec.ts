@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
+import { LOCALES } from "../lib/i18n/config";
 import { getDictionary } from "../lib/i18n";
-import { LIVE_TOOLS } from "../lib/tools";
+import { LIVE_TOOLS, UPCOMING_TOOLS } from "../lib/tools";
 
 /*
  * 홈의 도구 찾기.
@@ -55,4 +56,25 @@ test("걸리는 것이 없으면 그렇다고 말한다", async ({ page }) => {
   await expect(page.locator("[data-search-empty]")).toHaveText(
     getDictionary("ko").home.searchEmpty,
   );
+});
+
+/*
+ * **아무것도 안 오는데 "곧 온다" 고 말하지 않는다 (2026-08-12).**
+ *
+ * 21개가 전부 `live` 가 되면서 `UPCOMING_TOOLS` 가 빈 배열이 됐는데, 제목은 조건
+ * 없이 렌더되어 홈 맨 아래에 **내용 없는 "Coming soon"** 이 6개 언어 전부에 떠
+ * 있었다. 스펙 411개가 초록색인 채로 살아 있었다 — 아무도 그 자리를 안 봤기 때문이다.
+ *
+ * 언어를 전부 도는 이유: 제목 문자열이 사전마다 다르므로 한 언어만 보면 나머지
+ * 다섯이 조용히 새는 종류의 결함이다.
+ */
+test("준비 중인 도구가 없으면 그 제목 자체가 안 나온다", async ({ page }) => {
+  for (const locale of LOCALES) {
+    await page.goto(`/${locale}`);
+    const heading = page.getByRole("heading", {
+      name: getDictionary(locale).home.upcomingHeading,
+      exact: true,
+    });
+    await expect(heading, locale).toHaveCount(UPCOMING_TOOLS.length > 0 ? 1 : 0);
+  }
 });
