@@ -6,7 +6,7 @@ inside the browser tab.
 **[toolsmith.writingdeveloper.blog](https://toolsmith.writingdeveloper.blog)** ·
 21 tools · 6 languages · no account, no ads, no watermark
 
-![The toolsmith home page, showing the tool grid](docs/screenshot.jpg)
+![The toolsmith home page, showing the tool grid](docs/screenshot.png)
 
 ## "Runs in your browser" is easy to say
 
